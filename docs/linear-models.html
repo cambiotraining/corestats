@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="no-js">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Chapter 24 Linear models | Core Statistics in R</title>
+<meta name="author" content="Matt Castle and Martin van Rongen">
+<meta name="description" content="24.1 Objectives  Questions How do I use the linear model framework with three predictor variables? Objectives Be able to expand the linear model framework in R to three predictor variables Define...">
+<meta name="generator" content="bookdown 0.25 with bs4_book()">
+<meta property="og:title" content="Chapter 24 Linear models | Core Statistics in R">
+<meta property="og:type" content="book">
+<meta property="og:description" content="24.1 Objectives  Questions How do I use the linear model framework with three predictor variables? Objectives Be able to expand the linear model framework in R to three predictor variables Define...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 24 Linear models | Core Statistics in R">
+<meta name="twitter:description" content="24.1 Objectives  Questions How do I use the linear model framework with three predictor variables? Objectives Be able to expand the linear model framework in R to three predictor variables Define...">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<!-- CSS : implied media="all" --><link rel="stylesheet" href="stylesheets/full-stylesheet.css">
+<link rel="stylesheet" href="stylesheets/styleguide.css">
+<link rel="stylesheet" href="stylesheets/style.css">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><script type="text/javascript" src="//use.typekit.com/hyb5bko.js"></script><script type="text/javascript">try{Typekit.load();}catch(e){}</script><script type="text/javascript">  document.documentElement.className += " js";</script>
+</head>
+<body class="campl-theme-2" data-spy="scroll" data-target="#toc">
+
+<!--[if lt IE 7]>
+<div class="lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<div class="lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<div class="lt-ie9">
+<![endif]-->
+
+	<a href="#primary-nav" class="campl-skipTo">skip to primary navigation</a>
+	<a href="#content" class="campl-skipTo">skip to content</a>
+	<div class="campl-row campl-global-header">
+		<div class="campl-wrap clearfix">
+			<div class="campl-header-container campl-column8" id="global-header-controls">
+				<a href="http://www.cam.ac.uk" class="campl-main-logo">
+					<img alt="University of Cambridge" src="images/interface/main-logo-small.png" height="38px;"></a>
+
+				<ul class="campl-unstyled-list campl-horizontal-navigation campl-global-navigation clearfix">
+<li>
+						<a href="#study-with-us">Study at Cambridge</a>
+					</li>
+					<li>
+						<a href="#about-the-university">About the University</a>
+					</li>
+					<li>
+						<a href="http://www.cam.ac.uk/research" class="campl-no-drawer">Research at Cambridge</a>
+					</li>
+				</ul>
+</div>
+
+			<div class="campl-column2">
+				<div class="campl-quicklinks">
+				</div>
+			</div>
+
+			<div class="campl-column2">
+
+				<div class="campl-site-search" id="site-search-btn">
+
+					<label for="header-search" class="hidden">Search site</label>
+					<div class="campl-search-input">
+						<form action="http://search.cam.ac.uk/web" method="get">
+						<input id="header-search" type="text" name="query" value="" placeholder="Search"><input type="image" class="campl-search-submit " src="images/interface/btn-search-header.png">
+</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="campl-row campl-global-header campl-search-drawer">
+		<div class="campl-wrap clearfix">
+			<form class="campl-site-search-form" id="site-search-container" action="">
+				<div class="campl-search-form-wrapper clearfix">
+					<input type="text" class="text" placeholder="Search"><input type="image" class="campl-search-submit" src="images/interface/btn-search.png">
+</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="campl-row campl-global-navigation-drawer">
+
+		<div class="campl-wrap clearfix">
+			<div class="campl-column12 campl-home-link-container">
+				<a href="">Home</a>
+			</div>
+		</div>
+		<div class="campl-wrap clearfix">
+			<div class="campl-column12 campl-global-navigation-mobile-list campl-global-navigation-list">
+				<div class="campl-global-navigation-outer clearfix" id="study-with-us">
+					<ul class="campl-unstyled-list campl-global-navigation-header-container ">
+<li><a href="http://www.cam.ac.uk/study-at-cambridge">Study at Cambridge</a></li>
+					</ul>
+<div class="campl-column4">
+						<ul class="campl-global-navigation-container campl-unstyled-list campl-global-navigation-secondary-with-children">
+<li>
+								<a href="http://www.study.cam.ac.uk/undergraduate/">Undergraduate</a>
+								<ul class="campl-global-navigation-tertiary campl-unstyled-list">
+<li>
+										<a href="http://www.undergraduate.study.cam.ac.uk/courses">Courses</a>
+									</li>
+									<li>
+										<a href="http://www.undergraduate.study.cam.ac.uk/applying">Applying</a>
+									</li>
+									<li>
+										<a href="http://www.undergraduate.study.cam.ac.uk/events">Events and open days</a>
+									</li>
+								  <li>
+										<a href="http://www.undergraduate.study.cam.ac.uk/finance">Fees and finance</a>
+									</li>
+								  <li>
+										<a href="http://www.becambridge.com/">Student blogs and videos</a>
+									</li>
+								</ul>
+</li>
+						</ul>
+</div>
+					<div class="campl-column4">
+						<ul class="campl-global-navigation-container campl-unstyled-list campl-global-navigation-secondary-with-children">
+<li>
+								<a href="http://www.graduate.study.cam.ac.uk/">Graduate</a>
+								<ul class="campl-global-navigation-tertiary campl-unstyled-list">
+<li>
+										<a href="http://www.graduate.study.cam.ac.uk/why-cambridge/welcome-vice-chancellor">Why Cambridge</a>
+									</li>
+									<li>
+										<a href="http://www.graduate.study.cam.ac.uk/courses%0A">Course directory</a>
+									</li>
+									<li>
+									<a href="http://www.graduate.study.cam.ac.uk/how-do-i-apply">How to apply</a>
+</li>
+									<li><a href="http://www.cambridgestudents.cam.ac.uk/fees-and-funding">Fees and funding</a></li>
+									<li><a href="http://www.graduate.study.cam.ac.uk/faqs/applicant">Frequently asked questions</a></li>
+								</ul>
+</li>
+						</ul>
+</div>
+					<div class="campl-column4">
+						<ul class="campl-global-navigation-container campl-unstyled-list last">
+<li>
+								<a href="http://www.internationalstudents.cam.ac.uk">International students</a>
+							</li>
+							<li>
+								<a href="http://www.ice.cam.ac.uk">Continuing education</a>
+							</li>
+							<li>
+								<a href="http://www.epe.admin.cam.ac.uk/">Executive and professional education</a>
+							</li>
+							<li>
+								<a href="http://www.educ.cam.ac.uk">Courses in education</a>
+							</li>
+						</ul>
+</div>
+				</div>
+
+				<div class="campl-global-navigation-outer clearfix" id="about-the-university">
+					<ul class="campl-global-navigation-header-container campl-unstyled-list">
+<li><a href="http://www.cam.ac.uk/about-the-university">About the University</a></li>
+					</ul>
+<div class="campl-column4">
+						<ul class="campl-global-navigation-container campl-unstyled-list">
+<li>
+								<a href="http://www.cam.ac.uk/about-the-university/how-the-university-and-colleges-work">How the University and Colleges work</a>
+							</li>
+							<li>
+								<a href="http://www.cam.ac.uk/about-the-university/history">History</a>
+							</li>
+							<li>
+								<a href="http://www.cam.ac.uk/about-the-university/visiting-the-university">Visiting the University</a>
+							</li>
+							<li>
+								<a href="http://www.cam.ac.uk/about-the-university/term-dates-and-calendars">Term dates and calendars</a>
+							</li>
+							<li class="last">
+								<a href="http://map.cam.ac.uk">Map</a>
+							</li>
+						</ul>
+</div>
+					<div class="campl-column4">
+						<ul class="campl-global-navigation-container campl-unstyled-list">
+<li>
+								<a href="http://www.communications.cam.ac.uk/">For media</a>
+							</li>
+							<li>
+								<a href="http://www.cam.ac.uk/video-and-audio">Video and audio</a>
+							</li>
+							<li>
+								<a href="http://webservices.admin.cam.ac.uk/fae/">Find an expert</a>
+							</li>
+							<li>
+								<a href="http://www.cam.ac.uk/about-the-university/publications">Publications</a>
+							</li>
+							<li class="last">
+								<a href="http://www.cam.ac.uk/global-cambridge">Global Cambridge</a>
+							</li>
+						</ul>
+</div>
+					<div class="campl-column4">
+						<ul class="campl-global-navigation-container campl-unstyled-list">
+<li>
+								<a href="http://www.cam.ac.uk/news">News</a>
+							</li>
+							<li>
+								<a href="http://www.admin.cam.ac.uk/whatson/">Events</a>
+							</li>
+							<li>
+								<a href="http://www.cam.ac.uk/public-engagement">Public engagement</a>
+							</li>
+							<li>
+								<a href="http://www.jobs.cam.ac.uk">Jobs</a>
+							</li>
+							<li class="last">
+								<a href="https://www.philanthropy.cam.ac.uk/">Give to Cambridge</a>
+							</li>
+						</ul>
+</div>
+				</div>
+
+				<div class="campl-global-navigation-outer clearfix" id="our-research">
+					<ul class="campl-global-navigation-header-container campl-unstyled-list">
+<li><a href="">Research at Cambridge</a></li>
+					</ul>
+</div>
+			</div>
+
+			<ul class="campl-unstyled-list campl-quicklinks-list campl-global-navigation-container ">
+<li>
+					<a href="http://www.cam.ac.uk/for-staff">For staff</a>
+				</li>
+				<li>
+					<a href="http://www.cam.ac.uk/current-students">For current students</a>
+				</li>
+				<li>
+					<a href="http://www.alumni.cam.ac.uk">For alumni</a>
+				</li>
+				<li>
+					<a href="http://www.cam.ac.uk/for-business">For business</a>
+				</li>
+				<li>
+					<a href="http://www.cam.ac.uk/colleges-and-departments">Colleges &amp; departments</a>
+				</li>
+				<li>
+					<a href="http://www.lib.cam.ac.uk/libraries/">Libraries &amp; facilities</a>
+				</li>
+				<li>
+					<a href="http://www.cam.ac.uk/museums-and-collections">Museums &amp; collections</a>
+				</li>
+				<li class="last">
+					<a href="http://www.cam.ac.uk/email-and-phone-search">Email &amp; phone search</a>
+				</li>
+			</ul>
+</div>
+	</div>
+    <!-- .campl-global-header ends -->
+
+	<div class="campl-row campl-page-header campl-sub-section-page">
+		<div class="campl-wrap clearfix">
+			<div class="campl-column12">
+				<div class="campl-content-container">
+					<div class="campl-breadcrumb" id="breadcrumb">
+						<ul class="campl-unstyled-list campl-horizontal-navigation clearfix">
+<li class="first-child">
+								<a href="https://bioinfotraining.bio.cam.ac.uk/" class="campl-home ir">Home</a>
+							</li>
+							<li>
+								<a href="">Courses</a>
+							</li>
+							<li>
+								<a href="">Training Materials</a>
+							</li>
+							<li>
+								<a href="index.html">Core Statistics in R
+							</a>
+</li>
+						</ul>
+</div>
+					<!--<p class="campl-page-title">Bioinformatics Training Materials</p>-->
+
+					<p class="campl-mobile-parent"><a href=""><span class="campl-back-btn campl-menu-indicator"></span>Studying at Cambridge</a></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="campl-row campl-page-header">
+		<div class="campl-wrap clearfix campl-local-navigation" id="local-nav">
+			<div class="campl-local-navigation-container">
+				<ul class="campl-unstyled-list">
+<li><a href="https://training.cam.ac.uk/bioinformatics/search">Course schedule</a></li>
+					<li>
+<a href="#" class="campl-selected">Additional information</a>
+						<ul class="campl-unstyled-list local-dropdown-menu">
+<li><a href="#">Additional resources</a></li>
+							<li><a href="https://bioinfotraining.bio.cam.ac.uk/about/findus">Where to find us?</a></li>
+							<li><a href="#">Frequently asked questions</a></li>
+						</ul>
+</li>
+					<li><a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate">Further training</a></li>
+				</ul>
+</div>
+		</div>
+
+
+
+		<div class="campl-wrap clearfix campl-page-sub-title campl-recessed-sub-title">
+			<div class="campl-column12">
+				<div class="campl-content-container">
+					<p class="campl-sub-title">Core Statistics in R</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+		<div class="campl-row campl-content campl-recessed-content">
+			<div class="campl-wrap clearfix">
+				<div class="campl-column9  campl-main-content" id="content">
+					<div class="campl-content-container">
+						<div>
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <br><button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
+<li class="book-part">CoreStats 1: Simple hypothesis testing</li>
+<li><a class="" href="cs1-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li class="book-part">CoreStats 1 (Practicals)</li>
+<li><a class="" href="introduction.html"><span class="header-section-number">3</span> Introduction</a></li>
+<li><a class="" href="cs1-one-sample-t-test.html"><span class="header-section-number">4</span> One-sample t-test</a></li>
+<li><a class="" href="cs1-onesample-wilcoxon-signed-rank.html"><span class="header-section-number">5</span> Wilcoxon signed-rank test</a></li>
+<li><a class="" href="cs1-students-t-test.html"><span class="header-section-number">6</span> Student’s t-test</a></li>
+<li><a class="" href="cs1-mannwhitney-u-test.html"><span class="header-section-number">7</span> Mann-Whitney U test</a></li>
+<li><a class="" href="cs1-paired-two-sample-t-test.html"><span class="header-section-number">8</span> Paired two-sample t-test</a></li>
+<li><a class="" href="cs1-twosample-wilcoxon-signed-rank.html"><span class="header-section-number">9</span> Wilcoxon signed-rank test</a></li>
+<li class="book-part">CoreStats 2: Categorical predictors</li>
+<li><a class="" href="cs2-intro.html"><span class="header-section-number">10</span> Introduction</a></li>
+<li class="book-part">CoreStats 2 (Practicals)</li>
+<li><a class="" href="introduction-1.html"><span class="header-section-number">11</span> Introduction</a></li>
+<li><a class="" href="cs2-anova.html"><span class="header-section-number">12</span> ANOVA</a></li>
+<li><a class="" href="kruskal-wallis-test.html"><span class="header-section-number">13</span> Kruskal-Wallis test</a></li>
+<li class="book-part">CoreStats 3: Continuous predictors</li>
+<li><a class="" href="cs3-intro.html"><span class="header-section-number">14</span> Introduction</a></li>
+<li class="book-part">CoreStats 3 (Practicals)</li>
+<li><a class="" href="introduction-2.html"><span class="header-section-number">15</span> Introduction</a></li>
+<li><a class="" href="correlation-coefficients.html"><span class="header-section-number">16</span> Correlation coefficients</a></li>
+<li><a class="" href="linear-regression.html"><span class="header-section-number">17</span> Linear regression</a></li>
+<li class="book-part">CoreStats 4: Two predictor variables</li>
+<li><a class="" href="cs4-intro.html"><span class="header-section-number">18</span> Introduction</a></li>
+<li class="book-part">CoreStats 4 (Practicals)</li>
+<li><a class="" href="introduction-3.html"><span class="header-section-number">19</span> Introduction</a></li>
+<li><a class="" href="two-way-anova.html"><span class="header-section-number">20</span> Two-way ANOVA</a></li>
+<li><a class="" href="linear-regression-with-grouped-data.html"><span class="header-section-number">21</span> Linear regression with grouped data</a></li>
+<li class="book-part">CoreStats 5: Multiple predictor variables</li>
+<li><a class="" href="cs5-intro.html"><span class="header-section-number">22</span> Introduction</a></li>
+<li class="book-part">CoreStats 5 (Practicals)</li>
+<li><a class="" href="introduction-4.html"><span class="header-section-number">23</span> Introduction</a></li>
+<li><a class="active" href="linear-models.html"><span class="header-section-number">24</span> Linear models</a></li>
+<li><a class="" href="model-comparisons.html"><span class="header-section-number">25</span> Model comparisons</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="linear-models" class="section level1" number="24">
+<h1>
+<span class="header-section-number">24</span> Linear models<a class="anchor" aria-label="anchor" href="#linear-models"><i class="fas fa-link"></i></a>
+</h1>
+<div id="objectives-11" class="section level2" number="24.1">
+<h2>
+<span class="header-section-number">24.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives-11"><i class="fas fa-link"></i></a>
+</h2>
+<div class="objectives">
+<p><strong>Questions</strong></p>
+<ul>
+<li>How do I use the linear model framework with three predictor variables?</li>
+</ul>
+<p><strong>Objectives</strong></p>
+<ul>
+<li>Be able to expand the linear model framework in R to three predictor variables</li>
+<li>Define the equation for the regression line for each categorical variable</li>
+<li>Be able to construct and analyse any possible combination of predictor variables in the data</li>
+</ul>
+</div>
+</div>
+<div id="purpose-and-aim-8" class="section level2" number="24.2">
+<h2>
+<span class="header-section-number">24.2</span> Purpose and aim<a class="anchor" aria-label="anchor" href="#purpose-and-aim-8"><i class="fas fa-link"></i></a>
+</h2>
+<p>Revisiting the linear model framework and expanding to systems with three predictor variables.</p>
+</div>
+<div id="section-commands-12" class="section level2" number="24.3">
+<h2>
+<span class="header-section-number">24.3</span> Section commands<a class="anchor" aria-label="anchor" href="#section-commands-12"><i class="fas fa-link"></i></a>
+</h2>
+<p>Commands used in this section</p>
+<div class="inline-table"><table class="table table-sm">
+<thead><tr class="header">
+<th align="left">Function</th>
+<th align="left">Description</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="left"><code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code></td>
+<td align="left">Constructs a linear model according to the formula specified</td>
+</tr></tbody>
+</table></div>
+</div>
+<div id="data-and-hypotheses-11" class="section level2" number="24.4">
+<h2>
+<span class="header-section-number">24.4</span> Data and hypotheses<a class="anchor" aria-label="anchor" href="#data-and-hypotheses-11"><i class="fas fa-link"></i></a>
+</h2>
+<p>The first section uses the following dataset:
+<code>data/tidy/CS5-H2S.csv</code>. This is a dataset comprising 16 observations of three variables (one dependent and two predictor). This records the air pollution caused by H<sub>2</sub>S produced by two types of waste treatment plants. For both types of treatment plant, we obtain eight measurements each of H<sub>2</sub>S production (ppm). We also obtain information on the daily temperature.</p>
+</div>
+<div id="summarise-and-visualise-12" class="section level2" number="24.5">
+<h2>
+<span class="header-section-number">24.5</span> Summarise and visualise<a class="anchor" aria-label="anchor" href="#summarise-and-visualise-12"><i class="fas fa-link"></i></a>
+</h2>
+<p>Let’s first load the data:</p>
+<div class="sourceCode" id="cb252"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#load the data</span>
+<span class="va">airpoll</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"data/tidy/CS5-H2S.csv"</span><span class="op">)</span>
+
+<span class="co"># look at the data</span>
+<span class="va">airpoll</span></code></pre></div>
+<pre><code>## # A tibble: 16 × 4
+##       id treatment_plant daily_temp hydrogen_sulfide
+##    &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt;            &lt;dbl&gt;
+##  1     1 A                       21             5.22
+##  2     2 A                       22             4.39
+##  3     3 A                       22             5.24
+##  4     4 A                       24             5.04
+##  5     5 A                       27             4.6 
+##  6     6 A                       28             5.04
+##  7     7 A                       29             5.08
+##  8     8 A                       30             3.97
+##  9     9 B                       21             6.06
+## 10    10 B                       21             6.51
+## 11    11 B                       22             6.33
+## 12    12 B                       23             6.01
+## 13    13 B                       28             6.09
+## 14    14 B                       28             6.93
+## 15    15 B                       28             7.6 
+## 16    16 B                       29             7.65</code></pre>
+<p>We have four columns:</p>
+<ol style="list-style-type: decimal">
+<li>
+<code>id</code> is a unique ID column</li>
+<li>
+<code>treatment_plant</code> contains the name of the waste treatment plant</li>
+<li>
+<code>daily_temp</code> contains the average daily temperature in degrees Celsius</li>
+<li>
+<code>hydrogen_sulfide</code> contains H<sub>2</sub>S production (ppm)</li>
+</ol>
+<p>Next, visualise the data:</p>
+<div class="sourceCode" id="cb254"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># plot the data</span>
+<span class="va">airpoll</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">daily_temp</span>,
+             y <span class="op">=</span> <span class="va">hydrogen_sulfide</span>,
+             colour <span class="op">=</span> <span class="va">treatment_plant</span>,
+             group <span class="op">=</span> <span class="va">treatment_plant</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="co"># add regression lines</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="cs5-practical-linear_models_files/figure-html/unnamed-chunk-3-1.png" width="672"></div>
+<p>It looks as though the variable <code>treatment_plant</code> has an effect on H<sub>2</sub>S emissions (as one cloud of points is higher than the other). There is also a suggestion that the daily temperature might affect emissions (both data sets look like the gradient of the regression line through their respective cloud might not be zero) and it also appears that there might be an interaction between <code>treatment_plant</code> and <code>daily_temperature</code> because the gradient of the two regression lines is not parallel.</p>
+</div>
+<div id="implemention" class="section level2" number="24.6">
+<h2>
+<span class="header-section-number">24.6</span> Implemention<a class="anchor" aria-label="anchor" href="#implemention"><i class="fas fa-link"></i></a>
+</h2>
+<p>Construct and analyse a full linear model.</p>
+<div class="sourceCode" id="cb255"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># define the linear model with all terms and interactions</span>
+<span class="va">lm_full</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">hydrogen_sulfide</span> <span class="op">~</span> <span class="va">treatment_plant</span> <span class="op">*</span> <span class="va">daily_temp</span>,
+              data <span class="op">=</span> <span class="va">airpoll</span><span class="op">)</span>
+
+<span class="co"># view the model</span>
+<span class="va">lm_full</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = hydrogen_sulfide ~ treatment_plant * daily_temp, 
+##     data = airpoll)
+## 
+## Coefficients:
+##                 (Intercept)             treatment_plantB  
+##                     6.20495                     -2.73075  
+##                  daily_temp  treatment_plantB:daily_temp  
+##                    -0.05448                      0.18141</code></pre>
+<p>So here we construct a model that has all the main effects <em>and</em> the interaction term. Remember that <code>hydrogen_sulfide ~ treatment_plant * daily_temp</code> is a short hand version of <code>hydrogen_sulfide ~ treatment_plant + daily_temp + treatment_plant:daily_temp</code>.</p>
+<p>This gives us the coefficients of the model:</p>
+<pre><code>## # A tibble: 4 × 2
+##   term                        estimate
+##   &lt;chr&gt;                          &lt;dbl&gt;
+## 1 (Intercept)                   6.20  
+## 2 treatment_plantB             -2.73  
+## 3 daily_temp                   -0.0545
+## 4 treatment_plantB:daily_temp   0.181</code></pre>
+<p>These are best interpreted by using the linear model notation:</p>
+<p><span class="math display">\[\begin{equation}
+H_2S = 6.20495 - 0.05448 \cdot daily\_temp + \\ \binom{0}{-2.73075}\binom{treatment\_plantA}{treatment\_plantB} + \\
+\binom{0}{0.18141 \cdot daily\_temp}\binom{treatment\_plantA}{treatment\_plantB}
+\end{equation}\]</span></p>
+<p>This is effectively shorthand for writing down the equation of the two straight lines (one for each categorical variable):</p>
+<p><span class="math display">\[\begin{equation}
+treatment\_plantA = 6.20495 - 0.05448 \cdot daily\_temp
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+treatment\_plantB = 3.4742 + 0.12693 \cdot daily\_temp
+\end{equation}\]</span></p>
+<p>Performing an ANOVA on the full linear model gives the following output:</p>
+<div class="sourceCode" id="cb258"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">lm_full</span><span class="op">)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: hydrogen_sulfide
+##                            Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+## treatment_plant             1 13.3225 13.3225 54.1557 8.746e-06 ***
+## daily_temp                  1  0.2316  0.2316  0.9415   0.35104    
+## treatment_plant:daily_temp  1  1.4470  1.4470  5.8822   0.03201 *  
+## Residuals                  12  2.9520  0.2460                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<p>Here we can see that the interaction term appears to be marginally significant, implying that the effect of temperature on hydrogen sulfide production is different for the two different treatment plants.</p>
+<p>We check the assumptions of <code>lm_full</code> using the diagnostic plots:</p>
+<div class="sourceCode" id="cb260"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lm_full</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://goodekat.github.io/ggResidpanel/reference/resid_panel.html">resid_panel</a></span><span class="op">(</span>plots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"resid"</span>, <span class="st">"qq"</span>, <span class="st">"ls"</span>, <span class="st">"cookd"</span><span class="op">)</span>,
+              smoother <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="cs5-practical-linear_models_files/figure-html/unnamed-chunk-7-1.png" width="672"></div>
+</div>
+<div id="exploring-models" class="section level2" number="24.7">
+<h2>
+<span class="header-section-number">24.7</span> Exploring models<a class="anchor" aria-label="anchor" href="#exploring-models"><i class="fas fa-link"></i></a>
+</h2>
+<p>Rather than stop here however, we will use the concept of the linear model to its full potential and show that we can construct and analyse any possible combination of predictor variables for this dataset. Namely we will consider the following four extra models:</p>
+<div class="inline-table"><table class="table table-sm">
+<thead><tr class="header">
+<th align="left">Model</th>
+<th align="left">Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">1. <code>hydrogen_sulfide ~ treatment_plant + daily_temp</code>
+</td>
+<td align="left">An additive model</td>
+</tr>
+<tr class="even">
+<td align="left">2. <code>hydrogen_sulfide ~ treatment_plant</code>
+</td>
+<td align="left">Equivalent to a one-way ANOVA</td>
+</tr>
+<tr class="odd">
+<td align="left">3. <code>hydrogen_sulfide ~ daily_temp</code>
+</td>
+<td align="left">Equivalent to a simple linear regression</td>
+</tr>
+<tr class="even">
+<td align="left">4. <code>hydrogen_sulfide ~ 1</code>
+</td>
+<td align="left">The null model, where we have no predictors</td>
+</tr>
+</tbody>
+</table></div>
+<div id="additive-model" class="section level3" number="24.7.1">
+<h3>
+<span class="header-section-number">24.7.1</span> Additive model<a class="anchor" aria-label="anchor" href="#additive-model"><i class="fas fa-link"></i></a>
+</h3>
+<p>Construct and analyse the additive linear model.</p>
+<div class="sourceCode" id="cb261"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># define the linear model</span>
+<span class="va">lm_add</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">hydrogen_sulfide</span> <span class="op">~</span> <span class="va">treatment_plant</span> <span class="op">+</span> <span class="va">daily_temp</span>,
+             data <span class="op">=</span> <span class="va">airpoll</span><span class="op">)</span>
+
+<span class="co"># view the linear model</span>
+<span class="va">lm_add</span>
+
+<span class="co"># perform an ANOVA on the model</span>
+<span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">lm_add</span><span class="op">)</span></code></pre></div>
+<ul>
+<li>The first line creates a linear model that seeks to explain the <code>hydrogen_sulfide</code> values purely in terms of the categorical <code>treatment_plant</code> variable and the continuous <code>daily_temp</code> variable.</li>
+<li>The second line produces the following output:</li>
+</ul>
+<pre><code>## 
+## Call:
+## lm(formula = hydrogen_sulfide ~ treatment_plant + daily_temp, 
+##     data = airpoll)
+## 
+## Coefficients:
+##      (Intercept)  treatment_plantB        daily_temp  
+##          3.90164           1.83861           0.03629</code></pre>
+<p>This gives us the coefficients of the additive model:</p>
+<pre><code>## # A tibble: 3 × 2
+##   term             estimate
+##   &lt;chr&gt;               &lt;dbl&gt;
+## 1 (Intercept)        3.90  
+## 2 treatment_plantB   1.84  
+## 3 daily_temp         0.0363</code></pre>
+<p>These are best interpreted by using the linear model notation:</p>
+<p><span class="math display">\[\begin{equation}
+H_2S = 3.9 + 0.036 \cdot daily\_temp + \\
+\binom{0}{1.8} \binom{treatment\_plantA}{treatment\_plantB}
+\end{equation}\]</span></p>
+<p>This is effectively shorthand for writing down the equation of the two straight lines (one for each categorical variable):</p>
+<p><span class="math display">\[\begin{equation}
+H_2S(treatment\_plantA) = 3.9 + 0.036 \cdot daily\_temp
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+H_2S(treatment\_plantB) = 5.7 + 0.036 \cdot daily\_temp
+\end{equation}\]</span></p>
+<p>What is very important to note is not so much that the coefficients have changed (it is natural to assume that there would be some change in the model given that we’ve altered the predictor variables included). What is striking here is that the <strong>signs</strong> of the coefficients have changed! For example, in the full model we saw that the coefficient of <code>treatment_plantB</code> was negative (implying that in general <code>treatment_plantB</code> produced lower H<sub>2</sub>S values than <code>treatment_plantA</code> by default) whereas now it is positive indicating exactly the opposite effect. Given that the difference between the two models was the inclusion of an interaction term which we saw was significant in the analysis of the full model, it perhaps, is not surprising that dropping this term would lead to very different results.</p>
+<p>But just imagine if we had never included it in the first place! If we only looked at the additive model we would come out with completely different conclusions about the baseline pollution levels of each plant.</p>
+<ul>
+<li>The 3rd line produces the following output:</li>
+</ul>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: hydrogen_sulfide
+##                 Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+## treatment_plant  1 13.3225 13.3225 39.3702 2.858e-05 ***
+## daily_temp       1  0.2316  0.2316  0.6845     0.423    
+## Residuals       13  4.3991  0.3384                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<p>Here we can see that the temperature term is not significant, whereas the <code>treatment_plant</code> term is very significant indeed.</p>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-16" class="exercise"><strong>Exercise 24.1  </strong></span>Check the assumptions of this additive model. Do they differ significantly from the full model?</p>
+</div>
+</div>
+<div id="revisiting-anova" class="section level3" number="24.7.2">
+<h3>
+<span class="header-section-number">24.7.2</span> Revisiting ANOVA<a class="anchor" aria-label="anchor" href="#revisiting-anova"><i class="fas fa-link"></i></a>
+</h3>
+<p>Construct and analyse only the effect of <code>treatment_plant</code>:</p>
+<div class="sourceCode" id="cb265"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># visualise the data</span>
+<span class="va">airpoll</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">treatment_plant</span>, y <span class="op">=</span> <span class="va">hydrogen_sulfide</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="co"># add the data points and ensure they are jittered</span>
+  <span class="co"># so they do not overlap</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html">geom_jitter</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="cs5-practical-linear_models_files/figure-html/unnamed-chunk-12-1.png" width="672"></div>
+<div class="sourceCode" id="cb266"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># define the linear model</span>
+<span class="va">lm_plant</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">hydrogen_sulfide</span> <span class="op">~</span> <span class="va">treatment_plant</span>,
+               data <span class="op">=</span> <span class="va">airpoll</span><span class="op">)</span>
+
+<span class="co"># view the linear model</span>
+<span class="va">lm_plant</span>
+
+<span class="co"># perform an ANOVA on the model</span>
+<span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">lm_plant</span><span class="op">)</span></code></pre></div>
+<ul>
+<li>The third line gives us the model coefficients:</li>
+</ul>
+<pre><code>## 
+## Call:
+## lm(formula = hydrogen_sulfide ~ treatment_plant, data = airpoll)
+## 
+## Coefficients:
+##      (Intercept)  treatment_plantB  
+##            4.823             1.825</code></pre>
+<p>In this case it tells us the means of the groups. <code>(Intercept)</code> is the mean of the <code>treatment_plantA</code> H2S data (4.8225) whilst <code>treatment_plantB</code> tells us that the mean of the treatment plant B H2S data is 1.8250 more than the intercept value <em>i.e.</em> the mean of <code>treatment_plantB</code> is 4.8225 + 1.8250 = 6.6475.</p>
+<ul>
+<li>The last line gives us the normal ANOVA table for testing whether the means of the two groups differ significantly from each other.</li>
+</ul>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: hydrogen_sulfide
+##                 Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+## treatment_plant  1 13.3225 13.3225  40.278 1.809e-05 ***
+## Residuals       14  4.6307  0.3308                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-17" class="exercise"><strong>Exercise 24.2  </strong></span>Check the assumptions of this plant only model. Do they differ significantly from the previous models?</p>
+</div>
+</div>
+<div id="revisiting-regression" class="section level3" number="24.7.3">
+<h3>
+<span class="header-section-number">24.7.3</span> Revisiting regression<a class="anchor" aria-label="anchor" href="#revisiting-regression"><i class="fas fa-link"></i></a>
+</h3>
+<p>Construct a simple linear regression model, where H2S depends only on the average daily temperature:</p>
+<div class="sourceCode" id="cb269"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># plot the data</span>
+<span class="va">airpoll</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">daily_temp</span>, y <span class="op">=</span> <span class="va">hydrogen_sulfide</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="cs5-practical-linear_models_files/figure-html/unnamed-chunk-15-1.png" width="672"></div>
+<div class="sourceCode" id="cb270"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># define the linear model</span>
+<span class="va">lm_temp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">hydrogen_sulfide</span> <span class="op">~</span> <span class="va">daily_temp</span>,
+              data <span class="op">=</span> <span class="va">airpoll</span><span class="op">)</span>
+
+<span class="co"># view the model</span>
+<span class="va">lm_temp</span>
+
+<span class="co"># perform an ANOVA on the model</span>
+<span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">lm_temp</span><span class="op">)</span></code></pre></div>
+<ul>
+<li>The model gives us the coefficients to the equation of the regression line</li>
+</ul>
+<pre><code>## 
+## Call:
+## lm(formula = hydrogen_sulfide ~ daily_temp, data = airpoll)
+## 
+## Coefficients:
+## (Intercept)   daily_temp  
+##     5.21465      0.02066</code></pre>
+<p>In this case it tells us the intercept <code>(Intercept)</code> and the gradient (<code>daily_temp</code>) of the regression line.</p>
+<ul>
+<li>The last line gives us the ANOVA analysis:</li>
+</ul>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: hydrogen_sulfide
+##            Df  Sum Sq Mean Sq F value Pr(&gt;F)
+## daily_temp  1  0.0753  0.0753   0.059 0.8117
+## Residuals  14 17.8779  1.2770</code></pre>
+<p>Temperature clearly does not have a significant effect.</p>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-18" class="exercise"><strong>Exercise 24.3  </strong></span>Again, check the assumptions of this temperature only model. Do they differ significantly from the previous models?</p>
+</div>
+</div>
+<div id="the-null-model" class="section level3" number="24.7.4">
+<h3>
+<span class="header-section-number">24.7.4</span> The null model<a class="anchor" aria-label="anchor" href="#the-null-model"><i class="fas fa-link"></i></a>
+</h3>
+<p>Construct and analyse the null model:</p>
+<div class="sourceCode" id="cb273"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># visualise the data</span>
+<span class="va">airpoll</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">hydrogen_sulfide</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="cs5-practical-linear_models_files/figure-html/unnamed-chunk-18-1.png" width="672"></div>
+<div class="sourceCode" id="cb274"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># define the null model</span>
+<span class="va">lm_null</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">hydrogen_sulfide</span> <span class="op">~</span> <span class="fl">1</span>,
+              data <span class="op">=</span> <span class="va">airpoll</span><span class="op">)</span>
+
+<span class="co"># view the model</span>
+<span class="va">lm_null</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = hydrogen_sulfide ~ 1, data = airpoll)
+## 
+## Coefficients:
+## (Intercept)  
+##       5.735</code></pre>
+<ul>
+<li>In <code>lm_null</code> we fit a null model to the data (effectively just finding the mean of all H<sub>2</sub>S values in the dataset)</li>
+<li>The null model gives us the mean of the H<sub>2</sub>S values (i.e. the coefficient of the null model)</li>
+</ul>
+<p>The null model by itself is rarely analysed for its own sake but is instead used a reference point for more sophisticated model selection techniques.</p>
+</div>
+</div>
+<div id="exercise-trees" class="section level2" number="24.8">
+<h2>
+<span class="header-section-number">24.8</span> Exercise: trees<a class="anchor" aria-label="anchor" href="#exercise-trees"><i class="fas fa-link"></i></a>
+</h2>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-19" class="exercise"><strong>Exercise 24.4  </strong></span>Trees: an example with only continuous variables</p>
+<p>Use the internal dataset trees. This is a data frame with 31 observations of 3 continuous variables. The variables are the height <code>Height</code>, diameter <code>Girth</code> and timber volume <code>Volume</code> of 31 felled black cherry trees.</p>
+<p>Investigate the relationship between <code>Volume</code> (as a dependent variable) and <code>Height</code> and <code>Girth</code> (as predictor variables).</p>
+<ul>
+<li>Here all variables are continuous and so there isn’t a way of producing a 2D plot of all three variables for visualisation purposes using R’s standard plotting functions.</li>
+<li>construct four linear models
+<ul>
+<li>Assume volume depends on <code>Height</code>, <code>Girth</code> and an interaction between <code>Girth</code> and <code>Height</code>
+</li>
+<li>Assume <code>Volume</code> depends on <code>Height</code> and <code>Girth</code> but that there isn’t any interaction between them.</li>
+<li>Assume <code>Volume</code> only depends on <code>Girth</code> (plot the result, with the regression line).</li>
+<li>Assume <code>Volume</code> only depends on <code>Height</code> (plot the result, with the regression line).</li>
+</ul>
+</li>
+<li>For each linear model write down the algebraic equation that the linear model produces that relates volume to the two continuous predictor variables.</li>
+<li>Check the assumptions of each model. Do you have any concerns?</li>
+</ul>
+<p>NB: For two continuous predictors, the interaction term is simply the two values multiplied together (so <code>Girth:Height</code> means <code>Girth x Height</code>)</p>
+<ul>
+<li>Use the equations to calculate the predicted volume of a tree that has a diameter of 20 inches and a height of 67 feet in each case.</li>
+</ul>
+<details><summary>
+Answer
+</summary><p>Let’s construct the four linear models in turn.</p>
+<div id="full-model" class="section level3" number="24.8.1">
+<h3>
+<span class="header-section-number">24.8.1</span> Full model<a class="anchor" aria-label="anchor" href="#full-model"><i class="fas fa-link"></i></a>
+</h3>
+<p>The r commands are:</p>
+<div class="sourceCode" id="cb276"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># define the model</span>
+<span class="va">lm_tree_full</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Volume</span> <span class="op">~</span> <span class="va">Height</span> <span class="op">*</span> <span class="va">Girth</span>,
+                   data <span class="op">=</span> <span class="va">trees</span><span class="op">)</span>
+
+<span class="co"># view the model</span>
+<span class="va">lm_tree_full</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Volume ~ Height * Girth, data = trees)
+## 
+## Coefficients:
+##  (Intercept)        Height         Girth  Height:Girth  
+##      69.3963       -1.2971       -5.8558        0.1347</code></pre>
+<p>We can use this output to get the following equation:</p>
+<p>Volume = 69.40 + -1.30 <span class="math inline">\(\cdot\)</span> Height + -5.86 <span class="math inline">\(\cdot\)</span> Girth + 0.13 <span class="math inline">\(\cdot\)</span> Height <span class="math inline">\(\cdot\)</span> Girth</p>
+<p>If we stick the numbers in (<code>Girth = 20</code> and <code>Height = 67</code>) we get the following equation:</p>
+<p>Volume = 69.40 + -1.30 <span class="math inline">\(\cdot\)</span> 67 + -5.86 <span class="math inline">\(\cdot\)</span> 20 + 0.13 <span class="math inline">\(\cdot\)</span> 67 <span class="math inline">\(\cdot\)</span> 20</p>
+<p>Volume = 45.81</p>
+<p>Here we note that the interaction term just requires us to multiple the three numbers together (we haven’t looked at continuous predictors before in the examples and this exercise was included as a check to see if this whole process was making sense).</p>
+<p>If we look at the diagnostic plots for the model using the following commands we get:</p>
+<div class="sourceCode" id="cb278"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lm_tree_full</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://goodekat.github.io/ggResidpanel/reference/resid_panel.html">resid_panel</a></span><span class="op">(</span>plots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"resid"</span>, <span class="st">"qq"</span>, <span class="st">"ls"</span>, <span class="st">"cookd"</span><span class="op">)</span>,
+              smoother <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="cs5-practical-linear_models_files/figure-html/unnamed-chunk-20-1.png" width="672"></div>
+<p>All assumptions are OK.</p>
+<ul>
+<li>There is some suggestion of heterogeneity of variance (with the variance being lower for small and large fitted (i.e. predicted Volume) values), but that can be attributed to there only being a small number of data points at the edges, so I’m not overly concerned.</li>
+<li>Similarly, there is a suggestion of snaking in the Q-Q plot (suggesting some lack of normality) but this is mainly due to the inclusion of one data point and overall the plot looks acceptable.</li>
+<li>There are no highly influential points</li>
+</ul>
+</div>
+<div id="additive-model-1" class="section level3" number="24.8.2">
+<h3>
+<span class="header-section-number">24.8.2</span> Additive model<a class="anchor" aria-label="anchor" href="#additive-model-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>The r commands are:</p>
+<div class="sourceCode" id="cb279"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># define the model</span>
+<span class="va">lm_tree_add</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Volume</span> <span class="op">~</span> <span class="va">Height</span> <span class="op">+</span> <span class="va">Girth</span>,
+                  data <span class="op">=</span> <span class="va">trees</span><span class="op">)</span>
+
+<span class="co"># view the model</span>
+<span class="va">lm_tree_add</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Volume ~ Height + Girth, data = trees)
+## 
+## Coefficients:
+## (Intercept)       Height        Girth  
+##    -57.9877       0.3393       4.7082</code></pre>
+<p>We can use this output to get the following equation:</p>
+<p>Volume = -57.99 + 0.34 <span class="math inline">\(\cdot\)</span> Height + 4.71 <span class="math inline">\(\cdot\)</span> Girth</p>
+<p>If we stick the numbers in (<code>Girth = 20</code> and <code>Height = 67</code>) we get the following equation:</p>
+<p>Volume = -57.99 + 0.34 <span class="math inline">\(\cdot\)</span> 67 + 4.71 <span class="math inline">\(\cdot\)</span> 20</p>
+<p>Volume = 58.91</p>
+<p>If we look at the diagnostic plots for the model using the following commands we get the following:</p>
+<div class="sourceCode" id="cb281"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lm_tree_add</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://goodekat.github.io/ggResidpanel/reference/resid_panel.html">resid_panel</a></span><span class="op">(</span>plots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"resid"</span>, <span class="st">"qq"</span>, <span class="st">"ls"</span>, <span class="st">"cookd"</span><span class="op">)</span>,
+              smoother <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="cs5-practical-linear_models_files/figure-html/unnamed-chunk-22-1.png" width="672"></div>
+<p>This model isn’t great.</p>
+<ul>
+<li>There is a worrying lack of linearity exhibited in the Residuals plot suggesting that this linear model isn’t appropriate.</li>
+<li>Assumptions of Normality seem OK</li>
+<li>Equality of variance is harder to interpret. Given the lack of linearity in the data it isn’t really sensible to interpret the Location-Scale plot as it stands (since the plot is generated assuming that we’ve fitted a straight line through the data), but for the sake of practising interpretation we’ll have a go. There is definitely suggestions of heterogeneity of variance here with a cluster of points with fitted values of around 20 having noticeably lower variance than the rest of the dataset.</li>
+<li>One point is influential and if there weren’t issues with the linearity of the model I would remove this point and repeat the analysis. As it stands there isn’t much point.</li>
+</ul>
+</div>
+<div id="height-only-model" class="section level3" number="24.8.3">
+<h3>
+<span class="header-section-number">24.8.3</span> Height-only model<a class="anchor" aria-label="anchor" href="#height-only-model"><i class="fas fa-link"></i></a>
+</h3>
+<p>The r commands are:</p>
+<div class="sourceCode" id="cb282"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># define the model</span>
+<span class="va">lm_height</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Volume</span> <span class="op">~</span> <span class="va">Height</span>,
+              data <span class="op">=</span> <span class="va">trees</span><span class="op">)</span>
+
+<span class="co"># view the model</span>
+<span class="va">lm_height</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Volume ~ Height, data = trees)
+## 
+## Coefficients:
+## (Intercept)       Height  
+##     -87.124        1.543</code></pre>
+<p>We can use this output to get the following equation:</p>
+<p>Volume = `-87.12 + 1.54 <span class="math inline">\(\cdot\)</span> Height</p>
+<p>If we stick the numbers in (<code>Girth = 20</code> and <code>Height = 67</code>) we get the following equation:</p>
+<p>Volume = -87.12 + 1.54 <span class="math inline">\(\cdot\)</span> 67</p>
+<p>Volume = 16.28</p>
+<p>If we look at the diagnostic plots for the model using the following commands we get the following:</p>
+<div class="sourceCode" id="cb284"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lm_height</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://goodekat.github.io/ggResidpanel/reference/resid_panel.html">resid_panel</a></span><span class="op">(</span>plots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"resid"</span>, <span class="st">"qq"</span>, <span class="st">"ls"</span>, <span class="st">"cookd"</span><span class="op">)</span>,
+              smoother <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="cs5-practical-linear_models_files/figure-html/unnamed-chunk-24-1.png" width="672"></div>
+<p>This model also isn’t great.</p>
+<ul>
+<li>The main issue here is the clear heterogeneity of variance. For trees with bigger volumes the data are much more spread out than for trees with smaller volumes (as can be seen clearly from the Location-Scale plot).</li>
+<li>Apart from that, the assumption of Normality seems OK</li>
+<li>And there aren’t any hugely influential points in this model</li>
+</ul>
+</div>
+<div id="girth-only-model" class="section level3" number="24.8.4">
+<h3>
+<span class="header-section-number">24.8.4</span> Girth-only model<a class="anchor" aria-label="anchor" href="#girth-only-model"><i class="fas fa-link"></i></a>
+</h3>
+<p>The r commands are:</p>
+<div class="sourceCode" id="cb285"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># define the model</span>
+<span class="va">lm_girth</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Volume</span> <span class="op">~</span> <span class="va">Girth</span>,
+               data <span class="op">=</span> <span class="va">trees</span><span class="op">)</span>
+
+<span class="co"># view the model</span>
+<span class="va">lm_girth</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Volume ~ Girth, data = trees)
+## 
+## Coefficients:
+## (Intercept)        Girth  
+##     -36.943        5.066</code></pre>
+<p>We can use this output to get the following equation:</p>
+<p>Volume = -36.94 + 5.07 <span class="math inline">\(\cdot\)</span> Girth</p>
+<p>If we stick the numbers in (<code>Girth = 20</code> and <code>Height = 67</code>) we get the following equation:</p>
+<p>Volume = -36.94 + 5.07 <span class="math inline">\(\cdot\)</span> 20</p>
+<p>Volume = 64.37</p>
+<p>If we look at the diagnostic plots for the model using the following commands we get the following:</p>
+<div class="sourceCode" id="cb287"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lm_girth</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://goodekat.github.io/ggResidpanel/reference/resid_panel.html">resid_panel</a></span><span class="op">(</span>plots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"resid"</span>, <span class="st">"qq"</span>, <span class="st">"ls"</span>, <span class="st">"cookd"</span><span class="op">)</span>,
+              smoother <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="cs5-practical-linear_models_files/figure-html/unnamed-chunk-26-1.png" width="672"></div>
+<p>The diagnostic plots here look rather similar to the ones we generated for the additive model and we have the same issue with a lack of linearity, heterogeneity of variance and one of the data points being influential.</p>
+
+</div>
+</details>
+</div>
+</div>
+<div id="key-points-8" class="section level2" number="24.9">
+<h2>
+<span class="header-section-number">24.9</span> Key points<a class="anchor" aria-label="anchor" href="#key-points-8"><i class="fas fa-link"></i></a>
+</h2>
+<div class="keypoints">
+<ul>
+<li>We can define a linear model with <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code>, adding extra variables</li>
+<li>Using the coefficients of the model we can construct the linear model equation</li>
+<li>The underlying assumptions of a linear model with three predictor variables are the same as those of a two-way ANOVA</li>
+</ul>
+</div>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="introduction-4.html"><span class="header-section-number">23</span> Introduction</a></div>
+<div class="next"><a href="model-comparisons.html"><span class="header-section-number">25</span> Model comparisons</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#linear-models"><span class="header-section-number">24</span> Linear models</a></li>
+<li><a class="nav-link" href="#objectives-11"><span class="header-section-number">24.1</span> Objectives</a></li>
+<li><a class="nav-link" href="#purpose-and-aim-8"><span class="header-section-number">24.2</span> Purpose and aim</a></li>
+<li><a class="nav-link" href="#section-commands-12"><span class="header-section-number">24.3</span> Section commands</a></li>
+<li><a class="nav-link" href="#data-and-hypotheses-11"><span class="header-section-number">24.4</span> Data and hypotheses</a></li>
+<li><a class="nav-link" href="#summarise-and-visualise-12"><span class="header-section-number">24.5</span> Summarise and visualise</a></li>
+<li><a class="nav-link" href="#implemention"><span class="header-section-number">24.6</span> Implemention</a></li>
+<li>
+<a class="nav-link" href="#exploring-models"><span class="header-section-number">24.7</span> Exploring models</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#additive-model"><span class="header-section-number">24.7.1</span> Additive model</a></li>
+<li><a class="nav-link" href="#revisiting-anova"><span class="header-section-number">24.7.2</span> Revisiting ANOVA</a></li>
+<li><a class="nav-link" href="#revisiting-regression"><span class="header-section-number">24.7.3</span> Revisiting regression</a></li>
+<li><a class="nav-link" href="#the-null-model"><span class="header-section-number">24.7.4</span> The null model</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#exercise-trees"><span class="header-section-number">24.8</span> Exercise: trees</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#full-model"><span class="header-section-number">24.8.1</span> Full model</a></li>
+<li><a class="nav-link" href="#additive-model-1"><span class="header-section-number">24.8.2</span> Additive model</a></li>
+<li><a class="nav-link" href="#height-only-model"><span class="header-section-number">24.8.3</span> Height-only model</a></li>
+<li><a class="nav-link" href="#girth-only-model"><span class="header-section-number">24.8.4</span> Girth-only model</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#key-points-8"><span class="header-section-number">24.9</span> Key points</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+					</div>
+				</div>
+				<!-- Related links -->
+				<!--<div class="campl-column3 campl-secondary-content">
+					<div class="campl-content-container">
+						<div class="campl-heading-container">
+							<h2>Related Links</h2>
+						</div>
+						<ul class='campl-unstyled-list campl-related-links'>
+							<li><a href="#">Lorem ipsum dolor sit amet</a></li>
+							<li><a href="#">Consectetur adipisicing elit</a></li>
+							<li><a href="#">Sed do eiusmod tempor incididunt extra long wrapping on to two line</a></li>
+							<li><a href="#">Labore et dolore magna aliqua</a></li>
+							<li><a href="#">Ut enim ad minim veniam</a></li>
+							<li><a href="#">Quis nostrud exercitation ullamco</a></li>
+						</ul>
+					</div>
+					<div class="campl-content-container">
+						<div class="campl-vertical-teaser campl-teaser campl-promo-teaser">
+							<div class="campl-content-container campl-vertical-teaser-txt">
+								<p class='campl-teaser-title'><a href="#">Promo teaser with title above</a></p>
+							</div>
+							<div class="campl-content-container campl-vertical-teaser-img">
+								<a href="#" class="campl-teaser-img-link"><img alt=""  src="images/content/homepage-promo-placeholder.png" class="campl-scale-with-grid" /></a>
+							</div>
+							<div class="campl-content-container campl-vertical-teaser-txt clearfix">
+								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+								<a href="#4" class="campl-secondary-cta campl-float-right">Read more</a>
+							</div>
+						</div>
+					</div>
+				</div>-->
+			</div>
+		</div>
+		<div class="campl-row campl-local-footer">
+			<div class="campl-wrap clearfix">
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Contact us</h3>
+						 <div class="content">
+						   <p>Bioinformatics Training Department of Genetics University of Cambridge Downing Street Cambridge CB2 3EH United Kingdom</p>
+						   <h3>Contact:</h3> <a href="mailto:%20bioinfotraining@bio.cam.ac.uk">bioinfotraining@bio.cam.ac.uk</a>
+						 </div>
+					</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Bioinformatics Training</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/undergraduate">Undergraduate training</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate">Postgraduate training</a>
+							</li>
+						</ul>
+</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Postgraduate Courses by Theme</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/programming">Basic Skills and Programming</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/services">Databases and Services</a>
+							</li>
+							<li>
+							  <a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/specialized">Specialised Topics</a>
+							</li>
+						</ul>
+</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation last">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>About Bioinformatics Training</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about">About the Facility</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about/findus">How to find us</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about/visitors">Visiting Cambridge</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/privacy-and-cookie-policies">Privacy and Cookies policy</a>
+							</li>
+						</ul>
+</div>
+				</div>
+			</div>
+		</div>
+	<div class="campl-row campl-global-footer">
+		<div class="campl-wrap clearfix">
+			<div class="campl-column3 campl-footer-navigation">
+				<div class="campl-content-container campl-footer-logo">
+					<img alt="University of Cambridge" src="images/interface/main-logo-small.png" height="38px;" class="campl-scale-with-grid"><p>© 2021 University of Cambridge</p>
+						<ul class="campl-unstyled-list campl-global-footer-links">
+<li>
+								<a href="http://www.cam.ac.uk/university-a-z">University A-Z</a>
+							</li>
+							<li>
+								<a href="http://www.cam.ac.uk/contact-the-university">Contact the University</a>
+							</li>
+							<li>
+								<a href="http://www.cam.ac.uk/about-this-site/accessibility">Accessibility</a>
+							</li>
+							<li>
+								<a href="http://www.admin.cam.ac.uk/univ/information/foi/">Freedom of information</a>
+							</li>
+							<li>
+								<a href="http://www.cam.ac.uk/about-this-site/terms-and-conditions">Terms and conditions</a>
+							</li>
+						</ul>
+</div>
+			</div>
+			<div class="campl-column3 campl-footer-navigation">
+				<div class="campl-content-container campl-navigation-list">
+
+					<div class="link-list">
+						<h3><a href="http://www.cam.ac.uk/study-at-cambridge">Study at Cambridge</a></h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="http://www.study.cam.ac.uk/undergraduate/">Undergraduate</a>
+							</li>
+							<li>
+								<a href="http://www.graduate.study.cam.ac.uk/">Graduate</a>
+							</li>
+							<li>
+								<a href="http://www.internationalstudents.cam.ac.uk">International students</a>
+							</li>
+							<li>
+								<a href="http://www.ice.cam.ac.uk">Continuing education</a>
+							</li>
+							<li>
+								<a href="http://www.epe.admin.cam.ac.uk/">Executive and professional education</a>
+							</li>
+							<li>
+								<a href="http://www.educ.cam.ac.uk">Courses in education</a>
+							</li>
+						</ul>
+</div>
+				</div>
+			</div>
+			<div class="campl-column3 campl-footer-navigation">
+				<div class="campl-content-container campl-navigation-list">
+					<h3><a href="http://www.cam.ac.uk/about-the-university">About the University</a></h3>
+					<ul class="campl-unstyled-list campl-page-children">
+<li>
+							<a href="http://www.cam.ac.uk/about-the-university/how-the-university-and-colleges-work">How the University and Colleges work</a>
+						</li>
+						<li>
+							<a href="http://www.cam.ac.uk/about-the-university/visiting-the-university">Visiting the University</a>
+						</li>
+						<li>
+							<a href="http://map.cam.ac.uk">Map</a>
+						</li>
+						<li>
+							<a href="http://www.cam.ac.uk/news">News</a>
+						</li>
+						<li>
+							<a href="http://www.admin.cam.ac.uk/whatson/">Events</a>
+						</li>
+						<li>
+							<a href="http://www.jobs.cam.ac.uk">Jobs</a>
+						</li>
+						<li>
+							<a href="https://www.philanthropy.cam.ac.uk/">Give to Cambridge</a>
+						</li>
+					</ul>
+</div>
+			</div>
+			<div class="campl-column3 campl-footer-navigation last">
+				<div class="campl-content-container campl-navigation-list">
+					<h3><a href="http://www.cam.ac.uk/research">Research at Cambridge</a></h3>
+					<ul class="campl-unstyled-list">
+<li>
+							<a href="http://www.cam.ac.uk/research/news">News</a>
+						</li>
+						<li>
+							<a href="http://www.cam.ac.uk/research/features">Features</a>
+						</li>
+						<li>
+							<a href="http://www.cam.ac.uk/research/discussion">Discussion</a>
+						</li>
+						<li>
+							<a href="http://www.cam.ac.uk/research/spotlight-on">Spotlight on...</a>
+						</li>
+						<li>
+							<a href="http://www.cam.ac.uk/research/research-at-cambridge">About research at Cambridge</a>
+						</li>
+					</ul>
+</div>
+			</div>
+		</div>
+	</div>
+	<!-- .campl-global-footer ends -->
+
+<!--[if lte IE 8]>
+</div>
+<![endif]-->
+
+	<script type="text/javascript" src="javascripts/libs/ios-orientationchange-fix.js"></script><script type="text/javascript" src="javascripts/libs/jquery-min.js"></script><script type="text/javascript" src="javascripts/libs/modernizr.js"></script><script type="text/javascript" src="javascripts/custom.js"></script><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

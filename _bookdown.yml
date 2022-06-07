@@ -1,0 +1,46 @@
+book_filename: "Core statistics in R"
+new_session: true
+delete_merged_file: true
+
+rmd_files: [
+  "index.Rmd",
+
+  #"cs1-intro.Rmd",
+  ##"cs1-background.Rmd",
+  "cs1-practical-introduction.Rmd",
+  "cs1-practical-one_sample_t_test.Rmd",
+  #"cs1-practical-one_sample_wilcoxon.Rmd",
+  #"cs1-practical-two_sample_t_test.Rmd",
+  #"cs1-practical-two_sample_mann_whitney.Rmd",
+  #"cs1-practical-two_sample_paired_t_test.Rmd",
+  #"cs1-practical-two_sample_wilcoxon.Rmd",
+
+  #"cs2-intro.Rmd",
+  #"cs2-practical-introduction.Rmd",
+  #"cs2-practical-anova.Rmd",
+  #"cs2-practical-kruskal.Rmd",
+
+  #"cs3-intro.Rmd",
+  #"cs3-practical-introduction.Rmd",
+  #"cs3-practical-correlation_coefficients.Rmd",
+  #"cs3-practical-linear_regression.Rmd",
+
+  #"cs4-intro.Rmd",
+  #"cs4-practical-introduction.Rmd",
+  #"cs4-practical-two_way_anova.Rmd",
+  #"cs4-practical-linear_regression_grouped_data.Rmd",
+
+  #"cs5-intro.Rmd",
+  #"cs5-practical-introduction.Rmd",
+  #"cs5-practical-linear_models.Rmd",
+  #"cs5-practical-model_comparison.Rmd",
+
+  ##"cs6-intro.Rmd",
+  ##"cs6-practical-introduction.Rmd",
+  ##"cs6-practical-power_analysis.Rmd",
+  ##"cs6-practical-statistical_reporting.Rmd",
+]
+
+language:
+  ui:
+    chapter_name: "Chapter "

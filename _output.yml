@@ -1,0 +1,4 @@
+bookdown::bs4_book:
+  theme:
+    primary: "#004e8f"
+  template: templates/uoc_template.html

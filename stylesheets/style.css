@@ -1,0 +1,144 @@
+p.caption {
+  color: #777;
+  margin-top: 10px;
+}
+p code {
+  white-space: inherit;
+}
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}
+pre code {
+  white-space: inherit;
+}
+
+/* ---------------------------------- */
+/* ----------- odd things ----------- */
+/* ---------------------------------- */
+
+/* Default - turquoise */
+
+/* Theme 1 - blue
+	#003e74 page header colours/global footer
+  Theme 2 - turquoise
+	#106470 page header colours/global footer
+  Theme 3 - purple
+	#422e5d page header colours/global footer
+  Theme 4 - green
+	#304220 page header colours/global footer
+  Theme 5 - orange
+	#c44101 page header colours/global footer
+  Theme 6 - red
+	#851735 page header colours/global footer
+*/
+
+.box, .exercise, .keypoints, .objectives, .highlight, .warning, .note{background-color: #f7f8fa}
+
+/* change the border colour to match the theme */
+div.highlight, div.keypoints, div.objectives{border-left: 10px solid #106470}
+
+/* odd things from the full-stylesheet that need a nicer solution at some point */
+
+/* make a:hover white for local navigation */
+div.campl-local-navigation-container li a:hover{color:#fff;text-decoration: none;}
+
+/* reduce font size for global and local navigation, local footer and global footer */
+/*.campl-global-header, .campl-header-container, .campl-global-navigation, .campl-horizontal-navigation, .campl-local-navigation,*/ .campl-local-footer, .campl-global-footer, .campl-horizontal-navigation li a, .campl-global-navigation li a, div.campl-search-input, div.campl-quicklinks{font-size: 0.8em}
+
+/* ---------------------------------- */
+/* ---- bookdown specific things ---- */
+/* ---------------------------------- */
+
+li.book-part{background-color:#f7f8fa; font-weight: bold} /* make the part sections headers stand out more */
+
+/* Boxes and exercises */
+/*@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');*/
+
+/* Make sure that images are rescaled to a maximum of 100% instead of fixed size */
+div.inline-figure img{max-width: 100%}
+
+div.exercise img{max-width: 100%}
+
+/* Style properties for exercise */
+div.exercise {
+  /*box-shadow: 0 0 3px 2px #fcedd7;*/
+  background-image: url("../img/exercise.svg");
+  padding: 1em 1em 1em 3em;
+  /* specify the image properties */
+  background-repeat: no-repeat;
+  background-position: 0.5em 1em;
+  background-size: 2em;
+  margin: 10px;
+  color: black;
+}
+
+/*---- "details" element ----*/
+/* usually used for exercise answers */
+
+details {
+  padding: .5rem 1rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+details summary > * {
+  display: inline;
+}
+
+/*---- Boxes ---- */
+/* at the moment all have same colour, but this can be adjusted in the future */
+
+.box,
+.objectives,
+.keypoints,
+.warning,
+.note,
+.highlight {
+  padding: 1em 1em 1em 3em;
+  /* specify the image properties */
+  background-repeat: no-repeat;
+  background-position: 0.5em 1em;
+  background-size: 2em;
+  margin: 10px;
+  color: black;
+}
+
+.warning:before,
+.note:before,
+.highlight:before {
+  font-weight: bold;
+  font-size: 13px;
+  color: black;
+}
+
+.objectives {
+  background-image: url("../img/warning.svg"); /* https://fonts.gstatic.com/s/i/materialiconsoutlined/error_outline/v11/24px.svg */
+}
+
+.keypoints {
+  background-image: url("../img/warning.svg"); /* https://fonts.gstatic.com/s/i/materialiconsoutlined/error_outline/v11/24px.svg */
+}
+
+.warning {
+  /*box-shadow: 0 0 3px 2px #fce4e1;*/
+  background-image: url("../img/warning.svg"); /* https://fonts.gstatic.com/s/i/materialiconsoutlined/error_outline/v11/24px.svg */
+}
+
+.note {
+  color: #1b1b1b;
+  /*box-shadow: 0 0 3px 2px #ebebf2;*/
+  background-image: url("../img/note.svg"); /*https://fonts.gstatic.com/s/i/materialiconsoutlined/info/v15/24px.svg*/
+}
+
+.highlight {
+  background-image: url("../img/highlight.svg"); /* https://fonts.gstatic.com/s/i/materialiconsoutlined/tips_and_updates/v1/24px.svg */
+}
+
+.box {
+  padding-left: 1em;
+}
+
