@@ -645,10 +645,9 @@ There are three ways of checking for normality:</p>
 <div class="panel">
 <p><span class="panel-name">Python</span></p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="cs1-one-sample-t-test.html#cb22-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb22-2"><a href="cs1-one-sample-t-test.html#cb22-2" aria-hidden="true" tabindex="-1"></a>  fishlength_py <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
-<span id="cb22-3"><a href="cs1-one-sample-t-test.html#cb22-3" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> <span class="st">"length"</span>))</span>
-<span id="cb22-4"><a href="cs1-one-sample-t-test.html#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_histogram(bins <span class="op">=</span> <span class="dv">15</span>)</span>
-<span id="cb22-5"><a href="cs1-one-sample-t-test.html#cb22-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<span id="cb22-2"><a href="cs1-one-sample-t-test.html#cb22-2" aria-hidden="true" tabindex="-1"></a>  ggplot(fishlength_py, aes(x <span class="op">=</span> <span class="st">"length"</span>))</span>
+<span id="cb22-3"><a href="cs1-one-sample-t-test.html#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_histogram(bins <span class="op">=</span> <span class="dv">15</span>)</span>
+<span id="cb22-4"><a href="cs1-one-sample-t-test.html#cb22-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-12-1.png" width="614"></div>
 </div>
 </div>
@@ -684,11 +683,10 @@ There are three ways of checking for normality:</p>
 <div class="panel">
 <p><span class="panel-name">Python</span></p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="cs1-one-sample-t-test.html#cb25-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb25-2"><a href="cs1-one-sample-t-test.html#cb25-2" aria-hidden="true" tabindex="-1"></a>  fishlength_py <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
-<span id="cb25-3"><a href="cs1-one-sample-t-test.html#cb25-3" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(sample <span class="op">=</span> <span class="st">"length"</span>))</span>
-<span id="cb25-4"><a href="cs1-one-sample-t-test.html#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> stat_qq()</span>
-<span id="cb25-5"><a href="cs1-one-sample-t-test.html#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> stat_qq_line()</span>
-<span id="cb25-6"><a href="cs1-one-sample-t-test.html#cb25-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<span id="cb25-2"><a href="cs1-one-sample-t-test.html#cb25-2" aria-hidden="true" tabindex="-1"></a>  ggplot(fishlength_py, aes(sample <span class="op">=</span> <span class="st">"length"</span>))</span>
+<span id="cb25-3"><a href="cs1-one-sample-t-test.html#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> stat_qq()</span>
+<span id="cb25-4"><a href="cs1-one-sample-t-test.html#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> stat_qq_line()</span>
+<span id="cb25-5"><a href="cs1-one-sample-t-test.html#cb25-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-15-1.png" width="614"></div>
 </div>
 </div>
@@ -1034,15 +1032,15 @@ Answer
 <p>We can look at the histogram and box plot of the data:</p>
 <div class="sourceCode" id="cb55"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb55-1"><a href="cs1-one-sample-t-test.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a histogram</span></span>
 <span id="cb55-2"><a href="cs1-one-sample-t-test.html#cb55-2" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb55-3"><a href="cs1-one-sample-t-test.html#cb55-3" aria-hidden="true" tabindex="-1"></a>dissolving_py <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
-<span id="cb55-4"><a href="cs1-one-sample-t-test.html#cb55-4" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> <span class="st">"dissolving_time"</span>))</span>
+<span id="cb55-3"><a href="cs1-one-sample-t-test.html#cb55-3" aria-hidden="true" tabindex="-1"></a>  ggplot(dissolving_py,</span>
+<span id="cb55-4"><a href="cs1-one-sample-t-test.html#cb55-4" aria-hidden="true" tabindex="-1"></a>    aes(x <span class="op">=</span> <span class="st">"dissolving_time"</span>))</span>
 <span id="cb55-5"><a href="cs1-one-sample-t-test.html#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_histogram(bins <span class="op">=</span> <span class="dv">4</span>)</span>
 <span id="cb55-6"><a href="cs1-one-sample-t-test.html#cb55-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-30-1.png" width="614"></div>
 <div class="sourceCode" id="cb56"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb56-1"><a href="cs1-one-sample-t-test.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a box plot</span></span>
 <span id="cb56-2"><a href="cs1-one-sample-t-test.html#cb56-2" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb56-3"><a href="cs1-one-sample-t-test.html#cb56-3" aria-hidden="true" tabindex="-1"></a>  dissolving_py <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
-<span id="cb56-4"><a href="cs1-one-sample-t-test.html#cb56-4" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> <span class="dv">1</span>, y <span class="op">=</span> <span class="st">"dissolving_time"</span>))</span>
+<span id="cb56-3"><a href="cs1-one-sample-t-test.html#cb56-3" aria-hidden="true" tabindex="-1"></a>  ggplot(dissolving_py,</span>
+<span id="cb56-4"><a href="cs1-one-sample-t-test.html#cb56-4" aria-hidden="true" tabindex="-1"></a>    aes(x <span class="op">=</span> <span class="dv">1</span>, y <span class="op">=</span> <span class="st">"dissolving_time"</span>))</span>
 <span id="cb56-5"><a href="cs1-one-sample-t-test.html#cb56-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_boxplot()</span>
 <span id="cb56-6"><a href="cs1-one-sample-t-test.html#cb56-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-31-3.png" width="614"></div>
@@ -1101,8 +1099,8 @@ Answer
 <pre><code>## ShapiroResult(statistic=0.9802342057228088, pvalue=0.9640541672706604)</code></pre>
 <div class="sourceCode" id="cb65"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb65-1"><a href="cs1-one-sample-t-test.html#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a Q-Q plot</span></span>
 <span id="cb65-2"><a href="cs1-one-sample-t-test.html#cb65-2" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb65-3"><a href="cs1-one-sample-t-test.html#cb65-3" aria-hidden="true" tabindex="-1"></a>  dissolving_py <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
-<span id="cb65-4"><a href="cs1-one-sample-t-test.html#cb65-4" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(sample <span class="op">=</span> <span class="st">"dissolving_time"</span>))</span>
+<span id="cb65-3"><a href="cs1-one-sample-t-test.html#cb65-3" aria-hidden="true" tabindex="-1"></a>  ggplot(dissolving_py,</span>
+<span id="cb65-4"><a href="cs1-one-sample-t-test.html#cb65-4" aria-hidden="true" tabindex="-1"></a>    aes(sample <span class="op">=</span> <span class="st">"dissolving_time"</span>))</span>
 <span id="cb65-5"><a href="cs1-one-sample-t-test.html#cb65-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> stat_qq()</span>
 <span id="cb65-6"><a href="cs1-one-sample-t-test.html#cb65-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> stat_qq_line()</span>
 <span id="cb65-7"><a href="cs1-one-sample-t-test.html#cb65-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>

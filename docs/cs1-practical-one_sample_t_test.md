@@ -300,8 +300,7 @@ hist(fishlength_r, breaks = 15)
 
 ```python
 (
-  fishlength_py >> \
-  ggplot(aes(x = "length"))
+  ggplot(fishlength_py, aes(x = "length"))
   + geom_histogram(bins = 15)
 )
 ```
@@ -353,8 +352,7 @@ qqline(fishlength_r)
 
 ```python
 (
-  fishlength_py >> \
-  ggplot(aes(sample = "length"))
+  ggplot(fishlength_py, aes(sample = "length"))
   + stat_qq()
   + stat_qq_line()
 )
@@ -798,8 +796,8 @@ We can look at the histogram and box plot of the data:
 ```python
 # create a histogram
 (
-dissolving_py >> \
-  ggplot(aes(x = "dissolving_time"))
+  ggplot(dissolving_py,
+    aes(x = "dissolving_time"))
   + geom_histogram(bins = 4)
 )
 ```
@@ -810,8 +808,8 @@ dissolving_py >> \
 ```python
 # create a box plot
 (
-  dissolving_py >> \
-  ggplot(aes(x = 1, y = "dissolving_time"))
+  ggplot(dissolving_py,
+    aes(x = 1, y = "dissolving_time"))
   + geom_boxplot()
 )
 ```
@@ -902,8 +900,8 @@ stats.shapiro(dissolving_py.dissolving_time)
 ```python
 # Create a Q-Q plot
 (
-  dissolving_py >> \
-  ggplot(aes(sample = "dissolving_time"))
+  ggplot(dissolving_py,
+    aes(sample = "dissolving_time"))
   + stat_qq()
   + stat_qq_line()
 )
