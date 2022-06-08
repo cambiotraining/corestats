@@ -33,6 +33,26 @@ xaringanExtra::style_panelset_tabs(font_family = "inherit")
 |`qqline()`| Adds a comparison line to the Q-Q plot.|
 |`shapiro.test()`| Performs a Shapiro-Wilk test for normality.|
 :::
+
+::: {.panel}
+[Python]{.panel-name}
+
+| Library / function| Description|
+|:- |:- |
+|`plotnine`| The Python equivalent of `ggplot2`.|
+|`pandas`| A Python data analysis and manipulation tool.|
+
+```{python, results='hide'}
+from plotnine import *
+from scipy import stats
+import pandas as pd
+from datar.all import *
+from pipda import options
+
+options.assume_all_piping = True
+```
+
+:::
 :::::
 
 ## Data and hypotheses
@@ -89,6 +109,20 @@ fishlength_r <- fishlengthDF$length
 
 The first line reads the data into R and creates an object called a data frame. This data frame only contains a single column of numbers called "Guanapo" (the name of the river). In most situations, and for most statistical analyses, having our data stored in a data frame is exactly what we’d want. However, for one sample tests we actually need our data to be stored as a vector. So, the second line extracts the values that are in the `Guanapo` column of our `fishlengthDF` data frame and creates a simple vector of numbers that we have called `fishlength_r` This step is only necessary for one-sample tests and when we look at more complex data sets, we won’t need to do this second step at all.
 :::
+
+::: {.panel}
+[Python]{.panel-name}
+We then read the data in:
+
+```{python}
+# load the data
+fishlength_py = pd.read_csv('data/tidy/CS1-onesample.csv')
+
+# inspect the data
+fishlength_py.head()
+```
+
+:::
 :::::
 
 ## Summarise and visualise
@@ -114,6 +148,25 @@ summary(fishlength_r)
 
 boxplot(fishlength_r, main = "Male guppies", ylab = "Length (mm)")
 ```
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+First we have a look at a numerical summary of the data:
+
+```{python}
+fishlength_py.describe()
+```
+
+```{python, results='hide'}
+(
+  ggplot(fishlength_py,
+    aes(x = 'river',
+        y = 'length'))
+  + geom_boxplot()
+)
+```
+
 :::
 :::::
 The data do not appear to contain any obvious errors, and whilst both the mean and median are less than 20 (`r fishlengthDF %>% summarise(mean = mean(length)) %>% pull() %>% round(digits = 1)` and `r fishlengthDF %>% summarise(median = median(length)) %>% pull() %>% round(digits = 1)` respectively) it is not absolutely certain that the sample mean is sufficiently different from this value to be "statistically significant", although we may anticipate such a result.
@@ -162,6 +215,18 @@ fishlengthDF %>%
 hist(fishlength_r, breaks = 15)
 ```
 :::
+
+::: {.panel}
+[Python]{.panel-name}
+
+```{python, results='hide'}
+(
+  fishlength_py >> \
+  ggplot(aes(x = "length"))
+  + geom_histogram(bins = 15)
+)
+```
+:::
 :::::
 
 The distribution appears to be uni-modal and symmetric, and so it isn’t obviously non-normal. However, there are a lot of distributions that have these simple properties but which aren’t normal, so this isn’t exactly rigorous. Thankfully there are other, more rigorous tests.
@@ -194,7 +259,21 @@ qqnorm(fishlength_r)
 qqline(fishlength_r)
 ```
 :::
+
+::: {.panel}
+[Python]{.panel-name}
+
+```{python, results='hide'}
+(
+  fishlength_py >> \
+  ggplot(aes(sample = "length"))
+  + stat_qq()
+  + stat_qq_line()
+)
+```
+:::
 :::::
+
 What is important to know is that if the data were normally distributed then all of the points should lie on (or close to) the diagonal line in this graph.
 
 In this case, the points lie quite close to the line for the most part but the sample quantiles (points) from either end of the sample distribution are either smaller (below the line on the left) or larger (above the line on the right) than expected if they were supposed to be normally distributed. This suggests that the sample distribution is a bit more spread out than would be expected if it came from a normal distribution.
@@ -269,7 +348,7 @@ fishlengthDF %>%
 
 ::: {.panel}
 [base R]{.panel-name}
-```{r cs1-one-sample-shapiro-test}
+```{r}
 shapiro.test(fishlength_r)
 ```
 
@@ -278,6 +357,15 @@ shapiro.test(fishlength_r)
 -	The calculated w-value is 0.9494 (we don’t need to know this)
 -	The p-value is 0.1764 
 :::
+
+::: {.panel}
+[Python]{.panel-name}
+
+```{python}
+stats.shapiro(fishlength_py.length)
+```
+:::
+
 :::::
 
 As the p-value is bigger than 0.05 (say) then we can say that there is insufficient evidence to reject the null hypothesis that the sample came from a normal distribution.
@@ -318,13 +406,29 @@ The `t_test()` function requires three arguments:
 ::: {.panel}
 [base R]{.panel-name}
 ```{r}
-t.test(fishlength_r, mu = 20, alternative = "two.sided")
+t.test(fishlength_r,
+       mu = 20,
+       alternative = "two.sided")
 ```
 
 -	The first argument must be a numerical vector of data values.
 -	The second argument must be a number and is the mean to be tested under the null hypothesis.
 -	The third argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`. We have no prior assumptions on whether the alternative fish length would be greater or less than 20, so we choose `two.sided`.
 
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+```{python, results='hide'}
+stats.ttest_1samp(fishlength_py.length,
+                  popmean = 20, 
+                  alternative = "two-sided")
+```
+
+* The first argument must be a numerical series of data values.
+* The second argument must be a number and is the mean to be tested under the null hypothesis.
+
+In Python you can only two a two-sided 1-sample t-test (i.e. you can only test whether the mean is different from 20 but not whether it is greater than or less than – why they chose to do this is beyond me).
 :::
 :::::
 
@@ -350,7 +454,9 @@ fishlengthDF %>%
 ::: {.panel}
 [base R]{.panel-name}
 ```{r, echo=FALSE}
-t.test(fishlength_r, mu = 20, alternative = "two.sided")
+t.test(fishlength_r,
+       mu = 20,
+       alternative = "two.sided")
 ```
 
 -	The 1st line gives the name of the test and the 2nd line reminds you what the dataset was called
@@ -361,6 +467,18 @@ t.test(fishlength_r, mu = 20, alternative = "two.sided")
 -	The 4th line simply states the alternative hypothesis
 -	The 5th and 6th lines give the 95th confidence interval (we don’t need to know this)
 -	The 7th, 8th and 9th lines give the sample mean again (18.29655).
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+```{python, echo=FALSE}
+stats.ttest_1samp(fishlength_py.length,
+                  popmean = 20, 
+                  alternative = "two-sided")
+```
+
+The output is very minimal. The 1st number in brackets is the t-value and the 2nd number is the p-value
+
 :::
 :::::
 
@@ -422,7 +540,7 @@ dissolving
 # summarise the data
 summary(dissolving)
 ```
-We can look at the histogram and boxplot of the data:
+We can look at the histogram and box plot of the data:
 
 ```{r}
 # create a histogram
@@ -454,6 +572,42 @@ hist(dissolving_r$dissolving_time)
 
 boxplot(dissolving_r$dissolving_time)
 ```
+:::
+::: {.panel}
+[Python]{.panel-name}
+
+```{python}
+# load the data
+dissolving_py = pd.read_csv("data/tidy/CS1-gastric_juices.csv")
+
+# have a look at the data
+dissolving_py.head()
+
+# summarise the data
+dissolving_py.describe()
+```
+We can look at the histogram and box plot of the data:
+
+```{python, results='hide'}
+# create a histogram
+(
+dissolving_py >> \
+  ggplot(aes(x = "dissolving_time"))
+  + geom_histogram(bins = 4)
+)
+```
+
+```{python, results='hide'}
+# create a box plot
+(
+  dissolving_py >> \
+  ggplot(aes(x = 1, y = "dissolving_time"))
+  + geom_boxplot()
+)
+```
+
+
+Python (or `plotnine` in particular) gets a bit cranky if you try to create a `geom_boxplot` but do not define the `x` aesthetic. Hence us putting it as `1`. The value is meaningless, however.
 :::
 :::::
 
@@ -495,6 +649,26 @@ qqnorm(dissolving_r$dissolving_time)
 qqline(dissolving_r$dissolving_time)
 ```
 :::
+
+::: {.panel}
+[Python]{.panel-name}
+
+```{python}
+# Perform Shapiro-Wilk test to check normality
+stats.shapiro(dissolving_py.dissolving_time)
+```
+
+```{python, results='hide'}
+# Create a Q-Q plot
+(
+  dissolving_py >> \
+  ggplot(aes(sample = "dissolving_time"))
+  + stat_qq()
+  + stat_qq_line()
+)
+```
+
+:::
 :::::
 
 * The Shapiro test  has a p-value of 0.964 which (given that it is bigger than 0.05) suggests that the data are normal enough.
@@ -522,13 +696,23 @@ dissolving %>%
 [base R]{.panel-name}
 ```{r}
 t.test(dissolving_r$dissolving_time,
-       mu=45 ,
+       mu = 45 ,
        alternative = "two.sided")
+```
+:::
+::: {.panel}
+[Python]{.panel-name}
+```{python}
+stats.ttest_1samp(dissolving_py.dissolving_time,
+                  popmean = 45, 
+                  alternative = "two-sided")
 ```
 :::
 :::::
 
 > A one-sample t-test indicated that the mean dissolving time of the drug is not significantly different from 45s (t=0.366 , df=7 , p=0.725)
+
+\
 
 And that, is that.
 

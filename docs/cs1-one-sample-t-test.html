@@ -430,6 +430,32 @@
 </tbody>
 </table></div>
 </div>
+<div class="panel">
+<p><span class="panel-name">Python</span></p>
+<div class="inline-table"><table class="table table-sm">
+<thead><tr class="header">
+<th align="left">Library / function</th>
+<th align="left">Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>plotnine</code></td>
+<td align="left">The Python equivalent of <code>ggplot2</code>.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>pandas</code></td>
+<td align="left">A Python data analysis and manipulation tool.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="cs1-one-sample-t-test.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb3-2"><a href="cs1-one-sample-t-test.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb3-3"><a href="cs1-one-sample-t-test.html#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-4"><a href="cs1-one-sample-t-test.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datar.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="cs1-one-sample-t-test.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pipda <span class="im">import</span> options</span>
+<span id="cb4-2"><a href="cs1-one-sample-t-test.html#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="cs1-one-sample-t-test.html#cb4-3" aria-hidden="true" tabindex="-1"></a>options.assume_all_piping <span class="op">=</span> <span class="va">True</span></span></code></pre></div>
+</div>
 </div>
 </div>
 <div id="data-and-hypotheses" class="section level2" number="3.2">
@@ -454,14 +480,14 @@
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
 <p>First we load the relevant libraries:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># load tidyverse</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 
 <span class="co"># load rstatix, a tidyverse-friendly stats package</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rpkgs.datanovia.com/rstatix/">rstatix</a></span><span class="op">)</span></code></pre></div>
 <p>We then read in the data and create a table containing the data.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># import the data</span>
 <span class="va">fishlengthDF</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"data/tidy/CS1-onesample.csv"</span><span class="op">)</span>
 
@@ -485,13 +511,29 @@
 <div class="panel">
 <p><span class="panel-name">base R</span>
 We then read in the data and create a vector containing the data.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># import the data</span>
 <span class="va">fishlengthDF</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"data/tidy/CS1-onesample.csv"</span><span class="op">)</span>
 
 <span class="co"># create a vector containing the data</span>
 <span class="va">fishlength_r</span> <span class="op">&lt;-</span> <span class="va">fishlengthDF</span><span class="op">$</span><span class="va">length</span></code></pre></div>
 <p>The first line reads the data into R and creates an object called a data frame. This data frame only contains a single column of numbers called “Guanapo” (the name of the river). In most situations, and for most statistical analyses, having our data stored in a data frame is exactly what we’d want. However, for one sample tests we actually need our data to be stored as a vector. So, the second line extracts the values that are in the <code>Guanapo</code> column of our <code>fishlengthDF</code> data frame and creates a simple vector of numbers that we have called <code>fishlength_r</code> This step is only necessary for one-sample tests and when we look at more complex data sets, we won’t need to do this second step at all.</p>
+</div>
+<div class="panel">
+<p><span class="panel-name">Python</span>
+We then read the data in:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="cs1-one-sample-t-test.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load the data</span></span>
+<span id="cb9-2"><a href="cs1-one-sample-t-test.html#cb9-2" aria-hidden="true" tabindex="-1"></a>fishlength_py <span class="op">=</span> pd.read_csv(<span class="st">'data/tidy/CS1-onesample.csv'</span>)</span>
+<span id="cb9-3"><a href="cs1-one-sample-t-test.html#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="cs1-one-sample-t-test.html#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># inspect the data</span></span>
+<span id="cb9-5"><a href="cs1-one-sample-t-test.html#cb9-5" aria-hidden="true" tabindex="-1"></a>fishlength_py.head()</span></code></pre></div>
+<pre><code>##        id    river    length
+##   &lt;int64&gt; &lt;object&gt; &lt;float64&gt;
+## 0       1  Guanapo      19.1
+## 1       2  Guanapo      23.3
+## 2       3  Guanapo      18.2
+## 3       4  Guanapo      16.4
+## 4       5  Guanapo      19.7</code></pre>
 </div>
 </div>
 </div>
@@ -503,7 +545,7 @@ We then read in the data and create a vector containing the data.</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fishlengthDF</span><span class="op">)</span></code></pre></div>
 <pre><code>##        id        river               length    
 ##  Min.   : 1   Length:29          Min.   :11.2  
@@ -512,21 +554,43 @@ We then read in the data and create a vector containing the data.</p>
 ##  Mean   :15                      Mean   :18.3  
 ##  3rd Qu.:22                      3rd Qu.:19.7  
 ##  Max.   :29                      Max.   :23.3</code></pre>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fishlengthDF</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">river</span>, y <span class="op">=</span> <span class="va">length</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-4-1.png" width="672"></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-6-1.png" width="672"></div>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fishlength_r</span><span class="op">)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##    11.2    17.5    18.8    18.3    19.7    23.3</code></pre>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/boxplot.html">boxplot</a></span><span class="op">(</span><span class="va">fishlength_r</span>, main <span class="op">=</span> <span class="st">"Male guppies"</span>, ylab <span class="op">=</span> <span class="st">"Length (mm)"</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-5-1.png" width="672"></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-7-1.png" width="672"></div>
+</div>
+<div class="panel">
+<p><span class="panel-name">Python</span>
+First we have a look at a numerical summary of the data:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="cs1-one-sample-t-test.html#cb17-1" aria-hidden="true" tabindex="-1"></a>fishlength_py.describe()</span></code></pre></div>
+<pre><code>##               id     length
+##        &lt;float64&gt;  &lt;float64&gt;
+## count  29.000000  29.000000
+## mean   15.000000  18.296552
+## std     8.514693   2.584636
+## min     1.000000  11.200000
+## 25%     8.000000  17.500000
+## 50%    15.000000  18.800000
+## 75%    22.000000  19.700000
+## max    29.000000  23.300000</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="cs1-one-sample-t-test.html#cb19-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb19-2"><a href="cs1-one-sample-t-test.html#cb19-2" aria-hidden="true" tabindex="-1"></a>  ggplot(fishlength_py,</span>
+<span id="cb19-3"><a href="cs1-one-sample-t-test.html#cb19-3" aria-hidden="true" tabindex="-1"></a>    aes(x <span class="op">=</span> <span class="st">'river'</span>,</span>
+<span id="cb19-4"><a href="cs1-one-sample-t-test.html#cb19-4" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> <span class="st">'length'</span>))</span>
+<span id="cb19-5"><a href="cs1-one-sample-t-test.html#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_boxplot()</span>
+<span id="cb19-6"><a href="cs1-one-sample-t-test.html#cb19-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-9-1.png" width="614"></div>
 </div>
 </div>
 <p>The data do not appear to contain any obvious errors, and whilst both the mean and median are less than 20 (18.3 and 18.8 respectively) it is not absolutely certain that the sample mean is sufficiently different from this value to be “statistically significant,” although we may anticipate such a result.</p>
@@ -566,17 +630,26 @@ There are three ways of checking for normality:</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fishlengthDF</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">length</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>bins <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-6-1.png" width="672"></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-10-3.png" width="672"></div>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">fishlength_r</span>, breaks <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-7-1.png" width="672"></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-11-1.png" width="672"></div>
+</div>
+<div class="panel">
+<p><span class="panel-name">Python</span></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="cs1-one-sample-t-test.html#cb22-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb22-2"><a href="cs1-one-sample-t-test.html#cb22-2" aria-hidden="true" tabindex="-1"></a>  fishlength_py <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb22-3"><a href="cs1-one-sample-t-test.html#cb22-3" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> <span class="st">"length"</span>))</span>
+<span id="cb22-4"><a href="cs1-one-sample-t-test.html#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_histogram(bins <span class="op">=</span> <span class="dv">15</span>)</span>
+<span id="cb22-5"><a href="cs1-one-sample-t-test.html#cb22-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-12-1.png" width="614"></div>
 </div>
 </div>
 <p>The distribution appears to be uni-modal and symmetric, and so it isn’t obviously non-normal. However, there are a lot of distributions that have these simple properties but which aren’t normal, so this isn’t exactly rigorous. Thankfully there are other, more rigorous tests.</p>
@@ -591,22 +664,32 @@ There are three ways of checking for normality:</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fishlengthDF</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">length</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">stat_qq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">stat_qq_line</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-8-1.png" width="672"></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-13-3.png" width="672"></div>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># plot the Q-Q plot</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqnorm</a></span><span class="op">(</span><span class="va">fishlength_r</span><span class="op">)</span>
 
 <span class="co"># and add a comparison line</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqline</a></span><span class="op">(</span><span class="va">fishlength_r</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-9-1.png" width="672"></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-14-1.png" width="672"></div>
+</div>
+<div class="panel">
+<p><span class="panel-name">Python</span></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="cs1-one-sample-t-test.html#cb25-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb25-2"><a href="cs1-one-sample-t-test.html#cb25-2" aria-hidden="true" tabindex="-1"></a>  fishlength_py <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb25-3"><a href="cs1-one-sample-t-test.html#cb25-3" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(sample <span class="op">=</span> <span class="st">"length"</span>))</span>
+<span id="cb25-4"><a href="cs1-one-sample-t-test.html#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> stat_qq()</span>
+<span id="cb25-5"><a href="cs1-one-sample-t-test.html#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> stat_qq_line()</span>
+<span id="cb25-6"><a href="cs1-one-sample-t-test.html#cb25-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-15-1.png" width="614"></div>
 </div>
 </div>
 <p>What is important to know is that if the data were normally distributed then all of the points should lie on (or close to) the diagonal line in this graph.</p>
@@ -614,7 +697,7 @@ There are three ways of checking for normality:</p>
 <p>It is important to recognise that there isn’t a simple unambiguous answer when interpreting these types of graph, in terms of whether the assumption of normality has been well met or not and instead it often boils down to a matter of experience.</p>
 <p>It is a very rare situation indeed where the assumptions necessary for a test will be met unequivocally and a certain degree of personal interpretation is always needed. Here you have to ask yourself whether the data are normal “enough” for you to be confident in the validity of the test.</p>
 <p>Below are four examples of QQ plots for different types of distributions:</p>
-<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/cs1-one-sample-qqplot-normal-dist-1.png" width="672"></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/cs1-one-sample-qqplot-normal-dist-3.png" width="672"></div>
 <p>These two graphs relate to 200 data points that have been drawn from a normal distribution. Even here you can see that the points do not all lie perfectly on the diagonal line in the QQ plot, and a certain amount of deviation at the top and bottom of the graph can happen just by chance (if I were to draw a different set of point then the graph would look slightly different).</p>
 <div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/cs1-one-sample-qqplot-uniform-dist-1.png" width="672"></div>
 <p>These two graphs relate to 200 data points that have been drawn from a uniform distribution. Uniform distributions are more condensed than normal distributions, and this is reflected in the QQ plot having a very pronounced S-shaped pattern to it (this is colloquially known as <strong>snaking</strong>).</p>
@@ -633,7 +716,7 @@ There are three ways of checking for normality:</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fishlengthDF</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rpkgs.datanovia.com/rstatix/reference/shapiro_test.html">shapiro_test</a></span><span class="op">(</span><span class="va">length</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 3
@@ -651,7 +734,7 @@ There are three ways of checking for normality:</p>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/shapiro.test.html">shapiro.test</a></span><span class="op">(</span><span class="va">fishlength_r</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
@@ -664,6 +747,11 @@ There are three ways of checking for normality:</p>
 <li>The calculated w-value is 0.9494 (we don’t need to know this)</li>
 <li>The p-value is 0.1764</li>
 </ul>
+</div>
+<div class="panel">
+<p><span class="panel-name">Python</span></p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="cs1-one-sample-t-test.html#cb30-1" aria-hidden="true" tabindex="-1"></a>stats.shapiro(fishlength_py.length)</span></code></pre></div>
+<pre><code>## ShapiroResult(statistic=0.9493839740753174, pvalue=0.17642046511173248)</code></pre>
 </div>
 </div>
 <p>As the p-value is bigger than 0.05 (say) then we can say that there is insufficient evidence to reject the null hypothesis that the sample came from a normal distribution.</p>
@@ -688,7 +776,7 @@ There are three ways of checking for normality:</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fishlengthDF</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rpkgs.datanovia.com/rstatix/reference/t_test.html">t_test</a></span><span class="op">(</span><span class="va">length</span> <span class="op">~</span> <span class="fl">1</span>,
          mu <span class="op">=</span> <span class="fl">20</span>,
@@ -703,8 +791,10 @@ There are three ways of checking for normality:</p>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span><span class="va">fishlength_r</span>, mu <span class="op">=</span> <span class="fl">20</span>, alternative <span class="op">=</span> <span class="st">"two.sided"</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span><span class="va">fishlength_r</span>,
+       mu <span class="op">=</span> <span class="fl">20</span>,
+       alternative <span class="op">=</span> <span class="st">"two.sided"</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ##  One Sample t-test
 ## 
@@ -721,6 +811,17 @@ There are three ways of checking for normality:</p>
 <li>The second argument must be a number and is the mean to be tested under the null hypothesis.</li>
 <li>The third argument gives the type of alternative hypothesis and must be one of <code>two.sided</code>, <code>greater</code> or <code>less</code>. We have no prior assumptions on whether the alternative fish length would be greater or less than 20, so we choose <code>two.sided</code>.</li>
 </ul>
+</div>
+<div class="panel">
+<p><span class="panel-name">Python</span></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="cs1-one-sample-t-test.html#cb35-1" aria-hidden="true" tabindex="-1"></a>stats.ttest_1samp(fishlength_py.length,</span>
+<span id="cb35-2"><a href="cs1-one-sample-t-test.html#cb35-2" aria-hidden="true" tabindex="-1"></a>                  popmean <span class="op">=</span> <span class="dv">20</span>, </span>
+<span id="cb35-3"><a href="cs1-one-sample-t-test.html#cb35-3" aria-hidden="true" tabindex="-1"></a>                  alternative <span class="op">=</span> <span class="st">"two-sided"</span>)</span></code></pre></div>
+<ul>
+<li>The first argument must be a numerical series of data values.</li>
+<li>The second argument must be a number and is the mean to be tested under the null hypothesis.</li>
+</ul>
+<p>In Python you can only two a two-sided 1-sample t-test (i.e. you can only test whether the mean is different from 20 but not whether it is greater than or less than – why they chose to do this is beyond me).</p>
 </div>
 </div>
 </div>
@@ -768,6 +869,11 @@ There are three ways of checking for normality:</p>
 <li>The 5th and 6th lines give the 95th confidence interval (we don’t need to know this)</li>
 <li>The 7th, 8th and 9th lines give the sample mean again (18.29655).</li>
 </ul>
+</div>
+<div class="panel">
+<p><span class="panel-name">Python</span></p>
+<pre><code>## Ttest_1sampResult(statistic=-3.5491839564647205, pvalue=0.0013868577835348004)</code></pre>
+<p>The output is very minimal. The 1st number in brackets is the t-value and the 2nd number is the p-value</p>
 </div>
 </div>
 <p>The p-value is what we’re mostly interested in. It gives the probability of us getting a sample such as ours if the null hypothesis were actually true.</p>
@@ -823,7 +929,7 @@ Answer
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># load the data</span>
 <span class="va">dissolving</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"data/tidy/CS1-gastric_juices.csv"</span><span class="op">)</span>
 
@@ -840,7 +946,7 @@ Answer
 ## 6     6            45.9
 ## 7     7            46.8
 ## 8     8            47.6</code></pre>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># summarise the data</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">dissolving</span><span class="op">)</span></code></pre></div>
 <pre><code>##        id       dissolving_time
@@ -850,23 +956,23 @@ Answer
 ##  Mean   :4.50   Mean   :45.21  
 ##  3rd Qu.:6.25   3rd Qu.:46.12  
 ##  Max.   :8.00   Max.   :47.60</code></pre>
-<p>We can look at the histogram and boxplot of the data:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<p>We can look at the histogram and box plot of the data:</p>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create a histogram</span>
 <span class="va">dissolving</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dissolving_time</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>bins <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-16-1.png" width="672"></div>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-26-1.png" width="672"></div>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create a boxplot</span>
 <span class="va">dissolving</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">dissolving_time</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-16-2.png" width="672"></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-26-2.png" width="672"></div>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># load the data</span>
 <span class="va">dissolving_r</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"data/tidy/CS1-gastric_juices.csv"</span><span class="op">)</span>
 
@@ -881,7 +987,7 @@ Answer
 ## 6  6            45.9
 ## 7  7            46.8
 ## 8  8            47.6</code></pre>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># summarise the data</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">dissolving_r</span><span class="op">)</span></code></pre></div>
 <pre><code>##        id       dissolving_time
@@ -891,12 +997,56 @@ Answer
 ##  Mean   :4.50   Mean   :45.21  
 ##  3rd Qu.:6.25   3rd Qu.:46.12  
 ##  Max.   :8.00   Max.   :47.60</code></pre>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">dissolving_r</span><span class="op">$</span><span class="va">dissolving_time</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-18-1.png" width="672"></div>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-28-1.png" width="672"></div>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/boxplot.html">boxplot</a></span><span class="op">(</span><span class="va">dissolving_r</span><span class="op">$</span><span class="va">dissolving_time</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-18-2.png" width="672"></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-28-2.png" width="672"></div>
+</div>
+<div class="panel">
+<p><span class="panel-name">Python</span></p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="cs1-one-sample-t-test.html#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load the data</span></span>
+<span id="cb51-2"><a href="cs1-one-sample-t-test.html#cb51-2" aria-hidden="true" tabindex="-1"></a>dissolving_py <span class="op">=</span> pd.read_csv(<span class="st">"data/tidy/CS1-gastric_juices.csv"</span>)</span>
+<span id="cb51-3"><a href="cs1-one-sample-t-test.html#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="cs1-one-sample-t-test.html#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="co"># have a look at the data</span></span>
+<span id="cb51-5"><a href="cs1-one-sample-t-test.html#cb51-5" aria-hidden="true" tabindex="-1"></a>dissolving_py.head()</span>
+<span id="cb51-6"><a href="cs1-one-sample-t-test.html#cb51-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-7"><a href="cs1-one-sample-t-test.html#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="co"># summarise the data</span></span></code></pre></div>
+<pre><code>##        id  dissolving_time
+##   &lt;int64&gt;        &lt;float64&gt;
+## 0       1             42.7
+## 1       2             43.4
+## 2       3             44.6
+## 3       4             45.1
+## 4       5             45.6</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb53-1"><a href="cs1-one-sample-t-test.html#cb53-1" aria-hidden="true" tabindex="-1"></a>dissolving_py.describe()</span></code></pre></div>
+<pre><code>##              id  dissolving_time
+##       &lt;float64&gt;        &lt;float64&gt;
+## count   8.00000         8.000000
+## mean    4.50000        45.212500
+## std     2.44949         1.640068
+## min     1.00000        42.700000
+## 25%     2.75000        44.300000
+## 50%     4.50000        45.350000
+## 75%     6.25000        46.125000
+## max     8.00000        47.600000</code></pre>
+<p>We can look at the histogram and box plot of the data:</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb55-1"><a href="cs1-one-sample-t-test.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a histogram</span></span>
+<span id="cb55-2"><a href="cs1-one-sample-t-test.html#cb55-2" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb55-3"><a href="cs1-one-sample-t-test.html#cb55-3" aria-hidden="true" tabindex="-1"></a>dissolving_py <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb55-4"><a href="cs1-one-sample-t-test.html#cb55-4" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> <span class="st">"dissolving_time"</span>))</span>
+<span id="cb55-5"><a href="cs1-one-sample-t-test.html#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_histogram(bins <span class="op">=</span> <span class="dv">4</span>)</span>
+<span id="cb55-6"><a href="cs1-one-sample-t-test.html#cb55-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-30-1.png" width="614"></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb56-1"><a href="cs1-one-sample-t-test.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a box plot</span></span>
+<span id="cb56-2"><a href="cs1-one-sample-t-test.html#cb56-2" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb56-3"><a href="cs1-one-sample-t-test.html#cb56-3" aria-hidden="true" tabindex="-1"></a>  dissolving_py <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb56-4"><a href="cs1-one-sample-t-test.html#cb56-4" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> <span class="dv">1</span>, y <span class="op">=</span> <span class="st">"dissolving_time"</span>))</span>
+<span id="cb56-5"><a href="cs1-one-sample-t-test.html#cb56-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_boxplot()</span>
+<span id="cb56-6"><a href="cs1-one-sample-t-test.html#cb56-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-31-3.png" width="614"></div>
+<p>Python (or <code>plotnine</code> in particular) gets a bit cranky if you try to create a <code>geom_boxplot</code> but do not define the <code>x</code> aesthetic. Hence us putting it as <code>1</code>. The value is meaningless, however.</p>
 </div>
 </div>
 <p>There are only 8 data points, so the histogram is rather uninformative. Thankfully the box plot is a bit more useful here. We can see:</p>
@@ -914,7 +1064,7 @@ Answer
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># perform Shapiro-Wilk test</span>
 <span class="va">dissolving</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rpkgs.datanovia.com/rstatix/reference/shapiro_test.html">shapiro_test</a></span><span class="op">(</span><span class="va">dissolving_time</span><span class="op">)</span></code></pre></div>
@@ -922,27 +1072,41 @@ Answer
 ##   variable        statistic     p
 ##   &lt;chr&gt;               &lt;dbl&gt; &lt;dbl&gt;
 ## 1 dissolving_time     0.980 0.964</code></pre>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create a Q-Q plot</span>
 <span class="va">dissolving</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">dissolving_time</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">stat_qq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">stat_qq_line</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-20-1.png" width="672"></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-33-1.png" width="672"></div>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/shapiro.test.html">shapiro.test</a></span><span class="op">(</span><span class="va">dissolving_r</span><span class="op">$</span><span class="va">dissolving_time</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
 ## 
 ## data:  dissolving_r$dissolving_time
 ## W = 0.98023, p-value = 0.9641</code></pre>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqnorm</a></span><span class="op">(</span><span class="va">dissolving_r</span><span class="op">$</span><span class="va">dissolving_time</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqline</a></span><span class="op">(</span><span class="va">dissolving_r</span><span class="op">$</span><span class="va">dissolving_time</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-22-1.png" width="672"></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-35-1.png" width="672"></div>
+</div>
+<div class="panel">
+<p><span class="panel-name">Python</span></p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb63-1"><a href="cs1-one-sample-t-test.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform Shapiro-Wilk test to check normality</span></span>
+<span id="cb63-2"><a href="cs1-one-sample-t-test.html#cb63-2" aria-hidden="true" tabindex="-1"></a>stats.shapiro(dissolving_py.dissolving_time)</span></code></pre></div>
+<pre><code>## ShapiroResult(statistic=0.9802342057228088, pvalue=0.9640541672706604)</code></pre>
+<div class="sourceCode" id="cb65"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb65-1"><a href="cs1-one-sample-t-test.html#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a Q-Q plot</span></span>
+<span id="cb65-2"><a href="cs1-one-sample-t-test.html#cb65-2" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb65-3"><a href="cs1-one-sample-t-test.html#cb65-3" aria-hidden="true" tabindex="-1"></a>  dissolving_py <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb65-4"><a href="cs1-one-sample-t-test.html#cb65-4" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(sample <span class="op">=</span> <span class="st">"dissolving_time"</span>))</span>
+<span id="cb65-5"><a href="cs1-one-sample-t-test.html#cb65-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> stat_qq()</span>
+<span id="cb65-6"><a href="cs1-one-sample-t-test.html#cb65-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> stat_qq_line()</span>
+<span id="cb65-7"><a href="cs1-one-sample-t-test.html#cb65-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-37-1.png" width="614"></div>
 </div>
 </div>
 <ul>
@@ -959,7 +1123,7 @@ Answer
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># perform one-sample t-test</span>
 <span class="va">dissolving</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rpkgs.datanovia.com/rstatix/reference/t_test.html">t_test</a></span><span class="op">(</span><span class="va">dissolving_time</span> <span class="op">~</span> <span class="fl">1</span>,
@@ -972,9 +1136,9 @@ Answer
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span><span class="va">dissolving_r</span><span class="op">$</span><span class="va">dissolving_time</span>,
-       mu<span class="op">=</span><span class="fl">45</span> ,
+       mu <span class="op">=</span> <span class="fl">45</span> ,
        alternative <span class="op">=</span> <span class="st">"two.sided"</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ##  One Sample t-test
@@ -988,10 +1152,18 @@ Answer
 ## mean of x 
 ##   45.2125</code></pre>
 </div>
+<div class="panel">
+<p><span class="panel-name">Python</span></p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb70-1"><a href="cs1-one-sample-t-test.html#cb70-1" aria-hidden="true" tabindex="-1"></a>stats.ttest_1samp(dissolving_py.dissolving_time,</span>
+<span id="cb70-2"><a href="cs1-one-sample-t-test.html#cb70-2" aria-hidden="true" tabindex="-1"></a>                  popmean <span class="op">=</span> <span class="dv">45</span>, </span>
+<span id="cb70-3"><a href="cs1-one-sample-t-test.html#cb70-3" aria-hidden="true" tabindex="-1"></a>                  alternative <span class="op">=</span> <span class="st">"two-sided"</span>)</span></code></pre></div>
+<pre><code>## Ttest_1sampResult(statistic=0.36647318560088843, pvalue=0.7248382429835611)</code></pre>
+</div>
 </div>
 <blockquote>
 <p>A one-sample t-test indicated that the mean dissolving time of the drug is not significantly different from 45s (t=0.366 , df=7 , p=0.725)</p>
 </blockquote>
+<p><br></p>
 <p>And that, is that.</p>
 
 </div>

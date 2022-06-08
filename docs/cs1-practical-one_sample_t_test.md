@@ -28,6 +28,30 @@
 |`qqline()`| Adds a comparison line to the Q-Q plot.|
 |`shapiro.test()`| Performs a Shapiro-Wilk test for normality.|
 :::
+
+::: {.panel}
+[Python]{.panel-name}
+
+| Library / function| Description|
+|:- |:- |
+|`plotnine`| The Python equivalent of `ggplot2`.|
+|`pandas`| A Python data analysis and manipulation tool.|
+
+
+```python
+from plotnine import *
+from scipy import stats
+import pandas as pd
+from datar.all import *
+```
+
+```python
+from pipda import options
+
+options.assume_all_piping = True
+```
+
+:::
 :::::
 
 ## Data and hypotheses
@@ -104,6 +128,31 @@ fishlength_r <- fishlengthDF$length
 
 The first line reads the data into R and creates an object called a data frame. This data frame only contains a single column of numbers called "Guanapo" (the name of the river). In most situations, and for most statistical analyses, having our data stored in a data frame is exactly what we’d want. However, for one sample tests we actually need our data to be stored as a vector. So, the second line extracts the values that are in the `Guanapo` column of our `fishlengthDF` data frame and creates a simple vector of numbers that we have called `fishlength_r` This step is only necessary for one-sample tests and when we look at more complex data sets, we won’t need to do this second step at all.
 :::
+
+::: {.panel}
+[Python]{.panel-name}
+We then read the data in:
+
+
+```python
+# load the data
+fishlength_py = pd.read_csv('data/tidy/CS1-onesample.csv')
+
+# inspect the data
+fishlength_py.head()
+```
+
+```
+##        id    river    length
+##   <int64> <object> <float64>
+## 0       1  Guanapo      19.1
+## 1       2  Guanapo      23.3
+## 2       3  Guanapo      18.2
+## 3       4  Guanapo      16.4
+## 4       5  Guanapo      19.7
+```
+
+:::
 :::::
 
 ## Summarise and visualise
@@ -134,7 +183,7 @@ fishlengthDF %>%
   geom_boxplot()
 ```
 
-<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-6-1.png" width="672" />
 :::
 
 ::: {.panel}
@@ -153,7 +202,43 @@ summary(fishlength_r)
 boxplot(fishlength_r, main = "Male guppies", ylab = "Length (mm)")
 ```
 
-<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+First we have a look at a numerical summary of the data:
+
+
+```python
+fishlength_py.describe()
+```
+
+```
+##               id     length
+##        <float64>  <float64>
+## count  29.000000  29.000000
+## mean   15.000000  18.296552
+## std     8.514693   2.584636
+## min     1.000000  11.200000
+## 25%     8.000000  17.500000
+## 50%    15.000000  18.800000
+## 75%    22.000000  19.700000
+## max    29.000000  23.300000
+```
+
+
+```python
+(
+  ggplot(fishlength_py,
+    aes(x = 'river',
+        y = 'length'))
+  + geom_boxplot()
+)
+```
+
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-9-1.png" width="614" />
+
 :::
 :::::
 The data do not appear to contain any obvious errors, and whilst both the mean and median are less than 20 (18.3 and 18.8 respectively) it is not absolutely certain that the sample mean is sufficiently different from this value to be "statistically significant", although we may anticipate such a result.
@@ -196,7 +281,7 @@ fishlengthDF %>%
   geom_histogram(bins = 15)
 ```
 
-<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-6-1.png" width="672" />
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-10-3.png" width="672" />
 :::
 
 ::: {.panel}
@@ -206,7 +291,22 @@ fishlengthDF %>%
 hist(fishlength_r, breaks = 15)
 ```
 
-<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+
+```python
+(
+  fishlength_py >> \
+  ggplot(aes(x = "length"))
+  + geom_histogram(bins = 15)
+)
+```
+
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-12-1.png" width="614" />
 :::
 :::::
 
@@ -230,7 +330,7 @@ fishlengthDF %>%
   stat_qq_line()
 ```
 
-<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-13-3.png" width="672" />
 :::
 
 ::: {.panel}
@@ -244,9 +344,26 @@ qqnorm(fishlength_r)
 qqline(fishlength_r)
 ```
 
-<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-9-1.png" width="672" />
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+
+```python
+(
+  fishlength_py >> \
+  ggplot(aes(sample = "length"))
+  + stat_qq()
+  + stat_qq_line()
+)
+```
+
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-15-1.png" width="614" />
 :::
 :::::
+
 What is important to know is that if the data were normally distributed then all of the points should lie on (or close to) the diagonal line in this graph.
 
 In this case, the points lie quite close to the line for the most part but the sample quantiles (points) from either end of the sample distribution are either smaller (below the line on the left) or larger (above the line on the right) than expected if they were supposed to be normally distributed. This suggests that the sample distribution is a bit more spread out than would be expected if it came from a normal distribution.
@@ -257,7 +374,7 @@ It is a very rare situation indeed where the assumptions necessary for a test wi
 
 Below are four examples of QQ plots for different types of distributions:
 
-<img src="cs1-practical-one_sample_t_test_files/figure-html/cs1-one-sample-qqplot-normal-dist-1.png" width="672" />
+<img src="cs1-practical-one_sample_t_test_files/figure-html/cs1-one-sample-qqplot-normal-dist-3.png" width="672" />
 
 These two graphs relate to 200 data points that have been drawn from a normal distribution. Even here you can see that the points do not all lie perfectly on the diagonal line in the QQ plot, and a certain amount of deviation at the top and bottom of the graph can happen just by chance (if I were to draw a different set of point then the graph would look slightly different).
 
@@ -322,6 +439,20 @@ shapiro.test(fishlength_r)
 -	The calculated w-value is 0.9494 (we don’t need to know this)
 -	The p-value is 0.1764 
 :::
+
+::: {.panel}
+[Python]{.panel-name}
+
+
+```python
+stats.shapiro(fishlength_py.length)
+```
+
+```
+## ShapiroResult(statistic=0.9493839740753174, pvalue=0.17642046511173248)
+```
+:::
+
 :::::
 
 As the p-value is bigger than 0.05 (say) then we can say that there is insufficient evidence to reject the null hypothesis that the sample came from a normal distribution.
@@ -364,7 +495,9 @@ The `t_test()` function requires three arguments:
 [base R]{.panel-name}
 
 ```r
-t.test(fishlength_r, mu = 20, alternative = "two.sided")
+t.test(fishlength_r,
+       mu = 20,
+       alternative = "two.sided")
 ```
 
 ```
@@ -385,6 +518,21 @@ t.test(fishlength_r, mu = 20, alternative = "two.sided")
 -	The second argument must be a number and is the mean to be tested under the null hypothesis.
 -	The third argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`. We have no prior assumptions on whether the alternative fish length would be greater or less than 20, so we choose `two.sided`.
 
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+```python
+stats.ttest_1samp(fishlength_py.length,
+                  popmean = 20, 
+                  alternative = "two-sided")
+```
+
+* The first argument must be a numerical series of data values.
+* The second argument must be a number and is the mean to be tested under the null hypothesis.
+
+In Python you can only two a two-sided 1-sample t-test (i.e. you can only test whether the mean is different from 20 but not whether it is greater than or less than – why they chose to do this is beyond me).
 :::
 :::::
 
@@ -433,6 +581,17 @@ This is the output that you should now see in the console window:
 -	The 4th line simply states the alternative hypothesis
 -	The 5th and 6th lines give the 95th confidence interval (we don’t need to know this)
 -	The 7th, 8th and 9th lines give the sample mean again (18.29655).
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+```
+## Ttest_1sampResult(statistic=-3.5491839564647205, pvalue=0.0013868577835348004)
+```
+
+The output is very minimal. The 1st number in brackets is the t-value and the 2nd number is the p-value
+
 :::
 :::::
 
@@ -521,7 +680,7 @@ summary(dissolving)
 ##  3rd Qu.:6.25   3rd Qu.:46.12  
 ##  Max.   :8.00   Max.   :47.60
 ```
-We can look at the histogram and boxplot of the data:
+We can look at the histogram and box plot of the data:
 
 
 ```r
@@ -531,7 +690,7 @@ dissolving %>%
   geom_histogram(bins = 4)
 ```
 
-<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-16-1.png" width="672" />
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-26-1.png" width="672" />
 
 ```r
 # create a boxplot
@@ -540,7 +699,7 @@ dissolving %>%
   geom_boxplot()
 ```
 
-<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-16-2.png" width="672" />
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-26-2.png" width="672" />
 :::
 ::: {.panel}
 [base R]{.panel-name}
@@ -585,13 +744,82 @@ summary(dissolving_r)
 hist(dissolving_r$dissolving_time)
 ```
 
-<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-18-1.png" width="672" />
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-28-1.png" width="672" />
 
 ```r
 boxplot(dissolving_r$dissolving_time)
 ```
 
-<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-18-2.png" width="672" />
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-28-2.png" width="672" />
+:::
+::: {.panel}
+[Python]{.panel-name}
+
+
+```python
+# load the data
+dissolving_py = pd.read_csv("data/tidy/CS1-gastric_juices.csv")
+
+# have a look at the data
+dissolving_py.head()
+
+# summarise the data
+```
+
+```
+##        id  dissolving_time
+##   <int64>        <float64>
+## 0       1             42.7
+## 1       2             43.4
+## 2       3             44.6
+## 3       4             45.1
+## 4       5             45.6
+```
+
+```python
+dissolving_py.describe()
+```
+
+```
+##              id  dissolving_time
+##       <float64>        <float64>
+## count   8.00000         8.000000
+## mean    4.50000        45.212500
+## std     2.44949         1.640068
+## min     1.00000        42.700000
+## 25%     2.75000        44.300000
+## 50%     4.50000        45.350000
+## 75%     6.25000        46.125000
+## max     8.00000        47.600000
+```
+We can look at the histogram and box plot of the data:
+
+
+```python
+# create a histogram
+(
+dissolving_py >> \
+  ggplot(aes(x = "dissolving_time"))
+  + geom_histogram(bins = 4)
+)
+```
+
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-30-1.png" width="614" />
+
+
+```python
+# create a box plot
+(
+  dissolving_py >> \
+  ggplot(aes(x = 1, y = "dissolving_time"))
+  + geom_boxplot()
+)
+```
+
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-31-3.png" width="614" />
+
+
+Python (or `plotnine` in particular) gets a bit cranky if you try to create a `geom_boxplot` but do not define the `x` aesthetic. Hence us putting it as `1`. The value is meaningless, however.
 :::
 :::::
 
@@ -632,7 +860,7 @@ dissolving %>%
   stat_qq_line(colour = "red")
 ```
 
-<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-20-1.png" width="672" />
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-33-1.png" width="672" />
 :::
 ::: {.panel}
 [base R]{.panel-name}
@@ -654,7 +882,35 @@ qqnorm(dissolving_r$dissolving_time)
 qqline(dissolving_r$dissolving_time)
 ```
 
-<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-22-1.png" width="672" />
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-35-1.png" width="672" />
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+
+```python
+# Perform Shapiro-Wilk test to check normality
+stats.shapiro(dissolving_py.dissolving_time)
+```
+
+```
+## ShapiroResult(statistic=0.9802342057228088, pvalue=0.9640541672706604)
+```
+
+
+```python
+# Create a Q-Q plot
+(
+  dissolving_py >> \
+  ggplot(aes(sample = "dissolving_time"))
+  + stat_qq()
+  + stat_qq_line()
+)
+```
+
+<img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-37-1.png" width="614" />
+
 :::
 :::::
 
@@ -692,7 +948,7 @@ dissolving %>%
 
 ```r
 t.test(dissolving_r$dissolving_time,
-       mu=45 ,
+       mu = 45 ,
        alternative = "two.sided")
 ```
 
@@ -710,9 +966,24 @@ t.test(dissolving_r$dissolving_time,
 ##   45.2125
 ```
 :::
+::: {.panel}
+[Python]{.panel-name}
+
+```python
+stats.ttest_1samp(dissolving_py.dissolving_time,
+                  popmean = 45, 
+                  alternative = "two-sided")
+```
+
+```
+## Ttest_1sampResult(statistic=0.36647318560088843, pvalue=0.7248382429835611)
+```
+:::
 :::::
 
 > A one-sample t-test indicated that the mean dissolving time of the drug is not significantly different from 45s (t=0.366 , df=7 , p=0.725)
+
+\
 
 And that, is that.
 
