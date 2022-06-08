@@ -1,7 +1,6 @@
 fig:fig-cs1-diagram-test
 fig:fig-cs1-diagram-which-test
 exr:unlabeled-div-1
-exr:unlabeled-div-2
 overview
 core-aims
 core-topics
@@ -33,16 +32,3 @@ hypotheses
 data-summarise-visualise
 assumptions-1
 implement-test
-cs1-onesample-wilcoxon-signed-rank
-libraries-and-functions-1
-data-and-hypotheses-1
-summarise-and-visualise-1
-assumptions-2
-implement-the-test-1
-interpreting-the-output-and-report-results-1
-exercise
-hypotheses-1
-assumptions-3
-wilcoxon-signed-rank-test
-discussion
-key-points

@@ -8,10 +8,13 @@
 ::: {.panel}
 [tidyverse]{.panel-name}
 
-| Library / function| Description|
+| Libraries| Description|
 |:- |:- |
 |`library(tidyverse)`| A collection of R packages designed for data science |
 |`library(rstatix)`| Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use.|
+
+| Functions| Description|
+|:- |:- |
 |`rstatix::t_test()`| Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections.|
 |`rstatix::shapiro_test()`| Performs a Shapiro-Wilk test for normality.|
 |`ggplot2::stat_qq()`| Plots a Q-Q plot for comparison with a normal distribution.|
@@ -21,7 +24,7 @@
 ::: {.panel}
 [base R]{.panel-name}
 
-| Library / function| Description|
+| Functions| Description|
 |:- |:- |
 |`t.test()`| Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections.|
 |`qqnorm()`| Plots a Q-Q plot for comparison with a normal distribution.|
@@ -32,24 +35,20 @@
 ::: {.panel}
 [Python]{.panel-name}
 
-| Library / function| Description|
+| Libraries| Description|
 |:- |:- |
 |`plotnine`| The Python equivalent of `ggplot2`.|
 |`pandas`| A Python data analysis and manipulation tool.|
+|`scipy.stats`| A Python module containing statistical functions.|
+
+| Functions| Description|
+|:- |:- |
+|`scipy.stats.shapiro()`|Perform the Shapiro-Wilk test for normality.|
+|`scipy.stats.ttest_1samp()`| Calculate the T-test for the mean of ONE group of scores.|
+|`plotnine.stats.stat_qq()`| Plots a Q-Q plot for comparison with a normal distribution.|
+|`plotnine.stats.stat_qq_line()`| Adds a comparison line to the Q-Q plot.|
 
 
-```python
-from plotnine import *
-from scipy import stats
-import pandas as pd
-from datar.all import *
-```
-
-```python
-from pipda import options
-
-options.assume_all_piping = True
-```
 
 :::
 :::::
@@ -143,13 +142,12 @@ fishlength_py.head()
 ```
 
 ```
-##        id    river    length
-##   <int64> <object> <float64>
-## 0       1  Guanapo      19.1
-## 1       2  Guanapo      23.3
-## 2       3  Guanapo      18.2
-## 3       4  Guanapo      16.4
-## 4       5  Guanapo      19.7
+##    id    river  length
+## 0   1  Guanapo    19.1
+## 1   2  Guanapo    23.3
+## 2   3  Guanapo    18.2
+## 3   4  Guanapo    16.4
+## 4   5  Guanapo    19.7
 ```
 
 :::
@@ -216,7 +214,6 @@ fishlength_py.describe()
 
 ```
 ##               id     length
-##        <float64>  <float64>
 ## count  29.000000  29.000000
 ## mean   15.000000  18.296552
 ## std     8.514693   2.584636
@@ -765,13 +762,12 @@ dissolving_py.head()
 ```
 
 ```
-##        id  dissolving_time
-##   <int64>        <float64>
-## 0       1             42.7
-## 1       2             43.4
-## 2       3             44.6
-## 3       4             45.1
-## 4       5             45.6
+##    id  dissolving_time
+## 0   1             42.7
+## 1   2             43.4
+## 2   3             44.6
+## 3   4             45.1
+## 4   5             45.6
 ```
 
 ```python
@@ -779,16 +775,15 @@ dissolving_py.describe()
 ```
 
 ```
-##              id  dissolving_time
-##       <float64>        <float64>
-## count   8.00000         8.000000
-## mean    4.50000        45.212500
-## std     2.44949         1.640068
-## min     1.00000        42.700000
-## 25%     2.75000        44.300000
-## 50%     4.50000        45.350000
-## 75%     6.25000        46.125000
-## max     8.00000        47.600000
+##             id  dissolving_time
+## count  8.00000         8.000000
+## mean   4.50000        45.212500
+## std    2.44949         1.640068
+## min    1.00000        42.700000
+## 25%    2.75000        44.300000
+## 50%    4.50000        45.350000
+## 75%    6.25000        46.125000
+## max    8.00000        47.600000
 ```
 We can look at the histogram and box plot of the data:
 

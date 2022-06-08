@@ -13,10 +13,13 @@ xaringanExtra::style_panelset_tabs(font_family = "inherit")
 ::: {.panel}
 [tidyverse]{.panel-name}
 
-| Library / function| Description|
+| Libraries| Description|
 |:- |:- |
 |`library(tidyverse)`| A collection of R packages designed for data science |
 |`library(rstatix)`| Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use.|
+
+| Functions| Description|
+|:- |:- |
 |`rstatix::t_test()`| Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections.|
 |`rstatix::shapiro_test()`| Performs a Shapiro-Wilk test for normality.|
 |`ggplot2::stat_qq()`| Plots a Q-Q plot for comparison with a normal distribution.|
@@ -26,7 +29,7 @@ xaringanExtra::style_panelset_tabs(font_family = "inherit")
 ::: {.panel}
 [base R]{.panel-name}
 
-| Library / function| Description|
+| Functions| Description|
 |:- |:- |
 |`t.test()`| Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections.|
 |`qqnorm()`| Plots a Q-Q plot for comparison with a normal distribution.|
@@ -37,19 +40,23 @@ xaringanExtra::style_panelset_tabs(font_family = "inherit")
 ::: {.panel}
 [Python]{.panel-name}
 
-| Library / function| Description|
+| Libraries| Description|
 |:- |:- |
 |`plotnine`| The Python equivalent of `ggplot2`.|
 |`pandas`| A Python data analysis and manipulation tool.|
+|`scipy.stats`| A Python module containing statistical functions.|
 
-```{python, results='hide'}
+| Functions| Description|
+|:- |:- |
+|`scipy.stats.shapiro()`|Perform the Shapiro-Wilk test for normality.|
+|`scipy.stats.ttest_1samp()`| Calculate the T-test for the mean of ONE group of scores.|
+|`plotnine.stats.stat_qq()`| Plots a Q-Q plot for comparison with a normal distribution.|
+|`plotnine.stats.stat_qq_line()`| Adds a comparison line to the Q-Q plot.|
+
+```{python, echo=FALSE, results='hide'}
 from plotnine import *
 from scipy import stats
 import pandas as pd
-from datar.all import *
-from pipda import options
-
-options.assume_all_piping = True
 ```
 
 :::

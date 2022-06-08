@@ -8,6 +8,10 @@ bookdown::render_book(output_dir = "docs", "index.Rmd", "bookdown::bs4_book")
 ::: {.panel}
 [base R]{.panel-name}
 :::
+
+::: {.panel}
+[Python]{.panel-name}
+:::
 :::::
 
 # Exercise with different languages
