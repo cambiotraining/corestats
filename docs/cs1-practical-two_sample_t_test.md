@@ -1,4 +1,4 @@
-
+`<style>.panelset{--panel-tab-font-family: inherit;}</style>`{=html}
 
 # Student's t-test {#cs1-students-t-test}
 For this test we assume that both sample data sets are **normally distributed** and have **equal variance**. We test to see if the means of the two samples differ significantly from each other. 
@@ -7,14 +7,56 @@ For this test we assume that both sample data sets are **normally distributed** 
 The language used in this section is slightly different to that used in section \@ref(cs1-one-sample-tests). Although the language used in section \@ref(cs1-one-sample-tests) was technically more correct, the sentences are somewhat more onerous to read. Here I’ve opted for an easier reading style at the expense of technical accuracy. Please feel free to re-write this section (at your own leisure).
 :::
 
-## Section commands
-New commands used in this section:
+## Libraries and functions
+::::: {.panelset}
+
+::: {.panel}
+[tidyverse]{.panel-name}
+
+| Libraries| Description|
+|:- |:- |
+|`library(tidyverse)`| A collection of R packages designed for data science |
+|`library(rstatix)`| Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use.|
+
+| Functions| Description|
+|:- |:- |
+|`rstatix::get_summary_stats()`| Computes summary statistics |
+|`rstatix::levene_test()`| Perform Levene's test for equality of variance (non-normally distributed data) |
+|`bartlett.test()`| Perform Bartlett's test for equality of variance (normally distributed data) |
+:::
+
+::: {.panel}
+[base R]{.panel-name}
+
+| Libraries| Description|
+|:- |:- |
+|`library(car)`| Companion to Applied Regression, provides additional statistical functionality.|
 
 | Function| Description|
 |:- |:- |
-|`get_summary_stats()`| Computes summary statistics |
+|`aggregate()`| Splits the data into subsets, computes summary statistics for each, and returns the result in a convenient form |
+|`unstack()`| Converts a stacked data frame into an unstacked data frame (or a list if the lengths of the samples are different) |
 |`bartlett.test()`| Perform Bartlett's test for equality of variance (normally distributed data) |
-|`levene_test()`| Perform Levene's test for equality of variance (non-normally distributed data) |
+|`car::leveneTest()`| Perform Levene's test for equality of variance (non-normally distributed data) |
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+| Libraries| Description|
+|:- |:- |
+|`plotnine`| The Python equivalent of `ggplot2`.|
+|`pandas`| A Python data analysis and manipulation tool.|
+|`scipy.stats`| A Python module containing statistical functions.|
+
+| Functions| Description|
+|:- |:- |
+
+
+
+
+:::
+:::::
 
 ## Data and hypotheses
 For example, suppose we now measure the body lengths of male guppies (in mm) collected from two rivers in Trinidad; the Aripo and the Guanapo. We want to test whether the mean body length differs between samples. We form the following null and alternative hypotheses:
@@ -30,15 +72,107 @@ We use a two-sample, two-tailed t-test to see if we can reject the null hypothes
 
 The data are stored in the file `data/tidy/CS1-twosample.csv`.
 
-Read this into R:
+Let's read in the data and have a quick look at the first rows to see how the data is structured.
+
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
 
 
 ```r
 rivers <- read_csv("data/tidy/CS1-twosample.csv")
+
+rivers
 ```
 
+```
+## # A tibble: 68 × 3
+##       id river   length
+##    <dbl> <chr>    <dbl>
+##  1     1 Guanapo   19.1
+##  2     2 Guanapo   23.3
+##  3     3 Guanapo   18.2
+##  4     4 Guanapo   16.4
+##  5     5 Guanapo   19.7
+##  6     6 Guanapo   16.6
+##  7     7 Guanapo   17.5
+##  8     8 Guanapo   19.9
+##  9     9 Guanapo   19.1
+## 10    10 Guanapo   18.8
+## # … with 58 more rows
+```
+
+:::
+
+::: {.panel}
+[base R]{.panel-name}
+
+
+```r
+rivers_r <- read.csv("data/tidy/CS1-twosample.csv")
+
+head(rivers_r)
+```
+
+```
+##   id   river length
+## 1  1 Guanapo   19.1
+## 2  2 Guanapo   23.3
+## 3  3 Guanapo   18.2
+## 4  4 Guanapo   16.4
+## 5  5 Guanapo   19.7
+## 6  6 Guanapo   16.6
+```
+
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+
+```python
+rivers_py = pd.read_csv("data/tidy/CS1-twosample.csv")
+
+rivers_py.head()
+```
+
+```
+##    id    river  length
+## 0   1  Guanapo    19.1
+## 1   2  Guanapo    23.3
+## 2   3  Guanapo    18.2
+## 3   4  Guanapo    16.4
+## 4   5  Guanapo    19.7
+```
+
+:::
+:::::
+
 ## Summarise and visualise {#cs1-students-sumvisual}
-Let's summarise the data...
+Let's first summarise the data.
+
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
+
+
+```r
+summary(rivers)
+```
+
+```
+##        id           river               length     
+##  Min.   : 1.00   Length:68          Min.   :11.20  
+##  1st Qu.:17.75   Class :character   1st Qu.:18.40  
+##  Median :34.50   Mode  :character   Median :19.30  
+##  Mean   :34.50                      Mean   :19.46  
+##  3rd Qu.:51.25                      3rd Qu.:20.93  
+##  Max.   :68.00                      Max.   :26.40
+```
+
+This gives us the standard summary statistics, but in this case we have more than one group (Aripo and Guanapo), so it might be helpful to get summary statistics _per group_. One way of doing this is by using the `get_summary_stats()` function from the `rstatix` library.
+
+We don't need summary statistics for the `id` column, so we un-select it. We then group the data by `river` and get the summary stats:
 
 
 ```r
@@ -57,7 +191,7 @@ rivers %>%
 ## 2 Guanapo length      29  11.2  23.3   18.8   2.2  18.3  2.58 0.48  0.983
 ```
 
-and visualise it:
+Numbers might not always give you the best insight into your data, so we also visualise our data:
 
 
 ```r
@@ -66,9 +200,108 @@ rivers %>%
   geom_boxplot()
 ```
 
-<img src="cs1-practical-two_sample_t_test_files/figure-html/cs1-twosample-rivers-boxplot-1.png" width="672" />
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+:::
 
-The boxplot does appear to suggest that the two samples have different means, and moreover that the guppies in Guanapo may be smaller than the guppies in Aripo. It isn’t immediately obvious that the two populations don’t have equal variances though, so we plough on.
+::: {.panel}
+[base R]{.panel-name}
+
+```r
+summary(rivers)
+```
+
+```
+##        id           river               length     
+##  Min.   : 1.00   Length:68          Min.   :11.20  
+##  1st Qu.:17.75   Class :character   1st Qu.:18.40  
+##  Median :34.50   Mode  :character   Median :19.30  
+##  Mean   :34.50                      Mean   :19.46  
+##  3rd Qu.:51.25                      3rd Qu.:20.93  
+##  Max.   :68.00                      Max.   :26.40
+```
+
+This gives us the standard summary statistics, but in this case we have more than one group (Aripo and Guanapo), so it might be helpful to get summary statistics _per group_. We can do this in base R using the `aggregate()` function.
+
+
+```r
+aggregate(length ~ river, data = rivers_r, summary)
+```
+
+```
+##     river length.Min. length.1st Qu. length.Median length.Mean length.3rd Qu.
+## 1   Aripo    17.50000       19.10000      20.10000    20.33077       21.30000
+## 2 Guanapo    11.20000       17.50000      18.80000    18.29655       19.70000
+##   length.Max.
+## 1    26.40000
+## 2    23.30000
+```
+
+* The first argument defines the variable that is being used (`length`) and grouping (`river`)
+* The second argument is the data frame that is used
+* The third argument defines the function that is applied across the subsets (in this case that's the `summary()` function)
+
+Numbers might not always give you the best insight into your data, so we also visualise our data:
+
+
+```r
+boxplot(length ~ river,
+        data = rivers_r)
+```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+
+We can use a very similar notation as we did for the summary statistics (`length ~ river`), so a box plot is created per group.
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+```python
+rivers_py.describe()
+```
+
+```
+##              id     length
+## count  68.00000  68.000000
+## mean   34.50000  19.463235
+## std    19.77372   2.370081
+## min     1.00000  11.200000
+## 25%    17.75000  18.400000
+## 50%    34.50000  19.300000
+## 75%    51.25000  20.925000
+## max    68.00000  26.400000
+```
+
+This gives us the standard summary statistics, but in this case we have more than one group (Aripo and Guanapo), so it might be helpful to get summary statistics _per group_. Here we use the `pd.groupby()` function to group by `river`. We only want to have summary statistics for the `length` variable, so we specify that as well:
+
+
+```python
+rivers_py.groupby("river")["length"].describe()
+```
+
+```
+##          count       mean       std   min   25%   50%   75%   max
+## river                                                            
+## Aripo     39.0  20.330769  1.780620  17.5  19.1  20.1  21.3  26.4
+## Guanapo   29.0  18.296552  2.584636  11.2  17.5  18.8  19.7  23.3
+```
+
+Numbers might not always give you the best insight into your data, so we also visualise our data:
+
+
+```python
+(
+  ggplot(rivers_py, aes(x = "river", y = "length"))
+  + geom_boxplot()
+)
+```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-14-1.png" width="614" />
+
+:::
+:::::
+
+The box plot does appear to suggest that the two samples have different means, and moreover that the guppies in Guanapo may be smaller than the guppies in Aripo. It isn’t immediately obvious that the two populations don’t have equal variances though (box plots are not quite the right tool for this), so we plough on. Who ever said statistics would be glamorous?
 
 ## Assumptions
 In order to use a Student’s t-test (and for the results to be strictly valid) we have to make three assumptions:
@@ -82,9 +315,15 @@ In this example the first assumption can be ignored as the sample sizes are larg
 The second point we can do nothing about unless we know how the data were collected, so again we ignore it.
 
 The third point regarding equality of variance can be tested using either Bartlett’s test (if the samples are normally distributed) or Levene’s test (if the samples are not normally distributed).
+
 This is where it gets a bit trickier. Although we don’t care if the samples are normally distributed for the t-test to be valid (because the sample size is big enough to compensate), we do need to know if they are normally distributed in order to decide which variance test to use.
 
 So we perform a [Shapiro-Wilk test](#shapiro-wilk-test) on both samples separately.
+
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
+We can use the `group_by()` function to group the data by `river`, then we perform the Shapiro-Wilk test on the `length` measurements:
 
 
 ```r
@@ -102,17 +341,85 @@ rivers %>%
 ## 2 Guanapo length       0.949 0.176
 ```
 
+:::
+
+::: {.panel}
+[base R]{.panel-name}
+Before we can do that, we need to convert the data to a format where the data is split by `river`:
+
+
+```r
+# create a new object (a list) that contains the unstacked data
+uns_rivers <- unstack(rivers_r, select = -id, form = length ~ river)
+# have a look at the data
+uns_rivers
+```
+
+Now that we've separated the data by river we can perform the Shapiro-Wilk test:
+
+
+```r
+shapiro.test(uns_rivers$Aripo)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  uns_rivers$Aripo
+## W = 0.93596, p-value = 0.02802
+```
+
+```r
+shapiro.test(uns_rivers$Guanapo)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  uns_rivers$Guanapo
+## W = 0.94938, p-value = 0.1764
+```
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+We first need to split the data by `river`.
+
+```python
+rivers_py.groupby("river")["length"] \
+.apply(lambda x: pd.Series(stats.shapiro(x), index=['W-stat','p-value'])) \
+.reset_index()
+```
+
+```
+##      river  level_1    length
+## 0    Aripo   W-stat  0.935958
+## 1    Aripo  p-value  0.028023
+## 2  Guanapo   W-stat  0.949384
+## 3  Guanapo  p-value  0.176420
+```
+
+The code is a bit convoluted and perhaps there is a more efficient way that I'm not aware of. Anyway, we can do this with the `groupby()` function from pandas. Next, we only select the `length` measurements and use the `.apply()` function to apply the `stats.shapiro()` test over each group. This returns two values per group: the W-statistic that the Shapiro-Wilk test uses and, the value we're most interested in, the p-value. Lastly,we use the `.reset_index()` function to repeat the grouping name.
+
+:::
+:::::
 We can see that whilst the Guanapo data is probably normally distributed (p = 0.1764 > 0.05), the Aripo data is unlikely to be normally distributed (p = 0.02802 < 0.05). Remember that the p-value gives the probability of observing each sample if the parent population is actually normally distributed.
 
 The Shapiro-Wilk test is quite sensitive to sample size. This means that if you have a large sample then even small deviations from normality will cause the sample to fail the test, whereas smaller samples are allowed to pass with much larger deviations. Here the Aripo data has nearly 40 points in it compared with the Guanapo data and so it is much easier for the Aripo sample to fail compared with the Guanapo data.
 
 ## Exercise: Q-Q plots rivers {#exercise-qq-rivers}
-:::exercise
+:::exercise ::::::
+
 Q-Q plots for `rivers` data
 
 Create the Q-Q plots for the two samples and discuss with your neighbour what you see in light of the results from the above Shapiro-Wilk test.
 
 <details><summary>Answer</summary>
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
 
 
 ```r
@@ -120,28 +427,73 @@ Create the Q-Q plots for the two samples and discuss with your neighbour what yo
 # then create a panel per river
 # containing the Q-Q plot for that river
 rivers %>% 
-  group_by(river) %>%
   ggplot(aes(sample = length)) +
   stat_qq() +
   stat_qq_line(colour = "red") +
   facet_wrap(facets = vars(river))
 ```
 
-<img src="cs1-practical-two_sample_t_test_files/figure-html/cs1-twosample-qqplot-1.png" width="672" />
-
-The Q-Q plots mirror what we found with the Shapiro-Wilk tests: the data for Aripo are pretty normally distributed, whereas the assumption of normality for the Guanapo data is less certain.
-
-</details>
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-17-1.png" width="672" />
 :::
 
-<br />
+::: {.panel}
+[base R]{.panel-name}
+
+```r
+par(mfrow=c(1,2))
+qqnorm(uns_rivers$Aripo, main = "Aripo")
+qqline(uns_rivers$Aripo, col = "red")
+
+qqnorm(uns_rivers$Guanapo, main = "Guanapo")
+qqline(uns_rivers$Guanapo, col = "red")
+```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-18-1.png" width="672" />
+
+:::
+
+::: {.panel}
+[Pyhon]{.panel-name}
+
+```python
+(
+  ggplot(rivers_py, aes(sample = "length"))
+  + stat_qq()
+  + stat_qq_line(colour = "red")
+  + facet_wrap("river")
+)
+```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-19-1.png" width="614" />
+
+:::
+:::::
+
+The Q-Q plots show the opposite of what we found with the Shapiro-Wilk tests: the data for Aripo look pretty normally distributed, whereas the assumption of normality for the Guanapo data is less certain.
+
+What to do? Well, you could be conservative and state that you are not confident that the data in either group are normally distributed. That would be a perfectly reasonable conclusion.
+
+I would personally not have issues with stating that the Aripo data are probably normally distributed _enough_.
+</details>
+::::::::::::::::::
 
 ## Equality of variance
 :::highlight
 Remember that statistical tests do not provide answers, they merely suggest patterns. Human interpretation is still a crucial aspect to what we do.
 :::
 
-The Shapiro-Wilk test has shown that the data are not normal _enough_ and so in order to test for equality of variance we will use Levene’s test.
+The reason why we're checking for equality of variance (also referred to as **homogeneity of variance**) is because many statistical tests assume that the spread of the data within different parental populations (in this case, two) is the same. 
+
+If that is indeed the case, then the data themselves should have equal spread as well.
+
+The Shapiro-Wilk test and the Q-Q plots have shown that some of the data might not be normal _enough_ (although in opposite directions!) and so in order to test for equality of variance we will use Levene’s test.
+
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
+The function we use is `levene_test()` from the `rstatix` library.
+
+It takes the data in the form of a formula as follows:
 
 
 ```r
@@ -156,7 +508,61 @@ rivers %>%
 ## 1     1    66      1.77 0.188
 ```
 
-The key bit of information is the `p` column. This is the p-value (0.1876) for this test. And this tells us the probability of observing these two samples if they come from distributions with the same variance. As this probability is greater than our arbitrary significance level of 0.05 then we can be somewhat confident that the necessary assumptions for carrying out Student’s t-test on these two samples was valid. (Once again woohoo!)
+The key bit of information is the `p` column. This is the p-value (0.1876) for this test.
+:::
+
+::: {.panel}
+[base R]{.panel-name}
+Levene’s test is not included in the default R packages and may require the installation of an additional package called `car` (Companion to Applied Regression).
+
+To install the `car` package, run the following command in your console:
+
+
+```r
+install.packages("car")
+```
+
+Alternatively, go to <kbd>Tools</kbd> > <kbd>Install packages...</kbd> > <kbd>Packages</kbd>, type in `car` and press <kbd>Install</kbd>
+
+We can now perform Levene's test:
+
+
+```r
+leveneTest(length ~ river, data = rivers)
+```
+
+```
+## Levene's Test for Homogeneity of Variance (center = median)
+##       Df F value Pr(>F)
+## group  1  1.7732 0.1876
+##       66
+```
+
+Ignore any warning you might get about coercion to factors (the test needs to create grouped variables to work and R versions from 4.x onwards do not read in the data as factors).
+
+The key bit of information is the 3rd line under the text `Pr(>F)`. This is the p-value for this test.
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+Levene's test is included in the `stats` module in `scipy`. It requires two vectors as input, so we need to subset our data for each river:
+
+
+```python
+guanapo = rivers_py.query('river == "Guanapo"')["length"]
+aripo = rivers_py.query('river == "Aripo"')["length"]
+
+stats.levene(guanapo, aripo)
+```
+
+```
+## LeveneResult(statistic=1.7731837331911642, pvalue=0.18756940068805075)
+```
+
+:::
+:::::
+
+The p-value tells us the probability of observing these two samples if they come from distributions with the same variance. As this probability is greater than our arbitrary significance level of 0.05 then we can be somewhat confident that the necessary assumptions for carrying out Student’s t-test on these two samples was valid. (Once again woohoo!)
 
 ### Bartlett's test
 If we had wanted to carry out Bartlett’s test (i.e. if the data _had_ been sufficiently normally distributed) then the command would have been:

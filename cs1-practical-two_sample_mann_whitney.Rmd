@@ -1,5 +1,8 @@
 ```{r, echo=FALSE}
 source(file = "setup.R")
+
+xaringanExtra::use_panelset()
+xaringanExtra::style_panelset_tabs(font_family = "inherit")
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
