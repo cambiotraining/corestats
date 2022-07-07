@@ -1,5 +1,7 @@
 `<style>.panelset{--panel-tab-font-family: inherit;}</style>`{=html}
 
+
+
 # Student's t-test {#cs1-students-t-test}
 For this test we assume that both sample data sets are **normally distributed** and have **equal variance**. We test to see if the means of the two samples differ significantly from each other. 
 
@@ -51,10 +53,15 @@ The language used in this section is slightly different to that used in section 
 
 | Functions| Description|
 |:- |:- |
-
-
-
-
+|`pandas.DataFrame.read_csv`|Reads in a `.csv` file|
+|`pandas.DataFrame.head()`|Plots the first few rows|
+|`pandas.DataFrame.describe()`|Gives summary statistics|
+|`pandas.DataFrame.groupby()`|Group DataFrame using a mapper or by a Series of columns|
+|`pandas.DataFrame.query()`|Query the columns of a DataFrame with a boolean expression|
+|`scipy.stats.shapiro()`|Performs the Shapiro-Wilk test|
+|`scipy.stats.levene()`|Performs Levene's test for equality of variance|
+|`scipy.stats.bartlett()`|Performs Bartlett's test for equality of variance|
+|`scipy.stats.ttest_ind()`|Calculate the T-test for the means of two independent samples of scores|
 :::
 :::::
 
@@ -86,19 +93,19 @@ rivers
 ```
 
 ```
-## # A tibble: 68 × 3
-##       id river   length
-##    <dbl> <chr>    <dbl>
-##  1     1 Guanapo   19.1
-##  2     2 Guanapo   23.3
-##  3     3 Guanapo   18.2
-##  4     4 Guanapo   16.4
-##  5     5 Guanapo   19.7
-##  6     6 Guanapo   16.6
-##  7     7 Guanapo   17.5
-##  8     8 Guanapo   19.9
-##  9     9 Guanapo   19.1
-## 10    10 Guanapo   18.8
+## # A tibble: 68 × 2
+##    river   length
+##    <chr>    <dbl>
+##  1 Guanapo   19.1
+##  2 Guanapo   23.3
+##  3 Guanapo   18.2
+##  4 Guanapo   16.4
+##  5 Guanapo   19.7
+##  6 Guanapo   16.6
+##  7 Guanapo   17.5
+##  8 Guanapo   19.9
+##  9 Guanapo   19.1
+## 10 Guanapo   18.8
 ## # … with 58 more rows
 ```
 
@@ -115,13 +122,13 @@ head(rivers_r)
 ```
 
 ```
-##   id   river length
-## 1  1 Guanapo   19.1
-## 2  2 Guanapo   23.3
-## 3  3 Guanapo   18.2
-## 4  4 Guanapo   16.4
-## 5  5 Guanapo   19.7
-## 6  6 Guanapo   16.6
+##     river length
+## 1 Guanapo   19.1
+## 2 Guanapo   23.3
+## 3 Guanapo   18.2
+## 4 Guanapo   16.4
+## 5 Guanapo   19.7
+## 6 Guanapo   16.6
 ```
 
 :::
@@ -137,12 +144,12 @@ rivers_py.head()
 ```
 
 ```
-##    id    river  length
-## 0   1  Guanapo    19.1
-## 1   2  Guanapo    23.3
-## 2   3  Guanapo    18.2
-## 3   4  Guanapo    16.4
-## 4   5  Guanapo    19.7
+##      river  length
+## 0  Guanapo    19.1
+## 1  Guanapo    23.3
+## 2  Guanapo    18.2
+## 3  Guanapo    16.4
+## 4  Guanapo    19.7
 ```
 
 :::
@@ -161,24 +168,22 @@ summary(rivers)
 ```
 
 ```
-##        id           river               length     
-##  Min.   : 1.00   Length:68          Min.   :11.20  
-##  1st Qu.:17.75   Class :character   1st Qu.:18.40  
-##  Median :34.50   Mode  :character   Median :19.30  
-##  Mean   :34.50                      Mean   :19.46  
-##  3rd Qu.:51.25                      3rd Qu.:20.93  
-##  Max.   :68.00                      Max.   :26.40
+##     river               length     
+##  Length:68          Min.   :11.20  
+##  Class :character   1st Qu.:18.40  
+##  Mode  :character   Median :19.30  
+##                     Mean   :19.46  
+##                     3rd Qu.:20.93  
+##                     Max.   :26.40
 ```
 
 This gives us the standard summary statistics, but in this case we have more than one group (Aripo and Guanapo), so it might be helpful to get summary statistics _per group_. One way of doing this is by using the `get_summary_stats()` function from the `rstatix` library.
 
-We don't need summary statistics for the `id` column, so we un-select it. We then group the data by `river` and get the summary stats:
 
 
 ```r
 # get common summary stats for the length column
 rivers %>% 
-  select(-id) %>% 
   group_by(river) %>% 
   get_summary_stats(type = "common")
 ```
@@ -211,13 +216,13 @@ summary(rivers)
 ```
 
 ```
-##        id           river               length     
-##  Min.   : 1.00   Length:68          Min.   :11.20  
-##  1st Qu.:17.75   Class :character   1st Qu.:18.40  
-##  Median :34.50   Mode  :character   Median :19.30  
-##  Mean   :34.50                      Mean   :19.46  
-##  3rd Qu.:51.25                      3rd Qu.:20.93  
-##  Max.   :68.00                      Max.   :26.40
+##     river               length     
+##  Length:68          Min.   :11.20  
+##  Class :character   1st Qu.:18.40  
+##  Mode  :character   Median :19.30  
+##                     Mean   :19.46  
+##                     3rd Qu.:20.93  
+##                     Max.   :26.40
 ```
 
 This gives us the standard summary statistics, but in this case we have more than one group (Aripo and Guanapo), so it might be helpful to get summary statistics _per group_. We can do this in base R using the `aggregate()` function.
@@ -263,15 +268,15 @@ rivers_py.describe()
 ```
 
 ```
-##              id     length
-## count  68.00000  68.000000
-## mean   34.50000  19.463235
-## std    19.77372   2.370081
-## min     1.00000  11.200000
-## 25%    17.75000  18.400000
-## 50%    34.50000  19.300000
-## 75%    51.25000  20.925000
-## max    68.00000  26.400000
+##           length
+## count  68.000000
+## mean   19.463235
+## std     2.370081
+## min    11.200000
+## 25%    18.400000
+## 50%    19.300000
+## 75%    20.925000
+## max    26.400000
 ```
 
 This gives us the standard summary statistics, but in this case we have more than one group (Aripo and Guanapo), so it might be helpful to get summary statistics _per group_. Here we use the `pd.groupby()` function to group by `river`. We only want to have summary statistics for the `length` variable, so we specify that as well:
@@ -352,7 +357,7 @@ Before we can do that, we need to convert the data to a format where the data is
 
 ```r
 # create a new object (a list) that contains the unstacked data
-uns_rivers <- unstack(rivers_r, select = -id, form = length ~ river)
+uns_rivers <- unstack(rivers_r, form = length ~ river)
 # have a look at the data
 uns_rivers
 ```
@@ -741,38 +746,76 @@ Using the following data, test the null hypothesis that male and female turtles 
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
  <thead>
   <tr>
+   <th style="text-align:right;"> id </th>
    <th style="text-align:right;"> Male </th>
    <th style="text-align:right;"> Female </th>
   </tr>
  </thead>
 <tbody>
   <tr>
+   <td style="text-align:right;"> 1 </td>
    <td style="text-align:right;"> 220.1 </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 218.6 </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 229.6 </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 228.8 </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 222.0 </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 224.1 </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 226.5 </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> 223.4 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 218.6 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> 221.5 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 229.6 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> 230.2 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 228.8 </td>
+   <td style="text-align:right;"> 11 </td>
+   <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> 224.3 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 222.0 </td>
+   <td style="text-align:right;"> 12 </td>
+   <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> 223.8 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 224.1 </td>
-   <td style="text-align:right;"> 230.8 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 226.5 </td>
+   <td style="text-align:right;"> 13 </td>
    <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> 230.8 </td>
   </tr>
 </tbody>
 </table>
@@ -816,8 +859,6 @@ turtle
 ## 12  224. Female
 ## 13  231. Female
 ```
-
-Note that there isn't an `id` column to identify each observation. This isn't a problem, as long as it's clear that each observation is independent.
 
 ### Hypotheses
 

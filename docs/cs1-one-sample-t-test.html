@@ -3,16 +3,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Chapter 3 One-sample t-test | Core Statistics in R</title>
+<title>Chapter 4 One-sample t-test | Core Statistics in R</title>
 <meta name="author" content="Matt Castle and Martin van Rongen">
-<meta name="description" content="3.1 Libraries and functions  tidyverse Libraries Description library(tidyverse) A collection of R packages designed for data science library(rstatix) Converts base R stats functions to a...">
+<meta name="description" content="4.1 Libraries and functions  tidyverse Libraries Description library(tidyverse) A collection of R packages designed for data science library(rstatix) Converts base R stats functions to a...">
 <meta name="generator" content="bookdown 0.26 with bs4_book()">
-<meta property="og:title" content="Chapter 3 One-sample t-test | Core Statistics in R">
+<meta property="og:title" content="Chapter 4 One-sample t-test | Core Statistics in R">
 <meta property="og:type" content="book">
-<meta property="og:description" content="3.1 Libraries and functions  tidyverse Libraries Description library(tidyverse) A collection of R packages designed for data science library(rstatix) Converts base R stats functions to a...">
+<meta property="og:description" content="4.1 Libraries and functions  tidyverse Libraries Description library(tidyverse) A collection of R packages designed for data science library(rstatix) Converts base R stats functions to a...">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter 3 One-sample t-test | Core Statistics in R">
-<meta name="twitter:description" content="3.1 Libraries and functions  tidyverse Libraries Description library(tidyverse) A collection of R packages designed for data science library(rstatix) Converts base R stats functions to a...">
+<meta name="twitter:title" content="Chapter 4 One-sample t-test | Core Statistics in R">
+<meta name="twitter:description" content="4.1 Libraries and functions  tidyverse Libraries Description library(tidyverse) A collection of R packages designed for data science library(rstatix) Converts base R stats functions to a...">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -342,11 +342,14 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
+<li class="book-part">CoreStats 1: Simple hypothesis testing</li>
+<li><a class="" href="cs1-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
 <li class="book-part">CoreStats 1 (Practicals)</li>
-<li><a class="" href="introduction.html"><span class="header-section-number">2</span> Introduction</a></li>
-<li><a class="active" href="cs1-one-sample-t-test.html"><span class="header-section-number">3</span> One-sample t-test</a></li>
-<li><a class="" href="cs1-onesample-wilcoxon-signed-rank.html"><span class="header-section-number">4</span> Wilcoxon signed-rank test</a></li>
-<li><a class="" href="cs1-students-t-test.html"><span class="header-section-number">5</span> Student’s t-test</a></li>
+<li><a class="" href="introduction.html"><span class="header-section-number">3</span> Introduction</a></li>
+<li><a class="active" href="cs1-one-sample-t-test.html"><span class="header-section-number">4</span> One-sample t-test</a></li>
+<li><a class="" href="cs1-onesample-wilcoxon-signed-rank.html"><span class="header-section-number">5</span> Wilcoxon signed-rank test</a></li>
+<li><a class="" href="cs1-students-t-test.html"><span class="header-section-number">6</span> Student’s t-test</a></li>
+<li><a class="" href="cs1-mannwhitney-u-test.html"><span class="header-section-number">7</span> Mann-Whitney U test</a></li>
 </ul>
 
         <div class="book-extra">
@@ -354,13 +357,13 @@
         </div>
       </nav>
 </div>
-  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="cs1-one-sample-t-test" class="section level1" number="3">
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="cs1-one-sample-t-test" class="section level1" number="4">
 <h1>
-<span class="header-section-number">3</span> One-sample t-test<a class="anchor" aria-label="anchor" href="#cs1-one-sample-t-test"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4</span> One-sample t-test<a class="anchor" aria-label="anchor" href="#cs1-one-sample-t-test"><i class="fas fa-link"></i></a>
 </h1>
-<div id="libraries-and-functions" class="section level2" number="3.1">
+<div id="libraries-and-functions" class="section level2" number="4.1">
 <h2>
-<span class="header-section-number">3.1</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.1</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions"><i class="fas fa-link"></i></a>
 </h2>
 <div class="panelset">
 <div class="panel">
@@ -498,9 +501,9 @@
 </div>
 </div>
 </div>
-<div id="data-and-hypotheses" class="section level2" number="3.2">
+<div id="data-and-hypotheses" class="section level2" number="4.2">
 <h2>
-<span class="header-section-number">3.2</span> Data and hypotheses<a class="anchor" aria-label="anchor" href="#data-and-hypotheses"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.2</span> Data and hypotheses<a class="anchor" aria-label="anchor" href="#data-and-hypotheses"><i class="fas fa-link"></i></a>
 </h2>
 <p>For example, suppose we measure the body lengths of male guppies (in mm) collected from the Guanapo River in Trinidad. We want to test whether the data support the hypothesis that the mean body is actually 20 mm. We form the following null and alternative hypotheses:</p>
 <ul>
@@ -576,9 +579,9 @@ We then read the data in:</p>
 </div>
 </div>
 </div>
-<div id="summarise-and-visualise" class="section level2" number="3.3">
+<div id="summarise-and-visualise" class="section level2" number="4.3">
 <h2>
-<span class="header-section-number">3.3</span> Summarise and visualise<a class="anchor" aria-label="anchor" href="#summarise-and-visualise"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.3</span> Summarise and visualise<a class="anchor" aria-label="anchor" href="#summarise-and-visualise"><i class="fas fa-link"></i></a>
 </h2>
 <p>Summarise the data and visualise it:</p>
 <div class="panelset">
@@ -633,9 +636,9 @@ First we have a look at a numerical summary of the data:</p>
 </div>
 <p>The data do not appear to contain any obvious errors, and whilst both the mean and median are less than 20 (18.3 and 18.8 respectively) it is not absolutely certain that the sample mean is sufficiently different from this value to be “statistically significant”, although we may anticipate such a result.</p>
 </div>
-<div id="assumptions" class="section level2" number="3.4">
+<div id="assumptions" class="section level2" number="4.4">
 <h2>
-<span class="header-section-number">3.4</span> Assumptions<a class="anchor" aria-label="anchor" href="#assumptions"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.4</span> Assumptions<a class="anchor" aria-label="anchor" href="#assumptions"><i class="fas fa-link"></i></a>
 </h2>
 <p>When it comes to one-sample tests, we have two options:</p>
 <ol style="list-style-type: lower-alpha">
@@ -660,9 +663,9 @@ There are three ways of checking for normality:</p>
 <li>Quantile-quantile plot</li>
 <li>Shapiro-Wilk test</li>
 </ol>
-<div id="histogram-of-the-data" class="section level3" number="3.4.1">
+<div id="histogram-of-the-data" class="section level3" number="4.4.1">
 <h3>
-<span class="header-section-number">3.4.1</span> Histogram of the data<a class="anchor" aria-label="anchor" href="#histogram-of-the-data"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.4.1</span> Histogram of the data<a class="anchor" aria-label="anchor" href="#histogram-of-the-data"><i class="fas fa-link"></i></a>
 </h3>
 <p>Plot a histogram of the data, which gives:</p>
 <div class="panelset">
@@ -692,9 +695,9 @@ There are three ways of checking for normality:</p>
 <p>The distribution appears to be uni-modal and symmetric, and so it isn’t obviously non-normal. However, there are a lot of distributions that have these simple properties but which aren’t normal, so this isn’t exactly rigorous. Thankfully there are other, more rigorous tests.</p>
 <p>NB. By even looking at this distribution to assess the assumption of normality we are already going far beyond what anyone else ever does. Nevertheless, we will continue.</p>
 </div>
-<div id="q-q-plot-of-the-data" class="section level3" number="3.4.2">
+<div id="q-q-plot-of-the-data" class="section level3" number="4.4.2">
 <h3>
-<span class="header-section-number">3.4.2</span> Q-Q plot of the data<a class="anchor" aria-label="anchor" href="#q-q-plot-of-the-data"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.4.2</span> Q-Q plot of the data<a class="anchor" aria-label="anchor" href="#q-q-plot-of-the-data"><i class="fas fa-link"></i></a>
 </h3>
 <p>Q-Q plot is the short for quantile-quantile plot. This <strong>diagnostic</strong> plot (as it is sometimes called) is a way of comparing two distributions. How Q-Q plots work won’t be explained here but ask a demonstrator if you really want to know what is going on.</p>
 <p>Construct a Q-Q Plot of the quantiles of the data against the quantiles of a normal distribution:</p>
@@ -743,9 +746,9 @@ There are three ways of checking for normality:</p>
 <p>These two graphs relate to 200 data points that have been drawn from an exponential distribution. Exponential distributions are not symmetric and are very skewed compared with normal distributions. The significant right-skew in this distribution is reflected in the QQ plot again having points that curve away above the diagonal line at both ends (a left-skew would have the points being below the line at both ends).</p>
 <p>In all four cases it is worth noting that the deviations are only at the ends of the plot.</p>
 </div>
-<div id="shapiro-wilk-test" class="section level3" number="3.4.3">
+<div id="shapiro-wilk-test" class="section level3" number="4.4.3">
 <h3>
-<span class="header-section-number">3.4.3</span> Shapiro-Wilk test<a class="anchor" aria-label="anchor" href="#shapiro-wilk-test"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.4.3</span> Shapiro-Wilk test<a class="anchor" aria-label="anchor" href="#shapiro-wilk-test"><i class="fas fa-link"></i></a>
 </h3>
 <p>This is one of a number of formal statistical test that assess whether a given sample of numbers come from a normal distribution. It calculates the probability of getting the sample data if the underlying distribution is in fact normal. It is very easy to carry out in R.</p>
 <p>Perform a Shapiro-Wilk test on the data:</p>
@@ -793,9 +796,9 @@ There are three ways of checking for normality:</p>
 <p>As the p-value is bigger than 0.05 (say) then we can say that there is insufficient evidence to reject the null hypothesis that the sample came from a normal distribution.</p>
 <p>It is important to recognise that the Shapiro-Wilk test is not without limitations. It is rather sensitive to the sample size being considered. In general, for small sample sizes, the test is very relaxed about normality (and nearly all data sets are considered normal), whereas for large sample sizes the test can be overly strict, and it can fail to recognise data sets that are very nearly normal indeed.</p>
 </div>
-<div id="assumptions-overview" class="section level3" number="3.4.4">
+<div id="assumptions-overview" class="section level3" number="4.4.4">
 <h3>
-<span class="header-section-number">3.4.4</span> Assumptions overview<a class="anchor" aria-label="anchor" href="#assumptions-overview"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.4.4</span> Assumptions overview<a class="anchor" aria-label="anchor" href="#assumptions-overview"><i class="fas fa-link"></i></a>
 </h3>
 <div class="highlight">
 <p>In terms of assessing the assumptions of a test it is always worth considering several methods, both graphical and analytic, and not just relying on a single method.</p>
@@ -804,9 +807,9 @@ There are three ways of checking for normality:</p>
 <p>In which case we would consider an alternative test that has less stringent assumptions (but is less powerful): the <a href="cs1-onesample-wilcoxon-signed-rank.html#cs1-onesample-wilcoxon-signed-rank">one-sample Wilcoxon signed-rank test</a>.</p>
 </div>
 </div>
-<div id="implement-the-test" class="section level2" number="3.5">
+<div id="implement-the-test" class="section level2" number="4.5">
 <h2>
-<span class="header-section-number">3.5</span> Implement the test<a class="anchor" aria-label="anchor" href="#implement-the-test"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.5</span> Implement the test<a class="anchor" aria-label="anchor" href="#implement-the-test"><i class="fas fa-link"></i></a>
 </h2>
 <p>Perform a one-sample, two-tailed t-test:</p>
 <div class="panelset">
@@ -861,9 +864,9 @@ There are three ways of checking for normality:</p>
 </div>
 </div>
 </div>
-<div id="interpreting-the-output-and-report-results" class="section level2" number="3.6">
+<div id="interpreting-the-output-and-report-results" class="section level2" number="4.6">
 <h2>
-<span class="header-section-number">3.6</span> Interpreting the output and report results<a class="anchor" aria-label="anchor" href="#interpreting-the-output-and-report-results"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.6</span> Interpreting the output and report results<a class="anchor" aria-label="anchor" href="#interpreting-the-output-and-report-results"><i class="fas fa-link"></i></a>
 </h2>
 <p>This is the output that you should now see in the console window:</p>
 <div class="panelset">
@@ -926,12 +929,12 @@ There are three ways of checking for normality:</p>
 <p>The above sentence is an adequate concluding statement for this test and is what we would write in any paper or report. Note that we have included (in brackets) information on the actual mean value of our group(<span class="math inline">\(\mu\)</span> = 18.29mm), the test statistic (t = -3.55), the degrees of freedom (df = 28), and the p-value (p = 0.0014). In some journals you are only required to report whether the p-value is less than the critical value (e.g. p &lt; 0.05) but I would always recommend reporting the actual p-value obtained.</p>
 <p>Please feel free to ask a demonstrator if any aspect of this section is unclear as this does form the core of classical hypothesis testing and the logic here applies to all of the rest of the tests.</p>
 </div>
-<div id="exercise-gastric-juices" class="section level2" number="3.7">
+<div id="exercise-gastric-juices" class="section level2" number="4.7">
 <h2>
-<span class="header-section-number">3.7</span> Exercise: gastric juices<a class="anchor" aria-label="anchor" href="#exercise-gastric-juices"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.7</span> Exercise: gastric juices<a class="anchor" aria-label="anchor" href="#exercise-gastric-juices"><i class="fas fa-link"></i></a>
 </h2>
 <div class="exercise">
-<p><span id="exr:unlabeled-div-1" class="exercise"><strong>Exercise 3.1  </strong></span>The following data are the dissolving times (in seconds) of a drug in agitated gastric juice:</p>
+<p><span id="exr:unlabeled-div-1" class="exercise"><strong>Exercise 4.1  </strong></span>The following data are the dissolving times (in seconds) of a drug in agitated gastric juice:</p>
 <p><code>42.7, 43.4, 44.6, 45.1, 45.6, 45.9, 46.8, 47.6</code></p>
 <p>Do these results provide any evidence to suggest that dissolving time for this drug is different from 45 seconds?</p>
 <ol style="list-style-type: decimal">
@@ -950,16 +953,16 @@ There are three ways of checking for normality:</p>
 </ol>
 <details><summary>
 Answer
-</summary><div id="hypotheses" class="section level3" number="3.7.1">
+</summary><div id="hypotheses" class="section level3" number="4.7.1">
 <h3>
-<span class="header-section-number">3.7.1</span> Hypotheses<a class="anchor" aria-label="anchor" href="#hypotheses"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.7.1</span> Hypotheses<a class="anchor" aria-label="anchor" href="#hypotheses"><i class="fas fa-link"></i></a>
 </h3>
 <p><span class="math inline">\(H_0\)</span> : mean <span class="math inline">\(=\)</span> 45s</p>
 <p><span class="math inline">\(H_1\)</span> : mean <span class="math inline">\(\neq\)</span> 45s</p>
 </div>
-<div id="data-summarise-visualise" class="section level3" number="3.7.2">
+<div id="data-summarise-visualise" class="section level3" number="4.7.2">
 <h3>
-<span class="header-section-number">3.7.2</span> Data, summarise &amp; visualise<a class="anchor" aria-label="anchor" href="#data-summarise-visualise"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.7.2</span> Data, summarise &amp; visualise<a class="anchor" aria-label="anchor" href="#data-summarise-visualise"><i class="fas fa-link"></i></a>
 </h3>
 <p>We can create a data frame in Excel and save it as an <code>.csv</code> file, for example as <code>CS1-gastric_juices.csv</code>. It contains two columns, an <code>id</code> column and a <code>dissolving_time</code> column with the measured values.</p>
 <div class="panelset">
@@ -1090,9 +1093,9 @@ Answer
 <li>The data appear to be symmetric, and so whilst we can’t tell if they’re normal they’re a least not massively skewed.</li>
 </ol>
 </div>
-<div id="assumptions-1" class="section level3" number="3.7.3">
+<div id="assumptions-1" class="section level3" number="4.7.3">
 <h3>
-<span class="header-section-number">3.7.3</span> Assumptions<a class="anchor" aria-label="anchor" href="#assumptions-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.7.3</span> Assumptions<a class="anchor" aria-label="anchor" href="#assumptions-1"><i class="fas fa-link"></i></a>
 </h3>
 <p>Normality:</p>
 <div class="panelset">
@@ -1150,9 +1153,9 @@ Answer
 <p>Overall, we are somewhat confident that the assumption of normality is well-enough met for the t-test to be an appropriate method for analysing the data. Note the ridiculous number of caveats here and the slightly political/slippery language I’m using. This is intentional and reflects the ambiguous nature of assumption checking. This is an important approach to doing statistics that you need to embrace.</p>
 <p>In reality, if I found myself in this situation I would also try doing a non-parametric test on the data (Wilcoxon signed-rank test) and see whether I get the same conclusion about whether the median dissolving time differs from 45s. Technically, you don’t know about the Wilcoxon test yet as you haven’t done that section of the materials. Anyway, if I get the same conclusion then my confidence in the result of the test goes up considerably; it doesn’t matter how well an assumption has been met, I get the same result. If on the other hand I get a completely different conclusion from carrying out the non-parametric test then all bets are off; I now have very little confidence in my test result as I don’t know which one to believe (in the case that the assumptions of the test are a bit unclear). In this example a Wilcoxon test also gives us a non-significant result and so all is good.</p>
 </div>
-<div id="implement-test" class="section level3" number="3.7.4">
+<div id="implement-test" class="section level3" number="4.7.4">
 <h3>
-<span class="header-section-number">3.7.4</span> Implement test<a class="anchor" aria-label="anchor" href="#implement-test"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.7.4</span> Implement test<a class="anchor" aria-label="anchor" href="#implement-test"><i class="fas fa-link"></i></a>
 </h3>
 <div class="panelset">
 <div class="panel">
@@ -1208,31 +1211,31 @@ Answer
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="introduction.html"><span class="header-section-number">2</span> Introduction</a></div>
-<div class="next"><a href="cs1-onesample-wilcoxon-signed-rank.html"><span class="header-section-number">4</span> Wilcoxon signed-rank test</a></div>
+<div class="prev"><a href="introduction.html"><span class="header-section-number">3</span> Introduction</a></div>
+<div class="next"><a href="cs1-onesample-wilcoxon-signed-rank.html"><span class="header-section-number">5</span> Wilcoxon signed-rank test</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#cs1-one-sample-t-test"><span class="header-section-number">3</span> One-sample t-test</a></li>
-<li><a class="nav-link" href="#libraries-and-functions"><span class="header-section-number">3.1</span> Libraries and functions</a></li>
-<li><a class="nav-link" href="#data-and-hypotheses"><span class="header-section-number">3.2</span> Data and hypotheses</a></li>
-<li><a class="nav-link" href="#summarise-and-visualise"><span class="header-section-number">3.3</span> Summarise and visualise</a></li>
+<li><a class="nav-link" href="#cs1-one-sample-t-test"><span class="header-section-number">4</span> One-sample t-test</a></li>
+<li><a class="nav-link" href="#libraries-and-functions"><span class="header-section-number">4.1</span> Libraries and functions</a></li>
+<li><a class="nav-link" href="#data-and-hypotheses"><span class="header-section-number">4.2</span> Data and hypotheses</a></li>
+<li><a class="nav-link" href="#summarise-and-visualise"><span class="header-section-number">4.3</span> Summarise and visualise</a></li>
 <li>
-<a class="nav-link" href="#assumptions"><span class="header-section-number">3.4</span> Assumptions</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#histogram-of-the-data"><span class="header-section-number">3.4.1</span> Histogram of the data</a></li>
-<li><a class="nav-link" href="#q-q-plot-of-the-data"><span class="header-section-number">3.4.2</span> Q-Q plot of the data</a></li>
-<li><a class="nav-link" href="#shapiro-wilk-test"><span class="header-section-number">3.4.3</span> Shapiro-Wilk test</a></li>
-<li><a class="nav-link" href="#assumptions-overview"><span class="header-section-number">3.4.4</span> Assumptions overview</a></li>
+<a class="nav-link" href="#assumptions"><span class="header-section-number">4.4</span> Assumptions</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#histogram-of-the-data"><span class="header-section-number">4.4.1</span> Histogram of the data</a></li>
+<li><a class="nav-link" href="#q-q-plot-of-the-data"><span class="header-section-number">4.4.2</span> Q-Q plot of the data</a></li>
+<li><a class="nav-link" href="#shapiro-wilk-test"><span class="header-section-number">4.4.3</span> Shapiro-Wilk test</a></li>
+<li><a class="nav-link" href="#assumptions-overview"><span class="header-section-number">4.4.4</span> Assumptions overview</a></li>
 </ul>
 </li>
-<li><a class="nav-link" href="#implement-the-test"><span class="header-section-number">3.5</span> Implement the test</a></li>
-<li><a class="nav-link" href="#interpreting-the-output-and-report-results"><span class="header-section-number">3.6</span> Interpreting the output and report results</a></li>
+<li><a class="nav-link" href="#implement-the-test"><span class="header-section-number">4.5</span> Implement the test</a></li>
+<li><a class="nav-link" href="#interpreting-the-output-and-report-results"><span class="header-section-number">4.6</span> Interpreting the output and report results</a></li>
 <li>
-<a class="nav-link" href="#exercise-gastric-juices"><span class="header-section-number">3.7</span> Exercise: gastric juices</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#hypotheses"><span class="header-section-number">3.7.1</span> Hypotheses</a></li>
-<li><a class="nav-link" href="#data-summarise-visualise"><span class="header-section-number">3.7.2</span> Data, summarise &amp; visualise</a></li>
-<li><a class="nav-link" href="#assumptions-1"><span class="header-section-number">3.7.3</span> Assumptions</a></li>
-<li><a class="nav-link" href="#implement-test"><span class="header-section-number">3.7.4</span> Implement test</a></li>
+<a class="nav-link" href="#exercise-gastric-juices"><span class="header-section-number">4.7</span> Exercise: gastric juices</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#hypotheses"><span class="header-section-number">4.7.1</span> Hypotheses</a></li>
+<li><a class="nav-link" href="#data-summarise-visualise"><span class="header-section-number">4.7.2</span> Data, summarise &amp; visualise</a></li>
+<li><a class="nav-link" href="#assumptions-1"><span class="header-section-number">4.7.3</span> Assumptions</a></li>
+<li><a class="nav-link" href="#implement-test"><span class="header-section-number">4.7.4</span> Implement test</a></li>
 </ul>
 </li>
 </ul>

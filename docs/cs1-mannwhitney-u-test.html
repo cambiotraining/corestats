@@ -3,15 +3,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Chapter 2 Mann-Whitney U test | Core Statistics in R</title>
+<title>Chapter 7 Mann-Whitney U test | Core Statistics in R</title>
 <meta name="author" content="Matt Castle and Martin van Rongen">
 <meta name="description" content="This test also compares two samples, however for this test (in contrast to Student’s t-test) we don’t have to assume that the parent distributions are normally distributed. In order to compare the...">
 <meta name="generator" content="bookdown 0.26 with bs4_book()">
-<meta property="og:title" content="Chapter 2 Mann-Whitney U test | Core Statistics in R">
+<meta property="og:title" content="Chapter 7 Mann-Whitney U test | Core Statistics in R">
 <meta property="og:type" content="book">
 <meta property="og:description" content="This test also compares two samples, however for this test (in contrast to Student’s t-test) we don’t have to assume that the parent distributions are normally distributed. In order to compare the...">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter 2 Mann-Whitney U test | Core Statistics in R">
+<meta name="twitter:title" content="Chapter 7 Mann-Whitney U test | Core Statistics in R">
 <meta name="twitter:description" content="This test also compares two samples, however for this test (in contrast to Student’s t-test) we don’t have to assume that the parent distributions are normally distributed. In order to compare the...">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
@@ -23,7 +23,8 @@
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
 <script src="libs/bs4_book-1.0.0/bs4_book.js"></script><link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet">
-<script src="libs/panelset-0.2.6/panelset.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><script type="text/javascript" src="//use.typekit.com/hyb5bko.js"></script><script type="text/javascript">try{Typekit.load();}catch(e){}</script><script type="text/javascript">  document.documentElement.className += " js";</script>
+<script src="libs/panelset-0.2.6/panelset.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><script type="text/javascript" src="//use.typekit.com/hyb5bko.js"></script><script type="text/javascript">try{Typekit.load();}catch(e){}</script><script type="text/javascript">  document.documentElement.className += " js";</script>
 </head>
 <body class="campl-theme-2" data-spy="scroll" data-target="#toc">
 
@@ -341,7 +342,14 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
-<li><a class="active" href="cs1-mannwhitney-u-test.html"><span class="header-section-number">2</span> Mann-Whitney U test</a></li>
+<li class="book-part">CoreStats 1: Simple hypothesis testing</li>
+<li><a class="" href="cs1-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li class="book-part">CoreStats 1 (Practicals)</li>
+<li><a class="" href="introduction.html"><span class="header-section-number">3</span> Introduction</a></li>
+<li><a class="" href="cs1-one-sample-t-test.html"><span class="header-section-number">4</span> One-sample t-test</a></li>
+<li><a class="" href="cs1-onesample-wilcoxon-signed-rank.html"><span class="header-section-number">5</span> Wilcoxon signed-rank test</a></li>
+<li><a class="" href="cs1-students-t-test.html"><span class="header-section-number">6</span> Student’s t-test</a></li>
+<li><a class="active" href="cs1-mannwhitney-u-test.html"><span class="header-section-number">7</span> Mann-Whitney U test</a></li>
 </ul>
 
         <div class="book-extra">
@@ -349,14 +357,14 @@
         </div>
       </nav>
 </div>
-  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="cs1-mannwhitney-u-test" class="section level1" number="2">
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="cs1-mannwhitney-u-test" class="section level1" number="7">
 <h1>
-<span class="header-section-number">2</span> Mann-Whitney U test<a class="anchor" aria-label="anchor" href="#cs1-mannwhitney-u-test"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7</span> Mann-Whitney U test<a class="anchor" aria-label="anchor" href="#cs1-mannwhitney-u-test"><i class="fas fa-link"></i></a>
 </h1>
 <p>This test also compares two samples, however for this test (in contrast to Student’s t-test) we don’t have to assume that the parent distributions are normally distributed. In order to compare the medians of the two groups we do still need the parent distributions (and consequently the samples) to both have the same shape and variance. In this test we look to see if the medians of the two parent distributions differ significantly from each other.</p>
-<div id="libraries-and-functions" class="section level2" number="2.1">
+<div id="libraries-and-functions-3" class="section level2" number="7.1">
 <h2>
-<span class="header-section-number">2.1</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.1</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions-3"><i class="fas fa-link"></i></a>
 </h2>
 <div class="panelset">
 <div class="panel">
@@ -454,9 +462,9 @@
 </div>
 </div>
 </div>
-<div id="data-and-hypotheses" class="section level2" number="2.2">
+<div id="data-and-hypotheses-3" class="section level2" number="7.2">
 <h2>
-<span class="header-section-number">2.2</span> Data and hypotheses<a class="anchor" aria-label="anchor" href="#data-and-hypotheses"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.2</span> Data and hypotheses<a class="anchor" aria-label="anchor" href="#data-and-hypotheses-3"><i class="fas fa-link"></i></a>
 </h2>
 <p>Again, we use the <code>rivers</code> data set. We want to test whether the median body length of male guppies differs between samples. We form the following null and alternative hypotheses:</p>
 <ul>
@@ -469,27 +477,27 @@
 </ul>
 <p>We use a two-tailed Mann-Whitney U test to see if we can reject the null hypothesis.</p>
 </div>
-<div id="summarise-and-visualise" class="section level2" number="2.3">
+<div id="summarise-and-visualise-2" class="section level2" number="7.3">
 <h2>
-<span class="header-section-number">2.3</span> Summarise and visualise<a class="anchor" aria-label="anchor" href="#summarise-and-visualise"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.3</span> Summarise and visualise<a class="anchor" aria-label="anchor" href="#summarise-and-visualise-2"><i class="fas fa-link"></i></a>
 </h2>
-<p>We did this in the <a href="#cs1-students-sumvisual">previous section</a>.</p>
+<p>We did this in the <a href="cs1-students-t-test.html#cs1-students-sumvisual">previous section</a>.</p>
 </div>
-<div id="assumptions" class="section level2" number="2.4">
+<div id="assumptions-6" class="section level2" number="7.4">
 <h2>
-<span class="header-section-number">2.4</span> Assumptions<a class="anchor" aria-label="anchor" href="#assumptions"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.4</span> Assumptions<a class="anchor" aria-label="anchor" href="#assumptions-6"><i class="fas fa-link"></i></a>
 </h2>
 <p>We have checked these previously.</p>
 </div>
-<div id="implement-and-interpret-the-test" class="section level2" number="2.5">
+<div id="implement-and-interpret-the-test-1" class="section level2" number="7.5">
 <h2>
-<span class="header-section-number">2.5</span> Implement and interpret the test<a class="anchor" aria-label="anchor" href="#implement-and-interpret-the-test"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.5</span> Implement and interpret the test<a class="anchor" aria-label="anchor" href="#implement-and-interpret-the-test-1"><i class="fas fa-link"></i></a>
 </h2>
 <p>Perform a two-tailed, Mann-Whitney U test:</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb192"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">rivers</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rpkgs.datanovia.com/rstatix/reference/wilcox_test.html">wilcox_test</a></span><span class="op">(</span><span class="va">length</span> <span class="op">~</span> <span class="va">river</span>,
               alternative <span class="op">=</span> <span class="st">"two.sided"</span><span class="op">)</span></code></pre></div>
@@ -512,7 +520,7 @@
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb194"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/wilcox.test.html">wilcox.test</a></span><span class="op">(</span><span class="va">length</span> <span class="op">~</span> <span class="va">river</span>, data <span class="op">=</span> <span class="va">rivers_r</span>,
             alternative <span class="op">=</span> <span class="st">"two.sided"</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
@@ -540,24 +548,24 @@
 <p>The <code>stats.mannwhitneyu()</code> function requires the numerical input for the two groups it needs to compare.</p>
 <p>The easiest way is to reformat our data from the <em>long</em> format where all the data are stacked on top of one another to the <em>wide</em> format, where the <code>length</code> values are in separate columns for the two rivers.</p>
 <p>We can do this with the <code>pd.pivot()</code> function. We save the output in a new object and then access the values as required. It keeps all the data separate, meaning that there will be missing values <code>NaN</code> in this format. The <code>stats.mannwhitneyu()</code> function doesn’t ignore missing values by default and we can specify this in the <code>nan_policy</code>, by setting this argument to <code>omit</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="cs1-mannwhitney-u-test.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reformat the data into a 'wide' format</span></span>
-<span id="cb5-2"><a href="cs1-mannwhitney-u-test.html#cb5-2" aria-hidden="true" tabindex="-1"></a>rivers_py_wide <span class="op">=</span> pd.pivot(rivers_py,</span>
-<span id="cb5-3"><a href="cs1-mannwhitney-u-test.html#cb5-3" aria-hidden="true" tabindex="-1"></a>                          columns <span class="op">=</span> <span class="st">'river'</span>,</span>
-<span id="cb5-4"><a href="cs1-mannwhitney-u-test.html#cb5-4" aria-hidden="true" tabindex="-1"></a>                          values <span class="op">=</span> <span class="st">'length'</span>)</span>
-<span id="cb5-5"><a href="cs1-mannwhitney-u-test.html#cb5-5" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb5-6"><a href="cs1-mannwhitney-u-test.html#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># have a look at the format</span></span>
-<span id="cb5-7"><a href="cs1-mannwhitney-u-test.html#cb5-7" aria-hidden="true" tabindex="-1"></a>rivers_py_wide.head()</span></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb196-1"><a href="cs1-mannwhitney-u-test.html#cb196-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reformat the data into a 'wide' format</span></span>
+<span id="cb196-2"><a href="cs1-mannwhitney-u-test.html#cb196-2" aria-hidden="true" tabindex="-1"></a>rivers_py_wide <span class="op">=</span> pd.pivot(rivers_py,</span>
+<span id="cb196-3"><a href="cs1-mannwhitney-u-test.html#cb196-3" aria-hidden="true" tabindex="-1"></a>                          columns <span class="op">=</span> <span class="st">'river'</span>,</span>
+<span id="cb196-4"><a href="cs1-mannwhitney-u-test.html#cb196-4" aria-hidden="true" tabindex="-1"></a>                          values <span class="op">=</span> <span class="st">'length'</span>)</span>
+<span id="cb196-5"><a href="cs1-mannwhitney-u-test.html#cb196-5" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb196-6"><a href="cs1-mannwhitney-u-test.html#cb196-6" aria-hidden="true" tabindex="-1"></a><span class="co"># have a look at the format</span></span>
+<span id="cb196-7"><a href="cs1-mannwhitney-u-test.html#cb196-7" aria-hidden="true" tabindex="-1"></a>rivers_py_wide.head()</span></code></pre></div>
 <pre><code>## river  Aripo  Guanapo
 ## 0        NaN     19.1
 ## 1        NaN     23.3
 ## 2        NaN     18.2
 ## 3        NaN     16.4
 ## 4        NaN     19.7</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="cs1-mannwhitney-u-test.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># perform the Mann-Whitney U test</span></span>
-<span id="cb7-2"><a href="cs1-mannwhitney-u-test.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ignoring the missing values</span></span>
-<span id="cb7-3"><a href="cs1-mannwhitney-u-test.html#cb7-3" aria-hidden="true" tabindex="-1"></a>stats.mannwhitneyu(rivers_py_wide[<span class="st">'Aripo'</span>],</span>
-<span id="cb7-4"><a href="cs1-mannwhitney-u-test.html#cb7-4" aria-hidden="true" tabindex="-1"></a>                   rivers_py_wide[<span class="st">'Guanapo'</span>],</span>
-<span id="cb7-5"><a href="cs1-mannwhitney-u-test.html#cb7-5" aria-hidden="true" tabindex="-1"></a>                   nan_policy <span class="op">=</span> <span class="st">'omit'</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb198-1"><a href="cs1-mannwhitney-u-test.html#cb198-1" aria-hidden="true" tabindex="-1"></a><span class="co"># perform the Mann-Whitney U test</span></span>
+<span id="cb198-2"><a href="cs1-mannwhitney-u-test.html#cb198-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ignoring the missing values</span></span>
+<span id="cb198-3"><a href="cs1-mannwhitney-u-test.html#cb198-3" aria-hidden="true" tabindex="-1"></a>stats.mannwhitneyu(rivers_py_wide[<span class="st">'Aripo'</span>],</span>
+<span id="cb198-4"><a href="cs1-mannwhitney-u-test.html#cb198-4" aria-hidden="true" tabindex="-1"></a>                   rivers_py_wide[<span class="st">'Guanapo'</span>],</span>
+<span id="cb198-5"><a href="cs1-mannwhitney-u-test.html#cb198-5" aria-hidden="true" tabindex="-1"></a>                   nan_policy <span class="op">=</span> <span class="st">'omit'</span>)</span></code></pre></div>
 <pre><code>## MannwhitneyuResult(statistic=841.0, pvalue=0.0006463668392349246)</code></pre>
 </div>
 </div>
@@ -566,42 +574,42 @@ Again, the p-value on the 3rd line is what we’re most interested in. Since the
 <p>To put it more completely, we can state that:</p>
 <p>A Mann-Whitney test indicated that the median body length of male guppies in the Guanapo river (18.8 mm) differs significantly from the median body length of male guppies in the Aripo river (20.1 mm) (W = 841, p = 0.0006).</p>
 </div>
-<div id="exercise" class="section level2" number="2.6">
+<div id="exercise-1" class="section level2" number="7.6">
 <h2>
-<span class="header-section-number">2.6</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.6</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise-1"><i class="fas fa-link"></i></a>
 </h2>
 <div class="exercise">
-<p><span id="exr:unlabeled-div-1" class="exercise"><strong>Exercise 2.1  </strong></span>Analyse the turtle data set from before using a Mann-Whitney U test.</p>
+<p><span id="exr:unlabeled-div-5" class="exercise"><strong>Exercise 7.1  </strong></span>Analyse the turtle data set from before using a Mann-Whitney U test.</p>
 <p>We follow the same process as with Student’s t-test.</p>
 <details><summary>
 Answer
-</summary><div id="hypotheses" class="section level3" number="2.6.1">
+</summary><div id="hypotheses-3" class="section level3" number="7.6.1">
 <h3>
-<span class="header-section-number">2.6.1</span> Hypotheses<a class="anchor" aria-label="anchor" href="#hypotheses"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.6.1</span> Hypotheses<a class="anchor" aria-label="anchor" href="#hypotheses-3"><i class="fas fa-link"></i></a>
 </h3>
 <p><span class="math inline">\(H_0\)</span> : male median <span class="math inline">\(=\)</span> female median</p>
 <p><span class="math inline">\(H_1\)</span> : male median <span class="math inline">\(\neq\)</span> female median</p>
 </div>
-<div id="summarise-and-visualise-1" class="section level3" number="2.6.2">
+<div id="summarise-and-visualise-3" class="section level3" number="7.6.2">
 <h3>
-<span class="header-section-number">2.6.2</span> Summarise and visualise<a class="anchor" aria-label="anchor" href="#summarise-and-visualise-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.6.2</span> Summarise and visualise<a class="anchor" aria-label="anchor" href="#summarise-and-visualise-3"><i class="fas fa-link"></i></a>
 </h3>
 <p>This is the same as before.</p>
 </div>
-<div id="assumptions-1" class="section level3" number="2.6.3">
+<div id="assumptions-7" class="section level3" number="7.6.3">
 <h3>
-<span class="header-section-number">2.6.3</span> Assumptions<a class="anchor" aria-label="anchor" href="#assumptions-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.6.3</span> Assumptions<a class="anchor" aria-label="anchor" href="#assumptions-7"><i class="fas fa-link"></i></a>
 </h3>
 <p>We’ve already checked that the variances of the two groups are similar, so we’re OK there. Whilst the Mann-Whitney U test doesn’t require normality or symmetry of distributions it does require that the distributions have the same shape. In this example, with just a handful of data points in each group, it’s quite hard to make this call one way or another. My advice in this case would be say that unless it’s obvious that the distributions are very different we can just allow this assumption to pass, and you’re only going see obvious differences in distribution shape when you have considerably more data points than we have here.</p>
 </div>
-<div id="carry-out-a-mann-whitney-test" class="section level3" number="2.6.4">
+<div id="carry-out-a-mann-whitney-test" class="section level3" number="7.6.4">
 <h3>
-<span class="header-section-number">2.6.4</span> Carry out a Mann-Whitney test<a class="anchor" aria-label="anchor" href="#carry-out-a-mann-whitney-test"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.6.4</span> Carry out a Mann-Whitney test<a class="anchor" aria-label="anchor" href="#carry-out-a-mann-whitney-test"><i class="fas fa-link"></i></a>
 </h3>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb200"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">turtle</span> <span class="op"><a href="https://rpkgs.datanovia.com/rstatix/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rpkgs.datanovia.com/rstatix/reference/wilcox_test.html">wilcox_test</a></span><span class="op">(</span><span class="va">serum</span> <span class="op">~</span> <span class="va">sex</span>,
               alternative <span class="op">=</span> <span class="st">"two.sided"</span><span class="op">)</span></code></pre></div>
@@ -612,7 +620,7 @@ Answer
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb202"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/wilcox.test.html">wilcox.test</a></span><span class="op">(</span><span class="va">serum</span> <span class="op">~</span> <span class="va">sex</span>,
             data <span class="op">=</span> <span class="va">turtle_r</span>,
             alternative <span class="op">=</span> <span class="st">"two.sided"</span><span class="op">)</span></code></pre></div>
@@ -625,24 +633,24 @@ Answer
 </div>
 <div class="panel">
 <p><span class="panel-name">Python</span></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="cs1-mannwhitney-u-test.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reformat the data into a 'wide' format</span></span>
-<span id="cb13-2"><a href="cs1-mannwhitney-u-test.html#cb13-2" aria-hidden="true" tabindex="-1"></a>turtle_py_wide <span class="op">=</span> pd.pivot(turtle_py,</span>
-<span id="cb13-3"><a href="cs1-mannwhitney-u-test.html#cb13-3" aria-hidden="true" tabindex="-1"></a>                          columns <span class="op">=</span> <span class="st">'sex'</span>,</span>
-<span id="cb13-4"><a href="cs1-mannwhitney-u-test.html#cb13-4" aria-hidden="true" tabindex="-1"></a>                          values <span class="op">=</span> <span class="st">'serum'</span>)</span>
-<span id="cb13-5"><a href="cs1-mannwhitney-u-test.html#cb13-5" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb13-6"><a href="cs1-mannwhitney-u-test.html#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># have a look at the format</span></span>
-<span id="cb13-7"><a href="cs1-mannwhitney-u-test.html#cb13-7" aria-hidden="true" tabindex="-1"></a>turtle_py_wide.head()</span></code></pre></div>
+<div class="sourceCode" id="cb204"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb204-1"><a href="cs1-mannwhitney-u-test.html#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reformat the data into a 'wide' format</span></span>
+<span id="cb204-2"><a href="cs1-mannwhitney-u-test.html#cb204-2" aria-hidden="true" tabindex="-1"></a>turtle_py_wide <span class="op">=</span> pd.pivot(turtle_py,</span>
+<span id="cb204-3"><a href="cs1-mannwhitney-u-test.html#cb204-3" aria-hidden="true" tabindex="-1"></a>                          columns <span class="op">=</span> <span class="st">'sex'</span>,</span>
+<span id="cb204-4"><a href="cs1-mannwhitney-u-test.html#cb204-4" aria-hidden="true" tabindex="-1"></a>                          values <span class="op">=</span> <span class="st">'serum'</span>)</span>
+<span id="cb204-5"><a href="cs1-mannwhitney-u-test.html#cb204-5" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb204-6"><a href="cs1-mannwhitney-u-test.html#cb204-6" aria-hidden="true" tabindex="-1"></a><span class="co"># have a look at the format</span></span>
+<span id="cb204-7"><a href="cs1-mannwhitney-u-test.html#cb204-7" aria-hidden="true" tabindex="-1"></a>turtle_py_wide.head()</span></code></pre></div>
 <pre><code>## sex  Female   Male
 ## 0       NaN  220.1
 ## 1       NaN  218.6
 ## 2       NaN  229.6
 ## 3       NaN  228.8
 ## 4       NaN  222.0</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="cs1-mannwhitney-u-test.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># perform the Mann-Whitney U test</span></span>
-<span id="cb15-2"><a href="cs1-mannwhitney-u-test.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ignoring the missing values</span></span>
-<span id="cb15-3"><a href="cs1-mannwhitney-u-test.html#cb15-3" aria-hidden="true" tabindex="-1"></a>stats.mannwhitneyu(turtle_py_wide[<span class="st">'Male'</span>],</span>
-<span id="cb15-4"><a href="cs1-mannwhitney-u-test.html#cb15-4" aria-hidden="true" tabindex="-1"></a>                   turtle_py_wide[<span class="st">'Female'</span>],</span>
-<span id="cb15-5"><a href="cs1-mannwhitney-u-test.html#cb15-5" aria-hidden="true" tabindex="-1"></a>                   nan_policy <span class="op">=</span> <span class="st">'omit'</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb206"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb206-1"><a href="cs1-mannwhitney-u-test.html#cb206-1" aria-hidden="true" tabindex="-1"></a><span class="co"># perform the Mann-Whitney U test</span></span>
+<span id="cb206-2"><a href="cs1-mannwhitney-u-test.html#cb206-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ignoring the missing values</span></span>
+<span id="cb206-3"><a href="cs1-mannwhitney-u-test.html#cb206-3" aria-hidden="true" tabindex="-1"></a>stats.mannwhitneyu(turtle_py_wide[<span class="st">'Male'</span>],</span>
+<span id="cb206-4"><a href="cs1-mannwhitney-u-test.html#cb206-4" aria-hidden="true" tabindex="-1"></a>                   turtle_py_wide[<span class="st">'Female'</span>],</span>
+<span id="cb206-5"><a href="cs1-mannwhitney-u-test.html#cb206-5" aria-hidden="true" tabindex="-1"></a>                   nan_policy <span class="op">=</span> <span class="st">'omit'</span>)</span></code></pre></div>
 <pre><code>## MannwhitneyuResult(statistic=16.0, pvalue=0.5337995337995338)</code></pre>
 </div>
 </div>
@@ -656,23 +664,23 @@ Answer
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="index.html"><span class="header-section-number">1</span> Overview</a></div>
+<div class="prev"><a href="cs1-students-t-test.html"><span class="header-section-number">6</span> Student’s t-test</a></div>
 <div class="empty"></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#cs1-mannwhitney-u-test"><span class="header-section-number">2</span> Mann-Whitney U test</a></li>
-<li><a class="nav-link" href="#libraries-and-functions"><span class="header-section-number">2.1</span> Libraries and functions</a></li>
-<li><a class="nav-link" href="#data-and-hypotheses"><span class="header-section-number">2.2</span> Data and hypotheses</a></li>
-<li><a class="nav-link" href="#summarise-and-visualise"><span class="header-section-number">2.3</span> Summarise and visualise</a></li>
-<li><a class="nav-link" href="#assumptions"><span class="header-section-number">2.4</span> Assumptions</a></li>
-<li><a class="nav-link" href="#implement-and-interpret-the-test"><span class="header-section-number">2.5</span> Implement and interpret the test</a></li>
+<li><a class="nav-link" href="#cs1-mannwhitney-u-test"><span class="header-section-number">7</span> Mann-Whitney U test</a></li>
+<li><a class="nav-link" href="#libraries-and-functions-3"><span class="header-section-number">7.1</span> Libraries and functions</a></li>
+<li><a class="nav-link" href="#data-and-hypotheses-3"><span class="header-section-number">7.2</span> Data and hypotheses</a></li>
+<li><a class="nav-link" href="#summarise-and-visualise-2"><span class="header-section-number">7.3</span> Summarise and visualise</a></li>
+<li><a class="nav-link" href="#assumptions-6"><span class="header-section-number">7.4</span> Assumptions</a></li>
+<li><a class="nav-link" href="#implement-and-interpret-the-test-1"><span class="header-section-number">7.5</span> Implement and interpret the test</a></li>
 <li>
-<a class="nav-link" href="#exercise"><span class="header-section-number">2.6</span> Exercise</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#hypotheses"><span class="header-section-number">2.6.1</span> Hypotheses</a></li>
-<li><a class="nav-link" href="#summarise-and-visualise-1"><span class="header-section-number">2.6.2</span> Summarise and visualise</a></li>
-<li><a class="nav-link" href="#assumptions-1"><span class="header-section-number">2.6.3</span> Assumptions</a></li>
-<li><a class="nav-link" href="#carry-out-a-mann-whitney-test"><span class="header-section-number">2.6.4</span> Carry out a Mann-Whitney test</a></li>
+<a class="nav-link" href="#exercise-1"><span class="header-section-number">7.6</span> Exercise</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#hypotheses-3"><span class="header-section-number">7.6.1</span> Hypotheses</a></li>
+<li><a class="nav-link" href="#summarise-and-visualise-3"><span class="header-section-number">7.6.2</span> Summarise and visualise</a></li>
+<li><a class="nav-link" href="#assumptions-7"><span class="header-section-number">7.6.3</span> Assumptions</a></li>
+<li><a class="nav-link" href="#carry-out-a-mann-whitney-test"><span class="header-section-number">7.6.4</span> Carry out a Mann-Whitney test</a></li>
 </ul>
 </li>
 </ul>

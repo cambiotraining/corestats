@@ -3,15 +3,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Chapter 4 Wilcoxon signed-rank test | Core Statistics in R</title>
+<title>Chapter 5 Wilcoxon signed-rank test | Core Statistics in R</title>
 <meta name="author" content="Matt Castle and Martin van Rongen">
 <meta name="description" content="This test also considers a single sample, however for this test (in contrast to the one sample t-test) we don’t have to assume that the parent distribution is normally distributed. We do still...">
 <meta name="generator" content="bookdown 0.26 with bs4_book()">
-<meta property="og:title" content="Chapter 4 Wilcoxon signed-rank test | Core Statistics in R">
+<meta property="og:title" content="Chapter 5 Wilcoxon signed-rank test | Core Statistics in R">
 <meta property="og:type" content="book">
 <meta property="og:description" content="This test also considers a single sample, however for this test (in contrast to the one sample t-test) we don’t have to assume that the parent distribution is normally distributed. We do still...">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter 4 Wilcoxon signed-rank test | Core Statistics in R">
+<meta name="twitter:title" content="Chapter 5 Wilcoxon signed-rank test | Core Statistics in R">
 <meta name="twitter:description" content="This test also considers a single sample, however for this test (in contrast to the one sample t-test) we don’t have to assume that the parent distribution is normally distributed. We do still...">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
@@ -342,11 +342,14 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
+<li class="book-part">CoreStats 1: Simple hypothesis testing</li>
+<li><a class="" href="cs1-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
 <li class="book-part">CoreStats 1 (Practicals)</li>
-<li><a class="" href="introduction.html"><span class="header-section-number">2</span> Introduction</a></li>
-<li><a class="" href="cs1-one-sample-t-test.html"><span class="header-section-number">3</span> One-sample t-test</a></li>
-<li><a class="active" href="cs1-onesample-wilcoxon-signed-rank.html"><span class="header-section-number">4</span> Wilcoxon signed-rank test</a></li>
-<li><a class="" href="cs1-students-t-test.html"><span class="header-section-number">5</span> Student’s t-test</a></li>
+<li><a class="" href="introduction.html"><span class="header-section-number">3</span> Introduction</a></li>
+<li><a class="" href="cs1-one-sample-t-test.html"><span class="header-section-number">4</span> One-sample t-test</a></li>
+<li><a class="active" href="cs1-onesample-wilcoxon-signed-rank.html"><span class="header-section-number">5</span> Wilcoxon signed-rank test</a></li>
+<li><a class="" href="cs1-students-t-test.html"><span class="header-section-number">6</span> Student’s t-test</a></li>
+<li><a class="" href="cs1-mannwhitney-u-test.html"><span class="header-section-number">7</span> Mann-Whitney U test</a></li>
 </ul>
 
         <div class="book-extra">
@@ -354,14 +357,14 @@
         </div>
       </nav>
 </div>
-  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="cs1-onesample-wilcoxon-signed-rank" class="section level1" number="4">
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="cs1-onesample-wilcoxon-signed-rank" class="section level1" number="5">
 <h1>
-<span class="header-section-number">4</span> Wilcoxon signed-rank test<a class="anchor" aria-label="anchor" href="#cs1-onesample-wilcoxon-signed-rank"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5</span> Wilcoxon signed-rank test<a class="anchor" aria-label="anchor" href="#cs1-onesample-wilcoxon-signed-rank"><i class="fas fa-link"></i></a>
 </h1>
 <p>This test also considers a single sample, however for this test (in contrast to the one sample t-test) we don’t have to assume that the parent distribution is normally distributed. We do still need the parent distribution (and consequently the sample) to be symmetric though. In this test we look to see if the <em>median</em> of the parent distributions differs significantly from a given hypothesised value (in contrast with the t-test that looks at the <em>mean</em>).</p>
-<div id="libraries-and-functions-1" class="section level2" number="4.1">
+<div id="libraries-and-functions-1" class="section level2" number="5.1">
 <h2>
-<span class="header-section-number">4.1</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.1</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions-1"><i class="fas fa-link"></i></a>
 </h2>
 <div class="panelset">
 <div class="panel">
@@ -449,9 +452,9 @@
 </div>
 </div>
 </div>
-<div id="data-and-hypotheses-1" class="section level2" number="4.2">
+<div id="data-and-hypotheses-1" class="section level2" number="5.2">
 <h2>
-<span class="header-section-number">4.2</span> Data and hypotheses<a class="anchor" aria-label="anchor" href="#data-and-hypotheses-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.2</span> Data and hypotheses<a class="anchor" aria-label="anchor" href="#data-and-hypotheses-1"><i class="fas fa-link"></i></a>
 </h2>
 <p>Again, we use the <code>fishlength</code> data set. The one-sample Wilcoxon signed-rank test allows to see if the <em>median</em> body length is different from a specified value. Here we want to test whether the data support the hypothesis that the median body is actually 20 mm. The following null and alternative hypotheses are very similar to those used for the one sample t-test:</p>
 <ul>
@@ -462,15 +465,15 @@
 </ul>
 <p>We will use a one-sample, two-tailed Wilcoxon signed-rank test to see if we should reject the null hypothesis or not.</p>
 </div>
-<div id="summarise-and-visualise-1" class="section level2" number="4.3">
+<div id="summarise-and-visualise-1" class="section level2" number="5.3">
 <h2>
-<span class="header-section-number">4.3</span> Summarise and visualise<a class="anchor" aria-label="anchor" href="#summarise-and-visualise-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3</span> Summarise and visualise<a class="anchor" aria-label="anchor" href="#summarise-and-visualise-1"><i class="fas fa-link"></i></a>
 </h2>
 <p>We did this before in the previous section, nothing really should have changed between now and then (if it has then you’re not off to a good start on this practical!)</p>
 </div>
-<div id="assumptions-2" class="section level2" number="4.4">
+<div id="assumptions-2" class="section level2" number="5.4">
 <h2>
-<span class="header-section-number">4.4</span> Assumptions<a class="anchor" aria-label="anchor" href="#assumptions-2"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.4</span> Assumptions<a class="anchor" aria-label="anchor" href="#assumptions-2"><i class="fas fa-link"></i></a>
 </h2>
 <p>In order to use a one-sample Wilcoxon rank-sum test for this analysis (and for the results to be strictly valid) we have to make two assumptions:</p>
 <ol style="list-style-type: decimal">
@@ -542,9 +545,9 @@ Let’s first determine the median, so we can use that to compare our data to.</
 </div>
 <p>Here we can see that whilst the distribution isn’t perfectly symmetric, neither is it heavily skewed to the left or right and we can make the call that the distribution is <em>symmetric enough</em> for us to be happy with the results of the test.</p>
 </div>
-<div id="implement-the-test-1" class="section level2" number="4.5">
+<div id="implement-the-test-1" class="section level2" number="5.5">
 <h2>
-<span class="header-section-number">4.5</span> Implement the test<a class="anchor" aria-label="anchor" href="#implement-the-test-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.5</span> Implement the test<a class="anchor" aria-label="anchor" href="#implement-the-test-1"><i class="fas fa-link"></i></a>
 </h2>
 <p>Perform a one-sample, two-tailed Wilcoxon signed-rank test:</p>
 <div class="panelset">
@@ -589,9 +592,9 @@ Let’s first determine the median, so we can use that to compare our data to.</
 </div>
 </div>
 </div>
-<div id="interpreting-the-output-and-report-results-1" class="section level2" number="4.6">
+<div id="interpreting-the-output-and-report-results-1" class="section level2" number="5.6">
 <h2>
-<span class="header-section-number">4.6</span> Interpreting the output and report results<a class="anchor" aria-label="anchor" href="#interpreting-the-output-and-report-results-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.6</span> Interpreting the output and report results<a class="anchor" aria-label="anchor" href="#interpreting-the-output-and-report-results-1"><i class="fas fa-link"></i></a>
 </h2>
 <p>This is the output that you should now see in the console window</p>
 <div class="panelset">
@@ -642,12 +645,12 @@ So, in this case since our p-value is less than 0.05 we can reject our null hypo
 <p><br></p>
 <p>The above sentence is an adequate concluding statement for this test and is what we would write in any paper or report. Note that we have included (in brackets) information on the median value of the group (<span class="math inline">\(\mu\)</span> = 18.8 mm), the test statistic (V = 67.5), the number of observations (n = 29), and the p-value (p = 0.0012).</p>
 </div>
-<div id="exercise" class="section level2" number="4.7">
+<div id="exercise" class="section level2" number="5.7">
 <h2>
-<span class="header-section-number">4.7</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.7</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise"><i class="fas fa-link"></i></a>
 </h2>
 <div class="exercise">
-<p><span id="exr:unlabeled-div-2" class="exercise"><strong>Exercise 4.1  </strong></span>Performing a Wilcoxon signed-rank test:</p>
+<p><span id="exr:unlabeled-div-2" class="exercise"><strong>Exercise 5.1  </strong></span>Performing a Wilcoxon signed-rank test:</p>
 <ol style="list-style-type: decimal">
 <li>Analyse the drug dataset from before using a one-sample Wilcoxon signed-rank test</li>
 <li>Discuss with a (virtual) neighbour which of the two tests you feel is best suited to the data.</li>
@@ -655,22 +658,22 @@ So, in this case since our p-value is less than 0.05 we can reject our null hypo
 </ol>
 <details><summary>
 Answer
-</summary><div id="hypotheses-1" class="section level3" number="4.7.1">
+</summary><div id="hypotheses-1" class="section level3" number="5.7.1">
 <h3>
-<span class="header-section-number">4.7.1</span> Hypotheses<a class="anchor" aria-label="anchor" href="#hypotheses-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.7.1</span> Hypotheses<a class="anchor" aria-label="anchor" href="#hypotheses-1"><i class="fas fa-link"></i></a>
 </h3>
 <p><span class="math inline">\(H_0\)</span> : median <span class="math inline">\(=\)</span> 45s</p>
 <p><span class="math inline">\(H_1\)</span> : median <span class="math inline">\(\neq\)</span> 45s</p>
 </div>
-<div id="assumptions-3" class="section level3" number="4.7.2">
+<div id="assumptions-3" class="section level3" number="5.7.2">
 <h3>
-<span class="header-section-number">4.7.2</span> Assumptions<a class="anchor" aria-label="anchor" href="#assumptions-3"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.7.2</span> Assumptions<a class="anchor" aria-label="anchor" href="#assumptions-3"><i class="fas fa-link"></i></a>
 </h3>
 <p>From the box plot from the previous exercise we already know that the data are symmetric enough for the test to be valid.</p>
 </div>
-<div id="wilcoxon-signed-rank-test" class="section level3" number="4.7.3">
+<div id="wilcoxon-signed-rank-test" class="section level3" number="5.7.3">
 <h3>
-<span class="header-section-number">4.7.3</span> Wilcoxon signed-rank test<a class="anchor" aria-label="anchor" href="#wilcoxon-signed-rank-test"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.7.3</span> Wilcoxon signed-rank test<a class="anchor" aria-label="anchor" href="#wilcoxon-signed-rank-test"><i class="fas fa-link"></i></a>
 </h3>
 <p>Performing the test:</p>
 <div class="panelset">
@@ -711,9 +714,9 @@ Answer
 </blockquote>
 <p><br></p>
 </div>
-<div id="discussion" class="section level3" number="4.7.4">
+<div id="discussion" class="section level3" number="5.7.4">
 <h3>
-<span class="header-section-number">4.7.4</span> Discussion<a class="anchor" aria-label="anchor" href="#discussion"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.7.4</span> Discussion<a class="anchor" aria-label="anchor" href="#discussion"><i class="fas fa-link"></i></a>
 </h3>
 <p>In terms of choosing between the two test we can see that both meet their respective assumptions and so both tests are valid. In this case both tests also agree in terms of their conclusions i.e. that the average dissolving time (either mean or median) doesn’t differ significantly from the proposed value of 45 s.</p>
 <ul>
@@ -725,9 +728,9 @@ Answer
 </details>
 </div>
 </div>
-<div id="key-points" class="section level2" number="4.8">
+<div id="key-points" class="section level2" number="5.8">
 <h2>
-<span class="header-section-number">4.8</span> Key points<a class="anchor" aria-label="anchor" href="#key-points"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.8</span> Key points<a class="anchor" aria-label="anchor" href="#key-points"><i class="fas fa-link"></i></a>
 </h2>
 <div class="keypoints">
 <ul>
@@ -742,27 +745,27 @@ Answer
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="cs1-one-sample-t-test.html"><span class="header-section-number">3</span> One-sample t-test</a></div>
-<div class="next"><a href="cs1-students-t-test.html"><span class="header-section-number">5</span> Student’s t-test</a></div>
+<div class="prev"><a href="cs1-one-sample-t-test.html"><span class="header-section-number">4</span> One-sample t-test</a></div>
+<div class="next"><a href="cs1-students-t-test.html"><span class="header-section-number">6</span> Student’s t-test</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#cs1-onesample-wilcoxon-signed-rank"><span class="header-section-number">4</span> Wilcoxon signed-rank test</a></li>
-<li><a class="nav-link" href="#libraries-and-functions-1"><span class="header-section-number">4.1</span> Libraries and functions</a></li>
-<li><a class="nav-link" href="#data-and-hypotheses-1"><span class="header-section-number">4.2</span> Data and hypotheses</a></li>
-<li><a class="nav-link" href="#summarise-and-visualise-1"><span class="header-section-number">4.3</span> Summarise and visualise</a></li>
-<li><a class="nav-link" href="#assumptions-2"><span class="header-section-number">4.4</span> Assumptions</a></li>
-<li><a class="nav-link" href="#implement-the-test-1"><span class="header-section-number">4.5</span> Implement the test</a></li>
-<li><a class="nav-link" href="#interpreting-the-output-and-report-results-1"><span class="header-section-number">4.6</span> Interpreting the output and report results</a></li>
+<li><a class="nav-link" href="#cs1-onesample-wilcoxon-signed-rank"><span class="header-section-number">5</span> Wilcoxon signed-rank test</a></li>
+<li><a class="nav-link" href="#libraries-and-functions-1"><span class="header-section-number">5.1</span> Libraries and functions</a></li>
+<li><a class="nav-link" href="#data-and-hypotheses-1"><span class="header-section-number">5.2</span> Data and hypotheses</a></li>
+<li><a class="nav-link" href="#summarise-and-visualise-1"><span class="header-section-number">5.3</span> Summarise and visualise</a></li>
+<li><a class="nav-link" href="#assumptions-2"><span class="header-section-number">5.4</span> Assumptions</a></li>
+<li><a class="nav-link" href="#implement-the-test-1"><span class="header-section-number">5.5</span> Implement the test</a></li>
+<li><a class="nav-link" href="#interpreting-the-output-and-report-results-1"><span class="header-section-number">5.6</span> Interpreting the output and report results</a></li>
 <li>
-<a class="nav-link" href="#exercise"><span class="header-section-number">4.7</span> Exercise</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#hypotheses-1"><span class="header-section-number">4.7.1</span> Hypotheses</a></li>
-<li><a class="nav-link" href="#assumptions-3"><span class="header-section-number">4.7.2</span> Assumptions</a></li>
-<li><a class="nav-link" href="#wilcoxon-signed-rank-test"><span class="header-section-number">4.7.3</span> Wilcoxon signed-rank test</a></li>
-<li><a class="nav-link" href="#discussion"><span class="header-section-number">4.7.4</span> Discussion</a></li>
+<a class="nav-link" href="#exercise"><span class="header-section-number">5.7</span> Exercise</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#hypotheses-1"><span class="header-section-number">5.7.1</span> Hypotheses</a></li>
+<li><a class="nav-link" href="#assumptions-3"><span class="header-section-number">5.7.2</span> Assumptions</a></li>
+<li><a class="nav-link" href="#wilcoxon-signed-rank-test"><span class="header-section-number">5.7.3</span> Wilcoxon signed-rank test</a></li>
+<li><a class="nav-link" href="#discussion"><span class="header-section-number">5.7.4</span> Discussion</a></li>
 </ul>
 </li>
-<li><a class="nav-link" href="#key-points"><span class="header-section-number">4.8</span> Key points</a></li>
+<li><a class="nav-link" href="#key-points"><span class="header-section-number">5.8</span> Key points</a></li>
 </ul>
 
       <div class="book-extra">
