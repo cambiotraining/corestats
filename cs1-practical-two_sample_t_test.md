@@ -1,15 +1,4 @@
-```{r, echo=FALSE}
-source(file = "setup.R")
-
-xaringanExtra::use_panelset()
-xaringanExtra::style_panelset_tabs(font_family = "inherit")
-```
-
-```{python, echo=FALSE, results='hide'}
-from plotnine import *
-from scipy import stats
-import pandas as pd
-```
+`<style>.panelset{--panel-tab-font-family: inherit;}</style>`{=html}
 
 # Student's t-test {#cs1-students-t-test}
 For this test we assume that both sample data sets are **normally distributed** and have **equal variance**. We test to see if the means of the two samples differ significantly from each other. 
@@ -62,15 +51,10 @@ The language used in this section is slightly different to that used in section 
 
 | Functions| Description|
 |:- |:- |
-|`pandas.DataFrame.read_csv`|Reads in a `.csv` file|
-|`pandas.DataFrame.head()`|Plots the first few rows|
-|`pandas.DataFrame.describe()`|Gives summary statistics|
-|`pandas.DataFrame.groupby()`|Group DataFrame using a mapper or by a Series of columns|
-|`pandas.DataFrame.query()`|Query the columns of a DataFrame with a boolean expression|
-|`scipy.stats.shapiro()`|Performs the Shapiro-Wilk test|
-|`scipy.stats.levene()`|Performs Levene's test for equality of variance|
-|`scipy.stats.bartlett()`|Performs Bartlett's test for equality of variance|
-|`scipy.stats.ttest_ind()`|Calculate the T-test for the means of two independent samples of scores|
+
+
+
+
 :::
 :::::
 
@@ -94,10 +78,28 @@ Let's read in the data and have a quick look at the first rows to see how the da
 ::: {.panel}
 [tidyverse]{.panel-name}
 
-```{r, message=FALSE, warning=FALSE}
+
+```r
 rivers <- read_csv("data/tidy/CS1-twosample.csv")
 
 rivers
+```
+
+```
+## # A tibble: 68 × 3
+##       id river   length
+##    <dbl> <chr>    <dbl>
+##  1     1 Guanapo   19.1
+##  2     2 Guanapo   23.3
+##  3     3 Guanapo   18.2
+##  4     4 Guanapo   16.4
+##  5     5 Guanapo   19.7
+##  6     6 Guanapo   16.6
+##  7     7 Guanapo   17.5
+##  8     8 Guanapo   19.9
+##  9     9 Guanapo   19.1
+## 10    10 Guanapo   18.8
+## # … with 58 more rows
 ```
 
 :::
@@ -105,10 +107,21 @@ rivers
 ::: {.panel}
 [base R]{.panel-name}
 
-```{r}
+
+```r
 rivers_r <- read.csv("data/tidy/CS1-twosample.csv")
 
 head(rivers_r)
+```
+
+```
+##   id   river length
+## 1  1 Guanapo   19.1
+## 2  2 Guanapo   23.3
+## 3  3 Guanapo   18.2
+## 4  4 Guanapo   16.4
+## 5  5 Guanapo   19.7
+## 6  6 Guanapo   16.6
 ```
 
 :::
@@ -116,10 +129,20 @@ head(rivers_r)
 ::: {.panel}
 [Python]{.panel-name}
 
-```{python}
+
+```python
 rivers_py = pd.read_csv("data/tidy/CS1-twosample.csv")
 
 rivers_py.head()
+```
+
+```
+##    id    river  length
+## 0   1  Guanapo    19.1
+## 1   2  Guanapo    23.3
+## 2   3  Guanapo    18.2
+## 3   4  Guanapo    16.4
+## 4   5  Guanapo    19.7
 ```
 
 :::
@@ -132,41 +155,87 @@ Let's first summarise the data.
 ::: {.panel}
 [tidyverse]{.panel-name}
 
-```{r}
+
+```r
 summary(rivers)
+```
+
+```
+##        id           river               length     
+##  Min.   : 1.00   Length:68          Min.   :11.20  
+##  1st Qu.:17.75   Class :character   1st Qu.:18.40  
+##  Median :34.50   Mode  :character   Median :19.30  
+##  Mean   :34.50                      Mean   :19.46  
+##  3rd Qu.:51.25                      3rd Qu.:20.93  
+##  Max.   :68.00                      Max.   :26.40
 ```
 
 This gives us the standard summary statistics, but in this case we have more than one group (Aripo and Guanapo), so it might be helpful to get summary statistics _per group_. One way of doing this is by using the `get_summary_stats()` function from the `rstatix` library.
 
+We don't need summary statistics for the `id` column, so we un-select it. We then group the data by `river` and get the summary stats:
 
-```{r}
+
+```r
 # get common summary stats for the length column
 rivers %>% 
+  select(-id) %>% 
   group_by(river) %>% 
   get_summary_stats(type = "common")
 ```
 
+```
+## # A tibble: 2 × 11
+##   river   variable     n   min   max median   iqr  mean    sd    se    ci
+##   <chr>   <chr>    <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+## 1 Aripo   length      39  17.5  26.4   20.1   2.2  20.3  1.78 0.285 0.577
+## 2 Guanapo length      29  11.2  23.3   18.8   2.2  18.3  2.58 0.48  0.983
+```
+
 Numbers might not always give you the best insight into your data, so we also visualise our data:
 
-```{r}
+
+```r
 rivers %>% 
   ggplot(aes(x = river, y = length)) +
   geom_boxplot()
 ```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-8-1.png" width="672" />
 :::
 
 ::: {.panel}
 [base R]{.panel-name}
-```{r}
+
+```r
 summary(rivers)
+```
+
+```
+##        id           river               length     
+##  Min.   : 1.00   Length:68          Min.   :11.20  
+##  1st Qu.:17.75   Class :character   1st Qu.:18.40  
+##  Median :34.50   Mode  :character   Median :19.30  
+##  Mean   :34.50                      Mean   :19.46  
+##  3rd Qu.:51.25                      3rd Qu.:20.93  
+##  Max.   :68.00                      Max.   :26.40
 ```
 
 This gives us the standard summary statistics, but in this case we have more than one group (Aripo and Guanapo), so it might be helpful to get summary statistics _per group_. We can do this in base R using the `aggregate()` function.
 
-```{r}
+
+```r
 aggregate(length ~ river,
           data = rivers_r,
           summary)
+```
+
+```
+##     river length.Min. length.1st Qu. length.Median length.Mean length.3rd Qu.
+## 1   Aripo    17.50000       19.10000      20.10000    20.33077       21.30000
+## 2 Guanapo    11.20000       17.50000      18.80000    18.29655       19.70000
+##   length.Max.
+## 1    26.40000
+## 2    23.30000
 ```
 
 * The first argument defines the variable that is being used (`length`) and grouping (`river`)
@@ -175,34 +244,61 @@ aggregate(length ~ river,
 
 Numbers might not always give you the best insight into your data, so we also visualise our data:
 
-```{r}
+
+```r
 boxplot(length ~ river,
         data = rivers_r)
 ```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-11-1.png" width="672" />
 
 We can use a very similar notation as we did for the summary statistics (`length ~ river`), so a box plot is created per group.
 :::
 
 ::: {.panel}
 [Python]{.panel-name}
-```{python}
+
+```python
 rivers_py.describe()
+```
+
+```
+##              id     length
+## count  68.00000  68.000000
+## mean   34.50000  19.463235
+## std    19.77372   2.370081
+## min     1.00000  11.200000
+## 25%    17.75000  18.400000
+## 50%    34.50000  19.300000
+## 75%    51.25000  20.925000
+## max    68.00000  26.400000
 ```
 
 This gives us the standard summary statistics, but in this case we have more than one group (Aripo and Guanapo), so it might be helpful to get summary statistics _per group_. Here we use the `pd.groupby()` function to group by `river`. We only want to have summary statistics for the `length` variable, so we specify that as well:
 
-```{python}
+
+```python
 rivers_py.groupby("river")["length"].describe()
+```
+
+```
+##          count       mean       std   min   25%   50%   75%   max
+## river                                                            
+## Aripo     39.0  20.330769  1.780620  17.5  19.1  20.1  21.3  26.4
+## Guanapo   29.0  18.296552  2.584636  11.2  17.5  18.8  19.7  23.3
 ```
 
 Numbers might not always give you the best insight into your data, so we also visualise our data:
 
-```{python, results='hide'}
+
+```python
 (
   ggplot(rivers_py, aes(x = "river", y = "length"))
   + geom_boxplot()
 )
 ```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-14-1.png" width="614" />
 
 :::
 :::::
@@ -231,11 +327,20 @@ So we perform a [Shapiro-Wilk test](#shapiro-wilk-test) on both samples separate
 [tidyverse]{.panel-name}
 We can use the `group_by()` function to group the data by `river`, then we perform the Shapiro-Wilk test on the `length` measurements:
 
-```{r}
+
+```r
 # group data by river and perform test
 rivers %>% 
   group_by(river) %>% 
   shapiro_test(length)
+```
+
+```
+## # A tibble: 2 × 4
+##   river   variable statistic      p
+##   <chr>   <chr>        <dbl>  <dbl>
+## 1 Aripo   length       0.936 0.0280
+## 2 Guanapo length       0.949 0.176
 ```
 
 :::
@@ -244,29 +349,58 @@ rivers %>%
 [base R]{.panel-name}
 Before we can do that, we need to convert the data to a format where the data is split by `river`:
 
-```{r cs1-twosample-unstack, results='hide'}
+
+```r
 # create a new object (a list) that contains the unstacked data
-uns_rivers <- unstack(rivers_r, form = length ~ river)
+uns_rivers <- unstack(rivers_r, select = -id, form = length ~ river)
 # have a look at the data
 uns_rivers
 ```
 
 Now that we've separated the data by river we can perform the Shapiro-Wilk test:
 
-```{r cs1-twosample-shapiro}
-shapiro.test(uns_rivers$Aripo)
 
+```r
+shapiro.test(uns_rivers$Aripo)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  uns_rivers$Aripo
+## W = 0.93596, p-value = 0.02802
+```
+
+```r
 shapiro.test(uns_rivers$Guanapo)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  uns_rivers$Guanapo
+## W = 0.94938, p-value = 0.1764
 ```
 :::
 
 ::: {.panel}
 [Python]{.panel-name}
 We first need to split the data by `river`.
-```{python}
+
+```python
 rivers_py.groupby("river")["length"] \
 .apply(lambda x: pd.Series(stats.shapiro(x), index=['W-stat','p-value'])) \
 .reset_index()
+```
+
+```
+##      river  level_1    length
+## 0    Aripo   W-stat  0.935958
+## 1    Aripo  p-value  0.028023
+## 2  Guanapo   W-stat  0.949384
+## 3  Guanapo  p-value  0.176420
 ```
 
 The code is a bit convoluted and perhaps there is a more efficient way that I'm not aware of. Anyway, we can do this with the `groupby()` function from pandas. Next, we only select the `length` measurements and use the `.apply()` function to apply the `stats.shapiro()` test over each group. This returns two values per group: the W-statistic that the Shapiro-Wilk test uses and, the value we're most interested in, the p-value. Lastly,we use the `.reset_index()` function to repeat the grouping name.
@@ -289,7 +423,8 @@ Create the Q-Q plots for the two samples and discuss with your neighbour what yo
 ::: {.panel}
 [tidyverse]{.panel-name}
 
-```{r}
+
+```r
 # we group the data by river
 # then create a panel per river
 # containing the Q-Q plot for that river
@@ -299,11 +434,14 @@ rivers %>%
   stat_qq_line(colour = "red") +
   facet_wrap(facets = vars(river))
 ```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-17-1.png" width="672" />
 :::
 
 ::: {.panel}
 [base R]{.panel-name}
-```{r}
+
+```r
 par(mfrow=c(1,2))
 qqnorm(uns_rivers$Aripo, main = "Aripo")
 qqline(uns_rivers$Aripo, col = "red")
@@ -312,11 +450,14 @@ qqnorm(uns_rivers$Guanapo, main = "Guanapo")
 qqline(uns_rivers$Guanapo, col = "red")
 ```
 
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-18-1.png" width="672" />
+
 :::
 
 ::: {.panel}
 [Pyhon]{.panel-name}
-```{python, results='hide'}
+
+```python
 (
   ggplot(rivers_py, aes(sample = "length"))
   + stat_qq()
@@ -324,6 +465,8 @@ qqline(uns_rivers$Guanapo, col = "red")
   + facet_wrap("river")
 )
 ```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-19-1.png" width="614" />
 
 :::
 :::::
@@ -354,9 +497,17 @@ The function we use is `levene_test()` from the `rstatix` library.
 
 It takes the data in the form of a formula as follows:
 
-```{r, warning=FALSE}
+
+```r
 rivers %>% 
   levene_test(length ~ river)
+```
+
+```
+## # A tibble: 1 × 4
+##     df1   df2 statistic     p
+##   <int> <int>     <dbl> <dbl>
+## 1     1    66      1.77 0.188
 ```
 
 The key bit of information is the `p` column. This is the p-value (0.1876) for this test.
@@ -368,7 +519,8 @@ Levene’s test is not included in the default R packages and may require the in
 
 To install the `car` package, run the following command in your console:
 
-```{r cs1-two-sample-car, eval=FALSE}
+
+```r
 install.packages("car")
 ```
 
@@ -376,8 +528,16 @@ Alternatively, go to <kbd>Tools</kbd> > <kbd>Install packages...</kbd> > <kbd>Pa
 
 We can now perform Levene's test:
 
-```{r cs1-twosample-levene, warning=FALSE}
+
+```r
 leveneTest(length ~ river, data = rivers)
+```
+
+```
+## Levene's Test for Homogeneity of Variance (center = median)
+##       Df F value Pr(>F)
+## group  1  1.7732 0.1876
+##       66
 ```
 
 Ignore any warning you might get about coercion to factors (the test needs to create grouped variables to work and R versions from 4.x onwards do not read in the data as factors).
@@ -389,11 +549,16 @@ The key bit of information is the 3rd line under the text `Pr(>F)`. This is the 
 [Python]{.panel-name}
 Levene's test is included in the `stats` module in `scipy`. It requires two vectors as input, so we need to subset our data for each river:
 
-```{python}
+
+```python
 aripo = rivers_py.query('river == "Aripo"')["length"]
 guanapo = rivers_py.query('river == "Guanapo"')["length"]
 
 stats.levene(aripo, guanapo)
+```
+
+```
+## LeveneResult(statistic=1.7731837331911642, pvalue=0.18756940068805075)
 ```
 :::
 :::::
@@ -410,7 +575,8 @@ Here we use `bartlett.test()` from base R. Surprisingly, the `rstatix` package d
 
 If we wanted to get the output of the Bartlett test into a tidy format, we could do the following, where we take the `rivers` data set and pipe it to the `bartlett.test()` function. Note that we need to define the data using a dot (`.`), because the first input into `bartlett.test()` is not the data. We then pipe the output to the `tidy()` function, which is part of the `broom` library, which kindly converts the output into a tidy format. Handy!
 
-```{r}
+
+```r
 # load the broom package
 library(broom)
 
@@ -420,12 +586,28 @@ rivers %>%
                 data = .) %>% 
   tidy()
 ```
+
+```
+## # A tibble: 1 × 4
+##   statistic p.value parameter method                                   
+##       <dbl>   <dbl>     <dbl> <chr>                                    
+## 1      4.47  0.0344         1 Bartlett test of homogeneity of variances
+```
 :::
 
 ::: {.panel}
 [base R]{.panel-name}
-```{r}
+
+```r
 bartlett.test(length ~ river, data = rivers_r)
+```
+
+```
+## 
+## 	Bartlett test of homogeneity of variances
+## 
+## data:  length by river
+## Bartlett's K-squared = 4.4734, df = 1, p-value = 0.03443
 ```
 
 The relevant p-value is given on the 3rd line.
@@ -435,8 +617,13 @@ The relevant p-value is given on the 3rd line.
 [Python]{.panel-name}
 We've already subset our data into `guanapo` and `aripo`, vectors that contain our data.
 
-```{python}
+
+```python
 stats.bartlett(aripo, guanapo)
+```
+
+```
+## BartlettResult(statistic=4.4734366516240165, pvalue=0.03442568304468286)
 ```
 :::
 :::::
@@ -451,12 +638,20 @@ Perform a two-sample, two-tailed, t-test:
 [tidyverse]{.panel-name}
 
 
-```{r,}
+
+```r
 # two-sample, two-tailed t-test
 rivers %>% 
   t_test(length ~ river,
          alternative = "two.sided",
          var.equal = TRUE)
+```
+
+```
+## # A tibble: 1 × 8
+##   .y.    group1 group2     n1    n2 statistic    df        p
+## * <chr>  <chr>  <chr>   <int> <int>     <dbl> <dbl>    <dbl>
+## 1 length Aripo  Guanapo    39    29      3.84    66 0.000275
 ```
 
 Here we do the following:
@@ -476,10 +671,25 @@ So, how do we interpret these results?
 
 ::: {.panel}
 [base R]{.panel-name}
-```{r}
+
+```r
 t.test(length ~ river, data = rivers_r,
        alternative = "two.sided",
        var.equal = TRUE)
+```
+
+```
+## 
+## 	Two Sample t-test
+## 
+## data:  length by river
+## t = 3.8433, df = 66, p-value = 0.0002754
+## alternative hypothesis: true difference in means between group Aripo and group Guanapo is not equal to 0
+## 95 percent confidence interval:
+##  0.9774482 3.0909868
+## sample estimates:
+##   mean in group Aripo mean in group Guanapo 
+##              20.33077              18.29655
 ```
 
 -	The first argument must be in the formula format: `variables ~ category`
@@ -501,10 +711,15 @@ So, how do we interpret the results?
 
 ::: {.panel}
 [Python]{.panel-name}
-```{python}
+
+```python
 stats.ttest_ind(aripo, guanapo,
                 alternative = "two-sided",
                 equal_var = True)
+```
+
+```
+## Ttest_indResult(statistic=3.8432667461726275, pvalue=0.00027544021976337834)
 ```
 :::
 :::::
@@ -523,14 +738,44 @@ Serum cholesterol concentrations in turtles
 
 Using the following data, test the null hypothesis that male and female turtles have the same mean serum cholesterol concentrations.
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-# serum cholesterol (mg/100 ml)
-read_csv("data/examples/cs1-turtle_example.csv") %>% 
-  pivot_wider(names_from = sex, values_from = serum) %>% 
-  select(-group) %>% 
-  kbl() %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "center")
-```
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Male </th>
+   <th style="text-align:right;"> Female </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 220.1 </td>
+   <td style="text-align:right;"> 223.4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 218.6 </td>
+   <td style="text-align:right;"> 221.5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 229.6 </td>
+   <td style="text-align:right;"> 230.2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 228.8 </td>
+   <td style="text-align:right;"> 224.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 222.0 </td>
+   <td style="text-align:right;"> 223.8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 224.1 </td>
+   <td style="text-align:right;"> 230.8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 226.5 </td>
+   <td style="text-align:right;"> NA </td>
+  </tr>
+</tbody>
+</table>
 
 1. Create a tidy data frame and save as a `.csv` file
 2. Write down the null and alternative hypotheses
@@ -547,12 +792,32 @@ We'll stop asking you to manually create your own data files soon, but it's mean
 
 This means that if you would restructure the data from above it would look like this:
 
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
-turtle <- read_csv("data/tidy/CS1-turtle.csv")
-```
-```{r}
+
+
+```r
 turtle
 ```
+
+```
+## # A tibble: 13 × 2
+##    serum sex   
+##    <dbl> <chr> 
+##  1  220. Male  
+##  2  219. Male  
+##  3  230. Male  
+##  4  229. Male  
+##  5  222  Male  
+##  6  224. Male  
+##  7  226. Male  
+##  8  223. Female
+##  9  222. Female
+## 10  230. Female
+## 11  224. Female
+## 12  224. Female
+## 13  231. Female
+```
+
+Note that there isn't an `id` column to identify each observation. This isn't a problem, as long as it's clear that each observation is independent.
 
 ### Hypotheses
 
@@ -566,36 +831,82 @@ Let's load the data (I've created the `.csv` file earlier) and explore our data 
 ::::: {.panelset}
 ::: {.panel}
 [tidyverse]{.panel-name}
-```{r, warning=FALSE}
+
+```r
 # load the data
 turtle <- read_csv("data/tidy/CS1-turtle.csv")
+```
 
+```
+## Rows: 13 Columns: 2
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (1): sex
+## dbl (1): serum
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
+
+```r
 # and have a look
 turtle
 ```
 
+```
+## # A tibble: 13 × 2
+##    serum sex   
+##    <dbl> <chr> 
+##  1  220. Male  
+##  2  219. Male  
+##  3  230. Male  
+##  4  229. Male  
+##  5  222  Male  
+##  6  224. Male  
+##  7  226. Male  
+##  8  223. Female
+##  9  222. Female
+## 10  230. Female
+## 11  224. Female
+## 12  224. Female
+## 13  231. Female
+```
+
 Let's summarise the data (although a visualisation is probably much easier to work with):
 
-```{r cs1-twosample-turtle-summary}
+
+```r
 # create summary statistics for each group
 turtle %>% 
   group_by(sex) %>% 
   get_summary_stats(type = "common")
 ```
 
+```
+## # A tibble: 2 × 11
+##   sex    variable     n   min   max median   iqr  mean    sd    se    ci
+##   <chr>  <chr>    <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+## 1 Female serum        6  222.  231.   224.  5.22  226.  3.87  1.58  4.06
+## 2 Male   serum        7  219.  230.   224.  6.6   224.  4.26  1.61  3.94
+```
+
 and visualise the data:
 
-```{r}
+
+```r
 # visualise the data
 turtle %>% 
   ggplot(aes(x = sex, y = serum)) +
   geom_boxplot()
 ```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-32-1.png" width="672" />
 :::
 
 ::: {.panel}
 [base R]{.panel-name}
-```{r, warning=FALSE}
+
+```r
 # load the data
 turtle_r <- read.csv("data/tidy/CS1-turtle.csv")
 
@@ -603,31 +914,60 @@ turtle_r <- read.csv("data/tidy/CS1-turtle.csv")
 head(turtle_r)
 ```
 
+```
+##   serum  sex
+## 1 220.1 Male
+## 2 218.6 Male
+## 3 229.6 Male
+## 4 228.8 Male
+## 5 222.0 Male
+## 6 224.1 Male
+```
+
 and visualise the data:
 
-```{r}
+
+```r
 # visualise the data
 boxplot(serum ~ sex , data = turtle_r)
 ```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-34-1.png" width="672" />
 :::
 
 ::: {.panel}
 [Python]{.panel-name}
-```{python}
+
+```python
 turtle_py = pd.read_csv("data/tidy/CS1-turtle.csv")
 
 turtle_py.describe()
 ```
 
+```
+##             serum
+## count   13.000000
+## mean   224.900000
+## std      3.978274
+## min    218.600000
+## 25%    222.000000
+## 50%    224.100000
+## 75%    228.800000
+## max    230.800000
+```
+
 and visualise the data:
 
-```{python, results='hide'}
+
+```python
 (
   ggplot(turtle_py, aes(x = "sex",
                         y = "serum"))
   + geom_boxplot()
 )
 ```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-36-1.png" width="614" />
 :::
 :::::
 
@@ -651,11 +991,20 @@ Let's look at the normality of each of the groups separately. There are several 
 ::: {.panel}
 [tidyverse]{.panel-name}
 
-```{r}
+
+```r
 # perform Shapiro-Wilk test on each group
 turtle %>% 
   group_by(sex) %>% 
   shapiro_test(serum)
+```
+
+```
+## # A tibble: 2 × 4
+##   sex    variable statistic     p
+##   <chr>  <chr>        <dbl> <dbl>
+## 1 Female serum        0.842 0.135
+## 2 Male   serum        0.944 0.674
 ```
 
 :::
@@ -664,30 +1013,72 @@ turtle %>%
 [base R]{.panel-name}
 We can use the `unstack()` function to split the data, then access the relevant values.
 
-```{r}
+
+```r
 uns_turtle_r <- unstack(turtle_r, serum ~ sex)
 
 uns_turtle_r
 ```
 
+```
+## $Female
+## [1] 223.4 221.5 230.2 224.3 223.8 230.8
+## 
+## $Male
+## [1] 220.1 218.6 229.6 228.8 222.0 224.1 226.5
+```
+
 You can see that the data has been split by `sex`.
 
-```{r}
+
+```r
 shapiro.test(uns_turtle_r$Male)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  uns_turtle_r$Male
+## W = 0.94392, p-value = 0.6743
+```
+
+```r
 shapiro.test(uns_turtle_r$Female)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  uns_turtle_r$Female
+## W = 0.84178, p-value = 0.1349
 ```
 :::
 
 ::: {.panel}
 [Python]{.panel-name}
-```{python}
+
+```python
 turtle_male = turtle_py.query('sex == "Male"')["serum"]
 turtle_female = turtle_py.query('sex == "Female"')["serum"]
 ```
 
-```{python}
+
+```python
 stats.shapiro(turtle_male)
+```
+
+```
+## ShapiroResult(statistic=0.9439237713813782, pvalue=0.6742751598358154)
+```
+
+```python
 stats.shapiro(turtle_female)
+```
+
+```
+## ShapiroResult(statistic=0.8417852520942688, pvalue=0.1348712146282196)
 ```
 :::
 :::::
@@ -703,7 +1094,8 @@ Given these caveats of the Shapiro-Wilk test (I'll stop mentioning them now, I t
 ::: {.panel}
 [tidyverse]{.panel-name}
 
-```{r}
+
+```r
 # create Q-Q plots for both groups
 turtle %>% 
   ggplot(aes(sample = serum)) +
@@ -712,22 +1104,28 @@ turtle %>%
   facet_wrap(facets = vars(sex))
 ```
 
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-42-1.png" width="672" />
+
 :::
 
 ::: {.panel}
 [base R]{.panel-name}
-```{r cs1-twosample-turtle-qqplot}
+
+```r
 par(mfrow=c(1,2))
 qqnorm(uns_turtle_r$Female, main = "Female")
 qqline(uns_turtle_r$Female, col = "red")
 qqnorm(uns_turtle_r$Male, main = "Male")
 qqline(uns_turtle_r$Male, col = "red")
 ```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/cs1-twosample-turtle-qqplot-1.png" width="672" />
 :::
 
 ::: {.panel}
 [Python]{.panel-name}
-```{python, results='hide', message='hide', warning='hide'}
+
+```python
 # create Q-Q plots for both groups
 (
   ggplot(turtle_py, aes(sample = "serum"))
@@ -736,6 +1134,8 @@ qqline(uns_turtle_r$Male, col = "red")
   + facet_wrap("sex")
 )
 ```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-43-1.png" width="614" />
 :::
 :::::
 
@@ -752,18 +1152,35 @@ It's not clear whether the data are normal or not, so it isn't clear which test 
 [tidyverse]{.panel-name}
 Bartlett's test gives us:
 
-```{r}
+
+```r
 # perform Bartlett's test
 bartlett.test(serum ~ sex,
               data = turtle)
 ```
 
+```
+## 
+## 	Bartlett test of homogeneity of variances
+## 
+## data:  serum by sex
+## Bartlett's K-squared = 0.045377, df = 1, p-value = 0.8313
+```
+
 and Levene's test gives us:
 
-```{r, warning=FALSE}
+
+```r
 # perform Levene's test
 turtle %>% 
   levene_test(serum ~ sex)
+```
+
+```
+## # A tibble: 1 × 4
+##     df1   df2 statistic     p
+##   <int> <int>     <dbl> <dbl>
+## 1     1    11     0.243 0.631
 ```
 :::
 
@@ -771,17 +1188,34 @@ turtle %>%
 [base R]{.panel-name}
 Bartlett's test gives us:
 
-```{r}
+
+```r
 bartlett.test(serum ~ sex, turtle_r)
+```
+
+```
+## 
+## 	Bartlett test of homogeneity of variances
+## 
+## data:  serum by sex
+## Bartlett's K-squared = 0.045377, df = 1, p-value = 0.8313
 ```
 
 and Levene's test gives us:
 
-```{r, warning=FALSE}
+
+```r
 # load if needed
 # library(car)
 
 leveneTest(serum ~ sex, turtle_r)
+```
+
+```
+## Levene's Test for Homogeneity of Variance (center = median)
+##       Df F value Pr(>F)
+## group  1  0.2434 0.6315
+##       11
 ```
 :::
 
@@ -789,14 +1223,24 @@ leveneTest(serum ~ sex, turtle_r)
 [Python]{.panel-name}
 Bartlett's test gives us:
 
-```{python}
+
+```python
 stats.bartlett(turtle_male, turtle_female)
+```
+
+```
+## BartlettResult(statistic=0.0453770725135282, pvalue=0.8313121829253811)
 ```
 
 and Levene's test gives us:
 
-```{python}
+
+```python
 stats.levene(turtle_male, turtle_female)
+```
+
+```
+## LeveneResult(statistic=0.24341796609304578, pvalue=0.6314503568954707)
 ```
 :::
 :::::
@@ -813,31 +1257,59 @@ Because of the result of the Bartlett test I know that I can carry out a two-sam
 ::: {.panel}
 [tidyverse]{.panel-name}
 
-```{r}
+
+```r
 # perform two-sample t-test
 turtle %>% 
   t_test(serum ~ sex,
          alternative = "two.sided",
          var.equal = TRUE)
 ```
+
+```
+## # A tibble: 1 × 8
+##   .y.   group1 group2    n1    n2 statistic    df     p
+## * <chr> <chr>  <chr>  <int> <int>     <dbl> <dbl> <dbl>
+## 1 serum Female Male       6     7     0.627    11 0.544
+```
 :::
 
 ::: {.panel}
 [base R]{.panel-name}
-```{r}
+
+```r
 t.test(serum ~ sex,
        data = turtle_r,
        alternative = "two.sided",
        var.equal = TRUE)
 ```
+
+```
+## 
+## 	Two Sample t-test
+## 
+## data:  serum by sex
+## t = 0.62681, df = 11, p-value = 0.5436
+## alternative hypothesis: true difference in means between group Female and group Male is not equal to 0
+## 95 percent confidence interval:
+##  -3.575759  6.423378
+## sample estimates:
+## mean in group Female   mean in group Male 
+##             225.6667             224.2429
+```
 :::
 
 ::: {.panel}
 [Python]{.panel-name}
-```{python}
+
+```python
 stats.ttest_ind(turtle_male, turtle_female,
                 alternative = "two-sided",
                 equal_var = True)
+```
+
+```
+## Ttest_indResult(statistic=-0.6268108404512706, pvalue=0.543572996867541)
 ```
 :::
 :::::
