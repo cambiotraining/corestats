@@ -224,7 +224,9 @@ This gives us the standard summary statistics, but in this case we have more tha
 
 
 ```r
-aggregate(length ~ river, data = rivers_r, summary)
+aggregate(length ~ river,
+          data = rivers_r,
+          summary)
 ```
 
 ```
@@ -549,40 +551,26 @@ Levene's test is included in the `stats` module in `scipy`. It requires two vect
 
 
 ```python
-guanapo = rivers_py.query('river == "Guanapo"')["length"]
 aripo = rivers_py.query('river == "Aripo"')["length"]
+guanapo = rivers_py.query('river == "Guanapo"')["length"]
 
-stats.levene(guanapo, aripo)
+stats.levene(aripo, guanapo)
 ```
 
 ```
 ## LeveneResult(statistic=1.7731837331911642, pvalue=0.18756940068805075)
 ```
-
 :::
 :::::
 
 The p-value tells us the probability of observing these two samples if they come from distributions with the same variance. As this probability is greater than our arbitrary significance level of 0.05 then we can be somewhat confident that the necessary assumptions for carrying out Student’s t-test on these two samples was valid. (Once again woohoo!)
 
 ### Bartlett's test
-If we had wanted to carry out Bartlett’s test (i.e. if the data _had_ been sufficiently normally distributed) then the command would have been:
+If we had wanted to carry out Bartlett’s test (i.e. if the data _had_ been sufficiently normally distributed) then we would have done:
 
-
-```r
-bartlett.test(length ~ river, data = rivers)
-```
-
-```
-## 
-## 	Bartlett test of homogeneity of variances
-## 
-## data:  length by river
-## Bartlett's K-squared = 4.4734, df = 1, p-value = 0.03443
-```
-
-The relevant p-value is given on the 3rd line.
-
-:::note
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
 Here we use `bartlett.test()` from base R. Surprisingly, the `rstatix` package does not have a built-in equivalent.
 
 If we wanted to get the output of the Bartlett test into a tidy format, we could do the following, where we take the `rivers` data set and pipe it to the `bartlett.test()` function. Note that we need to define the data using a dot (`.`), because the first input into `bartlett.test()` is not the data. We then pipe the output to the `tidy()` function, which is part of the `broom` library, which kindly converts the output into a tidy format. Handy!
@@ -607,10 +595,48 @@ rivers %>%
 ```
 :::
 
-## Implement test
-In this case we're ignoring the fact that the data are not normal enough, according to the Shapiro-Wilk test. However, because the sample sizes are pretty large and the t-test is also pretty robust in this case, we can perform a t-test. Remember, this is only allowed because the variances of the two groups (Aripo and Guanapo) are equal.
+::: {.panel}
+[base R]{.panel-name}
+
+```r
+bartlett.test(length ~ river, data = rivers_r)
+```
+
+```
+## 
+## 	Bartlett test of homogeneity of variances
+## 
+## data:  length by river
+## Bartlett's K-squared = 4.4734, df = 1, p-value = 0.03443
+```
+
+The relevant p-value is given on the 3rd line.
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+We've already subset our data into `guanapo` and `aripo`, vectors that contain our data.
+
+
+```python
+stats.bartlett(aripo, guanapo)
+```
+
+```
+## BartlettResult(statistic=4.4734366516240165, pvalue=0.03442568304468286)
+```
+:::
+:::::
+
+## Implement and interpret the test
+In this case we're ignoring the fact that the data are not normal enough, according to the Shapiro-Wilk test. However, this is not entirely naughty, because the sample sizes are pretty large and the t-test is also pretty robust in this case, we can perform a t-test. Remember, this is only allowed because the variances of the two groups (Aripo and Guanapo) are equal.
 
 Perform a two-sample, two-tailed, t-test:
+
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
+
 
 
 ```r
@@ -621,17 +647,6 @@ rivers %>%
          var.equal = TRUE)
 ```
 
-Here we do the following:
-
-* We take the data set and pipe it to the `t_test()` function
-* The `t_test()` function takes the formula in the format `variable ~ category`
-* Again the alternative is `two.sided` because we have no prior knowledge about whether the alternative should be `greater` or `less`
-* The last argument says whether the variance of the two samples can be assumed to be equal (Student's t-test) or unequal (Welch's t-test)
-
-## Interpret output and report results
-Let's look at the results of the t-test that we performed on the original (stacked) data frame:
-
-
 ```
 ## # A tibble: 1 × 8
 ##   .y.    group1 group2     n1    n2 statistic    df        p
@@ -639,14 +654,81 @@ Let's look at the results of the t-test that we performed on the original (stack
 ## 1 length Aripo  Guanapo    39    29      3.84    66 0.000275
 ```
 
+Here we do the following:
+
+* We take the data set and pipe it to the `t_test()` function
+* The `t_test()` function takes the formula in the format `variable ~ category`
+* Again the alternative is `two.sided` because we have no prior knowledge about whether the alternative should be `greater` or `less`
+* The last argument says whether the variance of the two samples can be assumed to be equal (Student's t-test) or unequal (Welch's t-test)
+
+So, how do we interpret these results?
+
 *	The first 5 columns give you information on the variable (`.y.`), groups and sample size of each group
 * The `statistic` column gives the t-value of 3.8433 (we need this for reporting)
 * The `df` column tell us there are 66 degrees of freedom (we need this for reporting)
 * The `p` column gives us a p-value of 0.0002754
+:::
+
+::: {.panel}
+[base R]{.panel-name}
+
+```r
+t.test(length ~ river, data = rivers_r,
+       alternative = "two.sided",
+       var.equal = TRUE)
+```
+
+```
+## 
+## 	Two Sample t-test
+## 
+## data:  length by river
+## t = 3.8433, df = 66, p-value = 0.0002754
+## alternative hypothesis: true difference in means between group Aripo and group Guanapo is not equal to 0
+## 95 percent confidence interval:
+##  0.9774482 3.0909868
+## sample estimates:
+##   mean in group Aripo mean in group Guanapo 
+##              20.33077              18.29655
+```
+
+-	The first argument must be in the formula format: `variables ~ category`
+-	The second argument must be the name of the data frame
+-	The third argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less` 
+-	The fourth argument says whether the variance of the two samples can be assumed to be equal (Student's t-test) or unequal (Welch's t-test)
+
+So, how do we interpret the results?
+
+-	The 1st line gives the name of the test and the 2nd line reminds you what the data set was called, and what variables were used.
+-	The 3rd line contains the three key outputs from the test:
+    - The calculated t-value is 3.8433 (we need this for reporting)
+    - There are 66 degrees of freedom (we need this for reporting)
+    - The p-value is 0.0002754. 
+-	The 4th line simply states the alternative hypothesis in terms of the difference between the two sample means (testing if the two sample means are different is equivalent to testing whether the difference in the means is equal to zero).
+-	The 5th and 6th lines give the 95th confidence interval (we don’t need to know this here).
+-	The 7th, 8th and 9th lines give the sample means for each group (20.33077 in Aripo and 18.29655 in Guanapo) which we found earlier.
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+```python
+stats.ttest_ind(aripo, guanapo,
+                alternative = "two-sided",
+                equal_var = True)
+```
+
+```
+## Ttest_indResult(statistic=3.8432667461726275, pvalue=0.00027544021976337834)
+```
+:::
+:::::
 
 Again, the p-value is what we’re most interested in. Since the p-value is very small (much smaller than the standard significance level) we choose to say "that it is very unlikely that these two samples came from the same parent distribution and as such we can reject our null hypothesis" and state that:
 
 > A Student’s t-test indicated that the mean body length of male guppies in the Guanapo river (18.29 mm) differs significantly from the mean body length of male guppies in the Aripo river (20.33 mm) (t = 3.8433, df = 66, p = 0.0003).
+
+<br />
 
 Now there's a conversation starter.
 
@@ -697,7 +779,7 @@ Using the following data, test the null hypothesis that male and female turtles 
 
 1. Create a tidy data frame and save as a `.csv` file
 2. Write down the null and alternative hypotheses
-3. Import the data into R
+3. Import the data
 4. Summarise and visualise the data
 5. Check your assumptions (normality and variance) using appropriate tests and plots
 6. Perform a two-sample t-test
@@ -706,9 +788,36 @@ Using the following data, test the null hypothesis that male and female turtles 
 <details><summary>Answer</summary>
 
 ### Data
-Here the data is in a tidy format, with each variable in its own column, each row an observation (and a unique identifier for each observation).
+We'll stop asking you to manually create your own data files soon, but it's meant to get you to think about how to record your data. If we're using a tidy data format, then each variable (thing that you measure) is in its own column. Each observation has its own row.
+
+This means that if you would restructure the data from above it would look like this:
 
 
+
+```r
+turtle
+```
+
+```
+## # A tibble: 13 × 2
+##    serum sex   
+##    <dbl> <chr> 
+##  1  220. Male  
+##  2  219. Male  
+##  3  230. Male  
+##  4  229. Male  
+##  5  222  Male  
+##  6  224. Male  
+##  7  226. Male  
+##  8  223. Female
+##  9  222. Female
+## 10  230. Female
+## 11  224. Female
+## 12  224. Female
+## 13  231. Female
+```
+
+Note that there isn't an `id` column to identify each observation. This isn't a problem, as long as it's clear that each observation is independent.
 
 ### Hypotheses
 
@@ -717,35 +826,50 @@ $H_0$ : male mean $=$ female mean
 $H_1$ : male mean $\neq$ female mean
 
 ### Load, summarise and visualise data
+Let's load the data (I've created the `.csv` file earlier) and explore our data a bit more before we dive into the statistics.
 
-I'd always recommend storing data in tidy, stacked format (in fact I can't think of any situation where I would want to store data in an untidy, unstacked format!) So for this example I manually input the data into Excel in the following layout, saving the data as a CSV file and reading it in:
-
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
 
 ```r
 # load the data
 turtle <- read_csv("data/tidy/CS1-turtle.csv")
+```
 
+```
+## Rows: 13 Columns: 2
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (1): sex
+## dbl (1): serum
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
+
+```r
 # and have a look
 turtle
 ```
 
 ```
-## # A tibble: 13 × 3
-##       id serum sex   
-##    <dbl> <dbl> <chr> 
-##  1     1  220. Male  
-##  2     2  219. Male  
-##  3     3  230. Male  
-##  4     4  229. Male  
-##  5     5  222  Male  
-##  6     6  224. Male  
-##  7     7  226. Male  
-##  8     8  223. Female
-##  9     9  222. Female
-## 10    10  230. Female
-## 11    11  224. Female
-## 12    12  224. Female
-## 13    13  231. Female
+## # A tibble: 13 × 2
+##    serum sex   
+##    <dbl> <chr> 
+##  1  220. Male  
+##  2  219. Male  
+##  3  230. Male  
+##  4  229. Male  
+##  5  222  Male  
+##  6  224. Male  
+##  7  226. Male  
+##  8  223. Female
+##  9  222. Female
+## 10  230. Female
+## 11  224. Female
+## 12  224. Female
+## 13  231. Female
 ```
 
 Let's summarise the data (although a visualisation is probably much easier to work with):
@@ -754,7 +878,6 @@ Let's summarise the data (although a visualisation is probably much easier to wo
 ```r
 # create summary statistics for each group
 turtle %>% 
-  select(-id) %>% 
   group_by(sex) %>% 
   get_summary_stats(type = "common")
 ```
@@ -777,24 +900,96 @@ turtle %>%
   geom_boxplot()
 ```
 
-<img src="cs1-practical-two_sample_t_test_files/figure-html/cs1-twosample-turtle-boxplot-1.png" width="672" />
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-32-1.png" width="672" />
+:::
+
+::: {.panel}
+[base R]{.panel-name}
+
+```r
+# load the data
+turtle_r <- read.csv("data/tidy/CS1-turtle.csv")
+
+# and have a look
+head(turtle_r)
+```
+
+```
+##   serum  sex
+## 1 220.1 Male
+## 2 218.6 Male
+## 3 229.6 Male
+## 4 228.8 Male
+## 5 222.0 Male
+## 6 224.1 Male
+```
+
+and visualise the data:
+
+
+```r
+# visualise the data
+boxplot(serum ~ sex , data = turtle_r)
+```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-34-1.png" width="672" />
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+```python
+turtle_py = pd.read_csv("data/tidy/CS1-turtle.csv")
+
+turtle_py.describe()
+```
+
+```
+##             serum
+## count   13.000000
+## mean   224.900000
+## std      3.978274
+## min    218.600000
+## 25%    222.000000
+## 50%    224.100000
+## 75%    228.800000
+## max    230.800000
+```
+
+and visualise the data:
+
+
+```python
+(
+  ggplot(turtle_py, aes(x = "sex",
+                        y = "serum"))
+  + geom_boxplot()
+)
+```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-36-1.png" width="614" />
+:::
+:::::
 
 As always we use the plot and summary to assess three things:
 
 1. Does it look like we've loaded the data in correctly?
-    * We have two groups and the extreme values of our plots seem to match with our dataset, so I'm happy that we haven't done anything massively wrong here.
+    * We have two groups and the extreme values of our plots seem to match with our data set, so I'm happy that we haven't done anything massively wrong here.
 2.  Do we think that there is a difference between the two groups?
-    * We need the result of the formal test to make sense given the data, so it's important to develop a sense of what we think is going to happen here. Whilst the ranges of the two groups suggests that the Female serum levels might be higher than the males when we look at things more closely we realise that isn't the case. The boxplot shows that the median values of the two groups is virtually identical and this is backed up by the summary statistics we calculated: the medians are both about 224.1, and the means are fairly close too (225.7 vs 224.2). Based on this, and the fact that there are only 13 observations in total I would be very surprised if any test came back showing that there was a difference between the groups.
+    * We need the result of the formal test to make sense given the data, so it's important to develop a sense of what we think is going to happen here. Whilst the ranges of the two groups suggests that the Female serum levels might be higher than the males when we look at things more closely we realise that isn't the case. The box plot shows that the median values of the two groups is virtually identical and this is backed up by the summary statistics we calculated: the medians are both about 224.1, and the means are fairly close too (225.7 vs 224.2). Based on this, and the fact that there are only 13 observations in total I would be very surprised if any test came back showing that there was a difference between the groups.
 3. What do we think about assumptions?
     * Normality looks a bit worrying: whilst the `Male` group appears nice and symmetric (and so might be normal), the `Female` group appears to be quite skewed (since the median is much closer to the bottom than the top). We'll have to look carefully at the more formal checks to decided whether we think the data are normal enough for us to use a t-test.
-    * Homogeneity of variance. At this stage the spread of the data within each group looks similar, but because of the potential skew in the Female group we'll again want to check the assumptions carefully.
-
+    * Homogeneity of variance. At this stage the spread of the data within each group looks similar, but because of the potential skew in the `Female` group we'll again want to check the assumptions carefully.
 
 ### Assumptions
 
 **Normality**
 
-Let's look at the normality of each of the groups separately. There are several ways of getting at the `serum` values for Males and Females separately. We'll use the unstacking method, then use Shapiro-Wilk followed by qqplots.
+Let's look at the normality of each of the groups separately. There are several ways of getting at the `serum` values for `Male` and `Female` groups separately. All of them come down to splitting the data. Afterwards we use the Shapiro-Wilk ('formal' test), followed by Q-Q plots (much more informative).
+
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
 
 
 ```r
@@ -812,10 +1007,92 @@ turtle %>%
 ## 2 Male   serum        0.944 0.674
 ```
 
-The p-values for both Shapiro-Wilk tests are non-significant which suggests that the data are normal enough. This is a bit surprising given what we saw in the boxplot but there are two bits of information that we can use to reassure us.
+:::
 
-1. The p-value for the Female group is smaller than for the Male group (suggesting that the Female group is closer to being non-normal than the Male group) which makes sense.
+::: {.panel}
+[base R]{.panel-name}
+We can use the `unstack()` function to split the data, then access the relevant values.
+
+
+```r
+uns_turtle_r <- unstack(turtle_r, serum ~ sex)
+
+uns_turtle_r
+```
+
+```
+## $Female
+## [1] 223.4 221.5 230.2 224.3 223.8 230.8
+## 
+## $Male
+## [1] 220.1 218.6 229.6 228.8 222.0 224.1 226.5
+```
+
+You can see that the data has been split by `sex`.
+
+
+```r
+shapiro.test(uns_turtle_r$Male)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  uns_turtle_r$Male
+## W = 0.94392, p-value = 0.6743
+```
+
+```r
+shapiro.test(uns_turtle_r$Female)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  uns_turtle_r$Female
+## W = 0.84178, p-value = 0.1349
+```
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+```python
+turtle_male = turtle_py.query('sex == "Male"')["serum"]
+turtle_female = turtle_py.query('sex == "Female"')["serum"]
+```
+
+
+```python
+stats.shapiro(turtle_male)
+```
+
+```
+## ShapiroResult(statistic=0.9439237713813782, pvalue=0.6742751598358154)
+```
+
+```python
+stats.shapiro(turtle_female)
+```
+
+```
+## ShapiroResult(statistic=0.8417852520942688, pvalue=0.1348712146282196)
+```
+:::
+:::::
+
+The p-values for both Shapiro-Wilk tests are non-significant which suggests that the data are normal enough. This is a bit surprising given what we saw in the box plot but there are two bits of information that we can use to reassure us.
+
+1. The p-value for the `Female` group is smaller than for the `Male` group (suggesting that the `Female` group is closer to being non-normal than the `Male` group) which makes sense based on our visual observations.
 2. The Shapiro-Wilk test is generally quite relaxed about normality for small sample sizes (and notoriously strict for very large sample sizes). For a group with only 6 data points in it, the data would actually have to have a really, really skewed distribution. Given that the Female group only has 6 data points in it, it's not too surprising that the Shapiro-Wilk test came back saying everything is OK.
+
+Given these caveats of the Shapiro-Wilk test (I'll stop mentioning them now, I think I've made my opinion clear ;)), let's look at the Q-Q plots.
+
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
 
 
 ```r
@@ -827,16 +1104,52 @@ turtle %>%
   facet_wrap(facets = vars(sex))
 ```
 
-<img src="cs1-practical-two_sample_t_test_files/figure-html/cs1-twosample-turtle-qqplot-1.png" width="672" />
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-42-1.png" width="672" />
 
-The results from the Q-Q plots echo what we've already seen from the Shapiro-Wilk analyses. The Male group doesn't look too bad whereas the Female group looks somewhat dodgy.
+:::
+
+::: {.panel}
+[base R]{.panel-name}
+
+```r
+par(mfrow=c(1,2))
+qqnorm(uns_turtle_r$Female, main = "Female")
+qqline(uns_turtle_r$Female, col = "red")
+qqnorm(uns_turtle_r$Male, main = "Male")
+qqline(uns_turtle_r$Male, col = "red")
+```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/cs1-twosample-turtle-qqplot-1.png" width="672" />
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+```python
+# create Q-Q plots for both groups
+(
+  ggplot(turtle_py, aes(sample = "serum"))
+  + stat_qq()
+  + stat_qq_line(colour = "red")
+  + facet_wrap("sex")
+)
+```
+
+<img src="cs1-practical-two_sample_t_test_files/figure-html/unnamed-chunk-43-1.png" width="614" />
+:::
+:::::
+
+The results from the Q-Q plots echo what we've already seen from the Shapiro-Wilk analyses. The normality of the data in the `Male` group doesn't look too bad whereas the those in the `Female` group looks somewhat dodgy.
 
 Overall, the assumption of normality of the data doesn't appear to be very well met at all, but we do have to bear in mind that there are only a few data points in each group and we might just be seeing this pattern in the data due to random chance rather than because the underlying populations are actually not normally distributed. Personally, though I'd edge towards non-normal here.
 
 **Homogeneity of Variance**
 
-It's not clear whether the data are normal or not, so it isn't clear which test to use here. The sensible approach is to do both and hope that they agree (fingers crossed!)
+It's not clear whether the data are normal or not, so it isn't clear which test to use here. The sensible approach is to do both and hope that they agree (fingers crossed!). Or err on the side of caution and assume they are not normal, but potentially throwing away statistical power (more on that later).
 
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
 Bartlett's test gives us:
 
 
@@ -869,14 +1182,80 @@ turtle %>%
 ##   <int> <int>     <dbl> <dbl>
 ## 1     1    11     0.243 0.631
 ```
+:::
 
-The good news is that both Levene and Bartlett agree that there is homogeneity of variance between the two groups (thank goodness!).
+::: {.panel}
+[base R]{.panel-name}
+Bartlett's test gives us:
+
+
+```r
+bartlett.test(serum ~ sex, turtle_r)
+```
+
+```
+## 
+## 	Bartlett test of homogeneity of variances
+## 
+## data:  serum by sex
+## Bartlett's K-squared = 0.045377, df = 1, p-value = 0.8313
+```
+
+and Levene's test gives us:
+
+
+```r
+# load if needed
+# library(car)
+
+leveneTest(serum ~ sex, turtle_r)
+```
+
+```
+## Levene's Test for Homogeneity of Variance (center = median)
+##       Df F value Pr(>F)
+## group  1  0.2434 0.6315
+##       11
+```
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+Bartlett's test gives us:
+
+
+```python
+stats.bartlett(turtle_male, turtle_female)
+```
+
+```
+## BartlettResult(statistic=0.0453770725135282, pvalue=0.8313121829253811)
+```
+
+and Levene's test gives us:
+
+
+```python
+stats.levene(turtle_male, turtle_female)
+```
+
+```
+## LeveneResult(statistic=0.24341796609304578, pvalue=0.6314503568954707)
+```
+:::
+:::::
+
+The good news is that both Levene and Bartlett agree that there is homogeneity of variance between the two groups (thank goodness, that's one less thing to worry about!).
 
 Overall, what this means is that we're not too sure about normality, but that homogeneity of variance is pretty good.
 
 ### Implement two-sample t-test
 
-Because of the result of the Bartlett test I know that I can carry out a two-sample Student's t-test (as opposed to a two-sample Welch's t-test, if you're confused, see Figure \@ref(fig:fig-cs1-diagram-which-test))
+Because of the result of the Bartlett test I know that I can carry out a two-sample Student's t-test. If the variances between the two groups were not equal, then we'd have to perform Welch's t-test.
+
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
 
 
 ```r
@@ -893,14 +1272,58 @@ turtle %>%
 ## * <chr> <chr>  <chr>  <int> <int>     <dbl> <dbl> <dbl>
 ## 1 serum Female Male       6     7     0.627    11 0.544
 ```
+:::
+
+::: {.panel}
+[base R]{.panel-name}
+
+```r
+t.test(serum ~ sex,
+       data = turtle_r,
+       alternative = "two.sided",
+       var.equal = TRUE)
+```
+
+```
+## 
+## 	Two Sample t-test
+## 
+## data:  serum by sex
+## t = 0.62681, df = 11, p-value = 0.5436
+## alternative hypothesis: true difference in means between group Female and group Male is not equal to 0
+## 95 percent confidence interval:
+##  -3.575759  6.423378
+## sample estimates:
+## mean in group Female   mean in group Male 
+##             225.6667             224.2429
+```
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+```python
+stats.ttest_ind(turtle_male, turtle_female,
+                alternative = "two-sided",
+                equal_var = True)
+```
+
+```
+## Ttest_indResult(statistic=-0.6268108404512706, pvalue=0.543572996867541)
+```
+:::
+:::::
+
 
 With a p-value of 0.544, this test tells me that there is insufficient evidence to suggest that the means of the two groups are different. A suitable summary sentence would be:
 
 > A Student's two-sample t-test indicated that the mean serum cholesterol level did not differ significantly between Male and Female turtles (t = 0.627, df = 11, p = 0.544).
 
+<br />
+
 ### Discussion
 
-In reality, because of the ambiguous normality assumption assessment, for this dataset I would actually carry out two different tests; the two-sample t-test with equal variance and the Mann-Whitney U test. If both of them agreed then it wouldn't matter too much which one I reported (I'd personally report both with a short sentence to say that I'm doing that because it wasn't clear whether the assumption of normality had or had not been met), but it would be acceptable to report just one. 
+In reality, because of the ambiguous normality assumption assessment, for this data set I would actually carry out two different tests; the two-sample t-test with equal variance and the Mann-Whitney U test. If both of them agreed then it wouldn't matter too much which one I reported (I'd personally report both with a short sentence to say that I'm doing that because it wasn't clear whether the assumption of normality had or had not been met), but it would be acceptable to report just one. 
 
 </details>
 :::

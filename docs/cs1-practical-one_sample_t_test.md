@@ -582,7 +582,7 @@ This is the output that you should now see in the console window:
 [Python]{.panel-name}
 
 ```
-## Ttest_1sampResult(statistic=-3.5491839564647205, pvalue=0.0013868577835348004)
+## Ttest_1sampResult(statistic=-3.5491839564647205, pvalue=0.0013868577835348002)
 ```
 
 The output is very minimal. The 1st number in brackets is the t-value and the 2nd number is the p-value
@@ -888,7 +888,7 @@ stats.shapiro(dissolving_py.dissolving_time)
 ```
 
 ```
-## ShapiroResult(statistic=0.9802342057228088, pvalue=0.9640541672706604)
+## ShapiroResult(statistic=0.9802345037460327, pvalue=0.9640554785728455)
 ```
 
 

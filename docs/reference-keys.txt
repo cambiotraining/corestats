@@ -56,8 +56,7 @@ assumptions-4
 exercise-qq-rivers
 equality-of-variance
 bartletts-test
-implement-test-1
-interpret-output-and-report-results
+implement-and-interpret-the-test
 exercise-turtles
 data
 hypotheses-2

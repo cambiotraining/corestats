@@ -6,7 +6,7 @@
 <title>Chapter 3 One-sample t-test | Core Statistics in R</title>
 <meta name="author" content="Matt Castle and Martin van Rongen">
 <meta name="description" content="3.1 Libraries and functions  tidyverse Libraries Description library(tidyverse) A collection of R packages designed for data science library(rstatix) Converts base R stats functions to a...">
-<meta name="generator" content="bookdown 0.25 with bs4_book()">
+<meta name="generator" content="bookdown 0.26 with bs4_book()">
 <meta property="og:title" content="Chapter 3 One-sample t-test | Core Statistics in R">
 <meta property="og:type" content="book">
 <meta property="og:description" content="3.1 Libraries and functions  tidyverse Libraries Description library(tidyverse) A collection of R packages designed for data science library(rstatix) Converts base R stats functions to a...">
@@ -631,7 +631,7 @@ First we have a look at a numerical summary of the data:</p>
 <div class="inline-figure"><img src="cs1-practical-one_sample_t_test_files/figure-html/unnamed-chunk-9-1.png" width="614"></div>
 </div>
 </div>
-<p>The data do not appear to contain any obvious errors, and whilst both the mean and median are less than 20 (18.3 and 18.8 respectively) it is not absolutely certain that the sample mean is sufficiently different from this value to be “statistically significant,” although we may anticipate such a result.</p>
+<p>The data do not appear to contain any obvious errors, and whilst both the mean and median are less than 20 (18.3 and 18.8 respectively) it is not absolutely certain that the sample mean is sufficiently different from this value to be “statistically significant”, although we may anticipate such a result.</p>
 </div>
 <div id="assumptions" class="section level2" number="3.4">
 <h2>
@@ -908,7 +908,7 @@ There are three ways of checking for normality:</p>
 </div>
 <div class="panel">
 <p><span class="panel-name">Python</span></p>
-<pre><code>## Ttest_1sampResult(statistic=-3.5491839564647205, pvalue=0.0013868577835348004)</code></pre>
+<pre><code>## Ttest_1sampResult(statistic=-3.5491839564647205, pvalue=0.0013868577835348002)</code></pre>
 <p>The output is very minimal. The 1st number in brackets is the t-value and the 2nd number is the p-value</p>
 </div>
 </div>
@@ -919,7 +919,7 @@ There are three ways of checking for normality:</p>
 <li>a low p-value means that there is a low probability of observing a sample such as ours and the null hypothesis is probably not true.</li>
 </ul>
 <p>It is important to realise that the p-value is just an indication and there is no absolute certainty here in this interpretation.</p>
-<p>People, however like more definite answers and so we pick an artificial probability threshold (called a significance level) in order to be able to say something more decisive. The standard significance level is 0.05 and since our p-value is smaller than this we choose to say that “it is very unlikely that we would have this particular sample if the null hypothesis were true.” Consequently, we can reject our null hypothesis and state that:</p>
+<p>People, however like more definite answers and so we pick an artificial probability threshold (called a significance level) in order to be able to say something more decisive. The standard significance level is 0.05 and since our p-value is smaller than this we choose to say that “it is very unlikely that we would have this particular sample if the null hypothesis were true”. Consequently, we can reject our null hypothesis and state that:</p>
 <blockquote>
 <p>A one-sample t-test indicated that the mean body length of male guppies (<span class="math inline">\(\mu\)</span> = 18.29mm) differs significantly from 20 mm (t = -3.55, df = 28, p = 0.0014).</p>
 </blockquote>
@@ -1132,7 +1132,7 @@ Answer
 <p><span class="panel-name">Python</span></p>
 <div class="sourceCode" id="cb61"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb61-1"><a href="cs1-one-sample-t-test.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform Shapiro-Wilk test to check normality</span></span>
 <span id="cb61-2"><a href="cs1-one-sample-t-test.html#cb61-2" aria-hidden="true" tabindex="-1"></a>stats.shapiro(dissolving_py.dissolving_time)</span></code></pre></div>
-<pre><code>## ShapiroResult(statistic=0.9802342057228088, pvalue=0.9640541672706604)</code></pre>
+<pre><code>## ShapiroResult(statistic=0.9802345037460327, pvalue=0.9640554785728455)</code></pre>
 <div class="sourceCode" id="cb63"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb63-1"><a href="cs1-one-sample-t-test.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a Q-Q plot</span></span>
 <span id="cb63-2"><a href="cs1-one-sample-t-test.html#cb63-2" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb63-3"><a href="cs1-one-sample-t-test.html#cb63-3" aria-hidden="true" tabindex="-1"></a>  ggplot(dissolving_py,</span>

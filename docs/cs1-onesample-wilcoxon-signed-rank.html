@@ -6,7 +6,7 @@
 <title>Chapter 4 Wilcoxon signed-rank test | Core Statistics in R</title>
 <meta name="author" content="Matt Castle and Martin van Rongen">
 <meta name="description" content="This test also considers a single sample, however for this test (in contrast to the one sample t-test) we don’t have to assume that the parent distribution is normally distributed. We do still...">
-<meta name="generator" content="bookdown 0.25 with bs4_book()">
+<meta name="generator" content="bookdown 0.26 with bs4_book()">
 <meta property="og:title" content="Chapter 4 Wilcoxon signed-rank test | Core Statistics in R">
 <meta property="og:type" content="book">
 <meta property="og:description" content="This test also considers a single sample, however for this test (in contrast to the one sample t-test) we don’t have to assume that the parent distribution is normally distributed. We do still...">
@@ -584,7 +584,7 @@ Let’s first determine the median, so we can use that to compare our data to.</
 <p>The syntax is similar to what we did earlier:</p>
 <ul>
 <li>The 1st argument we give to the <code>wilcoxon()</code> function is an array of the differences between our data points and the median to be tested under the null hypothesis, i.e. our data points (<code>fishlength_py.length</code>) minus the test median (20, in this case).</li>
-<li>The 2nd argument gives us the type of alternative hypothesis and must be one of “two-sided,” “larger,” or “smaller.” This is in contrast to the 1-sample t-test in Python that can only mange two-sided alternative hypotheses.</li>
+<li>The 2nd argument gives us the type of alternative hypothesis and must be one of “two-sided”, “larger”, or “smaller”. This is in contrast to the 1-sample t-test in Python that can only mange two-sided alternative hypotheses.</li>
 </ul>
 </div>
 </div>

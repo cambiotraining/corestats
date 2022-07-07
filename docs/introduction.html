@@ -6,7 +6,7 @@
 <title>Chapter 2 Introduction | Core Statistics in R</title>
 <meta name="author" content="Matt Castle and Martin van Rongen">
 <meta name="description" content="2.1 One-sample tests  2.1.1 Objectives (one-sample)  Questions When do I perform a one-sample test? Which one-sample tests are there and what are the assumptions? How do I interpret and present...">
-<meta name="generator" content="bookdown 0.25 with bs4_book()">
+<meta name="generator" content="bookdown 0.26 with bs4_book()">
 <meta property="og:title" content="Chapter 2 Introduction | Core Statistics in R">
 <meta property="og:type" content="book">
 <meta property="og:description" content="2.1 One-sample tests  2.1.1 Objectives (one-sample)  Questions When do I perform a one-sample test? Which one-sample tests are there and what are the assumptions? How do I interpret and present...">
@@ -470,7 +470,7 @@ Figure 2.2: Which test to use
 <ol style="list-style-type: decimal">
 <li>Testing whether a sample comes from a normal distribution was covered in <a href="introduction.html#cs1-one-sample-tests">One-sample tests</a>. You need to visualise your data and/or use the Shapiro-Wilk test.</li>
 <li>The size of the sample makes things easier. Because of maths (specifically due to something called the central limit theorem which I am not even going to attempt to touch upon here) if you have large samples then you can use the tests that assume normality of the parent population (Student’s t-test, Welch’s t-test and the paired t-test) even if your parent populations are certainly not normal. If you really want to understand exactly why this works, then you will have to do some more rigorous mathematics. So, for the moment I’m going to say that it’s OK to take these facts on faith and just trust me on this.</li>
-<li>Paired samples mean that for every data point in one sample there is a matching data point in the other sample that is linked to it in some inextricable way. A typical example would involve a group of 20 test subjects being measured before and after some experiment. Providing that the experiment didn’t do anything fatal to the test subjects then the data would consist of two samples; 20 pre-experiment measurements and 20 post-experiment measurements. However, because the same test subjects were used then each pre-experiment data point can be matched exactly to one of the post-experiment data points. In this sense the two samples are said to be “paired.”</li>
+<li>Paired samples mean that for every data point in one sample there is a matching data point in the other sample that is linked to it in some inextricable way. A typical example would involve a group of 20 test subjects being measured before and after some experiment. Providing that the experiment didn’t do anything fatal to the test subjects then the data would consist of two samples; 20 pre-experiment measurements and 20 post-experiment measurements. However, because the same test subjects were used then each pre-experiment data point can be matched exactly to one of the post-experiment data points. In this sense the two samples are said to be “paired”.</li>
 <li>There are a couple of tests (Bartlett’s test and Levene’s test) that can be used to see if two samples come from distributions with the same variance. These will be covered in a later section.</li>
 <li>Resampling techniques aren’t covered in this course and require a mixture of statistical understanding and programming skill. Ask a demonstrator (or Google it 😉) if you want to know more.</li>
 </ol>

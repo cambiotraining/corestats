@@ -38,6 +38,13 @@ bookdown::render_book(output_dir = "docs", "index.Rmd", "bookdown::bs4_book")
 </details>
 ::::::::::::::::::
 
+```{python, results='hide'}
+(
+  ggplot(turtle_py, aes(x = "sex", y = "serum"))
+  + geom_boxplot()
+)
+```
+
   in panelset.css:
 
   .panelset .panel-tabs {
