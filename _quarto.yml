@@ -1,0 +1,42 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Core statistics"
+  description: "Supporting materials for the Core statistics course (University of Cambridge)"
+  site-url: https://cambiotraining.github.io/corestats/
+  repo-url: https://github.com/cambiotraining/corestats
+  repo-actions: [issue]
+  page-navigation: true
+  favicon: "images/favicon.ico"
+  page-footer:
+    left: |
+      [Bioinformatics Training Facility](https://bioinfotraining.bio.cam.ac.uk)
+    right:
+      - icon: github
+        href: https://github.com/cambiotraining/
+        aria-label: Bioinformatics Training Facility GitHub
+
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+
+  sidebar:
+    - id: cs1
+      title: Simple hypothesis testing
+      collapse-level: 2
+      style: "floating"
+      align: left
+      contents:
+        - href: cs1/cs1-practical-one_sample_t_test.qmd
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+editor: visual
+
