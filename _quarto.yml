@@ -24,13 +24,12 @@ website:
         text: Home
 
   sidebar:
-    - id: cs1
-      title: Simple hypothesis testing
-      collapse-level: 2
-      style: "floating"
-      align: left
-      contents:
-        - href: cs1/cs1-practical-one_sample_t_test.qmd
+    style: "floating"
+    search: true
+    contents:
+      - section: "Simple hypothesis testing"
+        contents:
+          - cs1/cs1-practical-one_sample_t_test.qmd
 
 format:
   html:
