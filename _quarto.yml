@@ -19,6 +19,9 @@ website:
         aria-label: Bioinformatics Training Facility GitHub
 
   navbar:
+    background: primary
+    pinned: true
+    logo: "images/university_crest_reversed.png"
     left:
       - href: index.qmd
         text: Home
@@ -29,7 +32,8 @@ website:
     contents:
       - section: "Simple hypothesis testing"
         contents:
-          - cs1/cs1-practical-one_sample_t_test.qmd
+          - cs1_practical_one-sample-t-test.qmd
+          - cs1_practical_students-t-test.qmd
 
 format:
   html:

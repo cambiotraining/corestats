@@ -4,11 +4,11 @@ format:
   html:
     toc: true
     include-after-body:
-      - ../sync-tabs.html
+      - sync-tabs.html
 ---
 
 ```{r, echo=FALSE}
-source(file = "../setup.R")
+source(file = "setup.R")
 ```
 
 ## Libraries and functions
@@ -17,12 +17,12 @@ source(file = "../setup.R")
 ## tidyverse
 
 | Libraries            | Description                                                                                                       |
-|:-----------------|:-----------------------------------------------------|
+|:------------------|:----------------------------------------------------|
 | `library(tidyverse)` | A collection of R packages designed for data science                                                              |
 | `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
 
 | Functions                 | Description                                                                          |
-|:------------------|:----------------------------------------------------|
+|:-------------------|:---------------------------------------------------|
 | `rstatix::t_test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections. |
 | `rstatix::shapiro_test()` | Performs a Shapiro-Wilk test for normality.                                          |
 | `ggplot2::stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.                          |
@@ -31,7 +31,7 @@ source(file = "../setup.R")
 ## R
 
 | Functions        | Description                                                                          |
-|:-----------------|:-----------------------------------------------------|
+|:------------------|:----------------------------------------------------|
 | `t.test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections. |
 | `qqnorm()`       | Plots a Q-Q plot for comparison with a normal distribution.                          |
 | `qqline()`       | Adds a comparison line to the Q-Q plot.                                              |
@@ -91,7 +91,7 @@ We then read in the data and create a table containing the data.
 
 ```{r cs1-one-sample-read-data, message=FALSE, warning=FALSE}
 # import the data
-fishlengthDF <- read_csv("../data/CS1-onesample.csv")
+fishlengthDF <- read_csv("data/CS1-onesample.csv")
 
 fishlengthDF
 ```
@@ -104,7 +104,7 @@ We then read in the data and create a vector containing the data.
 
 ```{r}
 # import the data
-fishlengthDF <- read.csv("../data/CS1-onesample.csv")
+fishlengthDF <- read.csv("data/CS1-onesample.csv")
 
 # create a vector containing the data
 fishlength_r <- fishlengthDF$length
@@ -118,7 +118,7 @@ We then read the data in:
 
 ```{python}
 # load the data
-fishlength_py = pd.read_csv('../data/CS1-onesample.csv')
+fishlength_py = pd.read_csv('data/CS1-onesample.csv')
 
 # inspect the data
 fishlength_py.head()
@@ -493,11 +493,7 @@ Do these results provide any evidence to suggest that dissolving time for this d
 
 <details>
 
-<summary>
-
-Answer
-
-</summary>
+<summary>Answer</summary>
 
 ### Hypotheses
 
@@ -514,7 +510,7 @@ We can create a data frame in Excel and save it as an `.csv` file, for example a
 
 ```{r, message=FALSE, warning=FALSE}
 # load the data
-dissolving <- read_csv("../data/CS1-gastric_juices.csv")
+dissolving <- read_csv("data/CS1-gastric_juices.csv")
 
 # have a look at the data
 dissolving
@@ -541,7 +537,7 @@ dissolving %>%
 
 ```{r}
 # load the data
-dissolving_r <- read.csv("../data/CS1-gastric_juices.csv")
+dissolving_r <- read.csv("data/CS1-gastric_juices.csv")
 
 # have a look at the data
 dissolving_r
@@ -560,7 +556,7 @@ boxplot(dissolving_r$dissolving_time)
 
 ```{python}
 # load the data
-dissolving_py = pd.read_csv("../data/CS1-gastric_juices.csv")
+dissolving_py = pd.read_csv("data/CS1-gastric_juices.csv")
 
 # have a look at the data
 dissolving_py.head()

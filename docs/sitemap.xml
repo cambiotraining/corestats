@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://cambiotraining.github.io/corestats/cs1/cs1-practical-one_sample_t_test.html</loc>
-    <lastmod>2022-07-12T20:55:00.683Z</lastmod>
+    <loc>https://cambiotraining.github.io/corestats/cs1_practical_students-t-test.html</loc>
+    <lastmod>2022-08-02T21:06:11.168Z</lastmod>
   </url>
   <url>
     <loc>https://cambiotraining.github.io/corestats/index.html</loc>
-    <lastmod>2022-07-12T20:55:01.026Z</lastmod>
+    <lastmod>2022-08-02T21:06:11.513Z</lastmod>
   </url>
   <url>
     <loc>https://cambiotraining.github.io/corestats/about.html</loc>
-    <lastmod>2022-07-12T20:55:01.405Z</lastmod>
+    <lastmod>2022-08-02T21:06:11.824Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cambiotraining.github.io/corestats/cs1_practical_one-sample-t-test.html</loc>
+    <lastmod>2022-08-02T21:06:24.964Z</lastmod>
   </url>
 </urlset>
