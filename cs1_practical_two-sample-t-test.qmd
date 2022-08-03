@@ -17,7 +17,7 @@ source(file = "setup.R")
 ## tidyverse
 
 | Libraries            | Description                                                                                                       |
-|:---------------------|:-------------------------------------------------|
+|:----------------------|:-----------------------------------------------|
 | `library(tidyverse)` | A collection of R packages designed for data science                                                              |
 | `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
 

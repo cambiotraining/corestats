@@ -2,26 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://cambiotraining.github.io/corestats/cs1_practical_two-sample-t-test.html</loc>
-    <lastmod>2022-08-03T08:50:01.736Z</lastmod>
+    <lastmod>2022-08-03T14:32:56.244Z</lastmod>
+  </url>
+  <url>
+    <loc>https://cambiotraining.github.io/corestats/cs1_practical_two-sample-paired-t-test.html</loc>
+    <lastmod>2022-08-03T14:33:06.066Z</lastmod>
   </url>
   <url>
     <loc>https://cambiotraining.github.io/corestats/cs1_practical_one-sample-wilcoxon.html</loc>
-    <lastmod>2022-08-03T08:50:09.356Z</lastmod>
+    <lastmod>2022-08-03T14:33:13.343Z</lastmod>
   </url>
   <url>
     <loc>https://cambiotraining.github.io/corestats/index.html</loc>
-    <lastmod>2022-08-03T08:50:09.768Z</lastmod>
+    <lastmod>2022-08-03T14:38:10.704Z</lastmod>
   </url>
   <url>
     <loc>https://cambiotraining.github.io/corestats/about.html</loc>
-    <lastmod>2022-08-03T08:50:10.036Z</lastmod>
+    <lastmod>2022-08-03T14:33:14.040Z</lastmod>
   </url>
   <url>
     <loc>https://cambiotraining.github.io/corestats/cs1_practical_two-sample-mann-whitney.html</loc>
-    <lastmod>2022-08-03T08:50:16.430Z</lastmod>
+    <lastmod>2022-08-03T14:33:20.472Z</lastmod>
   </url>
   <url>
     <loc>https://cambiotraining.github.io/corestats/cs1_practical_one-sample-t-test.html</loc>
-    <lastmod>2022-08-03T08:50:29.965Z</lastmod>
+    <lastmod>2022-08-03T14:33:33.486Z</lastmod>
   </url>
 </urlset>

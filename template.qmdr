@@ -1,0 +1,21 @@
+---
+title: "Paired t-test"
+format:
+  html:
+    toc: true
+    include-after-body:
+      - sync-tabs.html
+---
+
+```{r, echo=FALSE}
+#| echo: false
+source(file = "setup.R")
+```
+
+```{python}
+#| echo: false
+#| message: false
+from plotnine import *
+from scipy import stats
+import pandas as pd
+```

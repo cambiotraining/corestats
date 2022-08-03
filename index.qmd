@@ -7,7 +7,8 @@ format:
       - sync-tabs.html
 ---
 
-**Authors and contributors:** Martin van Rongen, Matt Castle, Rob Nicholls, Holly Pavey, Vicki Hodgson
+**Authors and contributors:**\
+Martin van Rongen, Matt Castle, Rob Nicholls, Holly Pavey, Vicki Hodgson
 
 ------------------------------------------------------------------------
 
