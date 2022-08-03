@@ -19,6 +19,7 @@ from plotnine import *
 from scipy import stats
 import pandas as pd
 ```
+
 A paired t-test is used when we have two samples of continuous data that can be paired (examples of these sort of data would be weights of individuals before and after a diet). This test is applicable if the number of paired points within the samples is large (>30) or, if the number of points is small, then this test also works when the parent distributions are normally distributed.
 
 ## Libraries and functions
@@ -41,10 +42,6 @@ A paired t-test is used when we have two samples of continuous data that can be 
 |`tidyr::pivot_wider()`| "Widens" the data, increasing the number of columns |
 
 ## R
-
-| Libraries      | Description                                                                     |
-|:-----------------------------------|:-----------------------------------|
-|||
 
 | Function            | Description                                                                                                        |
 |:-----------------------------------|:-----------------------------------|

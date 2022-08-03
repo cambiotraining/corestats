@@ -37,6 +37,7 @@ website:
           - cs1_practical_two-sample-t-test.qmd
           - cs1_practical_two-sample-mann-whitney.qmd
           - cs1_practical_two-sample-paired-t-test.qmd
+          - cs1_practical_two-sample-paired-wilcoxon.qmd
 
 format:
   html:

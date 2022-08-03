@@ -1,0 +1,473 @@
+---
+title: "Wilcoxon signed rank test"
+format:
+  html:
+    toc: true
+    include-after-body:
+      - sync-tabs.html
+---
+
+```{r, echo=FALSE}
+#| echo: false
+source(file = "setup.R")
+```
+
+```{python}
+#| echo: false
+#| message: false
+from plotnine import *
+from scipy import stats
+import pandas as pd
+```
+
+```{r}
+#| echo: false
+#| message: false
+# R data required for this session
+cortisol <- read_csv("data/CS1-twopaired.csv")
+cortisol_r <- read.csv("data/CS1-twopaired.csv")
+```
+
+```{python}
+#| echo: false
+# Python data required for this session
+cortisol_py = pd.read_csv('data/CS1-twopaired.csv')
+cortisol_diff_py = pd.pivot(cortisol_py, index = "patient_id", columns = "time", values = "cortisol")
+
+# add a new column with difference between
+# evening and morning cortisol levels
+cortisol_diff_py["cortisol_change"] = cortisol_diff_py["evening"].subtract(cortisol_diff_py["morning"])
+```
+
+A Wilcoxon signed-rank test is an alternative to a paired t-test. It does not require that the data are drawn from normal distributions, but it does require that the distribution of the differences is symmetric. We’re effectively testing to see if the median of the differences between the two samples differs significantly from zero.
+
+## Libraries and functions
+
+::: panel-tabset
+## tidyverse
+
+| Libraries            | Description                                                                                                       |
+|:---------------------|:-------------------------------------------------|
+| `library(tidyverse)` | A collection of R packages designed for data science                                                              |
+| `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
+
+| Functions                      | Description                                                                    |
+|:-----------------------------------|:-----------------------------------|
+| `rstatix::t_test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections. |
+| `rstatix::shapiro_test()` | Performs a Shapiro-Wilk test for normality.|
+| `ggplot2::stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.                          |
+| `ggplot2::stat_qq_line()` | Adds a comparison line to the Q-Q plot.|
+|`ggplot2::geom_jitter()`| Plots jittered points by adding a small amount of random variation to each point, to handle overplotting|
+|`tidyr::pivot_wider()`| "Widens" the data, increasing the number of columns |
+
+## R
+
+| Function            | Description                                                                                                        |
+|:-----------------------------------|:-----------------------------------|
+|`stats::reshape`|Reshapes a data frame from 'long' to 'wide' and vice versa|
+| `t.test()`| Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections.|
+| `qqnorm()`| Plots a Q-Q plot for comparison with a normal distribution.|
+| `qqline()`| Adds a comparison line to the Q-Q plot.|
+| `shapiro.test()`| Performs a Shapiro-Wilk test for normality.|
+
+## Python
+
+| Libraries     | Description                                       |
+|:--------------|:--------------------------------------------------|
+| `plotnine`    | The Python equivalent of `ggplot2`.               |
+| `pandas`      | A Python data analysis and manipulation tool.     |
+| `scipy.stats` | A Python module containing statistical functions. |
+
+| Functions                       | Description |
+|:-----------------------------------|:-----------------------------------|
+| `pandas.DataFrame.read_csv`| Reads in a `.csv` file |
+|`scipy.stats.wilcoxon()`|Tests the null hypothesis that two related paired samples come from the same distribution.|
+| `scipy.stats.shapiro()`| Performs the Shapiro-Wilk test|
+| `plotnine.stats.stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.             |
+| `plotnine.stats.stat_qq_line()` | Adds a comparison line to the Q-Q plot.
+:::
+
+## Data and hypotheses
+Using the `cortisol` dataset from before we form the following null and alternative hypotheses:
+
+-	$H_0$: The median of the difference in cortisol levels between the two groups is 0 $(\mu M = \mu E)$
+-	$H_1$: The median of the difference in cortisol levels between the two groups is not 0 $(\mu M \neq \mu E)$
+
+We use a two-tailed Wilcoxon signed-rank test to see if we can reject the null hypothesis.
+
+## Summarise and visualise
+Already implemented previously.
+
+## Assumptions
+These have been checked previously.
+
+## Implement and interpret the test
+Perform a two-tailed, Wilcoxon signed-rank test:
+
+:::panel-tabset
+## tidyverse
+```{r}
+# perform the test
+cortisol %>% 
+  wilcox_test(cortisol ~ time,
+              alternative = "two.sided",
+              paired = TRUE)
+```
+
+-	The first argument gives the formula
+-	The second argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less` 
+-	The third argument says that the data are paired
+
+## R
+```{r}
+wilcox.test(cortisol ~ time,
+            alternative = "two.sided",
+            paired = TRUE,
+            data = cortisol_r)
+```
+
+-	The first argument gives the formula
+-	The second argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
+-	The third argument indicates that the test is paired
+- The last argument is the data set
+
+## Python
+
+We'll use the wide format data set that we created previously:
+
+```{python}
+stats.wilcoxon(cortisol_diff_py["evening"],
+               cortisol_diff_py["morning"],
+               alternative = "two-sided")
+```
+:::
+The p-value is given in the `p` column (p-value = 0.000168). Given that this is less than 0.05 we can still reject the null hypothesis.
+
+> A two-tailed, Wilcoxon signed-rank test indicated that the median cortisol level in adult females differed significantly between the morning (320.5 nmol/l) and the evening (188.9 nmol/l) (V = 13, p = 0.00017).
+
+<br />
+
+## Exercise: Deer legs
+
+Using the following data on deer legs (yes, really!), test the null hypothesis that the fore and hind legs of the deer in this data set are the same length.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+# deer leg length (cm)
+read_csv("data/examples/cs1-deer.csv") %>% 
+  pivot_wider(names_from = leg, values_from = length) %>% 
+  select(-id)
+```
+
+Do these results provide any evidence to suggest that fore- and hind-leg length differ in deer?
+
+1. Write down the null and alternative hypotheses
+2. Choose a tidy representation for the data and create a csv file (I'll stop asking you to do this from now on...)
+3. Import the data into R
+4. Summarise and visualise the data
+5. Check your assumptions (normality and variance) using appropriate tests
+6. Discuss with your (virtual) neighbour which test is most appropriate?
+7. Perform the test
+8. Write down a sentence that summarises the results that you have found
+
+::: {.callout-caution collapse="true"}
+## Answer
+
+### Hypotheses
+
+$H_0$ : foreleg average (mean or median) $=$ hindleg average (mean or median)
+
+$H_1$ : foreleg average $\neq$ hindleg average
+
+### Import data, summarise and visualise
+
+First of all, we need to get the data into a tidy format (every variable is a column, each observation is a row). Doing this in Excel, and adding a ID gives us:
+
+:::panel-tabset
+## tidyverse
+
+```{r}
+#| message: false
+#| warning: false
+# load the data
+deer <- read_csv("data/examples/cs1-deer.csv")
+
+# have a look
+deer
+```
+
+The ordering of the data is important here; the first hind leg row corresponds to the first fore leg row, the second to the second and so on. To indicate this we use an `id` column, where each observation has a unique ID.
+
+Let's look at the data and see what we can see.
+
+```{r}
+# summarise the data
+deer %>% 
+  select(-id) %>% 
+  get_summary_stats(type = "common")
+```
+
+```{r}
+# or even summarise by leg type
+deer %>% 
+  select(-id) %>% 
+  group_by(leg) %>% 
+  get_summary_stats(type = "common")
+```
+
+```{r}
+# we can also visualise the data
+deer %>% 
+  ggplot(aes(x = leg, y = length)) +
+  geom_boxplot()
+```
+
+All of this suggests that there might be a difference between the legs, with hind legs being longer than forelegs. However, this representation obscures the fact that we have _paired_ data. What we really need to look at is the difference in leg length for each observation:
+
+```{r}
+# create a data set that contains the difference in leg length
+leg_diff <- deer %>% 
+  pivot_wider(names_from = leg, values_from = length) %>% 
+  mutate(leg_diff = hindleg - foreleg)
+```
+
+```{r}
+# plot the difference in leg length
+leg_diff %>% 
+  ggplot(aes(y = leg_diff)) +
+  geom_boxplot()
+```
+
+Additionally, we can also plot the data by observation:
+
+```{r}
+# plot the data by observation
+deer %>% 
+  ggplot(aes(x = leg, y = length, group = id)) +
+  geom_point() +
+  geom_line()
+```
+
+## R
+
+```{r}
+deer_r <- read.csv("data/examples/cs1-deer.csv")
+
+head(deer_r)
+```
+
+The ordering of the data is important here; the first hind leg row corresponds to the first fore leg row, the second to the second and so on. To indicate this we use an `id` column, where each observation has a unique ID.
+
+Let's look at the data and see what we can see.
+
+```{r}
+# summarise the data
+summary(deer_r)
+```
+
+```{r}
+# or even summarise by leg type
+aggregate(length ~ leg, data = deer_r, summary)
+```
+
+```{r}
+# we can also visualise the data
+boxplot(length ~ leg, data = deer_r)
+```
+
+All of this suggests that there might be a difference between the legs, with hind legs being longer than forelegs. However, this representation obscures the fact that we have _paired_ data. What we really need to look at is the difference in leg length for each observation:
+
+```{r}
+leg_diff_r <- reshape(deer_r,
+        idvar = "id",
+        timevar = "leg",
+        direction = "wide")
+
+# calculate difference in leg length
+leg_diff_r$leg_diff <- leg_diff_r$length.hindleg - leg_diff_r$length.foreleg
+
+head(leg_diff_r)
+```
+
+```{r}
+# plot the difference in leg length
+boxplot(leg_diff_r$leg_diff)
+```
+
+Additionally, we can also plot the data by observation:
+
+```{r}
+# plot the data by observation
+matplot(t(leg_diff_r[ , 2:3]),
+        pch = 1,
+        type = c("b"),
+        col = 1:10)
+```
+Again, as far as I am aware of, there isn't a straightforward method of plotting paired data using the base R functionality. Hence the data gymnastics:
+
+* the default `plot()` function doesn't support this - the standard `matplot()` function does
+* the `t` function transposes the data, and I'm only selecting the second and third columns (`[ , 2:3]`) which contain the paired leg measurements.
+* to group (pair) the data, we're using colours, one for each of the 10 observations (`col = 1:10`)
+
+## Python
+
+```{python}
+#| message: false
+#| warning: false
+# load the data
+deer_py = pd.read_csv("data/examples/cs1-deer.csv")
+
+# have a look
+deer_py.head()
+```
+
+The ordering of the data is important here; the first hind leg row corresponds to the first fore leg row, the second to the second and so on. To indicate this we use an `id` column, where each observation has a unique ID.
+
+Let's look at the data and see what we can see.
+
+```{python}
+# summarise the data
+deer_py.describe()
+```
+We can also summarise by leg type, but we have to put our data into a wide format first:
+
+```{python}
+# reformat the data into a 'wide' format
+leg_diff_py = pd.pivot(deer_py, index = "id", columns = "leg", values = "length")
+
+# add a new column with difference between
+# evening and morning cortisol levels
+leg_diff_py["leg_diff"] = leg_diff_py["hindleg"].subtract(leg_diff_py["foreleg"])
+      
+# have a look at the format
+leg_diff_py.head()
+```
+
+Create the summary:
+```{python}
+leg_diff_py.describe()
+```
+
+We can visualise this difference:
+
+```{python}
+#| results: hide
+# we can also visualise the data
+(
+  ggplot(leg_diff_py,
+    aes(x = "1",
+        y = "leg_diff"))
+  + geom_boxplot()
+)
+```
+
+All of this suggests that there might be a difference between the legs, with hind legs being longer than forelegs. However, this representation obscures the fact that we have _paired_ data. What we really need to look at is the difference in leg length for each observation:
+
+```{python}
+#| results: hide
+# plot paired observations
+(
+  ggplot(deer_py,
+    aes(x = "leg",
+        y = "length",
+        group = "id"))
+  + geom_point()
+  + geom_line()
+)
+```
+:::
+
+All of this gives us a much clearer picture. It looks as though the hindlegs are about 4 cm longer than the forelegs, on average. It also suggests that our leg differences might not be normally distributed (the data look a bit skewed in the boxplot).
+
+### Assumptions
+
+We need to consider the distribution of the _difference_ in leg lengths rather than the individual distributions.
+
+:::panel-tabset
+## tidyverse
+
+Shapiro-Wilk test:
+```{r}
+# perform Shapiro-Wilk test on leg differences
+leg_diff %>% 
+  shapiro_test(leg_diff)
+```
+
+Q-Q plot:
+```{r}
+# create a Q-Q plot
+leg_diff %>% 
+  ggplot(aes(sample = leg_diff)) +
+  stat_qq() +
+  stat_qq_line(colour = "red")
+```
+
+## R
+Shapiro-Wilk test:
+```{r}
+# perform Shapiro-Wilk test on leg differences
+shapiro.test(leg_diff_r$leg_diff)
+```
+
+Q-Q plot:
+```{r}
+# create a Q-Q plot
+qqnorm(leg_diff_r$leg_diff)
+qqline(leg_diff_r$leg_diff, col = "red")
+```
+
+## Python
+
+Shapiro-Wilk test:
+```{python}
+# perform Shapiro-Wilk test on leg length differences
+stats.shapiro(leg_diff_py["leg_diff"])
+```
+Create the Q-Q plot:
+```{python}
+#| results: hide
+# create the Q-Q plot
+(
+  ggplot(leg_diff_py,
+    aes(sample = "leg_diff"))
+    + stat_qq()
+    + stat_qq_line(colour = "red")
+)
+```
+:::
+
+Both our Shapiro-Wilk test and our Q-Q plot suggest that the difference data aren't normally distributed, which rules out a paired t-test. We should therefore consider a paired Wilcoxon test next. Remember that this test requires that the distribution of differences be symmetric, whereas our box plot from before suggested that the data were very much skewed.
+
+### Conclusions
+So, frustratingly, neither of the tests at our disposal are appropriate for this data set. The differences in fore leg and hind leg lengths are neither normal enough for a paired t-test nor are they symmetric enough for a Wilcoxon test. We also don't have enough data to just use the t-test (we'd need more than 30 points or so). So what do we do in this situation? Well, the answer is that there aren't actually any traditional statistical tests that are valid for this data set as it stands!
+
+There are two options available to someone:
+
+1. try transforming the raw data (take logs, square root, reciprocals) and hope that one of them leads to a modified data set that satisfies the assumptions of one of the tests we've covered, or
+2. use a permutation test approach (which would work but is beyond the scope of this course).
+
+The reason I included this example in the first practical is purely to illustrate how a very simple data set with an apparently clear message (leg lengths differ within deer) can be intractable. You don't need to have very complex data sets before you go beyond the capabilities of classical statistics.
+
+As Jeremy Clarkson [would put it](https://www.quotes.net/mquote/941330):
+
+> And on that bombshell, it's time to end. Goodnight!
+
+:::
+
+## Key points
+
+::: callout-note
+- We use two-sample tests to see if two samples of continuous data come from the same parent distribution
+- This essentially boils down to testing if the mean or median differs between the two samples
+- There are 5 key two-sample tests: Student's t-test, Welch's t-test, Mann-Whitney U test, paired t-test and Wilcoxon signed-rank test
+- Which one you use depends on normality of the distribution, sample size, paired or unpaired data and variance of the samples
+- Parametric tests are used if the data are normally distributed or the sample size is large
+- Non-parametric tests are used if the data are not normally distributed _and_ the sample size is small
+- Equality of variance then determines which test is appropriate
+- You three questions to determine the test:
+    1. is my data paired?
+    2. do I need a parametric or non-parametric test
+    3. can I assume equality of variance?
+:::
