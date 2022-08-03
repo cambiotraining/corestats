@@ -87,7 +87,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./cs1_practical_students-t-test.html" rel="next">
+<link href="./cs1_practical_one-sample-wilcoxon.html" rel="next">
 <link href="./images/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -181,7 +181,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./cs1_practical_students-t-test.html" class="sidebar-item-text sidebar-link">Student’s t-test</a>
+  <a href="./cs1_practical_one-sample-wilcoxon.html" class="sidebar-item-text sidebar-link">Wilcoxon signed-rank test</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cs1_practical_two-sample-t-test.html" class="sidebar-item-text sidebar-link">Student’s t-test</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cs1_practical_two-sample-mann-whitney.html" class="sidebar-item-text sidebar-link">Mann-Whitney U test</a>
   </div>
 </li>
     </ul>
@@ -241,8 +251,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <table class="table">
 <colgroup>
-<col style="width: 26%">
-<col style="width: 73%">
+<col style="width: 29%">
+<col style="width: 70%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -263,8 +273,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </table>
 <table class="table">
 <colgroup>
-<col style="width: 27%">
-<col style="width: 72%">
+<col style="width: 30%">
+<col style="width: 69%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -295,8 +305,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <table class="table">
 <colgroup>
-<col style="width: 26%">
-<col style="width: 73%">
+<col style="width: 29%">
+<col style="width: 70%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -897,7 +907,6 @@ mean of x
 </section>
 <section id="exercise-gastric-juices" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-gastric-juices">Exercise: gastric juices</h2>
-<div class="exercise">
 <p>The following data are the dissolving times (in seconds) of a drug in agitated gastric juice:</p>
 <p><code>42.7, 43.4, 44.6, 45.1, 45.6, 45.9, 46.8, 47.6</code></p>
 <p>Do these results provide any evidence to suggest that dissolving time for this drug is different from 45 seconds?</p>
@@ -913,10 +922,18 @@ mean of x
 <li>Was the test valid?</li>
 </ul></li>
 </ol>
-<details>
-<summary>
+<div class="callout-caution callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
 Answer
-</summary>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <section id="hypotheses" class="level3">
 <h3 class="anchored" data-anchor-id="hypotheses">Hypotheses</h3>
 <p><span class="math inline">\(H_0\)</span> : mean <span class="math inline">\(=\)</span> 45s</p>
@@ -1219,14 +1236,15 @@ mean of x
 <p><br>
 </p>
 <p>And that, is that.</p>
-</section></details>
-</div></section>
-</main></div>
+</section>
+</div>
+</div>
+</div>
 
 
+</section>
 
-
- <!-- /main -->
+</main> <!-- /main -->
 <script type="application/javascript">
 
 function toggleTab(tabId, active) {
@@ -1369,12 +1387,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./cs1_practical_students-t-test.html" class="pagination-link">
-        <span class="nav-page-text">Student’s t-test</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./cs1_practical_one-sample-wilcoxon.html" class="pagination-link">
+        <span class="nav-page-text">Wilcoxon signed-rank test</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
- <!-- /content -->
+</div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left"><a href="https://bioinfotraining.bio.cam.ac.uk">Bioinformatics Training Facility</a></div>   

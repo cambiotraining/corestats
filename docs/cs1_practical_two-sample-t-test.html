@@ -87,7 +87,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./cs1_practical_one-sample-t-test.html" rel="prev">
+<link href="./cs1_practical_two-sample-mann-whitney.html" rel="next">
+<link href="./cs1_practical_one-sample-wilcoxon.html" rel="prev">
 <link href="./images/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -184,7 +185,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./cs1_practical_students-t-test.html" class="sidebar-item-text sidebar-link active">Student’s t-test</a>
+  <a href="./cs1_practical_one-sample-wilcoxon.html" class="sidebar-item-text sidebar-link">Wilcoxon signed-rank test</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cs1_practical_two-sample-t-test.html" class="sidebar-item-text sidebar-link active">Student’s t-test</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cs1_practical_two-sample-mann-whitney.html" class="sidebar-item-text sidebar-link">Mann-Whitney U test</a>
   </div>
 </li>
     </ul>
@@ -242,8 +253,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <table class="table">
 <colgroup>
-<col style="width: 27%">
-<col style="width: 72%">
+<col style="width: 30%">
+<col style="width: 69%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -579,7 +590,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> river, <span class="at">y =</span> length)) <span class="sc">+</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="cs1_practical_students-t-test_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<p><img src="cs1_practical_two-sample-t-test_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </div>
@@ -620,7 +631,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(length <span class="sc">~</span> river,</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> rivers_r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="cs1_practical_students-t-test_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<p><img src="cs1_practical_two-sample-t-test_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>We can use a very similar notation as we did for the summary statistics (<code>length ~ river</code>), so a box plot is created per group.</p>
@@ -657,7 +668,7 @@ Guanapo   29.0  18.296552  2.584636  11.2  17.5  18.8  19.7  23.3</code></pre>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_boxplot()</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="cs1_practical_students-t-test_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="614"></p>
+<p><img src="cs1_practical_two-sample-t-test_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="614"></p>
 </div>
 </div>
 </div>
@@ -748,13 +759,19 @@ W = 0.94938, p-value = 0.1764</code></pre>
 </section>
 <section id="exercise-qq-rivers" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-qq-rivers">Exercise: Q-Q plots rivers</h2>
-<div class="exercise">
-<p>Q-Q plots for <code>rivers</code> data</p>
 <p>Create the Q-Q plots for the two samples and discuss with your neighbour what you see in light of the results from the above Shapiro-Wilk test.</p>
-<details>
-<summary>
+<div class="callout-caution callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
 Answer
-</summary>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">tidyverse</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">Python</a></li></ul>
 <div class="tab-content">
@@ -769,7 +786,7 @@ Answer
 <span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">colour =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="at">facets =</span> <span class="fu">vars</span>(river))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="cs1_practical_students-t-test_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+<p><img src="cs1_practical_two-sample-t-test_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </div>
@@ -782,7 +799,7 @@ Answer
 <span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(uns_rivers<span class="sc">$</span>Guanapo, <span class="at">main =</span> <span class="st">"Guanapo"</span>)</span>
 <span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(uns_rivers<span class="sc">$</span>Guanapo, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="cs1_practical_students-t-test_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+<p><img src="cs1_practical_two-sample-t-test_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </div>
@@ -795,7 +812,7 @@ Answer
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> facet_wrap(<span class="st">"river"</span>)</span>
 <span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="cs1_practical_students-t-test_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="614"></p>
+<p><img src="cs1_practical_two-sample-t-test_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="614"></p>
 </div>
 </div>
 </div>
@@ -804,7 +821,8 @@ Answer
 <p>The Q-Q plots show the opposite of what we found with the Shapiro-Wilk tests: the data for Aripo look pretty normally distributed, whereas the assumption of normality for the Guanapo data is less certain.</p>
 <p>What to do? Well, you could be conservative and state that you are not confident that the data in either group are normally distributed. That would be a perfectly reasonable conclusion.</p>
 <p>I would personally not have issues with stating that the Aripo data are probably normally distributed <em>enough</em>.</p>
-</details>
+</div>
+</div>
 </div>
 </section>
 <section id="equality-of-variance" class="level2">
@@ -1026,8 +1044,7 @@ sample estimates:
 </section>
 <section id="exercise-turtles" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-turtles">Exercise: Turtles</h2>
-<div class="exercise">
-<p>Serum cholesterol concentrations in turtles</p>
+<p>This exercise explores serum cholesterol concentrations in turtles.</p>
 <p>Using the following data, test the null hypothesis that male and female turtles have the same mean serum cholesterol concentrations.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -1120,10 +1137,18 @@ sample estimates:
 <li>Perform a two-sample t-test</li>
 <li>Write down a sentence that summarises the results that you have found</li>
 </ol>
-<details>
-<summary>
+<div class="callout-caution callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
 Answer
-</summary>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <section id="data" class="level3">
 <h3 class="anchored" data-anchor-id="data">Data</h3>
 <p>We’ll stop asking you to manually create your own data files soon, but it’s meant to get you to think about how to record your data. If we’re using a tidy data format, then each variable (thing that you measure) is in its own column. Each observation has its own row.</p>
@@ -1220,7 +1245,7 @@ dbl (1): serum
 <span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sex, <span class="at">y =</span> serum)) <span class="sc">+</span></span>
 <span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="cs1_practical_students-t-test_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+<p><img src="cs1_practical_two-sample-t-test_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </div>
@@ -1246,7 +1271,7 @@ dbl (1): serum
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualise the data</span></span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(serum <span class="sc">~</span> sex , <span class="at">data =</span> turtle_r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="cs1_practical_students-t-test_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
+<p><img src="cs1_practical_two-sample-t-test_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </div>
@@ -1275,7 +1300,7 @@ max    230.800000</code></pre>
 <span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_boxplot()</span>
 <span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="cs1_practical_students-t-test_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="614"></p>
+<p><img src="cs1_practical_two-sample-t-test_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="614"></p>
 </div>
 </div>
 </div>
@@ -1390,7 +1415,7 @@ W = 0.84178, p-value = 0.1349</code></pre>
 <span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">colour =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb82-6"><a href="#cb82-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="at">facets =</span> <span class="fu">vars</span>(sex))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="cs1_practical_students-t-test_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
+<p><img src="cs1_practical_two-sample-t-test_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </div>
@@ -1402,7 +1427,7 @@ W = 0.84178, p-value = 0.1349</code></pre>
 <span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(uns_turtle_r<span class="sc">$</span>Male, <span class="at">main =</span> <span class="st">"Male"</span>)</span>
 <span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(uns_turtle_r<span class="sc">$</span>Male, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="cs1_practical_students-t-test_files/figure-html/cs1-twosample-turtle-qqplot-1.png" class="img-fluid" width="672"></p>
+<p><img src="cs1_practical_two-sample-t-test_files/figure-html/cs1-twosample-turtle-qqplot-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </div>
@@ -1416,7 +1441,7 @@ W = 0.84178, p-value = 0.1349</code></pre>
 <span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> facet_wrap(<span class="st">"sex"</span>)</span>
 <span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="cs1_practical_students-t-test_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="614"></p>
+<p><img src="cs1_practical_two-sample-t-test_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="614"></p>
 </div>
 </div>
 </div>
@@ -1566,14 +1591,15 @@ mean in group Female   mean in group Male
 <section id="discussion" class="level3">
 <h3 class="anchored" data-anchor-id="discussion">Discussion</h3>
 <p>In reality, because of the ambiguous normality assumption assessment, for this data set I would actually carry out two different tests; the two-sample t-test with equal variance and the Mann-Whitney U test. If both of them agreed then it wouldn’t matter too much which one I reported (I’d personally report both with a short sentence to say that I’m doing that because it wasn’t clear whether the assumption of normality had or had not been met), but it would be acceptable to report just one.</p>
-</section></details>
-</div></section>
-</main></div>
+</section>
+</div>
+</div>
+</div>
 
 
+</section>
 
-
- <!-- /main -->
+</main> <!-- /main -->
 <script type="application/javascript">
 
 function toggleTab(tabId, active) {
@@ -1714,14 +1740,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./cs1_practical_one-sample-t-test.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">One-sample t-test</span>
+      <a href="./cs1_practical_one-sample-wilcoxon.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Wilcoxon signed-rank test</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./cs1_practical_two-sample-mann-whitney.html" class="pagination-link">
+        <span class="nav-page-text">Mann-Whitney U test</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
- <!-- /content -->
+</div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left"><a href="https://bioinfotraining.bio.cam.ac.uk">Bioinformatics Training Facility</a></div>   

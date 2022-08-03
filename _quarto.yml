@@ -33,7 +33,9 @@ website:
       - section: "Simple hypothesis testing"
         contents:
           - cs1_practical_one-sample-t-test.qmd
-          - cs1_practical_students-t-test.qmd
+          - cs1_practical_one-sample-wilcoxon.qmd
+          - cs1_practical_two-sample-t-test.qmd
+          - cs1_practical_two-sample-mann-whitney.qmd
 
 format:
   html:

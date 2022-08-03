@@ -17,12 +17,12 @@ source(file = "setup.R")
 ## tidyverse
 
 | Libraries            | Description                                                                                                       |
-|:------------------|:----------------------------------------------------|
+|:--------------------|:--------------------------------------------------|
 | `library(tidyverse)` | A collection of R packages designed for data science                                                              |
 | `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
 
 | Functions                 | Description                                                                          |
-|:-------------------|:---------------------------------------------------|
+|:---------------------|:-------------------------------------------------|
 | `rstatix::t_test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections. |
 | `rstatix::shapiro_test()` | Performs a Shapiro-Wilk test for normality.                                          |
 | `ggplot2::stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.                          |
@@ -31,7 +31,7 @@ source(file = "setup.R")
 ## R
 
 | Functions        | Description                                                                          |
-|:------------------|:----------------------------------------------------|
+|:--------------------|:--------------------------------------------------|
 | `t.test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections. |
 | `qqnorm()`       | Plots a Q-Q plot for comparison with a normal distribution.                          |
 | `qqline()`       | Adds a comparison line to the Q-Q plot.                                              |
@@ -477,7 +477,6 @@ Please feel free to ask a demonstrator if any aspect of this section is unclear 
 
 ## Exercise: gastric juices
 
-::: exercise
 The following data are the dissolving times (in seconds) of a drug in agitated gastric juice:
 
 `42.7, 43.4, 44.6, 45.1, 45.6, 45.9, 46.8, 47.6`
@@ -491,9 +490,8 @@ Do these results provide any evidence to suggest that dissolving time for this d
 4.  Check the assumptions for the test.
     -   Was the test valid?
 
-<details>
-
-<summary>Answer</summary>
+::: {.callout-caution collapse="true"}
+## Answer
 
 ### Hypotheses
 
@@ -686,6 +684,4 @@ stats.ttest_1samp(dissolving_py.dissolving_time,
 \
 
 And that, is that.
-
-</details>
 :::
