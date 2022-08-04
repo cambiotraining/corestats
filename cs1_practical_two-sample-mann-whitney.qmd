@@ -7,14 +7,16 @@ format:
       - sync-tabs.html
 ---
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+#| message: false
+#| results: hide
 source(file = "setup.R")
 ```
 
 ```{python}
 #| echo: false
 #| message: false
-
 from plotnine import *
 from scipy import stats
 import pandas as pd
@@ -23,7 +25,6 @@ import pandas as pd
 ```{r}
 #| echo: false
 #| message: false
-
 # rivers data set
 rivers <- read_csv("data/CS1-twosample.csv")
 rivers_r <- read.csv("data/CS1-twosample.csv")
@@ -35,7 +36,6 @@ turtle_r <- read.csv("data/CS1-turtle.csv")
 
 ```{python}
 #| echo: false
-
 # rivers data set
 rivers_py = pd.read_csv("data/CS1-twosample.csv")
 
@@ -47,6 +47,8 @@ This test also compares two samples, however for this test (in contrast to Stude
 
 ## Libraries and functions
 
+::: {.callout-note collapse="true"}
+## Click to expand
 ::: panel-tabset
 ## tidyverse
 
@@ -75,7 +77,8 @@ This test also compares two samples, however for this test (in contrast to Stude
 | Functions                    | Description                                                         |
 |:-----------------------------------|:-----------------------------------|
 | `pandas.DataFrame.pivot()`   | Return reshaped DataFrame organised by given index / column values. |
-| `scipy.stats.mannwhitneyu()` | Calculate the Mann-Whitney U test                                   |
+| `scipy.stats.mannwhitneyu()` | Calculate the Mann-Whitney U test|
+:::
 :::
 
 ## Data and hypotheses

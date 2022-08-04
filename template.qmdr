@@ -7,8 +7,10 @@ format:
       - sync-tabs.html
 ---
 
-```{r, echo=FALSE}
+```{r}
 #| echo: false
+#| message: false
+#| results: hide
 source(file = "setup.R")
 ```
 
@@ -19,3 +21,14 @@ from plotnine import *
 from scipy import stats
 import pandas as pd
 ```
+
+## Libraries and functions
+
+::: {.callout-note collapse="true"}
+## Click to expand
+::: {.panel-tabset}
+## tidyverse
+## R
+## Python
+:::
+:::

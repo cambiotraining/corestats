@@ -7,17 +7,31 @@ format:
       - sync-tabs.html
 ---
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+#| message: false
+#| results: hide
 source(file = "setup.R")
 ```
 
+```{python}
+#| echo: false
+#| message: false
+from plotnine import *
+from scipy import stats
+import pandas as pd
+```
+
 ## Libraries and functions
+
+::: {.callout-note collapse="true"}
+## Click to expand
 
 ::: panel-tabset
 ## tidyverse
 
 | Libraries            | Description                                                                                                       |
-|:----------------------|:-----------------------------------------------|
+|:-----------------------|:----------------------------------------------|
 | `library(tidyverse)` | A collection of R packages designed for data science                                                              |
 | `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
 
@@ -65,15 +79,9 @@ source(file = "setup.R")
 | `scipy.stats.levene()`          | Performs Levene's test for equality of variance                         |
 | `scipy.stats.bartlett()`        | Performs Bartlett's test for equality of variance                       |
 | `scipy.stats.ttest_ind()`       | Calculate the T-test for the means of two independent samples of scores |
-| `scipy.stats.ttest_1samp()`     | Calculate the T-test for the mean of ONE group of scores.               |
 | `plotnine.stats.stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.             |
 | `plotnine.stats.stat_qq_line()` | Adds a comparison line to the Q-Q plot.                                 |
-
-```{python, echo=FALSE, results='hide'}
-from plotnine import *
-from scipy import stats
-import pandas as pd
-```
+:::
 :::
 
 ## Data and hypotheses

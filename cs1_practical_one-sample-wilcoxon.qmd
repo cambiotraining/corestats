@@ -7,14 +7,16 @@ format:
       - sync-tabs.html
 ---
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
+#| message: false
+#| results: hide
 source(file = "setup.R")
 ```
 
 ```{python}
 #| echo: false
 #| message: false
-
 from plotnine import *
 from scipy import stats
 import pandas as pd
@@ -23,7 +25,6 @@ import pandas as pd
 ```{r}
 #| echo: false
 #| message: false
-
 # required data from t-test section
 fishlengthDF <- read_csv("data/CS1-onesample.csv")
 fishlength_r <- fishlengthDF$length
@@ -34,7 +35,6 @@ dissolving_r <- read.csv("data/CS1-gastric_juices.csv")
 
 ```{python}
 #| echo: false
-
 fishlength_py = pd.read_csv("data/CS1-onesample.csv")
 dissolving_py = pd.read_csv("data/CS1-gastric_juices.csv")
 ```
@@ -43,6 +43,8 @@ This test also considers a single sample, however for this test (in contrast to 
 
 ## Libraries and functions
 
+::: {.callout-note collapse="true"}
+## Click to expand
 ::: panel-tabset
 ## tidyverse
 
@@ -72,6 +74,7 @@ This test also considers a single sample, however for this test (in contrast to 
 | Functions                | Description                              |
 |:-------------------------|:-----------------------------------------|
 | `scipy.stats.wilcoxon()` | Calculate the Wilcoxon signed-rank test. |
+:::
 :::
 
 ## Data and hypotheses

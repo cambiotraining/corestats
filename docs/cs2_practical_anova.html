@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Core statistics - ANOVA</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./cs1_practical_two-sample-paired-wilcoxon.html" rel="prev">
+<link href="./images/favicon.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <a class="navbar-brand" href="./index.html">
+    <img src="./images/university_crest_reversed.png" alt="">
+    <span class="navbar-title">Core statistics</span>
+  </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html">Home</a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">ANOVA</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+    <div class="sidebar-item-container"> 
+        <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Simple hypothesis testing</a>
+      <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+        <i class="bi bi-chevron-right ms-2"></i>
+      </a>
+    </div>
+    <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cs1_practical_one-sample-t-test.html" class="sidebar-item-text sidebar-link">One-sample t-test</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cs1_practical_one-sample-wilcoxon.html" class="sidebar-item-text sidebar-link">Wilcoxon signed-rank test</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cs1_practical_two-sample-t-test.html" class="sidebar-item-text sidebar-link">Student’s t-test</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cs1_practical_two-sample-mann-whitney.html" class="sidebar-item-text sidebar-link">Mann-Whitney U test</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cs1_practical_two-sample-paired-t-test.html" class="sidebar-item-text sidebar-link">Paired t-test</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cs1_practical_two-sample-paired-wilcoxon.html" class="sidebar-item-text sidebar-link">Wilcoxon signed rank test</a>
+  </div>
+</li>
+    </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+    <div class="sidebar-item-container"> 
+        <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Categorical predictors</a>
+      <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+        <i class="bi bi-chevron-right ms-2"></i>
+      </a>
+    </div>
+    <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cs2_practical_anova.html" class="sidebar-item-text sidebar-link active">ANOVA</a>
+  </div>
+</li>
+    </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#purpose-and-aim" id="toc-purpose-and-aim" class="nav-link active" data-scroll-target="#purpose-and-aim">Purpose and aim</a></li>
+  <li><a href="#libraries-and-functions" id="toc-libraries-and-functions" class="nav-link" data-scroll-target="#libraries-and-functions">Libraries and functions</a></li>
+  <li><a href="#data-and-hypotheses" id="toc-data-and-hypotheses" class="nav-link" data-scroll-target="#data-and-hypotheses">Data and hypotheses</a></li>
+  <li><a href="#summarise-and-visualise" id="toc-summarise-and-visualise" class="nav-link" data-scroll-target="#summarise-and-visualise">Summarise and visualise</a></li>
+  <li><a href="#assumptions" id="toc-assumptions" class="nav-link" data-scroll-target="#assumptions">Assumptions</a>
+  <ul class="collapse">
+  <li><a href="#normality" id="toc-normality" class="nav-link" data-scroll-target="#normality">Normality</a></li>
+  <li><a href="#equality-of-variance" id="toc-equality-of-variance" class="nav-link" data-scroll-target="#equality-of-variance">Equality of Variance</a></li>
+  <li><a href="#graphical-interpretation-and-diagnostic-plots" id="toc-graphical-interpretation-and-diagnostic-plots" class="nav-link" data-scroll-target="#graphical-interpretation-and-diagnostic-plots">Graphical interpretation and diagnostic plots</a></li>
+  </ul></li>
+  <li><a href="#implement-and-interpret-the-test" id="toc-implement-and-interpret-the-test" class="nav-link" data-scroll-target="#implement-and-interpret-the-test">Implement and interpret the test</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/cambiotraining/corestats/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">ANOVA</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Learning outcomes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Questions</strong></p>
+<ul>
+<li>How do I analyse multiple samples of continuous data?</li>
+<li>What is an ANOVA?</li>
+<li>How do I check for differences between groups?</li>
+</ul>
+<p><strong>Objectives</strong></p>
+<ul>
+<li>Be able to perform an ANOVA in R</li>
+<li>Understand the ANOVA output and evaluate the assumptions</li>
+<li>Understand what post-hoc testing is and how to do this in R</li>
+</ul>
+</div>
+</div>
+<section id="purpose-and-aim" class="level2">
+<h2 class="anchored" data-anchor-id="purpose-and-aim">Purpose and aim</h2>
+<p>Analysis of variance or ANOVA is a test than can be used when we have multiple samples of continuous response data. Whilst it is possible to use ANOVA with only two samples, it is generally used when we have three or more groups. It is used to find out if the samples came from parent distributions with the same mean. It can be thought of as a generalisation of the two-sample Student’s t-test.</p>
+</section>
+<section id="libraries-and-functions" class="level2">
+<h2 class="anchored" data-anchor-id="libraries-and-functions">Libraries and functions</h2>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Click to expand
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">tidyverse</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 66%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Libraries</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>library(tidyverse)</code></td>
+<td style="text-align: left;">A collection of R packages designed for data science</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>library(rstatix)</code></td>
+<td style="text-align: left;">Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we’ll use.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>library(ggResidpanel)</code></td>
+<td style="text-align: left;">Creates diagnostic plots using <code>ggplot2</code></td>
+</tr>
+</tbody>
+</table>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Library</th>
+<th style="text-align: left;">Function</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>rstatix</code></td>
+<td style="text-align: left;"><code>get_summary_stats()</code></td>
+<td style="text-align: left;">Computes summary statistics</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ggResidpanel</code></td>
+<td style="text-align: left;"><code>resid_panel()</code></td>
+<td style="text-align: left;">Creates diagnostic plots</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Function</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>lm()</code></td>
+<td style="text-align: left;">Fits a linear model</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>anova()</code></td>
+<td style="text-align: left;">Carries out an ANOVA on a linear model</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>qqnorm()</code></td>
+<td style="text-align: left;">Plots a Q-Q plot for comparison with a normal distribution.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>qqline()</code></td>
+<td style="text-align: left;">Adds a comparison line to the Q-Q plot.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>shapiro.test()</code></td>
+<td style="text-align: left;">Performs a Shapiro-Wilk test for normality.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Libraries</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>plotnine</code></td>
+<td style="text-align: left;">The Python equivalent of <code>ggplot2</code>.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>pandas</code></td>
+<td style="text-align: left;">A Python data analysis and manipulation tool.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>scipy.stats</code></td>
+<td style="text-align: left;">A Python module containing statistical functions.</td>
+</tr>
+</tbody>
+</table>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Functions</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>pandas.DataFrame.read_csv</code></td>
+<td style="text-align: left;">Reads in a <code>.csv</code> file</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>pandas.DataFrame.head()</code></td>
+<td style="text-align: left;">Plots the first few rows</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>pandas.DataFrame.describe()</code></td>
+<td style="text-align: left;">Gives summary statistics</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>pandas.DataFrame.groupby()</code></td>
+<td style="text-align: left;">Group DataFrame using a mapper or by a Series of columns</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>pandas.DataFrame.query()</code></td>
+<td style="text-align: left;">Query the columns of a DataFrame with a boolean expression</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>scipy.stats.levene()</code></td>
+<td style="text-align: left;">Performs Levene’s test for equality of variance</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-and-hypotheses" class="level2">
+<h2 class="anchored" data-anchor-id="data-and-hypotheses">Data and hypotheses</h2>
+<p>For example, suppose we measure the feeding rate of oyster catchers (shellfish per hour) at three sites characterised by their degree of shelter from the wind, imaginatively called <code>exposed</code> (E), <code>partially sheltered</code> (P) and <code>sheltered</code> (S). We want to test whether the data support the hypothesis that feeding rates don’t differ between locations. We form the following null and alternative hypotheses:</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: The mean feeding rates at all three sites is the same <span class="math inline">\(\mu E = \mu P = \mu S\)</span></li>
+<li><span class="math inline">\(H_1\)</span>: The mean feeding rates are not all equal.</li>
+</ul>
+<p>We will use a one-way ANOVA test to check this.</p>
+<ul>
+<li>We use a <strong>one-way</strong> ANOVA test because we only have one predictor variable (the categorical variable location).</li>
+<li>We’re using <strong>ANOVA</strong> because we have more than two groups and we don’t know any better yet with respect to the exact assumptions.</li>
+</ul>
+<p>The data are stored in the file <code>data/CS2-oystercatcher.csv</code>.</p>
+</section>
+<section id="summarise-and-visualise" class="level2">
+<h2 class="anchored" data-anchor-id="summarise-and-visualise">Summarise and visualise</h2>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">tidyverse</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">R</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>First we read in the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load data</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>oystercatcher <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/CS2-oystercatcher-feeding.csv"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># and have a look</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>oystercatcher</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 120 × 2
+   site    feeding
+   &lt;chr&gt;     &lt;dbl&gt;
+ 1 exposed    12.2
+ 2 exposed    13.1
+ 3 exposed    17.9
+ 4 exposed    13.9
+ 5 exposed    14.1
+ 6 exposed    18.4
+ 7 exposed    15.0
+ 8 exposed    10.3
+ 9 exposed    11.8
+10 exposed    12.5
+# … with 110 more rows</code></pre>
+</div>
+</div>
+<p>The <code>oystercatcher</code> data set contains two columns:</p>
+<ol type="1">
+<li>a <code>site</code> column with information on the amount of shelter of the feeding location</li>
+<li>a <code>feeding</code> column containing feeding rates</li>
+</ol>
+<p>Next, we get some basic descriptive statistics:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get some basic descriptive statistics</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>oystercatcher <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_summary_stats</span>(<span class="at">type =</span> <span class="st">"common"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 11
+  site      variable     n   min   max median   iqr  mean    sd    se    ci
+  &lt;chr&gt;     &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 exposed   feeding     40  8.35  18.6   13.9  3.40  13.8  2.44 0.386 0.781
+2 partial   feeding     40 10.8   23.0   16.9  2.82  17.1  2.62 0.414 0.838
+3 sheltered feeding     40 18.9   28.5   23.2  3.79  23.4  2.42 0.383 0.774</code></pre>
+</div>
+</div>
+<p>Finally, we plot the data by <code>site</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the data</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>oystercatcher <span class="sc">%&gt;%</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> site, <span class="at">y =</span> feeding)) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cs2_practical_anova_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>First we read in the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>oystercatcher_r <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/CS2-oystercatcher-feeding.csv"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># have a look</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(oystercatcher_r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     site  feeding
+1 exposed 12.17551
+2 exposed 13.07392
+3 exposed 17.93969
+4 exposed 13.89178
+5 exposed 14.05166
+6 exposed 18.36498</code></pre>
+</div>
+</div>
+<p>The <code>oystercatcher</code> data set contains two columns:</p>
+<ol type="1">
+<li>a <code>site</code> column with information on the amount of shelter of the feeding location</li>
+<li>a <code>feeding</code> column containing feeding rates</li>
+</ol>
+<p>Next, we get some basic descriptive statistics. We have three groups, so to get the summary statistics by group we do the following:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(feeding <span class="sc">~</span> site,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> oystercatcher_r,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>          summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       site feeding.Min. feeding.1st Qu. feeding.Median feeding.Mean
+1   exposed     8.350801       12.184961      13.946420    13.822899
+2   partial    10.795969       15.601927      16.927683    17.081666
+3 sheltered    18.856999       21.403028      23.166246    23.355503
+  feeding.3rd Qu. feeding.Max.
+1       15.581748    18.560404
+2       18.416708    23.021250
+3       25.197096    28.451252</code></pre>
+</div>
+</div>
+<p>Finally, we plot the data by <code>site</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the data by site</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(feeding <span class="sc">~</span> site,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> oystercatcher_r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cs2_practical_anova_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Looking at the data, there appears to be a noticeable difference in feeding rates between the three sites. We would probably expect a reasonably significant statistical result here.</p>
+</section>
+<section id="assumptions" class="level2">
+<h2 class="anchored" data-anchor-id="assumptions">Assumptions</h2>
+<p>To use an ANOVA test, we have to make three assumptions:</p>
+<ol type="1">
+<li>The parent distributions from which the samples are taken are normally distributed</li>
+<li>Each data point in the samples is independent of the others</li>
+<li>The parent distributions should have the same variance</li>
+</ol>
+<p>In a similar way to the two-sample tests we will consider the normality and equality of variance assumptions both using tests and by graphical inspection (and ignore the independence assumption).</p>
+<section id="normality" class="level3">
+<h3 class="anchored" data-anchor-id="normality">Normality</h3>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">tidyverse</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">R</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>First we perform a Shapiro-Wilk test on each site separately.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Shapiro-Wilk test on each site</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>oystercatcher <span class="sc">%&gt;%</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shapiro_test</span>(feeding)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<p>Unstack the data and perform a Shapiro-Wilk test on each group separately.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a new object (a list) that contains the unstacked data</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>uns_oystercatcher <span class="ot">&lt;-</span> <span class="fu">unstack</span>(oystercatcher_r,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">form =</span> feeding <span class="sc">~</span> site)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># have a look at the data</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(uns_oystercatcher)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   exposed  partial sheltered
+1 12.17551 15.20345  23.87176
+2 13.07392 16.53239  21.41133
+3 17.93969 13.64547  22.46681
+4 13.89178 23.02125  23.00843
+5 14.05166 20.39774  27.85932
+6 18.36498 14.03391  22.09400</code></pre>
+</div>
+</div>
+<p>Next, we perform the Shapiro-Wilk test on each group:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(uns_oystercatcher<span class="sc">$</span>exposed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  uns_oystercatcher$exposed
+W = 0.98859, p-value = 0.953</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(uns_oystercatcher<span class="sc">$</span>partial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  uns_oystercatcher$partial
+W = 0.98791, p-value = 0.9398</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(uns_oystercatcher<span class="sc">$</span>sheltered)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  uns_oystercatcher$sheltered
+W = 0.97511, p-value = 0.5136</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>We can see that all three groups appear to be normally distributed which is good.</p>
+<p>For ANOVA however, considering each group in turn is often considered quite excessive and, in most cases, it is sufficient to consider the normality of the combined set of <em>residuals</em> from the data. We’ll explain residuals properly in the <a href="#cs3-intro">next session</a> but effectively they are the difference between each data point and its group mean. The residuals can be obtained directly from a linear model fitted to the data.</p>
+<p>So, we create a linear model, extract the residuals and check their normality:</p>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">tidyverse</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">R</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define the model</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>lm_oystercatcher <span class="ot">&lt;-</span> <span class="fu">lm</span>(feeding <span class="sc">~</span> site,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data =</span> oystercatcher)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># extract the residuals</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>resid_oyster <span class="ot">&lt;-</span> <span class="fu">residuals</span>(lm_oystercatcher)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># perform Shapiro-Wilk test on residuals</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>resid_oyster <span class="sc">%&gt;%</span> </span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shapiro_test</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  variable statistic p.value
+  &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt;
+1 .            0.994   0.857</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define the model</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>lm_oystercatcher_r <span class="ot">&lt;-</span> <span class="fu">lm</span>(feeding <span class="sc">~</span> site,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">data =</span> oystercatcher_r)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># extract the residuals</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>resid_oyster_r <span class="ot">&lt;-</span> <span class="fu">residuals</span>(lm_oystercatcher_r)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co"># perform Shapiro-Wilk test on residuals</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(resid_oyster_r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  resid_oyster_r
+W = 0.99355, p-value = 0.8571</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Again, we can see that the combined residuals from all three groups appear to be normally distributed (which is as we would have expected given that they were all normally distributed individually!)</p>
+</section>
+<section id="equality-of-variance" class="level3">
+<h3 class="anchored" data-anchor-id="equality-of-variance">Equality of Variance</h3>
+<p>We now test for equality of variance using Bartlett’s test (since we’ve just found that all of the individual groups are normally distributed).</p>
+<p>Perform Bartlett’s test on the data:</p>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">tidyverse</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">R</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check equality of variance</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bartlett.test</span>(feeding <span class="sc">~</span> site,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> oystercatcher)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Bartlett test of homogeneity of variances
+
+data:  feeding by site
+Bartlett's K-squared = 0.29598, df = 2, p-value = 0.8624</code></pre>
+</div>
+</div>
+<p>Where the relevant p-value is given on the 3rd line. Here we see that each group do appear to have the same variance.</p>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check equality of variance</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bartlett.test</span>(feeding <span class="sc">~</span> site,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> oystercatcher)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Bartlett test of homogeneity of variances
+
+data:  feeding by site
+Bartlett's K-squared = 0.29598, df = 2, p-value = 0.8624</code></pre>
+</div>
+</div>
+<p>Where the relevant p-value is given on the 3rd line. Here we see that each group do appear to have the same variance.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="graphical-interpretation-and-diagnostic-plots" class="level3">
+<h3 class="anchored" data-anchor-id="graphical-interpretation-and-diagnostic-plots">Graphical interpretation and diagnostic plots</h3>
+<p>R provides a convenient set of graphs that allow us to assess these assumptions graphically.</p>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">tidyverse</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">R</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<p>In the first session we already created diagnostic Q-Q plots directly from our data, using <code>stat_qq()</code> and <code>stat_qq_line()</code>. For more specific plots this becomes a bit cumbersome. There is an option to create ggplot-friendly diagnostic plots, using the <code>ggResidPanel</code> package.</p>
+<p>Let’s create the diagnostic plots we’re interested in using <code>ggResidPanel</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>lm_oystercatcher <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">resid_panel</span>(<span class="at">plots =</span> <span class="fu">c</span>(<span class="st">"resid"</span>, <span class="st">"qq"</span>, <span class="st">"ls"</span>, <span class="st">"cookd"</span>),</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">smoother =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cs2_practical_anova_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ul>
+<li>The top left graph plots the <strong>Residuals plot</strong>. If the data are best explained by a linear line then there should be a uniform distribution of points above and below the horizontal blue line (and if there are sufficient points then the red line, which is a smoother line, should be on top of the blue line). This plot looks pretty good.</li>
+<li>The top right graph shows the <strong>Q-Q plot</strong> which allows a visual inspection of normality. If the residuals are normally distributed, then the points should lie on the diagonal blue line. This plot looks good.</li>
+<li>The bottom left <strong>Location-scale</strong> graph allows us to investigate whether there is any correlation between the residuals and the predicted values and whether the variance of the residuals changes significantly. If not, then the red line should be horizontal. If there is any correlation or change in variance then the red line will not be horizontal. This plot is fine.</li>
+<li>The last graph shows the <strong>Cook’s distance</strong> and tests if any one point has an unnecessarily large effect on the fit. A rule of thumb is that if any value is larger than 1.0, then it might have a large effect on the model. If not, then no point has undue influence. This plot is good. There are different ways to determine the threshold (apart from simply setting it to 1) and in this plot the blue dashed line is at <code>4/n</code>, with <code>n</code> being the number of samples. At this threshold there are some data points that may be influential, but I personally find this threshold rather strict.</li>
+</ul>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<p>We can create the default diagnostic plots in base R by simply plotting the <code>lm</code> object.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a neat 2x2 window</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create the diagnostic plots</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lm_oystercatcher)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cs2_practical_anova_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># and return the window back to normal</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The second line creates four diagnostic plots.</p>
+<ul>
+<li>The top left graph plots the <strong>Residuals vs Fitted</strong>. If the data are best explained by a linear line then there should be a uniform distribution of points above and below the horizontal red line. This plot looks pretty good.</li>
+<li>The top right graph shows the <strong>Normal Q-Q plot</strong> which allows a visual inspection of normality. If the residuals are normally distributed, then the points should lie on the diagonal dotted line. This plot looks good.</li>
+<li>The bottom left <strong>Scale-Location</strong> graph allows us to investigate whether there is any correlation between the residuals and the predicted values and whether the variance of the residuals changes significantly. If not, then the red line should be horizontal. If there is any correlation or change in variance then the red line will not be horizontal. This plot is fine.</li>
+<li>The bottom right <strong>Residuals vs Factor Levels</strong> plot shows the residuals for each group (= site). This plot is only displayed if there are equal number of observations in each group and we’ll explain more about this in the next session.</li>
+</ul>
+<p>We can see that these graphs are very much in line with what we’ve just looked at using the test, which is reassuring. The groups all appear to have the same spread of data, and whilst the Q-Q plot isn’t perfect, it appears that the assumption of normality is alright.</p>
+</div>
+</div>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At this stage, I should point out that I nearly always stick with the graphical method for assessing the assumptions of a test. Assumptions are rarely either completely met or not met and there is always some degree of personal assessment.</p>
+<p>Whilst the formal statistical tests (like Shapiro-Wilk) are technically fine, they can often create a false sense of things being absolutely right or wrong in spite of the fact that they themselves are still probabilistic statistical tests. In these exercises we are using both approaches whilst you gain confidence and experience in interpreting the graphical output and whilst it is absolutely fine to use both in the future I would strongly recommend that you don’t rely solely on the statistical tests in isolation.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="implement-and-interpret-the-test" class="level2">
+<h2 class="anchored" data-anchor-id="implement-and-interpret-the-test">Implement and interpret the test</h2>
+<p>Perform an ANOVA test on the data:</p>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">tidyverse</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">R</a></li></ul>
+<div class="tab-content">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_oystercatcher)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: feeding
+           Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+site        2 1878.02  939.01  150.78 &lt; 2.2e-16 ***
+Residuals 117  728.63    6.23                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>This takes the linear model (i.e.&nbsp;finds the means of the three groups and calculates a load of intermediary data that we need for the statistical analysis) and stores this information in an R object (which we’ve called <code>lm_oystercatcher</code>, but which you can call what you like).</p>
+<p>In the output:</p>
+<ul>
+<li>The 1st line just tells you the that this is an ANOVA test</li>
+<li>The 2nd line tells you what the response variable is (in this case feeding)</li>
+<li>The 3rd, 4th and 5th lines are an ANOVA table which contain some useful values:
+<ul>
+<li>The <code>Df</code> column contains the degrees of freedom values on each row, 2 and 117 (which we can use for the reporting)</li>
+<li>The <code>F</code> value column contains the F statistic, 150.78 (which again we’ll need for reporting).</li>
+<li>The p-value is 2.2e-16 and is the number directly under the <code>Pr(&gt;F)</code> on the 4th line (to be precise, it is 4.13e-33 but anything smaller than 2.2e-16 gets reported as <code>&lt; 2.2e-16</code>).</li>
+<li>The other values in the table (in the <code>Sum Sq</code> and <code>Mean Sq</code>) columns are used to calculate the F statistic itself and we don’t need to know these.</li>
+</ul></li>
+<li>The 6th line has some symbolic codes to represent how big (small) the p-value is; so, a p-value smaller than 0.001 would have a *** symbol next to it (which ours does). Whereas if the p-value was between 0.01 and 0.05 then there would simply be a * character next to it, etc. Thankfully we can all cope with actual numbers and don’t need a short-hand code to determine the reporting of our experiments (please tell me that’s true…!)</li>
+</ul>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_oystercatcher_r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: feeding
+           Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+site        2 1878.02  939.01  150.78 &lt; 2.2e-16 ***
+Residuals 117  728.63    6.23                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>This takes the linear model (i.e.&nbsp;finds the means of the three groups and calculates a load of intermediary data that we need for the statistical analysis) and stores this information in an R object (which we’ve called <code>lm_oystercatcher_r</code>, but which you can call what you like).</p>
+<p>In the output:</p>
+<ul>
+<li>The 1st line just tells you the that this is an ANOVA test</li>
+<li>The 2nd line tells you what the response variable is (in this case feeding)</li>
+<li>The 3rd, 4th and 5th lines are an ANOVA table which contain some useful values:
+<ul>
+<li>The <code>Df</code> column contains the degrees of freedom values on each row, 2 and 117 (which we can use for the reporting)</li>
+<li>The <code>F</code> value column contains the F statistic, 150.78 (which again we’ll need for reporting).</li>
+<li>The p-value is 2.2e-16 and is the number directly under the <code>Pr(&gt;F)</code> on the 4th line (to be precise, it is 4.13e-33 but anything smaller than 2.2e-16 gets reported as <code>&lt; 2.2e-16</code>).</li>
+<li>The other values in the table (in the <code>Sum Sq</code> and <code>Mean Sq</code>) columns are used to calculate the F statistic itself and we don’t need to know these.</li>
+</ul></li>
+<li>The 6th line has some symbolic codes to represent how big (small) the p-value is; so, a p-value smaller than 0.001 would have a *** symbol next to it (which ours does). Whereas if the p-value was between 0.01 and 0.05 then there would simply be a * character next to it, etc. Thankfully we can all cope with actual numbers and don’t need a short-hand code to determine the reporting of our experiments (please tell me that’s true…!)</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Again, the p-value is what we’re most interested in here and shows us the probability of getting samples such as ours if the null hypothesis were actually true.</p>
+<p>Since the p-value is very small (much smaller than the standard significance level of 0.05) we can say “that it is very unlikely that these three samples came from the same parent distribution” and as such we can reject our null hypothesis and state that:</p>
+<blockquote class="blockquote">
+<p>A one-way ANOVA showed that the mean feeding rate of oystercatchers differed significantly between locations (F = 150.78, df = 2, 117, p = 4.13e-33).</p>
+</blockquote>
+
+
+</section>
+
+</main> <!-- /main -->
+<script type="application/javascript">
+
+function toggleTab(tabId, active) {
+  let tab = document.getElementById(tabId);
+  let tabPanelId = tab.getAttribute("aria-controls");
+  let tabPanel = document.getElementById(tabPanelId);
+  if (active) {
+    tab.classList.add("active");
+    tabPanel.classList.add("active");
+  } else {
+    tab.classList.remove("active");
+    tabPanel.classList.remove("active");
+  }
+}
+function toggleAll(language, selectorsToSync) {
+  Object.keys(selectorsToSync).forEach((lang) => {
+    selectorsToSync[lang].forEach((selector) => {
+      toggleTab(selector, lang === language);
+    });
+  });
+}
+
+function findSelectorsToSyncByLanguage() {
+  let selectorsToSync = {};
+  document.querySelectorAll("[id^='tabset-']").forEach((item) => {
+    if ((item.innerHTML !== "tidyverse") & (item.innerHTML !== "R") & (item.innerHTML !== "Python")) {
+      return;
+    }
+    let lang = item.innerHTML;
+    if (!selectorsToSync[lang]) {
+      selectorsToSync[lang] = [];
+    }
+    selectorsToSync[lang].push(item.id);
+  });
+  return selectorsToSync;
+}
+
+function setupSelectorSync(lang) {
+  const selectorsToSync = findSelectorsToSyncByLanguage();
+  Object.keys(selectorsToSync).forEach((lang) => {
+    selectorsToSync[lang].forEach((selector) => {
+    const item = document.getElementById(selector);
+    item.addEventListener("click", (event) => {
+      localStorage.setItem("quartoLangTabSync", lang);
+      toggleAll(lang, selectorsToSync);
+    });
+    });
+  });
+  // for initial state
+  if (lang) {
+    toggleAll(lang, selectorsToSync);
+  }
+}
+
+window.document.addEventListener("DOMContentLoaded", (event) => {
+    setupSelectorSync(localStorage.getItem("quartoLangTabSync"));
+});
+
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./cs1_practical_two-sample-paired-wilcoxon.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Wilcoxon signed rank test</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left"><a href="https://bioinfotraining.bio.cam.ac.uk">Bioinformatics Training Facility</a></div>   
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/cambiotraining/">
+      <i class="bi bi-github" role="img" aria-label="Bioinformatics Training Facility GitHub">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+</body></html>

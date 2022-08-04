@@ -7,8 +7,10 @@ format:
       - sync-tabs.html
 ---
 
-```{r, echo=FALSE}
+```{r}
 #| echo: false
+#| message: false
+#| results: hide
 source(file = "setup.R")
 ```
 
@@ -20,36 +22,38 @@ from scipy import stats
 import pandas as pd
 ```
 
-A paired t-test is used when we have two samples of continuous data that can be paired (examples of these sort of data would be weights of individuals before and after a diet). This test is applicable if the number of paired points within the samples is large (>30) or, if the number of points is small, then this test also works when the parent distributions are normally distributed.
+A paired t-test is used when we have two samples of continuous data that can be paired (examples of these sort of data would be weights of individuals before and after a diet). This test is applicable if the number of paired points within the samples is large (\>30) or, if the number of points is small, then this test also works when the parent distributions are normally distributed.
 
 ## Libraries and functions
 
+::: {.callout-note collapse="true"}
+## Click to expand
 ::: panel-tabset
 ## tidyverse
 
 | Libraries            | Description                                                                                                       |
-|:---------------------|:-------------------------------------------------|
+|:----------------------|:------------------------------------------------|
 | `library(tidyverse)` | A collection of R packages designed for data science                                                              |
 | `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
 
-| Functions                      | Description                                                                    |
+| Functions                 | Description                                                                                              |
 |:-----------------------------------|:-----------------------------------|
-| `rstatix::t_test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections. |
-| `rstatix::shapiro_test()` | Performs a Shapiro-Wilk test for normality.|
-| `ggplot2::stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.                          |
-| `ggplot2::stat_qq_line()` | Adds a comparison line to the Q-Q plot.|
-|`ggplot2::geom_jitter()`| Plots jittered points by adding a small amount of random variation to each point, to handle overplotting|
-|`tidyr::pivot_wider()`| "Widens" the data, increasing the number of columns |
+| `rstatix::t_test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections.                     |
+| `rstatix::shapiro_test()` | Performs a Shapiro-Wilk test for normality.                                                              |
+| `ggplot2::stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.                                              |
+| `ggplot2::stat_qq_line()` | Adds a comparison line to the Q-Q plot.                                                                  |
+| `ggplot2::geom_jitter()`  | Plots jittered points by adding a small amount of random variation to each point, to handle overplotting |
+| `tidyr::pivot_wider()`    | "Widens" the data, increasing the number of columns                                                      |
 
 ## R
 
-| Function            | Description                                                                                                        |
+| Function         | Description                                                                          |
 |:-----------------------------------|:-----------------------------------|
-|`stats::reshape`|Reshapes a data frame from 'long' to 'wide' and vice versa|
-| `t.test()`| Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections.|
-| `qqnorm()`| Plots a Q-Q plot for comparison with a normal distribution.|
-| `qqline()`| Adds a comparison line to the Q-Q plot.|
-| `shapiro.test()`| Performs a Shapiro-Wilk test for normality.|
+| `stats::reshape` | Reshapes a data frame from 'long' to 'wide' and vice versa                           |
+| `t.test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections. |
+| `qqnorm()`       | Plots a Q-Q plot for comparison with a normal distribution.                          |
+| `qqline()`       | Adds a comparison line to the Q-Q plot.                                              |
+| `shapiro.test()` | Performs a Shapiro-Wilk test for normality.                                          |
 
 ## Python
 
@@ -59,32 +63,35 @@ A paired t-test is used when we have two samples of continuous data that can be 
 | `pandas`      | A Python data analysis and manipulation tool.     |
 | `scipy.stats` | A Python module containing statistical functions. |
 
-| Functions                       | Description |
+| Functions                       | Description                                                         |
 |:-----------------------------------|:-----------------------------------|
-| `pandas.DataFrame.read_csv`| Reads in a `.csv` file |
-|`pandas.DataFrame.pivot()`|Return reshaped DataFrame organised by given index / column values.|
-| `scipy.stats.shapiro()`| Performs the Shapiro-Wilk test|
-| `plotnine.stats.stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.             |
-| `plotnine.stats.stat_qq_line()` | Adds a comparison line to the Q-Q plot.
+| `pandas.DataFrame.read_csv`     | Reads in a `.csv` file|
+| `pandas.DataFrame.pivot()`      | Return reshaped DataFrame organised by given index / column values. |
+| `scipy.stats.shapiro()`         | Performs the Shapiro-Wilk test|
+| `plotnine.stats.stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.         |
+| `plotnine.stats.stat_qq_line()` | Adds a comparison line to the Q-Q plot.|
+:::
 :::
 
 ## Data and hypotheses
+
 For example, suppose we measure the cortisol levels in 20 adult females (nmol/l) first thing in the morning and again in the evening. We want to test whether the cortisol levels differs between the two measurement times. We will initially form the following null and alternative hypotheses:
 
-- $H_0$: There is no difference in cortisol level between times ($\mu M = \mu E$)
-- $H_1$: There is a difference in cortisol levels between times ($\mu M \neq \mu E$)
+-   $H_0$: There is no difference in cortisol level between times ($\mu M = \mu E$)
+-   $H_1$: There is a difference in cortisol levels between times ($\mu M \neq \mu E$)
 
 We use a two-sample, two-tailed paired t-test to see if we can reject the null hypothesis.
 
--	We use a **two-sample** test because we now have two samples
--	We use a **two-tailed** t-test because we want to know if our data suggest that the true (population) means are different from one another rather than that one mean is specifically bigger or smaller than the other
--	We use a **paired** test because each data point in the first sample can be linked to another data point in the second sample by a connecting factor
--	We’re using a **t-test** because we’re assuming that the parent populations are normal and have equal variance (We’ll check this in a bit)
+-   We use a **two-sample** test because we now have two samples
+-   We use a **two-tailed** t-test because we want to know if our data suggest that the true (population) means are different from one another rather than that one mean is specifically bigger or smaller than the other
+-   We use a **paired** test because each data point in the first sample can be linked to another data point in the second sample by a connecting factor
+-   We're using a **t-test** because we're assuming that the parent populations are normal and have equal variance (We'll check this in a bit)
 
 The data are stored in a tidy format in the file `data/CS1-twopaired.csv`.
 
-:::panel-tabset
+::: panel-tabset
 ## tidyverse
+
 ```{r}
 # load the data
 cortisol <- read_csv("data/CS1-twopaired.csv")
@@ -94,6 +101,7 @@ cortisol
 ```
 
 ## R
+
 ```{r}
 # load the data
 cortisol_r <- read.csv("data/CS1-twopaired.csv")
@@ -102,6 +110,7 @@ head(cortisol_r)
 ```
 
 ## Python
+
 ```{python}
 # load the data
 cortisol_py = pd.read_csv('data/CS1-twopaired.csv')
@@ -109,22 +118,23 @@ cortisol_py = pd.read_csv('data/CS1-twopaired.csv')
 # inspect the data
 cortisol_py.head()
 ```
-
 :::
 
 We can see that the data frame consists of three columns:
 
-1. `patient_id`, a unique ID for each patient
-2. `time` when the cortisol level was measured
-3. `cortisol`, which contains the measured value.
+1.  `patient_id`, a unique ID for each patient
+2.  `time` when the cortisol level was measured
+3.  `cortisol`, which contains the measured value.
 
 For each `patient_id` there are two measurements: one in the morning and one in the afternoon.
 
 ## Summarise and visualise
+
 It's always a good idea to visualise your data, so let's do that.
 
-:::panel-tabset
+::: panel-tabset
 ## tidyverse
+
 ```{r}
 # create a boxplot
 cortisol %>% 
@@ -137,6 +147,7 @@ cortisol %>%
 Here we use also visualise the actual data points, to get a sense of how these data are spread out. To avoid overlapping the data points (try using `geom_point()` instead of `geom_jitter()`), we jitter the data points. What `geom_jitter()` does is add a small amount of variation to each point.
 
 ## R
+
 ```{r}
 # create a boxplot
 boxplot(cortisol ~ time,
@@ -144,6 +155,7 @@ boxplot(cortisol ~ time,
 ```
 
 ## Python
+
 ```{python}
 #| results: hide
 (
@@ -157,13 +169,15 @@ boxplot(cortisol ~ time,
 ```
 :::
 
-However, this plot does not capture how the cortisol level of each _individual_ subject has changed though. We can explore the individual changes between morning and evening by looking at the _differences_ between the two times of measurement for each patient.
+However, this plot does not capture how the cortisol level of each *individual* subject has changed though. We can explore the individual changes between morning and evening by looking at the *differences* between the two times of measurement for each patient.
 
 To do this, we need to put our data into a wide format, so we can calculate the change in cortisol level for each patient.
 
-:::panel-tabset
+::: panel-tabset
 ## tidyverse
+
 In tidyverse we can use the `pivot_wider()` function.
+
 ```{r}
 # calculate the difference between evening and morning values
 cortisol_diff <- cortisol %>%
@@ -211,6 +225,7 @@ cortisol_diff_r$cortisol_change <- cortisol_diff_r$cortisol.evening - cortisol_d
 
 head(cortisol_diff_r)
 ```
+
 After this we can plot our data:
 
 ```{r}
@@ -230,9 +245,9 @@ matplot(t(cortisol_diff_r[ , 2:3]),
 
 As far as I am aware of, there isn't a straightforward method of plotting paired data using the base R functionality. Hence the data gymnastics:
 
-* the default `plot()` function doesn't support this - the standard `matplot()` function does
-* the `t` function transposes the data, and I'm only selecting the second and third columns (`[ , 2:3]`) which contain the paired morning/evening measurements.
-* to group (pair) the data, we're using colours, one for each of the 20 patients (`col = 1:20`)
+-   the default `plot()` function doesn't support this - the standard `matplot()` function does
+-   the `t` function transposes the data, and I'm only selecting the second and third columns (`[ , 2:3]`) which contain the paired morning/evening measurements.
+-   to group (pair) the data, we're using colours, one for each of the 20 patients (`col = 1:20`)
 
 This gives a similar picture to what the boxplot was telling us, that for most patients the cortisol levels are higher in the morning than in the evening.
 
@@ -283,13 +298,16 @@ This gives a similar picture to what the boxplot was telling us, that for most p
 :::
 
 ## Assumptions
+
 You will do this in the exercise!
 
 ## Implement and interpret the test
+
 Perform a two-sample, two-tailed, paired t-test:
 
-:::panel-tabset
+::: panel-tabset
 ## tidyverse
+
 ```{r}
 #| results: hide
 # perform the test
@@ -299,9 +317,9 @@ cortisol %>%
          paired = TRUE)
 ```
 
--	The first argument gives the formula
--	The second argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less` 
--	The third argument says that the data are paired
+-   The first argument gives the formula
+-   The second argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
+-   The third argument says that the data are paired
 
 ## R
 
@@ -311,9 +329,10 @@ t.test(cortisol ~ time,
        paired = TRUE,
        data = cortisol_r)
 ```
--	The first two arguments define the formula
--	The third argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less` 
--	The fourth argument says that the data are paired
+
+-   The first two arguments define the formula
+-   The third argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
+-   The fourth argument says that the data are paired
 
 From our perspective the value of interested is in the `p` column (p-value = 5.29 $\times$ 10<sup>-5</sup>). Given that this is substantially less than 0.05 we can reject the null hypothesis and state:
 
@@ -330,11 +349,11 @@ alternative = "two-sided")
 Since the p-value = 5.29 $\times$ 10<sup>-5</sup>) and thus substantially less than 0.05 we can reject the null hypothesis and state:
 :::
 
-> A two-tailed, paired t-test indicated that the average cortisol level in adult females differed significantly between the morning (313.5 nmol/l) and the evening (197.4 nmol/l) (t = -5.2, df = 19, p = 5.3 * 10<sup>-5</sup>).
+> A two-tailed, paired t-test indicated that the average cortisol level in adult females differed significantly between the morning (313.5 nmol/l) and the evening (197.4 nmol/l) (t = -5.2, df = 19, p = 5.3 \* 10<sup>-5</sup>).
 
 ## Exercise: Assumptions
-Check the assumptions necessary for this this paired t-test.
-Was a paired t-test an appropriate test?
+
+Check the assumptions necessary for this this paired t-test. Was a paired t-test an appropriate test?
 
 ::: {.callout-caution collapse="true"}
 ## Answer
@@ -343,8 +362,9 @@ A paired test is really just a one-sample test in disguise. We actually don't ca
 
 Let's check this with the Shapiro-Wilk test and Q-Q plots, using the wide data frames we created earlier.
 
-:::panel-tabset
+::: panel-tabset
 ## tidyverse
+
 Perform Shapiro-Wilk test:
 
 ```{r}
@@ -354,6 +374,7 @@ cortisol_diff %>%
 ```
 
 Create Q-Q plot:
+
 ```{r}
 # create the Q-Q plot
 cortisol_diff %>% 
@@ -365,18 +386,21 @@ cortisol_diff %>%
 ## base R
 
 Perform Shapiro-Wilk test:
+
 ```{r}
 # perform Shapiro-Wilk test on cortisol differences
 shapiro.test(cortisol_diff_r$cortisol_change)
 ```
 
 Create Q-Q plot:
+
 ```{r}
 qqnorm(cortisol_diff_r$cortisol_change)
 qqline(cortisol_diff_r$cortisol_change, col = "red")
 ```
 
 ## Python
+
 Perform Shapiro-Wilk test:
 
 ```{python}
