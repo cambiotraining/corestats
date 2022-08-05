@@ -21,8 +21,23 @@ from plotnine import *
 from scipy import stats
 import pandas as pd
 import pingouin as pg
+from dgplots import *
 ```
 
+```{python}
+oystercatcher_py = pd.read_csv("data/CS2-oystercatcher-feeding.csv")
+```
+
+```{python}
+# define the model
+model = smf.ols(formula= "feeding ~ C(site)", data = oystercatcher_py)
+# fit the model
+results = model.fit()
+```
+
+```{python}
+dgplots(results)
+```
 ::: {.callout-tip}
 ## Learning outcomes
 
