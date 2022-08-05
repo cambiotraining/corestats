@@ -20,6 +20,7 @@ source(file = "setup.R")
 from plotnine import *
 from scipy import stats
 import pandas as pd
+import pingouin as pg
 ```
 
 ::: {.callout-tip}
@@ -76,6 +77,7 @@ Analysis of variance or ANOVA is a test than can be used when we have multiple s
 | `plotnine`    | The Python equivalent of `ggplot2`.               |
 | `pandas`      | A Python data analysis and manipulation tool.     |
 | `scipy.stats` | A Python module containing statistical functions. |
+|`statsmodels`  | A Python module for statistical models, conducting tests and statistical data exploration. |
 
 | Functions                       | Description                                                             |
 |:-----------------------------------|:-----------------------------------|
@@ -168,6 +170,40 @@ boxplot(feeding ~ site,
         data = oystercatcher_r)
 ```
 
+## Python
+First, we read in the data.
+
+```{python}
+# load the data
+oystercatcher_py = pd.read_csv("data/CS2-oystercatcher-feeding.csv")
+
+# and have a look
+oystercatcher_py.head()
+```
+
+The `oystercatcher_py` data set contains two columns:
+
+1. a `site` column with information on the amount of shelter of the feeding location
+2. a `feeding` column containing feeding rates
+
+Next, we get some basic descriptive statistics *per group*. Here we use the `pd.groupby()` function to group by `site`. We only want to have summary statistics for the `feeding` variable, so we specify that as well:
+
+```{python}
+oystercatcher_py.groupby("site")["feeding"].describe()
+```
+
+Finally, we plot the data:
+
+```{python}
+#| results: hide
+# plot the data
+(
+  ggplot(oystercatcher_py,
+    aes(x = "site", y = "feeding"))
+    + geom_boxplot()
+)
+```
+
 :::
 
 Looking at the data, there appears to be a noticeable difference in feeding rates between the three sites. We would probably expect a reasonably significant statistical result here.
@@ -183,11 +219,12 @@ In a similar way to the two-sample tests we will consider the normality and equa
 
 ### Normality
 
+First we perform a Shapiro-Wilk test on each site separately.
+
 ::: {.panel-tabset}
 ## tidyverse
 
-First we perform a Shapiro-Wilk test on each site separately.
-
+We take the data, and `group_by()` site:
 ```{r}
 #| results: hide
 # Shapiro-Wilk test on each site
@@ -211,6 +248,20 @@ Next, we perform the Shapiro-Wilk test on each group:
 shapiro.test(uns_oystercatcher$exposed)
 shapiro.test(uns_oystercatcher$partial)
 shapiro.test(uns_oystercatcher$sheltered)
+```
+
+## Python
+
+We use the `pg.normality()` function to calculate the statistic. This requires:
+
+* the `dv` dependent variable (`feeding` in our case)
+* the `group` variable (`site`)
+* and some data
+
+```{python}
+pg.normality(dv = "feeding",
+             group = "site",
+             data = oystercatcher_py)
 ```
 :::
 
@@ -248,6 +299,45 @@ resid_oyster_r <- residuals(lm_oystercatcher_r)
 # perform Shapiro-Wilk test on residuals
 shapiro.test(resid_oyster_r)
 ```
+## Python
+Unfortunately `pingouin` does not have a straightforward way of extracting residuals (if you know more, please raise an issue!).
+
+So we need to do some statistical gymnastics to get the residuals. I would suggest that you don't worry about the code, just run it and look at the output!
+
+::: {.callout-note collapse=True}
+## Technical details (optional)
+For this to work in Python, we need to take our predictor variable (`site`) and convert it to a [dummy variable](https://pandas.pydata.org/docs/reference/api/pandas.get_dummies.html).
+
+We also need to import the `statsmodels.api` module, which contains an `OLS()` function (Ordinary Least Squares - the equivalent of the `lm()` function in R).
+
+We also import `formula.api` so we can use the formula notation in our linear model. We define the formula as `formula= "feeding ~ C(site)"` with `C` conveying that the `site` variable is a category. Lastly we can `.fit()` the model.
+
+If you're familiar with this stuff then you can look at the model itself by running `summary(lm_oystercatcher_py)`. But we'll cover all of this in later sessions.
+:::
+
+Eventually, we get the residuals from the linear model with `.resid`. We give this to the `stats.shapiro()` function and off we go...
+
+```{python}
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+
+# fitting the model
+
+lm_oystercatcher_py = smf.ols(formula= "feeding ~ C(site)", data = oystercatcher_py).fit()
+
+stats.shapiro(lm_oystercatcher_py.resid)
+```
+
+```{python}
+import statsmodels.formula.api as smf
+
+# fitting the model
+
+model = smf.ols(formula= "feeding ~ C(site)", data = oystercatcher_py)
+result = model.fit()
+
+result.summary()
+```
 :::
 
 Again, we can see that the combined residuals from all three groups appear to be normally distributed (which is as we would have expected given that they were all normally distributed individually!)
@@ -267,7 +357,7 @@ bartlett.test(feeding ~ site,
               data = oystercatcher)
 ```
 
-Where the relevant p-value is given on the 3rd line. Here we see that each group do appear to have the same variance.
+Where the relevant p-value is given on the 3rd line. Here we see that each group appears to have the same variance.
 
 ## R
 ```{r}
@@ -276,7 +366,19 @@ bartlett.test(feeding ~ site,
               data = oystercatcher)
 ```
 
-Where the relevant p-value is given on the 3rd line. Here we see that each group do appear to have the same variance.
+Where the relevant p-value is given on the 3rd line. Here we see that each group appears to have the same variance.
+
+## Python
+We use the `homoscedasticity()` function from `pingouin` (homoscedasticity is another way of describing equality of variance). The default `method` is `levene`, so we need to specify that we want to use `bartlett`.
+
+```{python}
+pg.homoscedasticity(dv = "feeding",
+                    group = "site",
+                    method = "bartlett",
+                    data = oystercatcher_py)
+```
+
+Where the relevant p-value is given in the `pval` column. Here we see that each group appears to have the same variance.
 :::
 
 ### Graphical interpretation and diagnostic plots
@@ -320,11 +422,12 @@ The second line creates four diagnostic plots.
 *	The top right graph shows the **Normal Q-Q plot** which allows a visual inspection of normality. If the residuals are normally distributed, then the points should lie on the diagonal dotted line. This plot looks good.
 *	The bottom left **Scale-Location** graph allows us to investigate whether there is any correlation between the residuals and the predicted values and whether the variance of the residuals changes significantly. If not, then the red line should be horizontal. If there is any correlation or change in variance then the red line will not be horizontal. This plot is fine.
 * The bottom right **Residuals vs Factor Levels** plot shows the residuals for each group (= site). This plot is only displayed if there are equal number of observations in each group and we'll explain more about this in the next session.
-
-We can see that these graphs are very much in line with what we’ve just looked at using the test, which is reassuring. The groups all appear to have the same spread of data, and whilst the Q-Q plot isn’t perfect, it appears that the assumption of normality is alright.
 :::
 
+We can see that these graphs are very much in line with what we’ve just looked at using the test, which is reassuring. The groups all appear to have the same spread of data, and the Q-Q plot shows that the assumption of normality is alright.
+
 ::: {.callout-important}
+## Assessing assumptions
 At this stage, I should point out that I nearly always stick with the graphical method for assessing the assumptions of a test. Assumptions are rarely either completely met or not met and there is always some degree of personal assessment.
 
 Whilst the formal statistical tests (like Shapiro-Wilk) are technically fine, they can often create a false sense of things being absolutely right or wrong in spite of the fact that they themselves are still probabilistic statistical tests. In these exercises we are using both approaches whilst you gain confidence and experience in interpreting the graphical output and whilst it is absolutely fine to use both in the future I would strongly recommend that you don’t rely solely on the statistical tests in isolation.
@@ -365,12 +468,42 @@ In the output:
 -	The 1st line just tells you the that this is an ANOVA test
 -	The 2nd line tells you what the response variable is (in this case feeding)
 -	The 3rd, 4th and 5th lines are an ANOVA table which contain some useful values:
-    - The `Df` column contains the degrees of freedom values on each row, `r glance(lm_oystercatcher_r) %>% pull(df) %>% as.numeric()` and `r glance(lm_oystercatcher_r) %>% pull(df.residual) %>% as.numeric()` (which we can use for the reporting)
-    - The `F` value column contains the F statistic, `r round(glance(lm_oystercatcher_r) %>% pull(statistic) %>% as.numeric(), digits = 2)` (which again we’ll need for reporting).
-    - The p-value is 2.2e-16 and is the number directly under the `Pr(>F)` on the 4th line (to be precise, it is `r formatC((glance(lm_oystercatcher_r) %>% pull(p.value) %>% as.numeric()), format = "e", digits = 2)` but anything smaller than 2.2e-16 gets reported as `< 2.2e-16`).
-    - The other values in the table (in the `Sum Sq` and `Mean Sq`) columns are used to calculate the F statistic itself and we don’t need to know these.
+- The `Df` column contains the degrees of freedom values on each row, `r glance(lm_oystercatcher_r) %>% pull(df) %>% as.numeric()` and `r glance(lm_oystercatcher_r) %>% pull(df.residual) %>% as.numeric()` (which we can use for the reporting)
+- The `F` value column contains the F statistic, `r round(glance(lm_oystercatcher_r) %>% pull(statistic) %>% as.numeric(), digits = 2)` (which again we’ll need for reporting).
+- The p-value is 2.2e-16 and is the number directly under the `Pr(>F)` on the 4th line (to be precise, it is `r formatC((glance(lm_oystercatcher_r) %>% pull(p.value) %>% as.numeric()), format = "e", digits = 2)` but anything smaller than 2.2e-16 gets reported as `< 2.2e-16`).
+- The other values in the table (in the `Sum Sq` and `Mean Sq`) columns are used to calculate the F statistic itself and we don’t need to know these.
 -	The 6th line has some symbolic codes to represent how big (small) the p-value is; so, a p-value smaller than 0.001 would have a *** symbol next to it (which ours does). Whereas if the p-value was between 0.01 and 0.05 then there would simply be a * character next to it, etc. Thankfully we can all cope with actual numbers and don’t need a short-hand code to determine the reporting of our experiments (please tell me that’s true…!)
 
+## Python
+
+There are different ways of conducting an ANOVA in Python, with `scipy.stats` [proving an option](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f_oneway.html).
+However, I find that [anova()](https://pingouin-stats.org/generated/pingouin.anova.html#pingouin.anova) function in `pingouin` provides the easiest and most-detailed option to do this.
+
+It takes the following arguments:
+
+* `dv`: dependent variable (response variable; in our case `feeding`)
+* `between`: between-subject factor (predictor variable; in our case `site`)
+* `data`: which function doesn't!?
+* `detailed`: optional `True` or `False`, we're setting it to `True` because we like to know what we're doing!
+
+```{python}
+pg.anova(dv = "feeding",
+         between = "site",
+         data = oystercatcher_py,
+         detailed = True)
+```
+
+This creates a linear model based on the data, _i.e_. finds the means of the three groups and calculates a load of intermediary data that we need for the statistical analysis.
+
+In the output:
+
+* `Source`: Factor names - in our case these are the different sites (`site`)
+* `SS`: Sums of squares (we'll get to that in a bit)
+* `DF`: Degrees of freedom (at the moment only used for reporting)
+* `MS`: Mean squares
+* `F`: Our F-statistic
+* `p-unc`: p-value (`unc` stands for "uncorrected" - more on multiple testing correction later)
+* `np2`: Partial eta-square effect sizes (more on this later)
 :::
 
 Again, the p-value is what we’re most interested in here and shows us the probability of getting samples such as ours if the null hypothesis were actually true.

@@ -1,0 +1,121 @@
+---
+title: "area_51"
+editor: visual
+---
+
+```{r}
+#
+```
+
+```{python}
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import patchworklib as pw
+from plotnine import *
+from plotnine.data import *
+import plotnine
+from statsmodels.tools.tools import maybe_unwrap_results
+from statsmodels.graphics.gofplots import ProbPlot
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+import matplotlib.pyplot as plt
+from typing import Type
+import statsmodels.formula.api as smf
+```
+
+```{python}
+oystercatcher_py = pd.read_csv("data/CS2-oystercatcher-feeding.csv")
+```
+
+```{python}
+# define the model
+model = smf.ols(formula= "feeding ~ C(site)", data = oystercatcher_py)
+# fit the model
+results = model.fit()
+
+results.summary()
+```
+
+```{python}
+# Get different Variables for diagnostic
+residuals = results.resid.rename("residuals")
+fitted_values = results.fittedvalues.rename("fitted_values")
+std_resid = pd.Series(results.resid_pearson).rename("std_resid")
+influence = results.get_influence()
+cooks_d = pd.Series(influence.cooks_distance[0]).rename("cooks_d")
+leverage = pd.Series(influence.hat_matrix_diag).rename("leverage")
+obs = pd.Series(range(len(residuals))).rename("obs")
+n_obs = len(obs.index)
+```
+
+```{python}
+# combine Series into DataFrame
+model_values = residuals.to_frame().join(fitted_values).join(std_resid).join(cooks_d).join(leverage).join(obs)
+
+model_values["n_obs"] = n_obs
+```
+```{python}
+g1 = pw.load_ggplot(ggplot(mtcars) 
+                    + geom_point(aes("mpg", "disp"))
+                    + theme(text=element_text(size=14), axis_title=element_text(size=18)),
+                    figsize=(2,3))
+g2 = pw.load_ggplot(ggplot(mtcars) 
+                    + geom_boxplot(aes("gear", "disp", group="gear"))
+                    + theme(text=element_text(size=14), axis_title=element_text(size=18)), 
+                    figsize=(2,3))
+g3 = pw.load_ggplot(ggplot(mtcars, aes('wt', 'mpg', color='factor(gear)')) 
+                    + geom_point() + stat_smooth(method='lm') 
+                    + facet_wrap('~gear')
+                    + theme(text=element_text(size=14), axis_title=element_text(size=18)), 
+                    figsize=(3,3))
+g4 = pw.load_ggplot(ggplot(data=diamonds) 
+                    + geom_bar(mapping=aes(x="cut", fill="clarity"), position="dodge")
+                    + theme(text=element_text(size=14), axis_title=element_text(size=20, color="blue"), 
+                            legend_text=element_text(size=14), legend_title=element_text(size=18)), 
+                    figsize=(5,2))
+g1234 = (g1|g2|g3)/g4
+g1234.savefig()
+```
+
+## Q-Q plot
+```{python}
+p1 = (
+  ggplot(model_values, aes(sample = "residuals"))
+  + stat_qq()
+  + stat_qq_line(colour = "blue")
+)
+
+p1 = pw.load_ggplot(p1, figsize=(2,3))
+p1.savefig()
+```
+
+
+## Residual plot
+```{python}
+(
+    ggplot(model_values, aes(x = "fitted_values", y = "residuals"))
+    + geom_point()
+    + geom_smooth(se = False, colour = "red")
+)
+```
+
+## Location-Scale plot
+```{python}
+(
+    ggplot(model_values, aes(x = "fitted_values", y = "std_resid"))
+    + geom_point()
+    + geom_smooth(se = False, colour = "red")
+)
+```
+
+## Cook's distance
+```{python}
+(
+    ggplot(model_values, aes(x = "obs", y = "cooks_d"))
+    + geom_point()
+    + geom_segment(aes(xend = "obs", yend = 0), colour = "blue")
+    + geom_hline(aes(yintercept = 0))
+    + geom_hline(aes(yintercept = 4/n_obs), colour = "blue", linetype = "dashed")
+)
+```
+

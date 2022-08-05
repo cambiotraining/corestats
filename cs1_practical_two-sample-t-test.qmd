@@ -31,7 +31,7 @@ import pandas as pd
 ## tidyverse
 
 | Libraries            | Description                                                                                                       |
-|:-----------------------|:----------------------------------------------|
+|:------------------------|:----------------------------------------------|
 | `library(tidyverse)` | A collection of R packages designed for data science                                                              |
 | `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
 
@@ -271,15 +271,32 @@ shapiro.test(uns_rivers$Guanapo)
 
 ## Python
 
-We first need to split the data by `river`.
+Before we can implement the Mann-Whitney U test, we need to reformat our data a bit.
+
+The `stats.shapiro()` function requires the numerical input for the two groups it needs to compare.
+
+The easiest way is to reformat our data from the *long* format where all the data are stacked on top of one another to the *wide* format, where the `length` values are in separate columns for the two rivers.
+
+We can do this with the `pd.pivot()` function. We save the output in a new object called `rivers_py_wide` and then access the values as required. It keeps all the data separate, meaning that there will be missing values `NaN` in this format. The `stats.shapiro()` function doesn't ignore missing values by default, so we remove them using `.dropna()`.
 
 ```{python}
-rivers_py.groupby("river")["length"] \
-.apply(lambda x: pd.Series(stats.shapiro(x), index=['W-stat','p-value'])) \
-.reset_index()
+# reformat the data into a 'wide' format
+rivers_py_wide = pd.pivot(rivers_py,
+                          columns = 'river',
+                          values = 'length')
+      
+# have a look at the format
+rivers_py_wide.head()
 ```
 
-The code is a bit convoluted and perhaps there is a more efficient way that I'm not aware of. Anyway, we can do this with the `groupby()` function from pandas. Next, we only select the `length` measurements and use the `.apply()` function to apply the `stats.shapiro()` test over each group. This returns two values per group: the W-statistic that the Shapiro-Wilk test uses and, the value we're most interested in, the p-value. Lastly,we use the `.reset_index()` function to repeat the grouping name.
+Perform the Shapiro-Wilk test on the individual groups, omitting the missing values:
+
+```{python}
+# perform the Shapiro test
+# ignoring the missing values
+stats.shapiro(rivers_py_wide['Aripo'].dropna())
+stats.shapiro(rivers_py_wide['Guanapo'].dropna())
+```
 :::
 
 We can see that whilst the Guanapo data is probably normally distributed (p = 0.1764 \> 0.05), the Aripo data is unlikely to be normally distributed (p = 0.02802 \< 0.05). Remember that the p-value gives the probability of observing each sample if the parent population is actually normally distributed.
