@@ -1,4 +1,5 @@
 # essential libraries
+library(reticulate)
 library(knitr)
 library(tidyverse)
 library(kableExtra)

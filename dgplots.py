@@ -5,9 +5,6 @@ import patchworklib as pw
 from plotnine.data import *
 from typing import Type
 import statsmodels
-from PIL import Image
-import matplotlib.pyplot as plt
-from matplotlib.pyplot import imshow
 
 def dgplots(results: Type[statsmodels.regression.linear_model.RegressionResultsWrapper]) -> None:
     if isinstance(results, statsmodels.regression.linear_model.RegressionResultsWrapper) is False:
@@ -59,4 +56,4 @@ def dgplots(results: Type[statsmodels.regression.linear_model.RegressionResultsW
         p4 = pw.load_ggplot(p4, figsize=(3,2))
 
         dplots = (p1 | p2) / (p3 | p4)
-        return dplots.savefig()
+        return dplots
