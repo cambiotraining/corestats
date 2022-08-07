@@ -1,7 +1,8 @@
 /.quarto/
 /_site/
-
-.Rproj.user
+/.Rproj.user/
+/.ipynb_checkpoints/
+/__pycache__/
 .Rhistory
 .RData
 .Ruserdata
