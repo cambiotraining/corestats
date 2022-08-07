@@ -1,13 +1,9 @@
 ---
 title: "area_51"
+jupyter: python3
 ---
+
 info
-```{r}
-#| echo: false
-#| message: false
-#| results: hide
-source(file = "setup.R")
-```
 
 ```{python}
 #| echo: false
@@ -27,18 +23,9 @@ lm_oystercatcher_py = model.fit()
 ```
 
 ```{python}
-#| eval: false
+#| eval: true
 dgplots(lm_oystercatcher_py)
 ```
-
-```{r}
-#| echo: false
-source_python("dgplots.py")
-
-dgplot <- dgplots(lm_oystercatcher_py)
-knitr::include_graphics(dgplot)
-```
-
 
 ```{python}
 state_py = pd.read_csv("data/CS3-statedata.csv")
@@ -52,14 +39,7 @@ lm_state = model.fit()
 ```
 
 ```{python}
-#| eval: false
+#| eval: true
 dgplots(lm_state)
 ```
 
-```{r}
-#| echo: false
-source_python("dgplots.py")
-
-dgplot <- dgplots(lm_state)
-knitr::include_graphics(dgplot)
-```

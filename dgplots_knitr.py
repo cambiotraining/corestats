@@ -1,3 +1,6 @@
+import os
+import glob
+from datetime import datetime
 from typing import Type
 import pandas as pd
 import statsmodels.api as sm
@@ -5,7 +8,7 @@ import statsmodels.formula.api as smf
 from plotnine import *
 import patchworklib as pw
 
-def dgplots(results: Type[sm.regression.linear_model.RegressionResultsWrapper]) -> None:
+def dgplotsknitr(results: Type[sm.regression.linear_model.RegressionResultsWrapper]) -> None:
     if isinstance(results, sm.regression.linear_model.RegressionResultsWrapper) is False:
         raise TypeError("Please provide a model fit.")
     else:
@@ -72,4 +75,11 @@ def dgplots(results: Type[sm.regression.linear_model.RegressionResultsWrapper]) 
         p4 = pw.load_ggplot(p4, figsize=(3,2))
 
         dgplots = (p1 | p2) / (p3 | p4)
-        return dgplots.savefig()
+        date = datetime.now().strftime("%Y_%m_%d-%I:%M:%S_%p")
+        dgplots.savefig(fname=(f"images/dgplots/{date}_dgplots" ".png"))
+        # get list of images created by dgplots
+        list_of_files = glob.glob('images/dgplots/*dgplots.png')
+        # get the latest file
+        latest_file = max(list_of_files, key=os.path.getctime)
+        
+        return latest_file

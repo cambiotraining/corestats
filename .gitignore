@@ -1,7 +1,9 @@
+/.quarto/
+/_site/
+
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
-.nojekyll
-
-/.quarto/
+.DS_Store
+.icloud

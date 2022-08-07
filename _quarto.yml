@@ -1,6 +1,11 @@
 project:
   type: website
-  output-dir: docs
+  output-dir: _site
+  render:
+    -  "*.qmd"
+    - "!area_51.qmd"
+execute:
+  freeze: auto
 
 website:
   title: "Core statistics"
