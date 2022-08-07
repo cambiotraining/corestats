@@ -1,17 +1,16 @@
-import pandas as pd
-from plotnine import *
-import statsmodels.formula.api as smf
-import patchworklib as pw
-from plotnine.data import *
-from typing import Type
-import statsmodels
-from datetime import datetime
-import glob
 import os
+import glob
+from datetime import datetime
+from typing import Type
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+from plotnine import *
+import patchworklib as pw
 
-def dgplots(results: Type[statsmodels.regression.linear_model.RegressionResultsWrapper]) -> None:
-    if isinstance(results, statsmodels.regression.linear_model.RegressionResultsWrapper) is False:
-        raise TypeError("I need a model fit")
+def dgplots(results: Type[sm.regression.linear_model.RegressionResultsWrapper]) -> None:
+    if isinstance(results, sm.regression.linear_model.RegressionResultsWrapper) is False:
+        raise TypeError("Please provide a model fit.")
     else:
         
         residuals = results.resid.rename("residuals")
@@ -35,6 +34,7 @@ def dgplots(results: Type[statsmodels.regression.linear_model.RegressionResultsW
         + labs(title = "Residuals plot")
         + xlab("predicted values")
         + ylab("residuals")
+        + theme_bw()
         )
 
         p2 = (
@@ -44,6 +44,7 @@ def dgplots(results: Type[statsmodels.regression.linear_model.RegressionResultsW
         + labs(title = "Q-Q plot")
         + xlab("theoretical quantiles")
         + ylab("sample quantiles")
+        + theme_bw()
         )
 
         p3 = (
@@ -53,6 +54,7 @@ def dgplots(results: Type[statsmodels.regression.linear_model.RegressionResultsW
         + labs(title = "Location-Scale plot")
         + xlab("predicted values")
         + ylab(u"\u221A"'standardised residuals')
+        + theme_bw()
         )
 
         p4 = (
@@ -64,6 +66,7 @@ def dgplots(results: Type[statsmodels.regression.linear_model.RegressionResultsW
         + labs(title = "Influential points")
         + xlab("observation")
         + ylab('cook\'s d')
+        + theme_bw()
         )
 
         p1 = pw.load_ggplot(p1, figsize=(3,2))

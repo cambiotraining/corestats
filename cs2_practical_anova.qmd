@@ -17,11 +17,7 @@ source(file = "setup.R")
 ```{python}
 #| echo: false
 #| message: false
-from plotnine import *
-from scipy import stats
-import pandas as pd
-import pingouin as pg
-from dgplots import *
+from setup import *
 ```
 
 ::: {.callout-tip}
@@ -139,6 +135,7 @@ oystercatcher %>%
   ggplot(aes(x = site, y = feeding)) +
   geom_boxplot()
 ```
+
 ## R
 First we read in the data.
 
@@ -233,6 +230,7 @@ oystercatcher %>%
   group_by(site) %>% 
   shapiro_test(feeding)
 ```
+
 ## R
 Unstack the data and perform a Shapiro-Wilk test on each group separately.
 
@@ -300,45 +298,40 @@ resid_oyster_r <- residuals(lm_oystercatcher_r)
 # perform Shapiro-Wilk test on residuals
 shapiro.test(resid_oyster_r)
 ```
+
 ## Python
 Unfortunately `pingouin` does not have a straightforward way of extracting residuals (if you know more, please raise an issue!).
 
 So we need to do some statistical gymnastics to get the residuals. I would suggest that you don't worry about the code, just run it and look at the output!
 
-::: {.callout-note collapse=True}
+::: {.callout-note collapse="true"}
 ## Technical details (optional)
-For this to work in Python, we need to take our predictor variable (`site`) and convert it to a [dummy variable](https://pandas.pydata.org/docs/reference/api/pandas.get_dummies.html).
+We need to import a few extra modules. First, we load the `statsmodels.api` module, which contains an `OLS()` function (Ordinary Least Squares - the equivalent of the `lm()` function in R).
 
-We also need to import the `statsmodels.api` module, which contains an `OLS()` function (Ordinary Least Squares - the equivalent of the `lm()` function in R).
-
-We also import `formula.api` so we can use the formula notation in our linear model. We define the formula as `formula= "feeding ~ C(site)"` with `C` conveying that the `site` variable is a category. Lastly we can `.fit()` the model.
+We also import `stats.models.formula.api` so we can use the formula notation in our linear model. We define the formula as `formula= "feeding ~ C(site)"` with `C` conveying that the `site` variable is a category. Lastly we can `.fit()` the model.
 
 If you're familiar with this stuff then you can look at the model itself by running `summary(lm_oystercatcher_py)`. But we'll cover all of this in later sessions.
 :::
 
-Eventually, we get the residuals from the linear model with `.resid`. We give this to the `stats.shapiro()` function and off we go...
-
+Eventually, we get the residuals from the linear model with `.resid`. 
 ```{python}
+#| eval: false
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
-
-# fitting the model
-
-lm_oystercatcher_py = smf.ols(formula= "feeding ~ C(site)", data = oystercatcher_py).fit()
-
-stats.shapiro(lm_oystercatcher_py.resid)
 ```
 
 ```{python}
-import statsmodels.formula.api as smf
-
-# fitting the model
-
+# create a linear model
 model = smf.ols(formula= "feeding ~ C(site)", data = oystercatcher_py)
-result = model.fit()
-
-result.summary()
+# and get the fitted parameters of the model
+lm_oystercatcher_py = model.fit()
 ```
+```{python}
+# get the residuals from the model fit
+# and perform Shapiro-Wilk test
+pg.normality(lm_oystercatcher_py.resid)
+```
+
 :::
 
 Again, we can see that the combined residuals from all three groups appear to be normally distributed (which is as we would have expected given that they were all normally distributed individually!)
@@ -384,7 +377,9 @@ Where the relevant p-value is given in the `pval` column. Here we see that each 
 
 ### Graphical interpretation and diagnostic plots
 
-R provides a convenient set of graphs that allow us to assess these assumptions graphically.
+Assessing assumptions via these tests can be cumbersome, but also a bit misleading at times. It reduces the answer to the question "is the assumption met?" to a yes/no, based on some statistic and associated p-value.
+
+This does not convey that things aren't always so clear-cut and that there is a lot of grey area that we need to navigate. As such, assessing assumptions through graphical means - using diagnostic plots - is often preferred.
 
 ::: {.panel-tabset}
 ## tidyverse
@@ -401,7 +396,7 @@ lm_oystercatcher %>%
 
 *	The top left graph plots the **Residuals plot**. If the data are best explained by a linear line then there should be a uniform distribution of points above and below the horizontal blue line (and if there are sufficient points then the red line, which is a smoother line, should be on top of the blue line). This plot looks pretty good.
 *	The top right graph shows the **Q-Q plot** which allows a visual inspection of normality. If the residuals are normally distributed, then the points should lie on the diagonal blue line. This plot looks good.
-*	The bottom left **Location-scale** graph allows us to investigate whether there is any correlation between the residuals and the predicted values and whether the variance of the residuals changes significantly. If not, then the red line should be horizontal. If there is any correlation or change in variance then the red line will not be horizontal. This plot is fine.
+*	The bottom left **Location-Scale** graph allows us to investigate whether there is any correlation between the residuals and the predicted values and whether the variance of the residuals changes significantly. If not, then the red line should be horizontal. If there is any correlation or change in variance then the red line will not be horizontal. This plot is fine.
 *	The last graph shows the **Cook's distance** and tests if any one point has an unnecessarily large effect on the fit. A rule of thumb is that if any value is larger than 1.0, then it might have a large effect on the model. If not, then no point has undue influence. This plot is good. There are different ways to determine the threshold (apart from simply setting it to 1) and in this plot the blue dashed line is at `4/n`, with `n` being the number of samples. At this threshold there are some data points that may be influential, but I personally find this threshold rather strict.  
 
 ## R
@@ -423,6 +418,30 @@ The second line creates four diagnostic plots.
 *	The top right graph shows the **Normal Q-Q plot** which allows a visual inspection of normality. If the residuals are normally distributed, then the points should lie on the diagonal dotted line. This plot looks good.
 *	The bottom left **Scale-Location** graph allows us to investigate whether there is any correlation between the residuals and the predicted values and whether the variance of the residuals changes significantly. If not, then the red line should be horizontal. If there is any correlation or change in variance then the red line will not be horizontal. This plot is fine.
 * The bottom right **Residuals vs Factor Levels** plot shows the residuals for each group (= site). This plot is only displayed if there are equal number of observations in each group and we'll explain more about this in the next session.
+
+## Python
+Unfortunately Python doesn't provide a convenient way of displaying the same diagnostic plots as R does.
+
+I created a function `dgplots()` (which stands for Diagnostic Plots, very original I know...) that does this for you. All you need to do is create a linear model, get the fit and feed that to the `dgplots()` function.
+
+You can of course plot the model values yourself by extracting them from the linear model fit, but this should provide a convenient way to avoid that kind of stuff.
+
+```{python}
+#| eval: false
+dgplots(lm_oystercatcher_py)
+```
+
+```{r}
+#| echo: false
+source_python("dgplots.py")
+
+dgplot <- dgplots(lm_oystercatcher_py)
+knitr::include_graphics(dgplot)
+```
+*	The top left graph plots the **Residuals plot**. If the data are best explained by a linear line then there should be a uniform distribution of points above and below the horizontal blue line (and if there are sufficient points then the red line, which is a smoother line, should be on top of the blue line). This plot looks pretty good.
+*	The top right graph shows the **Q-Q plot** which allows a visual inspection of normality. If the residuals are normally distributed, then the points should lie on the diagonal blue line. This plot looks good.
+*	The bottom left **Location-Scale** graph allows us to investigate whether there is any correlation between the residuals and the predicted values and whether the variance of the residuals changes significantly. If not, then the red line should be horizontal. If there is any correlation or change in variance then the red line will not be horizontal. This plot is fine.
+*	The last graph shows the **Influential points** and tests if any one point has an unnecessarily large effect on the fit. Here we're using the Cook's distance as a measure. A rule of thumb is that if any value is larger than 1.0, then it might have a large effect on the model. If not, then no point has undue influence. This plot is good. There are different ways to determine the threshold (apart from simply setting it to 1) and in this plot the blue dashed line is at `4/n`, with `n` being the number of samples. At this threshold there are some data points that may be influential, but I personally find this threshold rather strict.  
 :::
 
 We can see that these graphs are very much in line with what we’ve just looked at using the test, which is reassuring. The groups all appear to have the same spread of data, and the Q-Q plot shows that the assumption of normality is alright.

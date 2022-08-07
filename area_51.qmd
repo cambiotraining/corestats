@@ -10,7 +10,9 @@ source(file = "setup.R")
 ```
 
 ```{python}
-from dgplots import *
+#| echo: false
+#| message: false
+from setup import *
 ```
 
 ```{python}
@@ -21,20 +23,19 @@ oystercatcher_py = pd.read_csv("data/CS2-oystercatcher-feeding.csv")
 # define the model
 model = smf.ols(formula= "feeding ~ C(site)", data = oystercatcher_py)
 # fit the model
-results = model.fit()
+lm_oystercatcher_py = model.fit()
 ```
 
 ```{python}
 #| eval: false
-dgplots(results)
+dgplots(lm_oystercatcher_py)
 ```
 
 ```{r}
 #| echo: false
-library(reticulate)
 source_python("dgplots.py")
 
-dgplot <- dgplots(results)
+dgplot <- dgplots(lm_oystercatcher_py)
 knitr::include_graphics(dgplot)
 ```
 
@@ -57,7 +58,6 @@ dgplots(lm_state)
 
 ```{r}
 #| echo: false
-library(reticulate)
 source_python("dgplots.py")
 
 dgplot <- dgplots(lm_state)

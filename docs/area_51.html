@@ -250,23 +250,87 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dgplots <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>oystercatcher_py <span class="op">=</span> pd.read_csv(<span class="st">"data/CS2-oystercatcher-feeding.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>oystercatcher_py <span class="op">=</span> pd.read_csv(<span class="st">"data/CS2-oystercatcher-feeding.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define the model</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(formula<span class="op">=</span> <span class="st">"feeding ~ C(site)"</span>, data <span class="op">=</span> oystercatcher_py)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the model</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> model.fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define the model</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(formula<span class="op">=</span> <span class="st">"feeding ~ C(site)"</span>, data <span class="op">=</span> oystercatcher_py)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the model</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>lm_oystercatcher_py <span class="op">=</span> model.fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dgplots(results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>lm_oystercatcher_py.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tbody><tr>
+  <th>Dep. Variable:</th>         <td>feeding</td>     <th>  R-squared:         </th> <td>   0.720</td>
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.716</td>
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   150.8</td>
+</tr>
+<tr>
+  <th>Date:</th>             <td>Sun, 07 Aug 2022</td> <th>  Prob (F-statistic):</th> <td>4.13e-33</td>
+</tr>
+<tr>
+  <th>Time:</th>                 <td>10:45:58</td>     <th>  Log-Likelihood:    </th> <td> -278.49</td>
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>   120</td>      <th>  AIC:               </th> <td>   563.0</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>   117</td>      <th>  BIC:               </th> <td>   571.3</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     2</td>      <th>                     </th>     <td> </td>   
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>   
+</tr>
+</tbody></table>
+<table class="simpletable">
+<tbody><tr>
+            <td></td>              <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P&gt;|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>            <td>   13.8229</td> <td>    0.395</td> <td>   35.032</td> <td> 0.000</td> <td>   13.041</td> <td>   14.604</td>
+</tr>
+<tr>
+  <th>C(site)[T.partial]</th>   <td>    3.2588</td> <td>    0.558</td> <td>    5.840</td> <td> 0.000</td> <td>    2.154</td> <td>    4.364</td>
+</tr>
+<tr>
+  <th>C(site)[T.sheltered]</th> <td>    9.5326</td> <td>    0.558</td> <td>   17.083</td> <td> 0.000</td> <td>    8.427</td> <td>   10.638</td>
+</tr>
+</tbody></table>
+<table class="simpletable">
+<tbody><tr>
+  <th>Omnibus:</th>       <td> 0.490</td> <th>  Durbin-Watson:     </th> <td>   2.126</td>
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.783</td> <th>  Jarque-Bera (JB):  </th> <td>   0.642</td>
+</tr>
+<tr>
+  <th>Skew:</th>          <td> 0.107</td> <th>  Prob(JB):          </th> <td>   0.726</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td> 2.713</td> <th>  Cond. No.          </th> <td>    3.73</td>
+</tr>
+</tbody></table><br><br>Notes:<br>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dgplots(lm_oystercatcher_py)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="images/dgplots/2022_08_06-11:05:53_pm_dgplots.png" class="img-fluid" width="775"></p>
+<p><img src="images/dgplots/2022_08_07-10:45:59_am_dgplots.png" class="img-fluid" width="775"></p>
 </div>
 </div>
 <div class="cell">
@@ -283,7 +347,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="images/dgplots/2022_08_06-11:05:55_pm_dgplots.png" class="img-fluid" width="812"></p>
+<p><img src="images/dgplots/2022_08_07-10:46:01_am_dgplots.png" class="img-fluid" width="812"></p>
 </div>
 </div>
 
