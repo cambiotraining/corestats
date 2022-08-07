@@ -17,9 +17,7 @@ source(file = "setup.R")
 ```{python}
 #| echo: false
 #| message: false
-from plotnine import *
-from scipy import stats
-import pandas as pd
+from setup import *
 ```
 
 ## Libraries and functions
@@ -31,12 +29,12 @@ import pandas as pd
 ## tidyverse
 
 | Libraries            | Description                                                                                                       |
-|:-----------------------|:-----------------------------------------------|
+|:-----------------------|:----------------------------------------------|
 | `library(tidyverse)` | A collection of R packages designed for data science                                                              |
 | `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
 
 | Functions                 | Description                                                                          |
-|:-----------------------|:-----------------------------------------------|
+|:-----------------------|:----------------------------------------------|
 | `rstatix::t_test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections. |
 | `rstatix::shapiro_test()` | Performs a Shapiro-Wilk test for normality.                                          |
 | `ggplot2::stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.                          |
@@ -45,7 +43,7 @@ import pandas as pd
 ## R
 
 | Functions        | Description                                                                          |
-|:-----------------------|:-----------------------------------------------|
+|:-----------------------|:----------------------------------------------|
 | `t.test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections. |
 | `qqnorm()`       | Plots a Q-Q plot for comparison with a normal distribution.                          |
 | `qqline()`       | Adds a comparison line to the Q-Q plot.                                              |
@@ -61,8 +59,8 @@ import pandas as pd
 
 | Functions                       | Description                                                 |
 |:-------------------------|:---------------------------------------------|
-| `scipy.stats.shapiro()`         | Perform the Shapiro-Wilk test for normality.                |
-| `scipy.stats.ttest_1samp()`     | Calculate the T-test for the mean of ONE group of scores.   |
+| [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)| Perform the Shapiro-Wilk test for normality.|
+| [`pingouin.ttest()`](https://pingouin-stats.org/generated/pingouin.ttest.html#pingouin.ttest)| Calculate the T-test for the mean of ONE group of scores.   |
 | `plotnine.stats.stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution. |
 | `plotnine.stats.stat_qq_line()` | Adds a comparison line to the Q-Q plot.                     |
 :::
@@ -356,9 +354,14 @@ shapiro.test(fishlength_r)
 
 ## Python
 
+We take the `length` values from the `fishlength_py` data frame and pass that to the `normality()` function in `pingouin`:
+
 ```{python}
-stats.shapiro(fishlength_py.length)
+pg.normality(fishlength_py.length)
 ```
+- the `W` column gives us the W-statistic
+- the `pval` column gives us the p-value
+- the `normal` column gives us the outcome of the test in `True/False`
 :::
 
 As the p-value is bigger than 0.05 (say) then we can say that there is insufficient evidence to reject the null hypothesis that the sample came from a normal distribution.
@@ -375,14 +378,14 @@ In the `fishlength` example, the graphical Q-Q plot analysis was not especially 
 
 In which case we would consider an alternative test that has less stringent assumptions (but is less powerful): the [one-sample Wilcoxon signed-rank test](#cs1-onesample-wilcoxon-signed-rank).
 
-## Implement the test
+## Implement and interpret the test
 
 Perform a one-sample, two-tailed t-test:
 
 ::: panel-tabset
 ## tidyverse
 
-```{r, results='hide'}
+```{r}
 fishlengthDF %>% 
   t_test(length ~ 1,
          mu = 20,
@@ -394,6 +397,12 @@ The `t_test()` function requires three arguments:
 1.  the `formula`, here we give it `length ~ 1` to indicate it is a one-sample test on `length`
 2.  the `mu` is the mean to be tested under the null hypothesis, here it is 20
 3.  the `alternative` argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`. We have no prior assumptions on whether the alternative fish length would be greater or less than 20, so we choose `two.sided`.
+
+In the output:
+
+-   the `statistic` column gives us the t-statistic of -3.5492 (we'll need this for reporting)
+-   the `df` column tells us there are 28 degrees of freedom (again we'll need this for reporting)
+-   the `p` column gives us the p-value of 0.00139
 
 ## R
 
@@ -407,45 +416,7 @@ t.test(fishlength_r,
 -   The second argument must be a number and is the mean to be tested under the null hypothesis.
 -   The third argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`. We have no prior assumptions on whether the alternative fish length would be greater or less than 20, so we choose `two.sided`.
 
-## Python
-
-```{python, results='hide'}
-stats.ttest_1samp(fishlength_py.length,
-                  popmean = 20, 
-                  alternative = "two-sided")
-```
-
--   The first argument must be a numerical series of data values.
--   The second argument must be a number and is the mean to be tested under the null hypothesis.
-
-In Python you can only two a two-sided 1-sample t-test (i.e. you can only test whether the mean is different from 20 but not whether it is greater than or less than -- why they chose to do this is beyond me).
-:::
-
-## Interpreting the output and report results
-
-This is the output that you should now see in the console window:
-
-::: panel-tabset
-## tidyverse
-
-```{r, echo=FALSE}
-fishlengthDF %>% 
-  t_test(length ~ 1,
-         mu = 20,
-         alternative = "two.sided")
-```
-
--   the `statistic` column gives us the t-statistic of -3.5492 (we'll need this for reporting)
--   the `df` column tells us there are 28 degrees of freedom (again we'll need this for reporting)
--   the `p` column gives us the p-value of 0.00139
-
-## R
-
-```{r, echo=FALSE}
-t.test(fishlength_r,
-       mu = 20,
-       alternative = "two.sided")
-```
+In the output:
 
 -   The 1st line gives the name of the test and the 2nd line reminds you what the dataset was called
 -   The 3rd line contains the three key outputs from the test:
@@ -458,31 +429,43 @@ t.test(fishlength_r,
 
 ## Python
 
-```{python, echo=FALSE}
-stats.ttest_1samp(fishlength_py.length,
-                  popmean = 20, 
-                  alternative = "two-sided")
+```{python}
+pg.ttest(x = fishlength_py.length,
+         y = 20,
+         alternative = "two-sided").round(3)
 ```
 
-The output is very minimal. The 1st number in brackets is the t-value and the 2nd number is the p-value
+- the `x` argument must be a numerical series of data values
+- the `y` argument must be a number and is the mean to be tested under the null hypothesis
+- the `alternative` argument defines the alternative hypothesis (we have no expectation that the fish length is smaller or larger than 20, if the null hypothesis does not hold up)
+- with `.round(3)` we're rounding the outcome to 3 digits
+
+In the output:
+
+We're not focussing on _all_ of the output just yet, but
+
+- `T` gives us the value of the t-statistic
+- `dof` gives us the degrees of freedom (we'll need this for reporting)
+- `pval` gives us the p-value
 :::
 
 The p-value is what we're mostly interested in. It gives the probability of us getting a sample such as ours if the null hypothesis were actually true.
 
-So:
-
+::: {.callout-important}
+## p-value interpretation
 -   a high p-value means that there is a high probability of observing a sample such as ours and the null hypothesis is probably true whereas
 -   a low p-value means that there is a low probability of observing a sample such as ours and the null hypothesis is probably not true.
 
 It is important to realise that the p-value is just an indication and there is no absolute certainty here in this interpretation.
 
-People, however like more definite answers and so we pick an artificial probability threshold (called a significance level) in order to be able to say something more decisive. The standard significance level is 0.05 and since our p-value is smaller than this we choose to say that "it is very unlikely that we would have this particular sample if the null hypothesis were true". Consequently, we can reject our null hypothesis and state that:
+People, however like more definite answers and so we pick an artificial probability threshold (called a significance level) in order to be able to say something more decisive. The standard significance level is 0.05 and since our p-value is smaller than this we choose to say that "it is very unlikely that we would have this particular sample if the null hypothesis were true".
+:::
+
+In this case the p-value is much smaller than 0.05, so we reject our null hypothesis and state that:
 
 > A one-sample t-test indicated that the mean body length of male guppies ($\mu$ = 18.29mm) differs significantly from 20 mm (t = -3.55, df = 28, p = 0.0014).
 
 The above sentence is an adequate concluding statement for this test and is what we would write in any paper or report. Note that we have included (in brackets) information on the actual mean value of our group($\mu$ = 18.29mm), the test statistic (t = -3.55), the degrees of freedom (df = 28), and the p-value (p = 0.0014). In some journals you are only required to report whether the p-value is less than the critical value (e.g. p \< 0.05) but I would always recommend reporting the actual p-value obtained.
-
-Please feel free to ask a demonstrator if any aspect of this section is unclear as this does form the core of classical hypothesis testing and the logic here applies to all of the rest of the tests.
 
 ## Exercise: gastric juices
 
@@ -592,7 +575,7 @@ We can look at the histogram and box plot of the data:
 )
 ```
 
-Python (or `plotnine` in particular) gets a bit cranky if you try to create a `geom_boxplot` but do not define the `x` aesthetic. Hence us putting it as `1`. The value is meaningless, however.
+Python (or `plotnine` in particular) gets a bit cranky if you try to create a `geom_boxplot` but do not define the `x` aesthetic. Hence us putting it as `1`. The value has no numerical meaning, however.
 :::
 
 There are only 8 data points, so the histogram is rather uninformative. Thankfully the box plot is a bit more useful here. We can see:
@@ -637,7 +620,7 @@ qqline(dissolving_r$dissolving_time)
 
 ```{python}
 # Perform Shapiro-Wilk test to check normality
-stats.shapiro(dissolving_py.dissolving_time)
+pg.normality(dissolving_py.dissolving_time)
 ```
 
 ```{python, results='hide'}
@@ -682,9 +665,9 @@ t.test(dissolving_r$dissolving_time,
 ## Python
 
 ```{python}
-stats.ttest_1samp(dissolving_py.dissolving_time,
-                  popmean = 45, 
-                  alternative = "two-sided")
+pg.ttest(x = dissolving_py.dissolving_time,
+         y = 45,
+         alternative = "two-sided").round(3)
 ```
 :::
 
