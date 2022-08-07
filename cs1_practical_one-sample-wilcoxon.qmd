@@ -17,9 +17,7 @@ source(file = "setup.R")
 ```{python}
 #| echo: false
 #| message: false
-from plotnine import *
-from scipy import stats
-import pandas as pd
+from setup import *
 ```
 
 ```{r}
@@ -45,6 +43,7 @@ This test also considers a single sample, however for this test (in contrast to 
 
 ::: {.callout-note collapse="true"}
 ## Click to expand
+
 ::: panel-tabset
 ## tidyverse
 
@@ -69,11 +68,11 @@ This test also considers a single sample, however for this test (in contrast to 
 |:--------------|:--------------------------------------------------|
 | `plotnine`    | The Python equivalent of `ggplot2`.               |
 | `pandas`      | A Python data analysis and manipulation tool.     |
-| `scipy.stats` | A Python module containing statistical functions. |
+| `pingouin` | A Python module developed to have simple yet exhaustive stats functions |
 
-| Functions                | Description                              |
-|:-------------------------|:-----------------------------------------|
-| `scipy.stats.wilcoxon()` | Calculate the Wilcoxon signed-rank test. |
+| Functions                                                                                              | Description                |
+|:---------------------------|:-------------------------------------------|
+| [`pingouin.wilcoxon()`](https://pingouin-stats.org/generated/pingouin.wilcoxon.html#pingouin.wilcoxon) | Wilcoxon signed-rank test. |
 :::
 :::
 
@@ -238,14 +237,14 @@ The syntax is identical to the one-sample t-test we carried out earlier.
 ## Python
 
 ```{python}
-stats.wilcoxon(fishlength_py.length - 20,
-               alternative = "two-sided")
+pg.wilcoxon(fishlength_py.length - 20,
+            alternative = "two-sided")
 ```
 
 The syntax is similar to what we did earlier:
 
 -   The 1st argument we give to the `wilcoxon()` function is an array of the differences between our data points and the median to be tested under the null hypothesis, i.e. our data points (`fishlength_py.length`) minus the test median (20, in this case).
--   The 2nd argument gives us the type of alternative hypothesis and must be one of "two-sided", "larger", or "smaller". This is in contrast to the 1-sample t-test in Python that can only mange two-sided alternative hypotheses.
+-   The 2nd argument gives us the type of alternative hypothesis and must be one of "two-sided", "larger", or "smaller".
 :::
 
 Again, the p-value is what we're most interested in. It gives the probability of us getting a sample such as ours if the null hypothesis were actually true. So, in this case since our p-value is less than 0.05 we can reject our null hypothesis and state that:
@@ -302,8 +301,8 @@ wilcox.test(dissolving_r$dissolving_time,
 ## Python
 
 ```{python}
-stats.wilcoxon(dissolving_py.dissolving_time - 45,
-               alternative = "two-sided")
+pg.wilcoxon(dissolving_py.dissolving_time - 45,
+            alternative = "two-sided")
 ```
 :::
 

@@ -17,9 +17,7 @@ source(file = "setup.R")
 ```{python}
 #| echo: false
 #| message: false
-from plotnine import *
-from scipy import stats
-import pandas as pd
+from setup import *
 ```
 
 ```{r}
@@ -49,6 +47,7 @@ This test also compares two samples, however for this test (in contrast to Stude
 
 ::: {.callout-note collapse="true"}
 ## Click to expand
+
 ::: panel-tabset
 ## tidyverse
 
@@ -72,12 +71,12 @@ This test also compares two samples, however for this test (in contrast to Stude
 | Libraries     | Description                                       |
 |:--------------|:--------------------------------------------------|
 | `pandas`      | A Python data analysis and manipulation tool.     |
-| `scipy.stats` | A Python module containing statistical functions. |
+| `pingouin` | A Python module developed to have simple yet exhaustive stats functions. |
 
 | Functions                    | Description                                                         |
 |:-----------------------------------|:-----------------------------------|
 | `pandas.DataFrame.pivot()`   | Return reshaped DataFrame organised by given index / column values. |
-| `scipy.stats.mannwhitneyu()` | Calculate the Mann-Whitney U test|
+| [`pingouin.mwu()`](https://pingouin-stats.org/generated/pingouin.mwu.html#pingouin.mwu)| Performs the Mann-Whitney U test.|                                 |
 :::
 :::
 
@@ -143,11 +142,11 @@ After the warning message:
 
 Before we can implement the Mann-Whitney U test, we need to reformat our data a bit.
 
-The `stats.mannwhitneyu()` function requires the numerical input for the two groups it needs to compare.
+The `pg.mwu()` function requires the numerical input for the two groups it needs to compare.
 
 The easiest way is to reformat our data from the *long* format where all the data are stacked on top of one another to the *wide* format, where the `length` values are in separate columns for the two rivers.
 
-We can do this with the `pd.pivot()` function. We save the output in a new object and then access the values as required. It keeps all the data separate, meaning that there will be missing values `NaN` in this format. The `stats.mannwhitneyu()` function doesn't ignore missing values by default and we can specify this in the `nan_policy`, by setting this argument to `omit`.
+We can do this with the `pd.pivot()` function. We save the output in a new object and then access the values as required. It keeps all the data separate, meaning that there will be missing values `NaN` in this format. The `pg.mwu()` function ignores missing values by default.
 
 ```{python}
 # reformat the data into a 'wide' format
@@ -162,9 +161,8 @@ rivers_py_wide.head()
 ```{python}
 # perform the Mann-Whitney U test
 # ignoring the missing values
-stats.mannwhitneyu(rivers_py_wide['Aripo'],
-                   rivers_py_wide['Guanapo'],
-                   nan_policy = 'omit')
+pg.mwu(rivers_py_wide['Aripo'],
+       rivers_py_wide['Guanapo'])
 ```
 :::
 
@@ -231,9 +229,8 @@ turtle_py_wide.head()
 ```{python}
 # perform the Mann-Whitney U test
 # ignoring the missing values
-stats.mannwhitneyu(turtle_py_wide['Male'],
-                   turtle_py_wide['Female'],
-                   nan_policy = 'omit')
+pg.mwu(turtle_py_wide['Male'],
+       turtle_py_wide['Female'])
 ```
 :::
 

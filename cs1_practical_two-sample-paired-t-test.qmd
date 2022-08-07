@@ -17,9 +17,7 @@ source(file = "setup.R")
 ```{python}
 #| echo: false
 #| message: false
-from plotnine import *
-from scipy import stats
-import pandas as pd
+from setup import *
 ```
 
 A paired t-test is used when we have two samples of continuous data that can be paired (examples of these sort of data would be weights of individuals before and after a diet). This test is applicable if the number of paired points within the samples is large (\>30) or, if the number of points is small, then this test also works when the parent distributions are normally distributed.
@@ -28,11 +26,12 @@ A paired t-test is used when we have two samples of continuous data that can be 
 
 ::: {.callout-note collapse="true"}
 ## Click to expand
+
 ::: panel-tabset
 ## tidyverse
 
 | Libraries            | Description                                                                                                       |
-|:----------------------|:------------------------------------------------|
+|:------------------------|:----------------------------------------------|
 | `library(tidyverse)` | A collection of R packages designed for data science                                                              |
 | `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
 
@@ -57,19 +56,20 @@ A paired t-test is used when we have two samples of continuous data that can be 
 
 ## Python
 
-| Libraries     | Description                                       |
-|:--------------|:--------------------------------------------------|
-| `plotnine`    | The Python equivalent of `ggplot2`.               |
-| `pandas`      | A Python data analysis and manipulation tool.     |
-| `scipy.stats` | A Python module containing statistical functions. |
+| Libraries  | Description                                                             |
+|:-------------------|:---------------------------------------------------|
+| `plotnine` | The Python equivalent of `ggplot2`.                                     |
+| `pandas`   | A Python data analysis and manipulation tool.                           |
+| `pingouin` | A Python module developed to have simple yet exhaustive stats functions |
 
-| Functions                       | Description                                                         |
+| Functions                                                                                     | Description                                                         |
 |:-----------------------------------|:-----------------------------------|
-| `pandas.DataFrame.read_csv`     | Reads in a `.csv` file|
-| `pandas.DataFrame.pivot()`      | Return reshaped DataFrame organised by given index / column values. |
-| `scipy.stats.shapiro()`         | Performs the Shapiro-Wilk test|
-| `plotnine.stats.stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.         |
-| `plotnine.stats.stat_qq_line()` | Adds a comparison line to the Q-Q plot.|
+| `pandas.DataFrame.read_csv`                                                                   | Reads in a `.csv` file                                              |
+| `pandas.DataFrame.pivot()`                                                                    | Return reshaped DataFrame organised by given index / column values. |
+| [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)        | Performs the Shapiro-Wilk test for normality.                       |
+| [`pingouin.ttest()`](https://pingouin-stats.org/generated/pingouin.ttest.html#pingouin.ttest) | Performs a t-test                                                   |
+| `plotnine.stats.stat_qq()`                                                                    | Plots a Q-Q plot for comparison with a normal distribution.         |
+| `plotnine.stats.stat_qq_line()`                                                               | Adds a comparison line to the Q-Q plot.                             |
 :::
 :::
 
@@ -338,16 +338,19 @@ From our perspective the value of interested is in the `p` column (p-value = 5.2
 
 ## Python
 
-Python has a dedicated function for testing the null hypothesis that two related or repeated samples have identical average (expected) values: `stats.ttest_rel()`.
+To perform a paired t-test we can use the same `pg.ttest()` as before, but set the argument `paired = True`.
+
+Annoyingly, the output is not entirely visible because the data frame is too wide. To deal with that, we can simply transpose it with `transpose()`
 
 ```{python}
-stats.ttest_rel(cortisol_diff_py["evening"],
-cortisol_diff_py["morning"],
-alternative = "two-sided")
+pg.ttest(cortisol_diff_py["evening"],
+         cortisol_diff_py["morning"],
+         alternative = "two-sided",
+         paired = True).transpose()
 ```
+:::
 
 Since the p-value = 5.29 $\times$ 10<sup>-5</sup>) and thus substantially less than 0.05 we can reject the null hypothesis and state:
-:::
 
 > A two-tailed, paired t-test indicated that the average cortisol level in adult females differed significantly between the morning (313.5 nmol/l) and the evening (197.4 nmol/l) (t = -5.2, df = 19, p = 5.3 \* 10<sup>-5</sup>).
 
@@ -405,7 +408,7 @@ Perform Shapiro-Wilk test:
 
 ```{python}
 # perform Shapiro-Wilk test on cortisol differences
-stats.shapiro(cortisol_diff_py["cortisol_change"])
+pg.normality(cortisol_diff_py["cortisol_change"])
 ```
 
 Create Q-Q plot:

@@ -29,12 +29,12 @@ from setup import *
 ## tidyverse
 
 | Libraries            | Description                                                                                                       |
-|:-----------------------|:----------------------------------------------|
+|:------------------------|:----------------------------------------------|
 | `library(tidyverse)` | A collection of R packages designed for data science                                                              |
 | `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
 
 | Functions                 | Description                                                                          |
-|:-----------------------|:----------------------------------------------|
+|:------------------------|:----------------------------------------------|
 | `rstatix::t_test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections. |
 | `rstatix::shapiro_test()` | Performs a Shapiro-Wilk test for normality.                                          |
 | `ggplot2::stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.                          |
@@ -43,7 +43,7 @@ from setup import *
 ## R
 
 | Functions        | Description                                                                          |
-|:-----------------------|:----------------------------------------------|
+|:------------------------|:----------------------------------------------|
 | `t.test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections. |
 | `qqnorm()`       | Plots a Q-Q plot for comparison with a normal distribution.                          |
 | `qqline()`       | Adds a comparison line to the Q-Q plot.                                              |
@@ -53,16 +53,16 @@ from setup import *
 
 | Libraries     | Description                                       |
 |:--------------|:--------------------------------------------------|
-| `plotnine`    | The Python equivalent of `ggplot2`.               |
-| `pandas`      | A Python data analysis and manipulation tool.     |
-| `scipy.stats` | A Python module containing statistical functions. |
+| `plotnine`    | The Python equivalent of `ggplot2`.|
+| `pandas`      | A Python data analysis and manipulation tool.|
+| `pingouin` | A Python module developed to have simple yet exhaustive stats functions. |
 
-| Functions                       | Description                                                 |
-|:-------------------------|:---------------------------------------------|
-| [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)| Perform the Shapiro-Wilk test for normality.|
-| [`pingouin.ttest()`](https://pingouin-stats.org/generated/pingouin.ttest.html#pingouin.ttest)| Calculate the T-test for the mean of ONE group of scores.   |
-| `plotnine.stats.stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution. |
-| `plotnine.stats.stat_qq_line()` | Adds a comparison line to the Q-Q plot.                     |
+| Functions                                                                                     | Description                                                 |
+|:-------------------------|:--------------------------------------------|
+| [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)| Performs the Shapiro-Wilk test for normality.|
+| [`pingouin.ttest()`](https://pingouin-stats.org/generated/pingouin.ttest.html#pingouin.ttest) | Performs a t-test|
+| `plotnine.stats.stat_qq()`| Plots a Q-Q plot for comparison with a normal distribution. |
+| `plotnine.stats.stat_qq_line()`| Adds a comparison line to the Q-Q plot.|
 :::
 :::
 
@@ -359,9 +359,10 @@ We take the `length` values from the `fishlength_py` data frame and pass that to
 ```{python}
 pg.normality(fishlength_py.length)
 ```
-- the `W` column gives us the W-statistic
-- the `pval` column gives us the p-value
-- the `normal` column gives us the outcome of the test in `True/False`
+
+-   the `W` column gives us the W-statistic
+-   the `pval` column gives us the p-value
+-   the `normal` column gives us the outcome of the test in `True/False`
 :::
 
 As the p-value is bigger than 0.05 (say) then we can say that there is insufficient evidence to reject the null hypothesis that the sample came from a normal distribution.
@@ -435,24 +436,25 @@ pg.ttest(x = fishlength_py.length,
          alternative = "two-sided").round(3)
 ```
 
-- the `x` argument must be a numerical series of data values
-- the `y` argument must be a number and is the mean to be tested under the null hypothesis
-- the `alternative` argument defines the alternative hypothesis (we have no expectation that the fish length is smaller or larger than 20, if the null hypothesis does not hold up)
-- with `.round(3)` we're rounding the outcome to 3 digits
+-   the `x` argument must be a numerical series of data values
+-   the `y` argument must be a number and is the mean to be tested under the null hypothesis
+-   the `alternative` argument defines the alternative hypothesis (we have no expectation that the fish length is smaller or larger than 20, if the null hypothesis does not hold up)
+-   with `.round(3)` we're rounding the outcome to 3 digits
 
 In the output:
 
-We're not focussing on _all_ of the output just yet, but
+We're not focussing on *all* of the output just yet, but
 
-- `T` gives us the value of the t-statistic
-- `dof` gives us the degrees of freedom (we'll need this for reporting)
-- `pval` gives us the p-value
+-   `T` gives us the value of the t-statistic
+-   `dof` gives us the degrees of freedom (we'll need this for reporting)
+-   `pval` gives us the p-value
 :::
 
 The p-value is what we're mostly interested in. It gives the probability of us getting a sample such as ours if the null hypothesis were actually true.
 
-::: {.callout-important}
+::: callout-important
 ## p-value interpretation
+
 -   a high p-value means that there is a high probability of observing a sample such as ours and the null hypothesis is probably true whereas
 -   a low p-value means that there is a low probability of observing a sample such as ours and the null hypothesis is probably not true.
 

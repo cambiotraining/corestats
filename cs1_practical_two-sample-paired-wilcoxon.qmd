@@ -17,9 +17,7 @@ source(file = "setup.R")
 ```{python}
 #| echo: false
 #| message: false
-from plotnine import *
-from scipy import stats
-import pandas as pd
+from setup import *
 ```
 
 ```{r}
@@ -52,7 +50,7 @@ A Wilcoxon signed-rank test is an alternative to a paired t-test. It does not re
 ## tidyverse
 
 | Libraries            | Description                                                                                                       |
-|:-----------------------|:-----------------------------------------------|
+|:-----------------------|:----------------------------------------------|
 | `library(tidyverse)` | A collection of R packages designed for data science                                                              |
 | `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
 
@@ -81,15 +79,15 @@ A Wilcoxon signed-rank test is an alternative to a paired t-test. It does not re
 |:--------------|:--------------------------------------------------|
 | `plotnine`    | The Python equivalent of `ggplot2`.               |
 | `pandas`      | A Python data analysis and manipulation tool.     |
-| `scipy.stats` | A Python module containing statistical functions. |
+| `pingouin` | A Python module developed to have simple yet exhaustive stats functions |
 
 | Functions                       | Description                                                                                |
 |:-----------------------------------|:-----------------------------------|
 | `pandas.DataFrame.read_csv`     | Reads in a `.csv` file                                                                     |
 | `scipy.stats.wilcoxon()`        | Tests the null hypothesis that two related paired samples come from the same distribution. |
-| `scipy.stats.shapiro()`         | Performs the Shapiro-Wilk test|
+| `scipy.stats.shapiro()`         | Performs the Shapiro-Wilk test                                                             |
 | `plotnine.stats.stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.                                |
-| `plotnine.stats.stat_qq_line()` | Adds a comparison line to the Q-Q plot.|
+| `plotnine.stats.stat_qq_line()` | Adds a comparison line to the Q-Q plot.                                                    |
 :::
 :::
 

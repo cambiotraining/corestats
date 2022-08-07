@@ -17,9 +17,7 @@ source(file = "setup.R")
 ```{python}
 #| echo: false
 #| message: false
-from plotnine import *
-from scipy import stats
-import pandas as pd
+from setup import *
 ```
 
 ## Libraries and functions
@@ -62,11 +60,11 @@ import pandas as pd
 
 ## Python
 
-| Libraries     | Description                                       |
-|:--------------|:--------------------------------------------------|
-| `plotnine`    | The Python equivalent of `ggplot2`.               |
-| `pandas`      | A Python data analysis and manipulation tool.     |
-| `scipy.stats` | A Python module containing statistical functions. |
+| Libraries  | Description                                                              |
+|:-----------------|:-----------------------------------------------------|
+| `plotnine` | The Python equivalent of `ggplot2`.                                      |
+| `pandas`   | A Python data analysis and manipulation tool.                            |
+| `pingouin` | A Python module developed to have simple yet exhaustive stats functions. |
 
 | Functions                       | Description                                                             |
 |:-----------------------------------|:-----------------------------------|
@@ -75,10 +73,9 @@ import pandas as pd
 | `pandas.DataFrame.describe()`   | Gives summary statistics                                                |
 | `pandas.DataFrame.groupby()`    | Group DataFrame using a mapper or by a Series of columns                |
 | `pandas.DataFrame.query()`      | Query the columns of a DataFrame with a boolean expression              |
-| `scipy.stats.shapiro()`         | Performs the Shapiro-Wilk test                                          |
-| `scipy.stats.levene()`          | Performs Levene's test for equality of variance                         |
-| `scipy.stats.bartlett()`        | Performs Bartlett's test for equality of variance                       |
-| `scipy.stats.ttest_ind()`       | Calculate the T-test for the means of two independent samples of scores |
+| [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)| Performs the Shapiro-Wilk test for normality.|
+|[`pingouin.homoscedasticity()`](https://pingouin-stats.org/generated/pingouin.homoscedasticity.html#pingouin.homoscedasticity)|Checks for equality of variance.|
+| [`pingouin.ttest()`](https://pingouin-stats.org/generated/pingouin.ttest.html#pingouin.ttest) | Performs a t-test|
 | `plotnine.stats.stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.             |
 | `plotnine.stats.stat_qq_line()` | Adds a comparison line to the Q-Q plot.                                 |
 :::
@@ -271,31 +268,16 @@ shapiro.test(uns_rivers$Guanapo)
 
 ## Python
 
-Before we can implement the Mann-Whitney U test, we need to reformat our data a bit.
+To perform a Shapiro-Wilk test we can use the `normality()` function from `pingouin`. We can give it the data in the original 'long' format, where we specify:
 
-The `stats.shapiro()` function requires the numerical input for the two groups it needs to compare.
-
-The easiest way is to reformat our data from the *long* format where all the data are stacked on top of one another to the *wide* format, where the `length` values are in separate columns for the two rivers.
-
-We can do this with the `pd.pivot()` function. We save the output in a new object called `rivers_py_wide` and then access the values as required. It keeps all the data separate, meaning that there will be missing values `NaN` in this format. The `stats.shapiro()` function doesn't ignore missing values by default, so we remove them using `.dropna()`.
+* `dv` = dependent variable, `length`
+* `group` = grouping variable, `river
+* `data` = data frame
 
 ```{python}
-# reformat the data into a 'wide' format
-rivers_py_wide = pd.pivot(rivers_py,
-                          columns = 'river',
-                          values = 'length')
-      
-# have a look at the format
-rivers_py_wide.head()
-```
-
-Perform the Shapiro-Wilk test on the individual groups, omitting the missing values:
-
-```{python}
-# perform the Shapiro test
-# ignoring the missing values
-stats.shapiro(rivers_py_wide['Aripo'].dropna())
-stats.shapiro(rivers_py_wide['Guanapo'].dropna())
+pg.normality(dv = "length",
+             group = "river",
+             data = rivers_py)
 ```
 :::
 
@@ -404,13 +386,15 @@ The key bit of information is the 3rd line under the text `Pr(>F)`. This is the 
 
 ## Python
 
-Levene's test is included in the `stats` module in `scipy`. It requires two vectors as input, so we need to subset our data for each river:
+To test for equality of variance, we can use the `homoscedasticity()` function from `pingouin`.
+
+Note that, contrary to R, we specify the type of test in the `method` argument. The default is `"levene"`, assuming that data are _not_ normally distributed.
 
 ```{python}
-aripo = rivers_py.query('river == "Aripo"')["length"]
-guanapo = rivers_py.query('river == "Guanapo"')["length"]
-
-stats.levene(aripo, guanapo)
+pg.homoscedasticity(dv = "length",
+                    group = "river",
+                    method = "levene",
+                    data = rivers_py)
 ```
 :::
 
@@ -447,11 +431,11 @@ bartlett.test(length ~ river, data = rivers_r)
 The relevant p-value is given on the 3rd line.
 
 ## Python
-
-We've already subset our data into `guanapo` and `aripo`, vectors that contain our data.
-
 ```{python}
-stats.bartlett(aripo, guanapo)
+pg.homoscedasticity(dv = "length",
+                    group = "river",
+                    method = "bartlett",
+                    data = rivers_py)
 ```
 :::
 
@@ -512,10 +496,18 @@ So, how do we interpret the results?
 
 ## Python
 
+The `ttest()` function in `pingouin` needs two vectors as input, so we split the data as follows:
+
 ```{python}
-stats.ttest_ind(aripo, guanapo,
-                alternative = "two-sided",
-                equal_var = True)
+aripo = rivers_py.query('river == "Aripo"')["length"]
+guanapo = rivers_py.query('river == "Guanapo"')["length"]
+```
+
+Next, we perform the t-test. We specify that the variance are equal by setting `correction = False`. We also `transpose()` the data, so we can actually see the entire output.
+
+```{python}
+pg.ttest(aripo, guanapo,
+         correction = False).transpose()
 ```
 :::
 
@@ -693,8 +685,9 @@ turtle_female = turtle_py.query('sex == "Female"')["serum"]
 ```
 
 ```{python}
-stats.shapiro(turtle_male)
-stats.shapiro(turtle_female)
+pg.normality(dv = "serum",
+             group = "sex",
+             data = turtle_py)
 ```
 :::
 
@@ -789,13 +782,19 @@ leveneTest(serum ~ sex, turtle_r)
 Bartlett's test gives us:
 
 ```{python}
-stats.bartlett(turtle_male, turtle_female)
+pg.homoscedasticity(dv = "serum",
+                    group = "sex",
+                    method = "bartlett",
+                    data = turtle_py)
 ```
 
 and Levene's test gives us:
 
 ```{python}
-stats.levene(turtle_male, turtle_female)
+pg.homoscedasticity(dv = "serum",
+                    group = "sex",
+                    method = "levene",
+                    data = turtle_py)
 ```
 :::
 
@@ -830,9 +829,9 @@ t.test(serum ~ sex,
 ## Python
 
 ```{python}
-stats.ttest_ind(turtle_male, turtle_female,
+pg.ttest(turtle_female, turtle_male,
                 alternative = "two-sided",
-                equal_var = True)
+                correction = False).transpose()
 ```
 :::
 
