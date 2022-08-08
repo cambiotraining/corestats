@@ -50,7 +50,7 @@ A Wilcoxon signed-rank test is an alternative to a paired t-test. It does not re
 ## tidyverse
 
 | Libraries            | Description                                                                                                       |
-|:-----------------------|:----------------------------------------------|
+|:------------------------|:----------------------------------------------|
 | `library(tidyverse)` | A collection of R packages designed for data science                                                              |
 | `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
 
@@ -75,19 +75,19 @@ A Wilcoxon signed-rank test is an alternative to a paired t-test. It does not re
 
 ## Python
 
-| Libraries     | Description                                       |
-|:--------------|:--------------------------------------------------|
-| `plotnine`    | The Python equivalent of `ggplot2`.               |
-| `pandas`      | A Python data analysis and manipulation tool.     |
+| Libraries  | Description                                                             |
+|:-----------------|:-----------------------------------------------------|
+| `plotnine` | The Python equivalent of `ggplot2`.                                     |
+| `pandas`   | A Python data analysis and manipulation tool.                           |
 | `pingouin` | A Python module developed to have simple yet exhaustive stats functions |
 
 | Functions                       | Description                                                                                |
 |:-----------------------------------|:-----------------------------------|
-| `pandas.DataFrame.read_csv`     | Reads in a `.csv` file                                                                     |
-| `scipy.stats.wilcoxon()`        | Tests the null hypothesis that two related paired samples come from the same distribution. |
-| `scipy.stats.shapiro()`         | Performs the Shapiro-Wilk test                                                             |
-| `plotnine.stats.stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.                                |
-| `plotnine.stats.stat_qq_line()` | Adds a comparison line to the Q-Q plot.                                                    |
+| [`pandas.read_csv`](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html)| Reads in a `.csv` file|
+| [`pingouin.wilcoxon()`](https://pingouin-stats.org/generated/pingouin.wilcoxon.html#pingouin.wilcoxon)| Tests the null hypothesis that two related paired samples come from the same distribution. |
+| [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)| Performs the Shapiro-Wilk test for normality.|
+| [`plotnine.stats.stat_qq()`](https://plotnine.readthedocs.io/en/stable/generated/plotnine.stats.stat_qq.html)| Plots a Q-Q plot for comparison with a normal distribution.|
+| [`plotnine.stats.stat_qq_line()`](https://plotnine.readthedocs.io/en/stable/generated/plotnine.stats.stat_qq_line.html) | Adds a comparison line to the Q-Q plot.|
 :::
 :::
 
@@ -146,9 +146,10 @@ wilcox.test(cortisol ~ time,
 We'll use the wide format data set that we created previously:
 
 ```{python}
-stats.wilcoxon(cortisol_diff_py["evening"],
-               cortisol_diff_py["morning"],
-               alternative = "two-sided")
+pg.wilcoxon(x = cortisol_diff_py["evening"],
+            y = cortisol_diff_py["morning"],
+            alternative = "two-sided",
+            correction = True)
 ```
 :::
 
@@ -167,7 +168,7 @@ Using the following data on deer legs (yes, really!), test the null hypothesis t
 #| warning: false
 #| message: false
 # deer leg length (cm)
-read_csv("data/examples/cs1-deer.csv") %>% 
+read_csv("data/CS1-deer.csv") %>% 
   pivot_wider(names_from = leg, values_from = length) %>% 
   select(-id)
 ```
@@ -175,13 +176,12 @@ read_csv("data/examples/cs1-deer.csv") %>%
 Do these results provide any evidence to suggest that fore- and hind-leg length differ in deer?
 
 1.  Write down the null and alternative hypotheses
-2.  Choose a tidy representation for the data and create a csv file (I'll stop asking you to do this from now on...)
-3.  Import the data into R
-4.  Summarise and visualise the data
-5.  Check your assumptions (normality and variance) using appropriate tests
-6.  Discuss with your (virtual) neighbour which test is most appropriate?
-7.  Perform the test
-8.  Write down a sentence that summarises the results that you have found
+2.  Import the data from `data/CS1-deer.csv`
+3.  Summarise and visualise the data
+4.  Check your assumptions (normality and variance) using appropriate tests
+5.  Discuss with your (virtual) neighbour which test is most appropriate?
+6.  Perform the test
+7.  Write down a sentence that summarises the results that you have found
 
 ::: {.callout-caution collapse="true"}
 ## Answer
@@ -203,7 +203,7 @@ First of all, we need to get the data into a tidy format (every variable is a co
 #| message: false
 #| warning: false
 # load the data
-deer <- read_csv("data/examples/cs1-deer.csv")
+deer <- read_csv("data/CS1-deer.csv")
 
 # have a look
 deer
@@ -264,7 +264,7 @@ deer %>%
 ## R
 
 ```{r}
-deer_r <- read.csv("data/examples/cs1-deer.csv")
+deer_r <- read.csv("data/CS1-deer.csv")
 
 head(deer_r)
 ```
@@ -329,7 +329,7 @@ Again, as far as I am aware of, there isn't a straightforward method of plotting
 #| message: false
 #| warning: false
 # load the data
-deer_py = pd.read_csv("data/examples/cs1-deer.csv")
+deer_py = pd.read_csv("data/CS1-deer.csv")
 
 # have a look
 deer_py.head()
@@ -344,27 +344,35 @@ Let's look at the data and see what we can see.
 deer_py.describe()
 ```
 
-We can also summarise by leg type, but we have to put our data into a wide format first:
+We can also summarise by leg type:
+
+```{python}
+deer_py.groupby("leg")["length"].describe()
+```
+
+It might be more helpful to look at the _difference_ in leg length. In order to calculate that, we need to reformat our data into a 'wide' format first:
 
 ```{python}
 # reformat the data into a 'wide' format
-leg_diff_py = pd.pivot(deer_py, index = "id", columns = "leg", values = "length")
+leg_diff_py = pd.pivot(deer_py,
+                       index = "id",
+                       columns = "leg",
+                       values = "length")
 
-# add a new column with difference between
-# evening and morning cortisol levels
-leg_diff_py["leg_diff"] = leg_diff_py["hindleg"].subtract(leg_diff_py["foreleg"])
-      
 # have a look at the format
 leg_diff_py.head()
 ```
 
-Create the summary:
+Next, we can add a new column `leg_diff` that contains the leg difference:
 
 ```{python}
-leg_diff_py.describe()
+# add a new column with difference between
+# hind and fore leg length
+leg_diff_py["leg_diff"] = leg_diff_py["hindleg"].subtract(leg_diff_py["foreleg"])
+ 
 ```
 
-We can visualise this difference:
+Finally, we can visualise this:
 
 ```{python}
 #| results: hide
@@ -443,7 +451,7 @@ Shapiro-Wilk test:
 
 ```{python}
 # perform Shapiro-Wilk test on leg length differences
-stats.shapiro(leg_diff_py["leg_diff"])
+pg.normality(leg_diff_py["leg_diff"])
 ```
 
 Create the Q-Q plot:
@@ -461,6 +469,8 @@ Create the Q-Q plot:
 :::
 
 Both our Shapiro-Wilk test and our Q-Q plot suggest that the difference data aren't normally distributed, which rules out a paired t-test. We should therefore consider a paired Wilcoxon test next. Remember that this test requires that the distribution of differences be symmetric, whereas our box plot from before suggested that the data were very much skewed.
+
+This means that we're not able to perform a paired Wilcoxon test either!
 
 ### Conclusions
 
