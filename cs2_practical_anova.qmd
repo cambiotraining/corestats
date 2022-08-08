@@ -50,7 +50,7 @@ Analysis of variance or ANOVA is a test than can be used when we have multiple s
 ## tidyverse
 
 | Libraries               | Description                                                                                                       |
-|:------------------------|:------------------------------------------------------------------------------------------------------------------|
+|:---------------|:-------------------------------------------------------|
 | `library(tidyverse)`    | A collection of R packages designed for data science                                                              |
 | `library(rstatix)`      | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
 | `library(ggResidpanel)` | Creates diagnostic plots using `ggplot2`                                                                          |
@@ -63,7 +63,7 @@ Analysis of variance or ANOVA is a test than can be used when we have multiple s
 ## R
 
 | Function         | Description                                                 |
-|:-----------------|:------------------------------------------------------------|
+|:-----------------|:-----------------------------------------------------|
 | `lm()`           | Fits a linear model                                         |
 | `anova()`        | Carries out an ANOVA on a linear model                      |
 | `qqnorm()`       | Plots a Q-Q plot for comparison with a normal distribution. |
@@ -73,20 +73,23 @@ Analysis of variance or ANOVA is a test than can be used when we have multiple s
 ## Python
 
 | Libraries     | Description                                                                                |
-|:--------------|:-------------------------------------------------------------------------------------------|
-| `plotnine`    | The Python equivalent of `ggplot2`.                                                        |
-| `pandas`      | A Python data analysis and manipulation tool.                                              |
-| `scipy.stats` | A Python module containing statistical functions.                                          |
-| `statsmodels` | A Python module for statistical models, conducting tests and statistical data exploration. |
+|:--------------|:--------------------------------------------------------|
+| [`pandas`](https://pandas.pydata.org/docs/getting_started/index.html) | A Python data analysis and manipulation tool.|
+| [`pingouin`](https://pingouin-stats.org) | A Python module developed to have simple yet exhaustive stats functions. |
+| [`plotnine`](https://plotnine.readthedocs.io/en/stable/) | The Python equivalent of `ggplot2`.|
+| [`statsmodels`](https://www.statsmodels.org/stable/index.html) | A Python module for statistical models, conducting tests and statistical data exploration. |
 
 | Functions                     | Description                                                |
-|:------------------------------|:-----------------------------------------------------------|
-| `pandas.DataFrame.read_csv`   | Reads in a `.csv` file                                     |
-| `pandas.DataFrame.head()`     | Plots the first few rows                                   |
-| `pandas.DataFrame.describe()` | Gives summary statistics                                   |
-| `pandas.DataFrame.groupby()`  | Group DataFrame using a mapper or by a Series of columns   |
-| `pandas.DataFrame.query()`    | Query the columns of a DataFrame with a boolean expression |
-| `scipy.stats.levene()`        | Performs Levene's test for equality of variance            |
+|:------------------------|:----------------------------------------------|
+| [`pandas.DataFrame.describe()`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html) | Gives summary statistics.|
+| [`pandas.DataFrame.groupby()`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.groupby.html)  | Group DataFrame using a mapper or by a Series of columns   |
+| [`pandas.DataFrame.head()`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.head.html)     | Plots the first few rows of a DataFrame.|
+| [`pandas.DataFrame.query()`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.query.html)    | Query the columns of a DataFrame with a boolean expression |
+| [`pandas.read_csv`](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html)| Reads in a `.csv` file.|
+|[`pingouin.anova()`](https://pingouin-stats.org/generated/pingouin.anova.html#pingouin.anova)| Performs an analysis of variance.|
+|[`pingouin.homoscedasticity()`](https://pingouin-stats.org/generated/pingouin.homoscedasticity.html#pingouin.homoscedasticity)| Tests equality of variance.|
+| [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)| Performs the Shapiro-Wilk test for normality.|
+|[`statsmodels.formula.api.ols`](https://www.statsmodels.org/stable/generated/statsmodels.formula.api.ols.html#statsmodels.formula.api.ols)| Creates a model from a formula and data frame.|
 :::
 :::
 
@@ -315,7 +318,9 @@ shapiro.test(resid_oyster_r)
 
 Unfortunately `pingouin` does not have a straightforward way of extracting residuals (if you know more, please raise an issue!).
 
-So we need to do some statistical gymnastics to get the residuals. I would suggest that you don't worry about the code, just run it and look at the output!
+To get our residuals we use `statsmodels`, a module that provides functions for statistical models. We'll be using this in upcoming sessions, so you'll have a head start!
+
+At this point you shouldn't concern yourself too much with the exact syntax, just run it an have a look.
 
 ::: {.callout-note collapse="true"}
 ## Technical details (optional)
@@ -327,7 +332,7 @@ We also import `stats.models.formula.api` so we can use the formula notation in 
 If you're familiar with this stuff then you can look at the model itself by running `summary(lm_oystercatcher_py)`. But we'll cover all of this in later sessions.
 :::
 
-Eventually, we get the residuals from the linear model with `.resid`.
+We load the modules, define a linear model, create a `fit()` and we get the residuals from the linear model fit with `.resid`.
 
 ```{python}
 #| eval: false

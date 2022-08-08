@@ -77,13 +77,13 @@ A Wilcoxon signed-rank test is an alternative to a paired t-test. It does not re
 
 | Libraries  | Description                                                             |
 |:-----------------|:-----------------------------------------------------|
-| `plotnine` | The Python equivalent of `ggplot2`.                                     |
-| `pandas`   | A Python data analysis and manipulation tool.                           |
-| `pingouin` | A Python module developed to have simple yet exhaustive stats functions |
+| [`pandas`](https://pandas.pydata.org/docs/getting_started/index.html) | A Python data analysis and manipulation tool.|
+| [`pingouin`](https://pingouin-stats.org) | A Python module developed to have simple yet exhaustive stats functions. |
+| [`plotnine`](https://plotnine.readthedocs.io/en/stable/) | The Python equivalent of `ggplot2`.|
 
 | Functions                       | Description                                                                                |
 |:-----------------------------------|:-----------------------------------|
-| [`pandas.read_csv`](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html)| Reads in a `.csv` file|
+| [`pandas.read_csv`](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html)| Reads in a `.csv` file.|
 | [`pingouin.wilcoxon()`](https://pingouin-stats.org/generated/pingouin.wilcoxon.html#pingouin.wilcoxon)| Tests the null hypothesis that two related paired samples come from the same distribution. |
 | [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)| Performs the Shapiro-Wilk test for normality.|
 | [`plotnine.stats.stat_qq()`](https://plotnine.readthedocs.io/en/stable/generated/plotnine.stats.stat_qq.html)| Plots a Q-Q plot for comparison with a normal distribution.|
