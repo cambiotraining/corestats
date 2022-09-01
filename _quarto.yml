@@ -46,6 +46,7 @@ website:
       - section: "Categorical predictors"
         contents:
           - cs2_practical_anova.qmd
+          - cs2_practical_kruskal-wallis.qmd
 
 format:
   html:

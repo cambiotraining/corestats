@@ -1,10 +1,11 @@
 # essential libraries
+library(downlit)
 library(reticulate)
 library(knitr)
 library(tidyverse)
 library(kableExtra)
 library(car)
-#library(dunn.test)
+library(dunn.test)
 library(broom)
 library(rstatix)
 library(patchwork)
