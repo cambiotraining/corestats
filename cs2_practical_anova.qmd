@@ -50,14 +50,15 @@ Analysis of variance or ANOVA is a test than can be used when we have multiple s
 
 | Libraries                                                                     | Description                                                                                                       |
 |:--------------------|:--------------------------------------------------|
-| [`library(tidyverse)`](https://www.tidyverse.org)                             | A collection of R packages designed for data science.                                                             |
-| [`library(rstatix)`](https://rpkgs.datanovia.com/rstatix/)                    | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
-| [`library(ggResidpanel)`](https://goodekat.github.io/ggResidpanel/index.html) | Creates diagnostic plots using `ggplot2`.                                                                         |
+|`library(tidyverse)`| A collection of R packages designed for data science.|
+|`library(rstatix)`| Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
+|`library(ggResidpanel)`| Creates diagnostic plots using `ggplot2`.|
 
-| Library        | Function                                                                                      | Description                  |
+| Library| Function| Description|
 |:-----------------|:-----------------------|:-----------------------------|
-| `rstatix`      | [`get_summary_stats()`](https://rdrr.io/github/kassambara/rstatix/man/get_summary_stats.html) | Computes summary statistics. |
-| `ggResidpanel` | [`resid_panel()`](https://rdrr.io/cran/ggResidpanel/man/resid_panel.html)                     | Creates diagnostic plots.    |
+| `rstatix`| `get_summary_stats()`| Computes summary statistics. |
+| `ggResidpanel` |`resid_panel()`| Creates diagnostic plots.|
+
 
 ## R
 
