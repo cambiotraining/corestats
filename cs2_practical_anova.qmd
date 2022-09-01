@@ -5,7 +5,6 @@ format:
     toc: true
     include-after-body:
       - sync-tabs.html
-engine: knitr
 ---
 
 ```{r}
@@ -49,21 +48,21 @@ Analysis of variance or ANOVA is a test than can be used when we have multiple s
 ::: panel-tabset
 ## tidyverse
 
-| Libraries| Description|
-|:-----------------|:-----------------------------------------------------|
-| [`library(tidyverse)`](https://www.tidyverse.org)| A collection of R packages designed for data science.|
-| [`library(rstatix)`](https://rpkgs.datanovia.com/rstatix/)| Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
-| [`library(ggResidpanel)`](https://goodekat.github.io/ggResidpanel/index.html) | Creates diagnostic plots using `ggplot2`.|
+| Libraries                                                                     | Description                                                                                                       |
+|:--------------------|:--------------------------------------------------|
+| [`library(tidyverse)`](https://www.tidyverse.org)                             | A collection of R packages designed for data science.                                                             |
+| [`library(rstatix)`](https://rpkgs.datanovia.com/rstatix/)                    | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
+| [`library(ggResidpanel)`](https://goodekat.github.io/ggResidpanel/index.html) | Creates diagnostic plots using `ggplot2`.                                                                         |
 
-| Library        | Function              | Description|
-|:---------------|:----------------------|:----------------------------|
-| `rstatix`| [`get_summary_stats()`](https://rdrr.io/github/kassambara/rstatix/man/get_summary_stats.html) | Computes summary statistics. |
-| `ggResidpanel` | [`resid_panel()`](https://rdrr.io/cran/ggResidpanel/man/resid_panel.html)| Creates diagnostic plots.|
+| Library        | Function                                                                                      | Description                  |
+|:-----------------|:-----------------------|:-----------------------------|
+| `rstatix`      | [`get_summary_stats()`](https://rdrr.io/github/kassambara/rstatix/man/get_summary_stats.html) | Computes summary statistics. |
+| `ggResidpanel` | [`resid_panel()`](https://rdrr.io/cran/ggResidpanel/man/resid_panel.html)                     | Creates diagnostic plots.    |
 
 ## R
 
 | Function         | Description                                                 |
-|:------------------|:----------------------------------------------------|
+|:---------------------|:-------------------------------------------------|
 | `lm()`           | Fits a linear model                                         |
 | `anova()`        | Carries out an ANOVA on a linear model                      |
 | `qqnorm()`       | Plots a Q-Q plot for comparison with a normal distribution. |
@@ -73,14 +72,14 @@ Analysis of variance or ANOVA is a test than can be used when we have multiple s
 ## Python
 
 | Libraries                                                             | Description                                                                                |
-|:----------------|:------------------------------------------------------|
+|:-------------------|:---------------------------------------------------|
 | [`pandas`](https://pandas.pydata.org/docs/getting_started/index.html) | A Python data analysis and manipulation tool.                                              |
 | [`pingouin`](https://pingouin-stats.org)                              | A Python module developed to have simple yet exhaustive stats functions.                   |
 | [`plotnine`](https://plotnine.readthedocs.io/en/stable/)              | The Python equivalent of `ggplot2`.                                                        |
 | [`statsmodels`](https://www.statsmodels.org/stable/index.html)        | A Python module for statistical models, conducting tests and statistical data exploration. |
 
 | Functions                                                                                                                                  | Description                                                |
-|:------------------------|:----------------------------------------------|
+|:-------------------------|:---------------------------------------------|
 | [`pandas.DataFrame.describe()`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html)                               | Gives summary statistics.                                  |
 | [`pandas.DataFrame.groupby()`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.groupby.html)                                 | Group DataFrame using a mapper or by a Series of columns   |
 | [`pandas.DataFrame.head()`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.head.html)                                       | Plots the first few rows of a DataFrame.                   |
@@ -455,20 +454,25 @@ You can of course plot the model values yourself by extracting them from the lin
 dgplots(lm_oystercatcher_py)
 ```
 
-```{r}
+```{python}
 #| echo: false
 # load dgplots function for knitr
-source_python("dgplots_knitr.py")
+from dgplots_knitr import *
 # create rendered diagnostic plots image
-dgplot <- dgplotsknitr(lm_oystercatcher_py)
+# and save the file link
+dgplot = dgplotsknitr(lm_oystercatcher_py)
+```
+
+```{r}
+#| echo: false
 # display image
-knitr::include_graphics(dgplot)
+knitr::include_graphics(py$dgplot)
 ```
 
 -   The top left graph plots the **Residuals plot**. If the data are best explained by a linear line then there should be a uniform distribution of points above and below the horizontal blue line (and if there are sufficient points then the red line, which is a smoother line, should be on top of the blue line). This plot looks pretty good.
 -   The top right graph shows the **Q-Q plot** which allows a visual inspection of normality. If the residuals are normally distributed, then the points should lie on the diagonal blue line. This plot looks good.
 -   The bottom left **Location-Scale** graph allows us to investigate whether there is any correlation between the residuals and the predicted values and whether the variance of the residuals changes significantly. If not, then the red line should be horizontal. If there is any correlation or change in variance then the red line will not be horizontal. This plot is fine.
--   The last graph shows the **Influential points** and tests if any one point has an unnecessarily large effect on the fit. Here we're using the Cook's distance as a measure. A rule of thumb is that if any value is larger than 1.0, then it might have a large effect on the model. If not, then no point has undue influence. This plot is good. There are different ways to determine the threshold (apart from simply setting it to 1) and in this plot the blue dashed line is at `4/n`, with `n` being the number of samples. At this threshold there are some data points that may be influential, but I personally find this threshold rather strict.\
+-   The last graph shows the **Influential points** and tests if any one point has an unnecessarily large effect on the fit. Here we're using the Cook's distance as a measure. A rule of thumb is that if any value is larger than 1.0, then it might have a large effect on the model. If not, then no point has undue influence. This plot is good. There are different ways to determine the threshold (apart from simply setting it to 1) and in this plot the blue dashed line is at `4/n`, with `n` being the number of samples. At this threshold there are some data points that may be influential, but I personally find this threshold rather strict.
 :::
 
 We can see that these graphs are very much in line with what we've just looked at using the test, which is reassuring. The groups all appear to have the same spread of data, and the Q-Q plot shows that the assumption of normality is alright.
@@ -560,3 +564,414 @@ Again, the p-value is what we're most interested in here and shows us the probab
 Since the p-value is very small (much smaller than the standard significance level of 0.05) we can say "that it is very unlikely that these three samples came from the same parent distribution" and as such we can reject our null hypothesis and state that:
 
 > A one-way ANOVA showed that the mean feeding rate of oystercatchers differed significantly between locations (F = `r round(glance(lm_oystercatcher) %>% pull(statistic) %>% as.numeric(), digits = 2)`, df = `r glance(lm_oystercatcher) %>% pull(df) %>% as.numeric()`, `r glance(lm_oystercatcher) %>% pull(df.residual) %>% as.numeric()`, p = `r formatC((glance(lm_oystercatcher) %>% pull(p.value) %>% as.numeric()), format = "e", digits = 2)`).
+
+## Post-hoc testing (Tukey's rank test)
+
+One drawback with using an ANOVA test is that it only tests to see if all of the means are the same, and if we get a significant result using ANOVA then all we can say is that not all of the means are the same, rather than anything about how the pairs of groups differ. For example, consider the following box plot for three samples.
+
+```{r}
+#| message: false
+# load the data
+tukey <- read_csv("data/CS2-tukey.csv")
+
+tukey
+```
+
+```{r}
+tukey %>%
+    ggplot(aes(x = group, y = response)) +
+    geom_boxplot()
+```
+
+Each group is a random sample of 20 points from a normal distribution with variance 1. Groups 1 and 2 come from a parent population with mean 0 whereas group 3 come from a parent population with mean 2. The data clearly satisfy the assumptions of an ANOVA test.
+
+### Read in data and plot
+
+::: panel-tabset
+## tidyverse
+
+```{r}
+# load the data
+tukey <- read_csv("data/CS2-tukey.csv")
+
+# have a look at the data
+tukey
+```
+
+```{r}
+# plot the data
+tukey %>%
+    ggplot(aes(x = group, y = response)) +
+    geom_boxplot()
+```
+
+## R
+
+```{r}
+tukey <- read.csv("data/CS2-tukey.csv")
+
+boxplot(response ~ group, data = tukey)
+```
+
+## Python
+:::
+
+### Test for a significant difference in group means
+
+::: panel-tabset
+## tidyverse
+
+```{r}
+# create a linear model
+lm_tukey <- lm(response ~ group,
+               data = tukey)
+
+# perform an ANOVA
+anova(lm_tukey)
+```
+
+## R
+
+```{r}
+lm_tukey <- lm(response ~ group, data = tukey)
+
+anova(lm_tukey)
+```
+
+## Python
+:::
+
+Here we have a p-value of 2.39 $\times$ 10<sup>-7</sup> and so the test has very conclusively rejected the hypothesis that all means are equal.
+
+However, this was not due to all of the sample means being different, but rather just because one of the groups is very different from the others. In order to drill down and investigate this further we use a new test called **Tukey's range test** (or **Tukey's honest significant difference test** -- this always makes me think of some terrible cowboy/western dialogue).
+
+This will compare all of the groups in a pairwise fashion and reports on whether a significant difference exists.
+
+### Performing Tukey's test
+
+::: panel-tabset
+## tidyverse
+
+```{r}
+# perform Tukey's range test on linear model
+lm_tukey %>%
+    tukey_hsd()
+```
+
+The `tukey_hsd()` function takes our linear model (`lm_tukey`) as its input. The output is a pair-by-pair comparison between the different groups (samples 1 to 3). We are interested in the `p.adj` column, which gives us the adjusted p-value. The null hypothesis in each case is that there is no difference in the mean between the two groups.
+
+## R
+
+```{r}
+aov_tukey <- aov(response ~ group, data = tukey)
+
+TukeyHSD(aov_tukey)
+```
+
+The first argument repeats our ANOVA using a different function `aov()`. We store the output of this function in an R object called `aov_tukey`. Note that the `TukeyHSD()` function takes the output of the `aov()` function as its argument and not the raw data.
+
+The bottom three lines contain the information that we want. The final column of each (entitled `p adj`) is the p-value that we're looking for. The null hypothesis in each case is that there is no difference in the mean between the two groups.
+
+## Python
+:::
+
+As we can see that there isn't a significant difference between `sample1` and `sample2` but the 2nd and 3rd rows show that there is a significant difference between `sample1` and `sample3`, as well as `sample2` and `sample3`. This matches with what we expected based on the box plot.
+
+### Assumptions
+
+When to use Tukey's range test is a matter of debate (strangely enough a lot of statistical analysis techniques are currently matters of opinion rather than mathematical fact -- it does explain a little why this whole field appears so bloody confusing!)
+
+-   Some people claim that we should only perform Tukey's range test (or any other post-hoc tests) if the preceding ANOVA test showed that there was a significant difference between the groups and that if the ANOVA test had not shown any significant differences between groups then we would have to stop there.
+-   Other people say that this is rubbish and we can do whatever we like as long as we tell people what we did.
+
+The background to this is rather involved but one of the reasons for this debate is to prevent so-called **data-dredging** or **p-hacking**. This is where scientists/analysts are so fixated on getting a "significant" result that they perform a huge variety of statistical techniques until they find one that shows that their data is significant (this was a particular problem in psychological studies for while -- not to point fingers though, they are working hard to sort their stuff out. Kudos!).
+
+Whether you should use post-hoc testing or not will depend on your experimental design and the questions that you're attempting to answer.
+
+Tukey's range test, when we decide to use it, requires the same three assumptions as an ANOVA test:
+
+1.  Normality of distributions
+2.  Equality of variance between groups
+3.  Independence of observations
+
+## Exercise: Lobster weight
+
+Juvenile lobsters in aquaculture were grown on three different diets (fresh mussels, semi-dry pellets and dry flakes). After nine weeks, their wet weight was:
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+read_csv("data/examples/cs2-messy_lobsters.csv") %>%
+    pivot_wider(names_from = diet, values_from = weight) %>%
+    select(-group) %>%
+    kbl() %>%
+    kable_styling(bootstrap_options = "striped",
+                  full_width = F, position = "center")
+```
+
+Is there any evidence that diet affects the growth rate of lobsters?
+
+1.  Write down the null and alternative hypotheses
+2.  Import the data into R from `data/CS2-lobsters.csv`
+3.  Summarise and visualise the data
+4.  Check the assumptions using appropriate tests and graphical analyses
+5.  Perform an ANOVA test
+6.  Write down a sentence that summarise the results that you have found
+7.  Perform a post-hoc test and report the findings
+
+::: {.callout-caution collapse="true"}
+## Answer
+
+### Hypotheses
+
+$H_0$ : all means are equal
+
+$H_1$ : not all means are equal
+
+### Import Data, summarise and visualise
+
+::: panel-tabset
+## tidyverse
+
+```{r}
+#| message: false
+#| warning: false
+# load the data
+lobsters <- read_csv("data/CS2-lobsters.csv")
+
+# look at the data
+lobsters
+```
+
+The data have a unique `id` column, which we don't need any summary statistics for, so we deselect it:
+
+```{r}
+# create some summary statistics
+lobsters %>% 
+  select(-id) %>% 
+  group_by(diet) %>% 
+  get_summary_stats(type = "common")
+```
+
+Next, we visualise the data:
+
+```{r}
+lobsters %>% 
+  ggplot(aes(x = diet, y = weight)) +
+  geom_boxplot()
+```
+
+## R
+```{r}
+lobsters <- read.csv("data/CS2-lobsters.csv")
+```
+
+Let's look at the data and see what we can see.
+
+```{r, echo=FALSE}
+lobsters
+```
+
+```{r}
+aggregate(weight ~ diet, data = lobsters, summary)
+
+boxplot(weight ~ diet, data = lobsters)
+```
+
+## Python
+:::
+
+As always we use the plot and summary to assess three things:
+
+1. Did we load the data in properly?
+  * We see three groups with reasonable values. There aren't any data points that are obviously wrong (negative, zero or massively big) and we have the right number of groups. So it looks as if we didn't do anything obviously wrong.
+2. What do we expect as a result of a statistical test?
+  * Whilst the `Mussels` group does look higher than the other two groups, `Pellets` and `Flakes` appear almost identical in terms of average values, and there's quite a bit of overlap with the `Mussels` group. A non-significant result is the most likely answer, and I would be surprised to see a significant p-value - especially given the small sample size that we have here.
+3. What do we think about assumptions?
+  * The groups appear mainly symmetric (although `Pellets` is a bit weird) and so we're not immediately massively worried about lack of normality. Again, `Flakes` and `Mussels` appear to have very similar variances but it's a bit hard to decide what's going on with `Pellets.` It's hard to say what's going on with the assumptions and so I'll wait and see what the other tests say.
+
+### Explore Assumptions
+We'll explore the assumption of normality and equality of variance, assuming that the data are independent.
+
+::: {.panel-tabset}
+## tidyverse
+**Normality**
+
+We'll be really thorough here and consider the normality of each group separately and jointly using the Shapiro-Wilk test, as well as looking at the Q-Q plot. In reality, and after these examples , we'll only use the Q-Q plot.
+
+First, we perform the Shapiro-Wilk test on the individual groups:
+
+```{r}
+# Shapiro-Wilk on lobster groups
+lobsters %>% 
+  group_by(diet) %>% 
+  shapiro_test(weight)
+```
+
+`Flakes` and `Mussels` are fine, but, as we suspected from earlier, `Pellets` appears to have a marginally significant Normality test result.
+
+Let's look at the Shapiro-Wilk test for all of the data together:
+
+```{r}
+# create a linear model
+lm_lobsters <- lm(weight ~ diet,
+                  data = lobsters)
+
+# extract the residuals
+resid_lobsters <- residuals(lm_lobsters)
+
+# and perform the Shapiro-Wilk test on the residuals
+resid_lobsters %>% 
+  shapiro_test()
+```
+
+This on the other hand says that everything is fine. Let's look at Q-Q plot.
+
+```{r}
+# Q-Q plots
+lm_lobsters %>% 
+  resid_panel(plots = "qq")
+```
+
+Here, I've used an extra argument to the normal diagnostic plots call. The default option is to plot 4 diagnostic plots. You can tell `resid_panel()` to only plot a specific one, using the `plots =` arguments. If you want to  know more about this have a look at the [help documentation](https://goodekat.github.io/ggResidpanel-tutorial/tutorial.html#overview) or by using `?resid_panel`.
+
+The Q-Q plot looks OK, not perfect, but more than good enough for us to have confidence in the normality of the data.
+
+Overall, I'd be happy that the assumption of normality has been adequately well met here. The suggested lack of normality in the `Pellets` was only just significant and we have to take into account that there are only 5 data points in that group. If there had been a lot more points in that group, or if the Q-Q plot was considerably worse then I wouldn't be confident.
+
+**Equality of Variance**
+
+We'll consider the Bartlett test and we'll look at some diagnostic plots too.
+
+```{r, message=FALSE}
+# perform Bartlett's test
+bartlett.test(weight ~ diet,
+              data = lobsters)
+
+# plot the residuals and scale-location plots
+lm_lobsters %>% 
+  resid_panel(plots = c("resid", "ls"),
+              smoother = TRUE)
+```
+
+In the above code I've specified which diagnostic plots I wanted. I have also added a loess smoother line (`smoother = TRUE`) to the plots
+
+1. The Residuals Plot. What we're looking for there is that the points are evenly spread on either side of the line. Looks good.
+2. The Location-Scale Plot (this is displayed by default in base R's diagnostic plots). Here we're looking at the red line. If that line is more or less horizontal, then the equality of variance assumption is met.
+
+Here all three methods agree that there aren't any issues with equality of variance:
+
+* the Bartlett test p-value is large and non-significant
+* the spread of points in all three groups in the residuals vs fitted graph are roughly the same
+* the red line in the scale-location graph is pretty horizontal
+
+Overall, this assumption is pretty well met.
+
+## R
+**Normality**
+
+We'll be really thorough here and consider the normality of each group separately and jointly using the Shapiro-Wilk test, as well as looking at the Q-Q plot. In reality, and after these examples , we'll only use the Q-Q plot.
+
+We'll need to unstack the data to use the Shapiro-Wilk test on the individual groups:
+
+```{r}
+lobst_uns <- unstack(lobsters, weight ~ diet)
+shapiro.test(lobst_uns$Flakes)
+shapiro.test(lobst_uns$Mussels)
+shapiro.test(lobst_uns$Pellets)
+```
+
+`Flakes` and `Mussels` are fine, but, as we suspected from earlier, `Pellets` appears to have a marginally significant Normality test result.
+
+Let's look at the Shapiro-Wilk test for all of the data together:
+
+```{r}
+resid_lobst <- residuals(lm(weight ~ diet, data = lobsters))
+shapiro.test(resid_lobst)
+```
+
+This on the other hand says that everything is fine. Let's look at the Q-Q-plot:
+
+```{r}
+plot(lm(weight ~ diet , data = lobsters),
+     which = 2)
+```
+
+Here, I've used an extra argument to the normal diagnostic plots call. The default option is to plot 4 diagnostic plots, but you can tell R to only plot a specific one. (If you want to  know more about this have a look at the `plot.lm` help documentation using `?plot.lm`). I've asked R to only plot the Q-Q plot with the `which = 2` argument.
+
+The Q-Q plot looks OK, not perfect, but more than good enough for us to have confidence in the normality of the data.
+
+Overall, I'd be happy that the assumption of normality has been adequately well met here. The suggested lack of normality in the `Pellets` was only just significant and we have to take into account that there are only 5 data points in that group. If there had been a lot more points in that group, or if the Q-Q plot was considerably worse then I wouldn't be confident.
+
+**Equality of Variance**
+
+We'll consider the Bartlett test and we'll look at some diagnostic plots too.
+
+```{r}
+bartlett.test(weight ~ diet, data = lobsters)
+
+plot(lm(weight ~ diet, data = lobsters),
+     which = c(1,3))
+```
+
+In the above code, I've used the same trick as before with the `which` argument to only plot the two diagnostic plots that relate to equality of variance (residuals vs fitted and scale-location).
+
+Here all three methods agree that there aren't any issues with equality of variance:
+
+* the Bartlett test p-value is large and non-significant
+* the spread of points in all three groups in the residuals vs fitted graph are roughly the same
+* the red line in the scale-location graph is pretty horizontal
+
+Overall, this assumption is pretty well met.
+
+## Python
+:::
+
+### Carry out one-way ANOVA
+
+With our assumptions of normality and equality of variance met we can be confident that a one-way ANOVA is an appropriate test.
+
+::: {.panel-tabset}
+## tidyverse
+```{r}
+anova(lm_lobsters)
+```
+
+## R
+```{r}
+anova(lm(weight ~ diet, data = lobsters))
+```
+
+## Python
+:::
+
+> A one-way ANOVA test indicated that the mean weight of juvenile lobsters did not differ significantly between diets (F = 1.64, df = 2,15, p = 0.23).
+
+### Post-hoc testing with Tukey
+In this case we did not find any significant differences between the different diets. So that is a good time for me to reiterate that carrying out the post-hoc test after getting a non-significant result with ANOVA is something that you have to think very carefully about and it all depends on what your research question it.
+
+If your research question was:
+
+> Does diet affect lobster weight?
+
+or
+
+> Is there any effect of diet on lobster weight?_ 
+
+Then when we got the non-significant result from the ANOVA test we should have just stopped there as we have our answer. Going digging for "significant" results by running more tests is a main factor that contributes towards lack of reproducibility in research.
+
+If on the other hand your research question was:
+
+> Are any specific diets better or worse for lobster weight than others?
+
+Then we should probably have just skipped the one-way ANOVA test entirely and just jumped straight in with the Tukey's range test. The important point here is that the result of the one-way ANOVA test doesn't stop you from carrying out the Tukey test - but it's up to you to decide whether it is sensible.
+:::
+
+## Key points
+
+:::callout-note
+- We use an ANOVA to test if there is a difference in means between multiple continuous response variables
+- We check assumptions with diagnostic plots and check if the residuals are normally distributed
+- We use post-hoc testing to check for significant differences between the group means, for example using Tukey's range test
+:::
