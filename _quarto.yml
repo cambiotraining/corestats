@@ -47,6 +47,10 @@ website:
         contents:
           - cs2_practical_anova.qmd
           - cs2_practical_kruskal-wallis.qmd
+      - section: "Continuous predictors"
+        contents:
+          - cs3_practical_linear-regression.qmd
+          - cs3_practical_correlations.qmd
 
 format:
   html:

@@ -1,5 +1,6 @@
 # essential libraries
 library(downlit)
+library(corrr)
 library(reticulate)
 library(knitr)
 library(tidyverse)

@@ -1,0 +1,157 @@
+---
+title: "Correlations"
+format:
+  html:
+    toc: true
+    include-after-body:
+      - sync-tabs.html
+---
+
+```{r}
+#| echo: false
+#| message: false
+#| results: hide
+source(file = "setup.R")
+```
+
+```{python}
+#| echo: false
+#| message: false
+from setup import *
+```
+
+::: callout-tip
+## Learning outcomes
+
+**Questions**
+
+- What are correlation coefficients?
+- What kind of correlation coefficients are there and when do I use them?
+
+**Objectives**
+
+- Be able to calculate correlation coefficients in R or Python
+- Use visual tools to explore correlations between variables
+- Know the limitations of correlation coefficients
+:::
+
+## Libraries and functions
+
+::: {.callout-note collapse="true"}
+## Click to expand
+
+::: panel-tabset
+## tidyverse
+
+| Libraries               | Description                                                                                                       |
+|:---------------------|:-------------------------------------------------|
+| `library(tidyverse)`    | A collection of R packages designed for data science.                                                             |
+| `library(rstatix)`      | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
+| `library(ggResidpanel)` | Creates diagnostic plots using `ggplot2`.|
+|`library(corrr)` | A package for exploring correlations in R.
+
+| Library        | Function              | Description                  |
+|:---------------|:----------------------|:-----------------------------|
+| `ggResidpanel` | `resid_panel()`       | Creates diagnostic plots.    |
+
+## R
+
+## Python
+:::
+:::
+
+## Purpose and aim
+Correlation refers to the relationship of two variables (or data sets) to one another. Two data sets are said to be correlated if they are not independent from one another. Correlations can be useful because they can indicate if a predictive relationship may exist. However just because two data sets are correlated does not mean that they are causally related.
+
+## Data and hypotheses
+We will use the `USArrests` data set for this example. This rather bleak data set contains statistics in arrests per 100,000 residents for assault, murder and robbery in each of the 50 US states in 1973, alongside the proportion of the population who lived in urban areas at that time. `USArrests` is a data frame with 50 observations of five variables: `state`, `murder`, `assault`, `urban_pop` and `robbery`.
+
+We will be using these data to explore if there are correlations between these variables.
+
+The data are stored in the file `data/CS3-usarrests.csv`.
+
+## Load and visualise the data
+First, we load the data:
+
+::: {.panel-tabset}
+## tidyverse
+```{r}
+#| message: false
+# load the data
+USArrests <- read_csv("data/CS3-usarrests.csv")
+
+# have a look at the data
+USArrests
+```
+
+We can create a visual overview of the potential correlations that might exist between the variables. For this, we use the `corrr` package.
+
+Make sure to install the package, if you haven't done so already:
+```{r}
+#| eval: false
+install.packages("corrr")
+```
+
+and then load it:
+```{r}
+#| eval: false
+library(corrr)
+```
+
+We can only calculate correlations between numerical variables, so we have to deselect the `state` variable. Next, we calculate the correlations with `correlate()`. We `shave()` off the redundant top results (`murder` vs `assault` is the same as `assault` vs `murder`) and plot the result using `rplot()`.
+
+```{r}
+# create correlation graph
+USArrests %>% 
+    select(-state) %>% 
+    correlate() %>% 
+    shave() %>% 
+    rplot()
+```
+
+The output tells us that the correlation method used is `pearson` (see below) and that only paired observations without missing values are taken into account.
+
+On the right there is a scale of the strength of the correlation.
+
+## R
+First, we load the data:
+
+```{r}
+# load the data
+USArrests_r <- read.csv("data/CS3-usarrests.csv")
+
+# and have a look at the data
+head(USArrests_r)
+```
+
+We can only calculate correlations between numerical variables, so we have to deselect the `state` variable.
+
+We can load the data with an extra argument, `row.names = 1`. This will instruct R to load the data but use first column (`state`) as row names:
+
+```{r}
+# load the data
+USArrests_r <- read.csv("data/CS3-usarrests.csv", row.names = 1)
+
+# have a look at the data
+head(USArrests_r)
+```
+
+We can visualise the data with the `pairs()` function. This function creates a matrix of scatter plots that we can use to look for correlations. Every combination of variables appears twice (e.g. `murder` vs `assault` is the same as `assault` vs `murder`), so we use the `lower.panel = NULL` argument to only visualise the unique combinations.
+
+```{r}
+# create matrix of scatter plots
+pairs(USArrests_r, lower.panel = NULL)
+```
+ 
+## Python
+:::
+
+From the visual inspection we can see that there appears to be a slight positive correlation between all pairs of variables, although this may be very weak in some cases (`murder` and `urban_pop` for example).
+
+:::callout-note
+## Correlation coefficients
+
+The method we used above is **Pearson's r**. This is a measure of the linear correlation between two variables. It has a value between -1 and +1, where +1 means a perfect positive correlation, -1 means a perfect negative correlation and 0 means no correlation at all.
+
+There are other correlation coefficients, most notably the **Spearman's rank correlation coefficient**, a non-parametric measure of rank correlation and is generally less sensitive to outliers.
+:::
