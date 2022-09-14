@@ -452,6 +452,24 @@ bind_cols(USAstate_colnames, abs(USAstate_diff)) %>%
 
 ## R
 
+```{r}
+corPear <- cor(USAstate_r, method = "pearson")
+corSpea <- cor(USAstate_r, method = "spearman")
+corDiff <- corPear - corSpea
+```
+
+Again, we could now just look at a grid of 64 numbers and see if we can spot the biggest differences, but our eyes aren't that good at processing and parsing this sort of information display. A better way would be to somehow visualise the data. We can do that using some R plotting functions, `heatmap()` to be exact. The `heatmap()` function has a lot of features that we don't need and so I'm not going to go into it in detail here. The main reason I'm using it is that it displays matrices the right way round (other plotting functions display matrices rotated by 90 degrees) and automatically labels the rows and columns.
+
+```{r}
+heatmap(abs(corDiff), symm = TRUE, Rowv = NA)
+```
+
+The `abs()` function calculates the absolute value (i.e. just the magnitude) of the matrix values. This is just because I only care about situations where the two correlation coefficients are different from each other but I don't care which is the larger. The `symm` argument tells the function that we have a symmetric matrix and in conjunction with the `Rowv = NA` argument stops the plot from reordering the rows and columns. The `Rowv = NA` argument also stops the function from adding dendrograms to the margins of the plot.
+
+The plot itself is coloured from yellow, indicating the smallest values (which in this case correspond to no difference in correlation coefficients), through orange to dark red, indicating the biggest values (which in this case correspond to the variables with the biggest difference in correlation coefficients).
+
+The plot is symmetric along the leading diagonal (hopefully for obvious reasons) and we can see that the majority of squares are light yellow in colour, which means that there isn't much difference between Spearman and Pearson for the vast majority of variables. The squares appear darkest when we look along the `area` row/column suggesting that there's a big difference in the correlation coefficients there.
+
 ## Python
 :::
 
