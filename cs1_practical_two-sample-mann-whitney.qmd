@@ -1,10 +1,5 @@
 ---
 title: "Mann-Whitney U test"
-format:
-  html:
-    toc: true
-    include-after-body:
-      - sync-tabs.html
 ---
 
 ```{r}
@@ -48,35 +43,51 @@ This test also compares two samples, however for this test (in contrast to Stude
 ::: {.callout-note collapse="true"}
 ## Click to expand
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
-| Libraries            | Description                                                                                                       |
-|:-----------------------------------|:-----------------------------------|
-| `library(tidyverse)` | A collection of R packages designed for data science                                                              |
-| `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
+### Libraries
 
-| Functions                | Description                                                                                                     |
-|:-----------------------------------|:-----------------------------------|
-| `rstatix::wilcox_test()` | Performs one- and two-sample Wilcoxon tests on vectors of data; the latter is also known as 'Mann-Whitney' test |
+```{r}
+#| eval: false
+# A collection of R packages designed for data science
+library(tidyverse)
+
+# Converts stats functions to a tidyverse-friendly format
+library(rstatix)
+```
+
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Performs one- and two-sample Wilcoxon tests on vectors of data; the latter is also known as 'Mann-Whitney' test
+rstatix::wilcox_test()
+```
 
 ## R
 
-| Functions       | Description                                                                                                     |
-|:-----------------------------------|:-----------------------------------|
-| `wilcox.test()` | Performs one- and two-sample Wilcoxon tests on vectors of data; the latter is also known as 'Mann-Whitney' test |
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Performs one- and two-sample Wilcoxon tests on vectors of data; the latter is also known as 'Mann-Whitney' test
+wilcox.test()
+```
 
 ## Python
 
-| Libraries     | Description                                       |
-|:--------------|:--------------------------------------------------|
-| `pandas`      | A Python data analysis and manipulation tool.     |
+| Libraries  | Description                                                              |
+|:------------------|:----------------------------------------------------|
+| `pandas`   | A Python data analysis and manipulation tool.                            |
 | `pingouin` | A Python module developed to have simple yet exhaustive stats functions. |
 
-| Functions                    | Description                                                         |
+| Functions                                                                               | Description                                                         |
 |:-----------------------------------|:-----------------------------------|
-| `pandas.DataFrame.pivot()`   | Return reshaped DataFrame organised by given index / column values. |
-| [`pingouin.mwu()`](https://pingouin-stats.org/generated/pingouin.mwu.html#pingouin.mwu)| Performs the Mann-Whitney U test.|                                 |
+| `pandas.DataFrame.pivot()`                                                              | Return reshaped DataFrame organised by given index / column values. |
+| [`pingouin.mwu()`](https://pingouin-stats.org/generated/pingouin.mwu.html#pingouin.mwu) | Performs the Mann-Whitney U test.                                   |
 :::
 :::
 
@@ -101,7 +112,7 @@ We have checked these previously.
 
 Perform a two-tailed, Mann-Whitney U test:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -197,7 +208,7 @@ We've already checked that the variances of the two groups are similar, so we're
 
 ### Carry out a Mann-Whitney test
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r cs1-twosample-mannwhitney-exercise}

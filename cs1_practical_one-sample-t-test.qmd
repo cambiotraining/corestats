@@ -1,10 +1,5 @@
 ---
 title: "One-sample t-test"
-format:
-  html:
-    toc: true
-    include-after-body:
-      - sync-tabs.html
 ---
 
 ```{r}
@@ -25,44 +20,72 @@ from setup import *
 ::: {.callout-note collapse="true"}
 ## Click to expand
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
-| Libraries            | Description                                                                                                       |
-|:------------------------|:----------------------------------------------|
-| `library(tidyverse)` | A collection of R packages designed for data science                                                              |
-| `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
+### Libraries
 
-| Functions                 | Description                                                                          |
-|:------------------------|:----------------------------------------------|
-| `rstatix::t_test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections. |
-| `rstatix::shapiro_test()` | Performs a Shapiro-Wilk test for normality.                                          |
-| `ggplot2::stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.                          |
-| `ggplot2::stat_qq_line()` | Adds a comparison line to the Q-Q plot.                                              |
+```{r}
+#| eval: false
+# A collection of R packages designed for data science
+library(tidyverse)
+
+# Converts stats functions to a tidyverse-friendly format
+library(rstatix)
+```
+
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
+rstatix::t_test()
+
+# Performs a Shapiro-Wilk test for normality
+rstatix::shapiro_test()
+
+# Plots a Q-Q plot for comparison with a normal distribution
+ggplot2::stat_qq()
+
+# Adds a comparison line to the Q-Q plot
+ggplot2::stat_qq_line()
+```
 
 ## R
 
-| Functions        | Description                                                                          |
-|:------------------------|:----------------------------------------------|
-| `t.test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections. |
-| `qqnorm()`       | Plots a Q-Q plot for comparison with a normal distribution.                          |
-| `qqline()`       | Adds a comparison line to the Q-Q plot.                                              |
-| `shapiro.test()` | Performs a Shapiro-Wilk test for normality.                                          |
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
+t.test()
+
+# Plots a Q-Q plot for comparison with a normal distribution
+qqnorm()
+
+# Adds a comparison line to the Q-Q plot
+qqline()
+
+# Performs a Shapiro-Wilk test for normality
+shapiro.test()
+```
 
 ## Python
 
-| Libraries     | Description                                       |
-|:--------------|:--------------------------------------------------|
-| `plotnine`    | The Python equivalent of `ggplot2`.|
-| `pandas`      | A Python data analysis and manipulation tool.|
+| Libraries  | Description                                                              |
+|:-----------------|:-----------------------------------------------------|
+| `plotnine` | The Python equivalent of `ggplot2`.                                      |
+| `pandas`   | A Python data analysis and manipulation tool.                            |
 | `pingouin` | A Python module developed to have simple yet exhaustive stats functions. |
 
 | Functions                                                                                     | Description                                                 |
-|:-------------------------|:--------------------------------------------|
-| [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)| Performs the Shapiro-Wilk test for normality.|
-| [`pingouin.ttest()`](https://pingouin-stats.org/generated/pingouin.ttest.html#pingouin.ttest) | Performs a t-test|
-| `plotnine.stats.stat_qq()`| Plots a Q-Q plot for comparison with a normal distribution. |
-| `plotnine.stats.stat_qq_line()`| Adds a comparison line to the Q-Q plot.|
+|:--------------------------|:--------------------------------------------|
+| [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)        | Performs the Shapiro-Wilk test for normality.               |
+| [`pingouin.ttest()`](https://pingouin-stats.org/generated/pingouin.ttest.html#pingouin.ttest) | Performs a t-test                                           |
+| `plotnine.stats.stat_qq()`                                                                    | Plots a Q-Q plot for comparison with a normal distribution. |
+| `plotnine.stats.stat_qq_line()`                                                               | Adds a comparison line to the Q-Q plot.                     |
 :::
 :::
 
@@ -81,7 +104,7 @@ We will use a one-sample, two-tailed t-test to see if we should reject the null 
 
 Make sure you have downloaded the data (see: [Datasets](#index-datasets)) and placed it within your working directory.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 First we load the relevant libraries:
@@ -136,7 +159,7 @@ fishlength_py.head()
 
 Summarise the data and visualise it:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -204,7 +227,7 @@ In increasing order of rigour, we have
 
 Plot a histogram of the data, which gives:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -239,7 +262,7 @@ Q-Q plot is the short for quantile-quantile plot. This **diagnostic** plot (as i
 
 Construct a Q-Q Plot of the quantiles of the data against the quantiles of a normal distribution:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -329,7 +352,7 @@ This is one of a number of formal statistical test that assess whether a given s
 
 Perform a Shapiro-Wilk test on the data:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -383,7 +406,7 @@ In which case we would consider an alternative test that has less stringent assu
 
 Perform a one-sample, two-tailed t-test:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -497,7 +520,7 @@ $H_1$ : mean $\neq$ 45s
 
 We can create a data frame in Excel and save it as an `.csv` file, for example as `CS1-gastric_juices.csv`. It contains two columns, an `id` column and a `dissolving_time` column with the measured values.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r, message=FALSE, warning=FALSE}
@@ -590,7 +613,7 @@ There are only 8 data points, so the histogram is rather uninformative. Thankful
 
 Normality:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -645,7 +668,7 @@ In reality, if I found myself in this situation I would also try doing a non-par
 
 ### Implement test
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}

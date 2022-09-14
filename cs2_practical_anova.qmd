@@ -1,10 +1,5 @@
 ---
 title: "ANOVA"
-format:
-  html:
-    toc: true
-    include-after-body:
-      - sync-tabs.html
 ---
 
 ```{r}
@@ -45,35 +40,62 @@ Analysis of variance or ANOVA is a test than can be used when we have multiple s
 ::: {.callout-note collapse="true"}
 ## Click to expand
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
-| Libraries                                                                     | Description                                                                                                       |
-|:--------------------|:--------------------------------------------------|
-|`library(tidyverse)`| A collection of R packages designed for data science.|
-|`library(rstatix)`| Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
-|`library(ggResidpanel)`| Creates diagnostic plots using `ggplot2`.|
+### Libraries
 
-| Library| Function| Description|
-|:-----------------|:-----------------------|:-----------------------------|
-| `rstatix`| `get_summary_stats()`| Computes summary statistics. |
-| `ggResidpanel` |`resid_panel()`| Creates diagnostic plots.|
+```{r}
+#| eval: false
+# A collection of R packages designed for data science
+library(tidyverse)
 
+# Converts stats functions to a tidyverse-friendly format
+library(rstatix)
+
+# Creates diagnostic plots using ggplot2
+library(ggResidpanel)
+```
+
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Computes summary statistics
+rstatix::get_summary_stats()
+
+# Creates diagnostic plots
+ggResidpanel::resid_panel()
+```
 
 ## R
 
-| Function         | Description                                                 |
-|:---------------------|:-------------------------------------------------|
-| `lm()`           | Fits a linear model                                         |
-| `anova()`        | Carries out an ANOVA on a linear model                      |
-| `qqnorm()`       | Plots a Q-Q plot for comparison with a normal distribution. |
-| `qqline()`       | Adds a comparison line to the Q-Q plot.                     |
-| `shapiro.test()` | Performs a Shapiro-Wilk test for normality.                 |
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Fits a linear model  
+lm()
+
+# Carries out an ANOVA on a linear model 
+anova()
+
+# Plots a Q-Q plot for comparison with a normal distribution
+qqnorm()
+
+# Adds a comparison line to the Q-Q plot
+qqline()
+
+# Performs a Shapiro-Wilk test for normality
+shapiro.test()
+```
 
 ## Python
 
 | Libraries                                                             | Description                                                                                |
-|:-------------------|:---------------------------------------------------|
+|:----------------------|:------------------------------------------------|
 | [`pandas`](https://pandas.pydata.org/docs/getting_started/index.html) | A Python data analysis and manipulation tool.                                              |
 | [`pingouin`](https://pingouin-stats.org)                              | A Python module developed to have simple yet exhaustive stats functions.                   |
 | [`plotnine`](https://plotnine.readthedocs.io/en/stable/)              | The Python equivalent of `ggplot2`.                                                        |
@@ -109,7 +131,7 @@ The data are stored in the file `data/CS2-oystercatcher.csv`.
 
 ## Summarise and visualise
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 First we read in the data.
@@ -230,7 +252,7 @@ In a similar way to the two-sample tests we will consider the normality and equa
 
 First we perform a Shapiro-Wilk test on each site separately.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 We take the data, and `group_by()` site:
@@ -284,7 +306,7 @@ For ANOVA however, considering each group in turn is often considered quite exce
 
 So, we create a linear model, extract the residuals and check their normality:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -362,7 +384,7 @@ We now test for equality of variance using Bartlett's test (since we've just fou
 
 Perform Bartlett's test on the data:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -403,7 +425,7 @@ Assessing assumptions via these tests can be cumbersome, but also a bit misleadi
 
 This does not convey that things aren't always so clear-cut and that there is a lot of grey area that we need to navigate. As such, assessing assumptions through graphical means - using diagnostic plots - is often preferred.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 In the first session we already created diagnostic Q-Q plots directly from our data, using `stat_qq()` and `stat_qq_line()`. For more specific plots this becomes a bit cumbersome. There is an option to create ggplot-friendly diagnostic plots, using the `ggResidPanel` package.
@@ -490,7 +512,7 @@ Whilst the formal statistical tests (like Shapiro-Wilk) are technically fine, th
 
 Perform an ANOVA test on the data:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -588,7 +610,7 @@ Each group is a random sample of 20 points from a normal distribution with varia
 
 ### Read in data and plot
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -619,7 +641,7 @@ boxplot(response ~ group, data = tukey)
 
 ### Test for a significant difference in group means
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -650,7 +672,7 @@ This will compare all of the groups in a pairwise fashion and reports on whether
 
 ### Performing Tukey's test
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -732,7 +754,7 @@ $H_1$ : not all means are equal
 
 ### Import Data, summarise and visualise
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -764,6 +786,7 @@ lobsters %>%
 ```
 
 ## R
+
 ```{r}
 lobsters <- read.csv("data/CS2-lobsters.csv")
 ```
@@ -785,18 +808,25 @@ boxplot(weight ~ diet, data = lobsters)
 
 As always we use the plot and summary to assess three things:
 
-1. Did we load the data in properly?
-  * We see three groups with reasonable values. There aren't any data points that are obviously wrong (negative, zero or massively big) and we have the right number of groups. So it looks as if we didn't do anything obviously wrong.
-2. What do we expect as a result of a statistical test?
-  * Whilst the `Mussels` group does look higher than the other two groups, `Pellets` and `Flakes` appear almost identical in terms of average values, and there's quite a bit of overlap with the `Mussels` group. A non-significant result is the most likely answer, and I would be surprised to see a significant p-value - especially given the small sample size that we have here.
-3. What do we think about assumptions?
-  * The groups appear mainly symmetric (although `Pellets` is a bit weird) and so we're not immediately massively worried about lack of normality. Again, `Flakes` and `Mussels` appear to have very similar variances but it's a bit hard to decide what's going on with `Pellets.` It's hard to say what's going on with the assumptions and so I'll wait and see what the other tests say.
+1.  Did we load the data in properly?
+
+-   We see three groups with reasonable values. There aren't any data points that are obviously wrong (negative, zero or massively big) and we have the right number of groups. So it looks as if we didn't do anything obviously wrong.
+
+2.  What do we expect as a result of a statistical test?
+
+-   Whilst the `Mussels` group does look higher than the other two groups, `Pellets` and `Flakes` appear almost identical in terms of average values, and there's quite a bit of overlap with the `Mussels` group. A non-significant result is the most likely answer, and I would be surprised to see a significant p-value - especially given the small sample size that we have here.
+
+3.  What do we think about assumptions?
+
+-   The groups appear mainly symmetric (although `Pellets` is a bit weird) and so we're not immediately massively worried about lack of normality. Again, `Flakes` and `Mussels` appear to have very similar variances but it's a bit hard to decide what's going on with `Pellets.` It's hard to say what's going on with the assumptions and so I'll wait and see what the other tests say.
 
 ### Explore Assumptions
+
 We'll explore the assumption of normality and equality of variance, assuming that the data are independent.
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## tidyverse
+
 **Normality**
 
 We'll be really thorough here and consider the normality of each group separately and jointly using the Shapiro-Wilk test, as well as looking at the Q-Q plot. In reality, and after these examples , we'll only use the Q-Q plot.
@@ -835,7 +865,7 @@ lm_lobsters %>%
   resid_panel(plots = "qq")
 ```
 
-Here, I've used an extra argument to the normal diagnostic plots call. The default option is to plot 4 diagnostic plots. You can tell `resid_panel()` to only plot a specific one, using the `plots =` arguments. If you want to  know more about this have a look at the [help documentation](https://goodekat.github.io/ggResidpanel-tutorial/tutorial.html#overview) or by using `?resid_panel`.
+Here, I've used an extra argument to the normal diagnostic plots call. The default option is to plot 4 diagnostic plots. You can tell `resid_panel()` to only plot a specific one, using the `plots =` arguments. If you want to know more about this have a look at the [help documentation](https://goodekat.github.io/ggResidpanel-tutorial/tutorial.html#overview) or by using `?resid_panel`.
 
 The Q-Q plot looks OK, not perfect, but more than good enough for us to have confidence in the normality of the data.
 
@@ -858,18 +888,19 @@ lm_lobsters %>%
 
 In the above code I've specified which diagnostic plots I wanted. I have also added a loess smoother line (`smoother = TRUE`) to the plots
 
-1. The Residuals Plot. What we're looking for there is that the points are evenly spread on either side of the line. Looks good.
-2. The Location-Scale Plot (this is displayed by default in base R's diagnostic plots). Here we're looking at the red line. If that line is more or less horizontal, then the equality of variance assumption is met.
+1.  The Residuals Plot. What we're looking for there is that the points are evenly spread on either side of the line. Looks good.
+2.  The Location-Scale Plot (this is displayed by default in base R's diagnostic plots). Here we're looking at the red line. If that line is more or less horizontal, then the equality of variance assumption is met.
 
 Here all three methods agree that there aren't any issues with equality of variance:
 
-* the Bartlett test p-value is large and non-significant
-* the spread of points in all three groups in the residuals vs fitted graph are roughly the same
-* the red line in the scale-location graph is pretty horizontal
+-   the Bartlett test p-value is large and non-significant
+-   the spread of points in all three groups in the residuals vs fitted graph are roughly the same
+-   the red line in the scale-location graph is pretty horizontal
 
 Overall, this assumption is pretty well met.
 
 ## R
+
 **Normality**
 
 We'll be really thorough here and consider the normality of each group separately and jointly using the Shapiro-Wilk test, as well as looking at the Q-Q plot. In reality, and after these examples , we'll only use the Q-Q plot.
@@ -899,7 +930,7 @@ plot(lm(weight ~ diet , data = lobsters),
      which = 2)
 ```
 
-Here, I've used an extra argument to the normal diagnostic plots call. The default option is to plot 4 diagnostic plots, but you can tell R to only plot a specific one. (If you want to  know more about this have a look at the `plot.lm` help documentation using `?plot.lm`). I've asked R to only plot the Q-Q plot with the `which = 2` argument.
+Here, I've used an extra argument to the normal diagnostic plots call. The default option is to plot 4 diagnostic plots, but you can tell R to only plot a specific one. (If you want to know more about this have a look at the `plot.lm` help documentation using `?plot.lm`). I've asked R to only plot the Q-Q plot with the `which = 2` argument.
 
 The Q-Q plot looks OK, not perfect, but more than good enough for us to have confidence in the normality of the data.
 
@@ -920,9 +951,9 @@ In the above code, I've used the same trick as before with the `which` argument 
 
 Here all three methods agree that there aren't any issues with equality of variance:
 
-* the Bartlett test p-value is large and non-significant
-* the spread of points in all three groups in the residuals vs fitted graph are roughly the same
-* the red line in the scale-location graph is pretty horizontal
+-   the Bartlett test p-value is large and non-significant
+-   the spread of points in all three groups in the residuals vs fitted graph are roughly the same
+-   the red line in the scale-location graph is pretty horizontal
 
 Overall, this assumption is pretty well met.
 
@@ -933,13 +964,15 @@ Overall, this assumption is pretty well met.
 
 With our assumptions of normality and equality of variance met we can be confident that a one-way ANOVA is an appropriate test.
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## tidyverse
+
 ```{r}
 anova(lm_lobsters)
 ```
 
 ## R
+
 ```{r}
 anova(lm(weight ~ diet, data = lobsters))
 ```
@@ -950,6 +983,7 @@ anova(lm(weight ~ diet, data = lobsters))
 > A one-way ANOVA test indicated that the mean weight of juvenile lobsters did not differ significantly between diets (F = 1.64, df = 2,15, p = 0.23).
 
 ### Post-hoc testing with Tukey
+
 In this case we did not find any significant differences between the different diets. So that is a good time for me to reiterate that carrying out the post-hoc test after getting a non-significant result with ANOVA is something that you have to think very carefully about and it all depends on what your research question it.
 
 If your research question was:
@@ -958,7 +992,7 @@ If your research question was:
 
 or
 
-> Is there any effect of diet on lobster weight?_ 
+> Is there any effect of diet on lobster weight?\_
 
 Then when we got the non-significant result from the ANOVA test we should have just stopped there as we have our answer. Going digging for "significant" results by running more tests is a main factor that contributes towards lack of reproducibility in research.
 
@@ -971,8 +1005,8 @@ Then we should probably have just skipped the one-way ANOVA test entirely and ju
 
 ## Key points
 
-:::callout-note
-- We use an ANOVA to test if there is a difference in means between multiple continuous response variables
-- We check assumptions with diagnostic plots and check if the residuals are normally distributed
-- We use post-hoc testing to check for significant differences between the group means, for example using Tukey's range test
+::: callout-note
+-   We use an ANOVA to test if there is a difference in means between multiple continuous response variables
+-   We check assumptions with diagnostic plots and check if the residuals are normally distributed
+-   We use post-hoc testing to check for significant differences between the group means, for example using Tukey's range test
 :::

@@ -1,10 +1,5 @@
 ---
 title: "Paired t-test"
-format:
-  html:
-    toc: true
-    include-after-body:
-      - sync-tabs.html
 ---
 
 ```{r}
@@ -27,37 +22,71 @@ A paired t-test is used when we have two samples of continuous data that can be 
 ::: {.callout-note collapse="true"}
 ## Click to expand
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
-| Libraries            | Description                                                                                                       |
-|:------------------------|:----------------------------------------------|
-| `library(tidyverse)` | A collection of R packages designed for data science                                                              |
-| `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
+### Libraries
 
-| Functions                 | Description                                                                                              |
-|:-----------------------------------|:-----------------------------------|
-| `rstatix::t_test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections.                     |
-| `rstatix::shapiro_test()` | Performs a Shapiro-Wilk test for normality.                                                              |
-| `ggplot2::stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.                                              |
-| `ggplot2::stat_qq_line()` | Adds a comparison line to the Q-Q plot.                                                                  |
-| `ggplot2::geom_jitter()`  | Plots jittered points by adding a small amount of random variation to each point, to handle overplotting |
-| `tidyr::pivot_wider()`    | "Widens" the data, increasing the number of columns                                                      |
+```{r}
+#| eval: false
+# A collection of R packages designed for data science
+library(tidyverse)
+
+# Converts stats functions to a tidyverse-friendly format
+library(rstatix)
+```
+
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
+rstatix::t_test()
+
+# Performs a Shapiro-Wilk test for normality
+rstatix::shapiro_test()
+
+# Plots a Q-Q plot for comparison with a normal distribution
+ggplot2::stat_qq()
+
+# Adds a comparison line to the Q-Q plot
+ggplot2::stat_qq_line()
+
+# Plots jittered points by adding a small amount of random variation to each point, to handle overplotting
+ggplot2::geom_jitter()
+
+# "Widens" the data, increasing the number of columns
+tidyr::pivot_wider()
+```
 
 ## R
 
-| Function         | Description                                                                          |
-|:-----------------------------------|:-----------------------------------|
-| `stats::reshape` | Reshapes a data frame from 'long' to 'wide' and vice versa                           |
-| `t.test()`       | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections. |
-| `qqnorm()`       | Plots a Q-Q plot for comparison with a normal distribution.                          |
-| `qqline()`       | Adds a comparison line to the Q-Q plot.                                              |
-| `shapiro.test()` | Performs a Shapiro-Wilk test for normality.                                          |
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Reshapes a data frame from 'long' to 'wide' and vice vers
+stats::reshape()
+
+# Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
+t.test()
+
+# Plots a Q-Q plot for comparison with a normal distribution
+qqnorm()
+
+# Adds a comparison line to the Q-Q plot
+qqline()
+
+# Performs a Shapiro-Wilk test for normality
+shapiro.test()
+```
 
 ## Python
 
 | Libraries  | Description                                                             |
-|:-------------------|:---------------------------------------------------|
+|:---------------------|:-------------------------------------------------|
 | `plotnine` | The Python equivalent of `ggplot2`.                                     |
 | `pandas`   | A Python data analysis and manipulation tool.                           |
 | `pingouin` | A Python module developed to have simple yet exhaustive stats functions |
@@ -89,7 +118,7 @@ We use a two-sample, two-tailed paired t-test to see if we can reject the null h
 
 The data are stored in a tidy format in the file `data/CS1-twopaired.csv`.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -132,7 +161,7 @@ For each `patient_id` there are two measurements: one in the morning and one in 
 
 It's always a good idea to visualise your data, so let's do that.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -173,7 +202,7 @@ However, this plot does not capture how the cortisol level of each *individual* 
 
 To do this, we need to put our data into a wide format, so we can calculate the change in cortisol level for each patient.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 In tidyverse we can use the `pivot_wider()` function.
@@ -305,7 +334,7 @@ You will do this in the exercise!
 
 Perform a two-sample, two-tailed, paired t-test:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -365,7 +394,7 @@ A paired test is really just a one-sample test in disguise. We actually don't ca
 
 Let's check this with the Shapiro-Wilk test and Q-Q plots, using the wide data frames we created earlier.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 Perform Shapiro-Wilk test:

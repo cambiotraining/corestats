@@ -1,10 +1,5 @@
 ---
 title: "Student's t-test"
-format:
-  html:
-    toc: true
-    include-after-body:
-      - sync-tabs.html
 ---
 
 ```{r}
@@ -25,59 +20,101 @@ from setup import *
 ::: {.callout-note collapse="true"}
 ## Click to expand
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
-| Libraries            | Description                                                                                                       |
-|:------------------------|:----------------------------------------------|
-| `library(tidyverse)` | A collection of R packages designed for data science                                                              |
-| `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
+### Libraries
 
-| Functions                      | Description                                                                    |
-|:-----------------------------------|:-----------------------------------|
-| `rstatix::get_summary_stats()` | Computes summary statistics                                                    |
-| `rstatix::levene_test()`       | Perform Levene's test for equality of variance (non-normally distributed data) |
-| `bartlett.test()`              | Perform Bartlett's test for equality of variance (normally distributed data)   |
-| `ggplot2::stat_qq()`           | Plots a Q-Q plot for comparison with a normal distribution.                    |
-| `ggplot2::stat_qq_line()`      | Adds a comparison line to the Q-Q plot.                                        |
+```{r}
+#| eval: false
+# A collection of R packages designed for data science
+library(tidyverse)
+
+# Converts stats functions to a tidyverse-friendly format
+library(rstatix)
+```
+
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Computes summary statistics                         
+rstatix::get_summary_stats() 
+
+# Performs Levene's test for equality of variance (non-normally distributed data)
+rstatix::levene_test()
+
+# Performs Bartlett's test for equality of variance (normally distributed data)
+bartlett.test()
+
+# Plots a Q-Q plot for comparison with a normal distribution
+ggplot2::stat_qq()
+
+# Adds a comparison line to the Q-Q plot
+ggplot2::stat_qq_line()
+```
 
 ## R
 
-| Libraries      | Description                                                                     |
-|:-----------------------------------|:-----------------------------------|
-| `library(car)` | Companion to Applied Regression, provides additional statistical functionality. |
+### Libraries
 
-| Function            | Description                                                                                                        |
-|:-----------------------------------|:-----------------------------------|
-| `aggregate()`       | Splits the data into subsets, computes summary statistics for each, and returns the result in a convenient form    |
-| `unstack()`         | Converts a stacked data frame into an unstacked data frame (or a list if the lengths of the samples are different) |
-| `bartlett.test()`   | Perform Bartlett's test for equality of variance (normally distributed data)                                       |
-| `car::leveneTest()` | Perform Levene's test for equality of variance (non-normally distributed data)                                     |
-| `t.test()`          | Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections.                               |
-| `qqnorm()`          | Plots a Q-Q plot for comparison with a normal distribution.                                                        |
-| `qqline()`          | Adds a comparison line to the Q-Q plot.                                                                            |
-| `shapiro.test()`    | Performs a Shapiro-Wilk test for normality.                                                                        |
+```{r}
+#| eval: false
+# Companion to Applied Regression, provides additional statistical functionality
+library(car)
+```
+
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Splits the data into subsets, computes summary statistics for each, and returns the result in a convenient form
+aggregate()
+
+# Converts a stacked data frame into an unstacked data frame (or a list if the lengths of the samples are different)
+unstack()
+
+# Performs Bartlett's test for equality of variance (normally distributed data)
+bartlett.test()
+
+# Performs Levene's test for equality of variance (non-normally distributed data)
+car::leveneTest()
+
+# Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
+t.test()
+
+# Plots a Q-Q plot for comparison with a normal distribution
+qqnorm()
+
+# Adds a comparison line to the Q-Q plot
+qqline()
+
+# Performs a Shapiro-Wilk test for normality
+shapiro.test()
+```
 
 ## Python
 
 | Libraries  | Description                                                              |
-|:-----------------|:-----------------------------------------------------|
+|:--------------------|:--------------------------------------------------|
 | `plotnine` | The Python equivalent of `ggplot2`.                                      |
 | `pandas`   | A Python data analysis and manipulation tool.                            |
 | `pingouin` | A Python module developed to have simple yet exhaustive stats functions. |
 
-| Functions                       | Description                                                             |
+| Functions                                                                                                                      | Description                                                 |
 |:-----------------------------------|:-----------------------------------|
-| `pandas.DataFrame.read_csv`     | Reads in a `.csv` file                                                  |
-| `pandas.DataFrame.head()`       | Plots the first few rows                                                |
-| `pandas.DataFrame.describe()`   | Gives summary statistics                                                |
-| `pandas.DataFrame.groupby()`    | Group DataFrame using a mapper or by a Series of columns                |
-| `pandas.DataFrame.query()`      | Query the columns of a DataFrame with a boolean expression              |
-| [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)| Performs the Shapiro-Wilk test for normality.|
-|[`pingouin.homoscedasticity()`](https://pingouin-stats.org/generated/pingouin.homoscedasticity.html#pingouin.homoscedasticity)|Checks for equality of variance.|
-| [`pingouin.ttest()`](https://pingouin-stats.org/generated/pingouin.ttest.html#pingouin.ttest) | Performs a t-test|
-| `plotnine.stats.stat_qq()`      | Plots a Q-Q plot for comparison with a normal distribution.             |
-| `plotnine.stats.stat_qq_line()` | Adds a comparison line to the Q-Q plot.                                 |
+| `pandas.DataFrame.read_csv`                                                                                                    | Reads in a `.csv` file                                      |
+| `pandas.DataFrame.head()`                                                                                                      | Plots the first few rows                                    |
+| `pandas.DataFrame.describe()`                                                                                                  | Gives summary statistics                                    |
+| `pandas.DataFrame.groupby()`                                                                                                   | Group DataFrame using a mapper or by a Series of columns    |
+| `pandas.DataFrame.query()`                                                                                                     | Query the columns of a DataFrame with a boolean expression  |
+| [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)                                         | Performs the Shapiro-Wilk test for normality.               |
+| [`pingouin.homoscedasticity()`](https://pingouin-stats.org/generated/pingouin.homoscedasticity.html#pingouin.homoscedasticity) | Checks for equality of variance.                            |
+| [`pingouin.ttest()`](https://pingouin-stats.org/generated/pingouin.ttest.html#pingouin.ttest)                                  | Performs a t-test                                           |
+| `plotnine.stats.stat_qq()`                                                                                                     | Plots a Q-Q plot for comparison with a normal distribution. |
+| `plotnine.stats.stat_qq_line()`                                                                                                | Adds a comparison line to the Q-Q plot.                     |
 :::
 :::
 
@@ -100,7 +137,7 @@ Let's read in the data and have a quick look at the first rows to see how the da
 
 Make sure you have downloaded the data (see: [Datasets](#index-datasets)) and placed it within your working directory.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 First we load the relevant libraries:
@@ -142,7 +179,7 @@ rivers_py.head()
 
 Let's first summarise the data.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -235,7 +272,7 @@ This is where it gets a bit trickier. Although we don't care if the samples are 
 
 So we perform a [Shapiro-Wilk test](#shapiro-wilk-test) on both samples separately.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 We can use the `group_by()` function to group the data by `river`, then we perform the Shapiro-Wilk test on the `length` measurements:
@@ -270,9 +307,9 @@ shapiro.test(uns_rivers$Guanapo)
 
 To perform a Shapiro-Wilk test we can use the `normality()` function from `pingouin`. We can give it the data in the original 'long' format, where we specify:
 
-* `dv` = dependent variable, `length`
-* `group` = grouping variable, `river
-* `data` = data frame
+-   `dv` = dependent variable, `length`
+-   `group` = grouping variable, \`river
+-   `data` = data frame
 
 ```{python}
 pg.normality(dv = "length",
@@ -292,7 +329,7 @@ Create the Q-Q plots for the two samples and discuss with your neighbour what yo
 ::: {.callout-caution collapse="true"}
 ## Answer
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -348,7 +385,7 @@ If that is indeed the case, then the data themselves should have equal spread as
 
 The Shapiro-Wilk test and the Q-Q plots have shown that some of the data might not be normal *enough* (although in opposite directions!) and so in order to test for equality of variance we will use Levene's test.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 The function we use is `levene_test()` from the `rstatix` library.
@@ -388,7 +425,7 @@ The key bit of information is the 3rd line under the text `Pr(>F)`. This is the 
 
 To test for equality of variance, we can use the `homoscedasticity()` function from `pingouin`.
 
-Note that, contrary to R, we specify the type of test in the `method` argument. The default is `"levene"`, assuming that data are _not_ normally distributed.
+Note that, contrary to R, we specify the type of test in the `method` argument. The default is `"levene"`, assuming that data are *not* normally distributed.
 
 ```{python}
 pg.homoscedasticity(dv = "length",
@@ -404,7 +441,7 @@ The p-value tells us the probability of observing these two samples if they come
 
 If we had wanted to carry out Bartlett's test (i.e. if the data *had* been sufficiently normally distributed) then we would have done:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 Here we use `bartlett.test()` from base R. Surprisingly, the `rstatix` package does not have a built-in equivalent.
@@ -431,6 +468,7 @@ bartlett.test(length ~ river, data = rivers_r)
 The relevant p-value is given on the 3rd line.
 
 ## Python
+
 ```{python}
 pg.homoscedasticity(dv = "length",
                     group = "river",
@@ -445,7 +483,7 @@ In this case we're ignoring the fact that the data are not normal enough, accord
 
 Perform a two-sample, two-tailed, t-test:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r,}
@@ -569,7 +607,7 @@ $H_1$ : male mean $\neq$ female mean
 
 Let's load the data (I've created the `.csv` file earlier) and explore our data a bit more before we dive into the statistics.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r, warning=FALSE}
@@ -650,7 +688,7 @@ As always we use the plot and summary to assess three things:
 
 Let's look at the normality of each of the groups separately. There are several ways of getting at the `serum` values for `Male` and `Female` groups separately. All of them come down to splitting the data. Afterwards we use the Shapiro-Wilk ('formal' test), followed by Q-Q plots (much more informative).
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -698,7 +736,7 @@ The p-values for both Shapiro-Wilk tests are non-significant which suggests that
 
 Given these caveats of the Shapiro-Wilk test (I'll stop mentioning them now, I think I've made my opinion clear ;)), let's look at the Q-Q plots.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -741,7 +779,7 @@ Overall, the assumption of normality of the data doesn't appear to be very well 
 
 It's not clear whether the data are normal or not, so it isn't clear which test to use here. The sensible approach is to do both and hope that they agree (fingers crossed!). Or err on the side of caution and assume they are not normal, but potentially throwing away statistical power (more on that later).
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 Bartlett's test gives us:
@@ -806,7 +844,7 @@ Overall, what this means is that we're not too sure about normality, but that ho
 
 Because of the result of the Bartlett test I know that I can carry out a two-sample Student's t-test. If the variances between the two groups were not equal, then we'd have to perform Welch's t-test.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}

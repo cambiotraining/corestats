@@ -1,10 +1,5 @@
 ---
 title: "Linear regression"
-format:
-  html:
-    toc: true
-    include-after-body:
-      - sync-tabs.html
 ---
 
 ```{r}
@@ -41,18 +36,31 @@ from setup import *
 ::: {.callout-note collapse="true"}
 ## Click to expand
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
-| Libraries               | Description                                                                                                       |
-|:---------------------|:-------------------------------------------------|
-| `library(tidyverse)`    | A collection of R packages designed for data science.                                                             |
-| `library(rstatix)`      | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
-| `library(ggResidpanel)` | Creates diagnostic plots using `ggplot2`.                                                                         |
+### Libraries
 
-| Library        | Function              | Description                  |
-|:---------------|:----------------------|:-----------------------------|
-| `ggResidpanel` | `resid_panel()`       | Creates diagnostic plots.    |
+```{r}
+#| eval: false
+# A collection of R packages designed for data science
+library(tidyverse)
+
+# Converts stats functions to a tidyverse-friendly format
+library(rstatix)
+
+# Creates diagnostic plots using ggplot2
+library(ggResidpanel)
+```
+
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Creates diagnostic plots
+ggResidpanel::resid_panel()
+```
 
 ## R
 
@@ -87,7 +95,7 @@ And then will be testing the following null and alternative hypotheses:
 
 ## Summarise and visualise
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 First, we read in the data:
@@ -139,7 +147,7 @@ In order for a linear regression analysis to be valid 4 key assumptions need to 
 
 Whether these assumptions are met can easily be checked visually by producing four key diagnostic plots.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 First we need to define the linear model:
@@ -205,7 +213,7 @@ Let's change this through leading by example!
 
 We have already defined the linear model, so we can have a closer look at it:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -236,7 +244,7 @@ Murder = 0.63 + 0.042 Assault
 ```
 Next we can assess whether the slope is significantly different from zero:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -284,7 +292,7 @@ Again, the p-value is what we're most interested in here and shows us the probab
 
 It can be very helpful to plot the regression line with the original data to see how far the data are from the predicted linear values. We can do this as follows:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -331,7 +339,7 @@ Do the following in both cases:
 
 ### Load and visualise the data
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 First, we read in the data:
@@ -384,7 +392,7 @@ We visualise for the same reasons as before:
 
 Now, let's check the assumptions with the diagnostic plots.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -425,7 +433,7 @@ So in this case, because we have a large enough sample size and our deviation fr
 
 So, let's actually do the analysis:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -449,7 +457,7 @@ Now let's investigate the relationship between the proportion of High School Gra
 
 We'll run through this a bit quicker:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -487,7 +495,7 @@ Let's check these out properly
 
 Now, let's check the assumptions with the diagnostic plots.
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}

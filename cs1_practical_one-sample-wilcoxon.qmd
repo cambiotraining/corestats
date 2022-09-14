@@ -1,10 +1,5 @@
 ---
 title: "Wilcoxon signed-rank test"
-format:
-  html:
-    toc: true
-    include-after-body:
-      - sync-tabs.html
 ---
 
 ```{r}
@@ -44,30 +39,46 @@ This test also considers a single sample, however for this test (in contrast to 
 ::: {.callout-note collapse="true"}
 ## Click to expand
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
-| Libraries            | Description                                                                                                       |
-|:-----------------------------------|:-----------------------------------|
-| `library(tidyverse)` | A collection of R packages designed for data science                                                              |
-| `library(rstatix)`   | Converts base R stats functions to a tidyverse-friendly format. Also contains extra functionality that we'll use. |
+### Libraries
 
-| Functions                | Description                                 |
-|:-------------------------|:--------------------------------------------|
-| `rstatix::wilcox_test()` | Performs one and two sample Wilcoxon tests. |
+```{r}
+#| eval: false
+# A collection of R packages designed for data science
+library(tidyverse)
+
+# Converts stats functions to a tidyverse-friendly format
+library(rstatix)
+```
+
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Performs one and two sample Wilcoxon tests
+rstatix::wilcox_test()
+```
 
 ## R
 
-| Functions         | Description                                                                                                      |
-|:-----------------------------------|:-----------------------------------|
-| `wilcoxon.test()` | Performs one- and two-sample Wilcoxon tests on vectors of data; the latter is also known as 'Mann-Whitney' test. |
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Performs one- and two-sample Wilcoxon tests on vectors of data; the latter is also known as 'Mann-Whitney' test
+wilcoxon.test()
+```
 
 ## Python
 
-| Libraries     | Description                                       |
-|:--------------|:--------------------------------------------------|
-| `plotnine`    | The Python equivalent of `ggplot2`.               |
-| `pandas`      | A Python data analysis and manipulation tool.     |
+| Libraries  | Description                                                             |
+|:------------------|:----------------------------------------------------|
+| `plotnine` | The Python equivalent of `ggplot2`.                                     |
+| `pandas`   | A Python data analysis and manipulation tool.                           |
 | `pingouin` | A Python module developed to have simple yet exhaustive stats functions |
 
 | Functions                                                                                              | Description                |
@@ -100,7 +111,7 @@ Whilst there are formal statistical tests for symmetry we will opt for a simple 
 
 Plot a histogram and a box plot of the data:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 Let's first determine the median, so we can use that to compare our data to.
@@ -187,7 +198,7 @@ Here we can see that whilst the distribution isn't perfectly symmetric, neither 
 
 Perform a one-sample, two-tailed Wilcoxon signed-rank test:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}
@@ -280,7 +291,7 @@ From the box plot from the previous exercise we already know that the data are s
 
 Performing the test:
 
-::: panel-tabset
+::: {.panel-tabset group="language"}
 ## tidyverse
 
 ```{r}

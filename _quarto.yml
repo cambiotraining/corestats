@@ -7,6 +7,13 @@ project:
 execute:
   freeze: auto
 
+format:
+  html:
+    toc: true
+    code-link: true
+    theme: cosmo
+    css: styles.css
+
 website:
   title: "Core statistics"
   description: "Supporting materials for the Core statistics course (University of Cambridge)"
@@ -51,12 +58,6 @@ website:
         contents:
           - cs3_practical_linear-regression.qmd
           - cs3_practical_correlations.qmd
-
-format:
-  html:
-    theme: cosmo
-    css: styles.css
-    toc: true
 
 editor: visual
 
