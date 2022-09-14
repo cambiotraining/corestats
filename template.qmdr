@@ -1,10 +1,5 @@
 ---
 title: "Paired t-test"
-format:
-  html:
-    toc: true
-    include-after-body:
-      - sync-tabs.html
 ---
 
 ```{r}
@@ -20,14 +15,41 @@ source(file = "setup.R")
 from setup import *
 ```
 
+::: callout-tip
+## Learning outcomes
+
+**Questions**
+
+-
+-
+
+**Objectives**
+
+-
+-
+-
+:::
+
 ## Libraries and functions
 
 ::: {.callout-note collapse="true"}
 ## Click to expand
-::: {.panel-tabset}
+
+::: {.panel-tabset group="language"}
 ## tidyverse
+
+### Libraries
+### Functions
+
 ## R
+
+### Libraries
+### Functions
+
 ## Python
+
+### Libraries
+### Functions
 :::
 :::
 
@@ -35,9 +57,17 @@ from setup import *
 
 ::: {.callout-caution collapse="true"}
 ## Answer
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## tidyverse
 ## R
 ## Python
 :::
+:::
+
+## Key points
+
+::: callout-note
+-
+-
+-
 :::
