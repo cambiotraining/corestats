@@ -1,0 +1,460 @@
+---
+title: "Paired t-test"
+---
+
+```{r}
+#| echo: false
+#| message: false
+#| results: hide
+source(file = "setup_files/setup.R")
+```
+
+```{python}
+#| echo: false
+#| message: false
+exec(open('setup_files/setup.py').read())
+```
+
+A paired t-test is used when we have two samples of continuous data that can be paired (examples of these sort of data would be weights of individuals before and after a diet). This test is applicable if the number of paired points within the samples is large (\>30) or, if the number of points is small, then this test also works when the parent distributions are normally distributed.
+
+## Libraries and functions
+
+::: {.callout-note collapse="true"}
+## Click to expand
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+### Libraries
+
+```{r}
+#| eval: false
+# A collection of R packages designed for data science
+library(tidyverse)
+
+# Converts stats functions to a tidyverse-friendly format
+library(rstatix)
+```
+
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
+rstatix::t_test()
+
+# Performs a Shapiro-Wilk test for normality
+rstatix::shapiro_test()
+
+# Plots a Q-Q plot for comparison with a normal distribution
+ggplot2::stat_qq()
+
+# Adds a comparison line to the Q-Q plot
+ggplot2::stat_qq_line()
+
+# Plots jittered points by adding a small amount of random variation to each point, to handle overplotting
+ggplot2::geom_jitter()
+
+# "Widens" the data, increasing the number of columns
+tidyr::pivot_wider()
+```
+
+## R
+
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Reshapes a data frame from 'long' to 'wide' and vice vers
+stats::reshape()
+
+# Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
+t.test()
+
+# Plots a Q-Q plot for comparison with a normal distribution
+qqnorm()
+
+# Adds a comparison line to the Q-Q plot
+qqline()
+
+# Performs a Shapiro-Wilk test for normality
+shapiro.test()
+```
+
+## Python
+
+| Libraries  | Description                                                             |
+|:----------------------|:------------------------------------------------|
+| `plotnine` | The Python equivalent of `ggplot2`.                                     |
+| `pandas`   | A Python data analysis and manipulation tool.                           |
+| `pingouin` | A Python module developed to have simple yet exhaustive stats functions |
+
+| Functions                                                                                     | Description                                                         |
+|:-----------------------------------|:-----------------------------------|
+| `pandas.DataFrame.read_csv`                                                                   | Reads in a `.csv` file                                              |
+| `pandas.DataFrame.pivot()`                                                                    | Return reshaped DataFrame organised by given index / column values. |
+| [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)        | Performs the Shapiro-Wilk test for normality.                       |
+| [`pingouin.ttest()`](https://pingouin-stats.org/generated/pingouin.ttest.html#pingouin.ttest) | Performs a t-test                                                   |
+| `plotnine.stats.stat_qq()`                                                                    | Plots a Q-Q plot for comparison with a normal distribution.         |
+| `plotnine.stats.stat_qq_line()`                                                               | Adds a comparison line to the Q-Q plot.                             |
+:::
+:::
+
+## Data and hypotheses
+
+For example, suppose we measure the cortisol levels in 20 adult females (nmol/l) first thing in the morning and again in the evening. We want to test whether the cortisol levels differs between the two measurement times. We will initially form the following null and alternative hypotheses:
+
+-   $H_0$: There is no difference in cortisol level between times ($\mu M = \mu E$)
+-   $H_1$: There is a difference in cortisol levels between times ($\mu M \neq \mu E$)
+
+We use a two-sample, two-tailed paired t-test to see if we can reject the null hypothesis.
+
+-   We use a **two-sample** test because we now have two samples
+-   We use a **two-tailed** t-test because we want to know if our data suggest that the true (population) means are different from one another rather than that one mean is specifically bigger or smaller than the other
+-   We use a **paired** test because each data point in the first sample can be linked to another data point in the second sample by a connecting factor
+-   We're using a **t-test** because we're assuming that the parent populations are normal and have equal variance (We'll check this in a bit)
+
+The data are stored in a tidy format in the file `data/CS1-twopaired.csv`.
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+# load the data
+cortisol <- read_csv("data/CS1-twopaired.csv")
+
+# have a look at the data
+cortisol
+```
+
+## R
+
+```{r}
+# load the data
+cortisol_r <- read.csv("data/CS1-twopaired.csv")
+
+head(cortisol_r)
+```
+
+## Python
+
+```{python}
+# load the data
+cortisol_py = pd.read_csv('data/CS1-twopaired.csv')
+
+# inspect the data
+cortisol_py.head()
+```
+:::
+
+We can see that the data frame consists of three columns:
+
+1.  `patient_id`, a unique ID for each patient
+2.  `time` when the cortisol level was measured
+3.  `cortisol`, which contains the measured value.
+
+For each `patient_id` there are two measurements: one in the morning and one in the afternoon.
+
+## Summarise and visualise
+
+It's always a good idea to visualise your data, so let's do that.
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+# create a boxplot
+cortisol %>% 
+  ggplot(aes(x = time, y = cortisol)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.05) +
+  ylab("Cortisol level (nmol/l)")
+```
+
+Here we use also visualise the actual data points, to get a sense of how these data are spread out. To avoid overlapping the data points (try using `geom_point()` instead of `geom_jitter()`), we jitter the data points. What `geom_jitter()` does is add a small amount of variation to each point.
+
+## R
+
+```{r}
+# create a boxplot
+boxplot(cortisol ~ time,
+        data = cortisol_r)
+```
+
+## Python
+
+```{python}
+#| results: hide
+(
+  ggplot(cortisol_py,
+    aes(x = "time",
+        y = "cortisol"))
+  + geom_boxplot()
+  + geom_jitter(width = 0.05)
+  + ylab("Cortisol level (nmol/l)")
+)
+```
+:::
+
+However, this plot does not capture how the cortisol level of each *individual* subject has changed though. We can explore the individual changes between morning and evening by looking at the *differences* between the two times of measurement for each patient.
+
+To do this, we need to put our data into a wide format, so we can calculate the change in cortisol level for each patient.
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+In tidyverse we can use the `pivot_wider()` function.
+
+```{r}
+# calculate the difference between evening and morning values
+cortisol_diff <- cortisol %>%
+  pivot_wider(names_from = time, values_from = cortisol) %>% 
+  mutate(cortisol_change = evening - morning)
+
+cortisol_diff
+```
+
+After this we can plot our data:
+
+```{r}
+# plot the data
+  ggplot(cortisol_diff, aes(y = cortisol_change)) +
+  geom_boxplot() +
+  ylab("Change in cortisol (nmol/l)")
+```
+
+The differences in cortisol levels appear to be very much less than zero, meaning that the evening cortisol levels appear to be much lower than the morning ones. As such we would expect that the test would give a pretty significant result.
+
+An alternative representation would be to plot the data points for both evening and morning and connect them by patient:
+
+```{r}
+# plot cortisol levels by patient
+cortisol %>% 
+  ggplot(aes(x = time,
+             y = cortisol,
+             group = patient_id)) +
+  geom_point() +
+  geom_line()
+```
+
+This gives a similar picture to what the boxplot was telling us, that for most patients the cortisol levels are higher in the morning than in the evening.
+
+## R
+
+```{r}
+cortisol_diff_r <- reshape(cortisol_r,
+        idvar = "patient_id",
+        timevar = "time",
+        direction = "wide")
+
+# add new column with difference
+cortisol_diff_r$cortisol_change <- cortisol_diff_r$cortisol.evening - cortisol_diff_r$cortisol.morning
+
+head(cortisol_diff_r)
+```
+
+After this we can plot our data:
+
+```{r}
+boxplot(cortisol_diff_r$cortisol_change)
+```
+
+The differences in cortisol levels appear to be very much less than zero, meaning that the evening cortisol levels appear to be much lower than the morning ones. As such we would expect that the test would give a pretty significant result.
+
+An alternative representation would be to plot the data points for both evening and morning and connect them by patient:
+
+```{r}
+matplot(t(cortisol_diff_r[ , 2:3]),
+        pch = 1,
+        type = c("b"),
+        col = 1:20)
+```
+
+As far as I am aware of, there isn't a straightforward method of plotting paired data using the base R functionality. Hence the data gymnastics:
+
+-   the default `plot()` function doesn't support this - the standard `matplot()` function does
+-   the `t` function transposes the data, and I'm only selecting the second and third columns (`[ , 2:3]`) which contain the paired morning/evening measurements.
+-   to group (pair) the data, we're using colours, one for each of the 20 patients (`col = 1:20`)
+
+This gives a similar picture to what the boxplot was telling us, that for most patients the cortisol levels are higher in the morning than in the evening.
+
+## Python
+
+```{python}
+# reformat the data into a 'wide' format
+cortisol_diff_py = pd.pivot(cortisol_py, index = "patient_id", columns = "time", values = "cortisol")
+
+# add a new column with difference between
+# evening and morning cortisol levels
+cortisol_diff_py["cortisol_change"] = cortisol_diff_py["evening"].subtract(cortisol_diff_py["morning"])
+      
+# have a look at the format
+cortisol_diff_py.head()
+```
+
+After this we can plot our data:
+
+```{python}
+#| results: hide
+# plot the data
+(
+  ggplot(cortisol_diff_py, aes(x = "1", y = "cortisol_change"))
+  + geom_boxplot()
+  + ylab("Change in cortisol (nmol/l)")
+)
+```
+
+The differences in cortisol levels appear to be very much less than zero, meaning that the evening cortisol levels appear to be much lower than the morning ones. As such we would expect that the test would give a pretty significant result.
+
+An alternative representation would be to plot the data points for both evening and morning and connect them by patient:
+
+```{python}
+#| results: hide
+# plot cortisol levels by patient
+(
+  ggplot(cortisol_py,
+    aes(x = "time",
+        y = "cortisol",
+        group = "patient_id"))
+  + geom_point()
+  + geom_line()
+)
+```
+
+This gives a similar picture to what the boxplot was telling us, that for most patients the cortisol levels are higher in the morning than in the evening.
+:::
+
+## Assumptions
+
+You will do this in the exercise!
+
+## Implement and interpret the test
+
+Perform a two-sample, two-tailed, paired t-test:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+#| results: hide
+# perform the test
+cortisol %>% 
+  t_test(cortisol ~ time,
+         alternative = "two.sided",
+         paired = TRUE)
+```
+
+-   The first argument gives the formula
+-   The second argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
+-   The third argument says that the data are paired
+
+## R
+
+```{r}
+t.test(cortisol ~ time,
+       alternative = "two.sided",
+       paired = TRUE,
+       data = cortisol_r)
+```
+
+-   The first two arguments define the formula
+-   The third argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
+-   The fourth argument says that the data are paired
+
+From our perspective the value of interested is in the `p` column (p-value = 5.29 $\times$ 10<sup>-5</sup>). Given that this is substantially less than 0.05 we can reject the null hypothesis and state:
+
+## Python
+
+To perform a paired t-test we can use the same `pg.ttest()` as before, but set the argument `paired = True`.
+
+Annoyingly, the output is not entirely visible because the data frame is too wide. To deal with that, we can simply transpose it with `transpose()`
+
+```{python}
+pg.ttest(cortisol_diff_py["evening"],
+         cortisol_diff_py["morning"],
+         alternative = "two-sided",
+         paired = True).transpose()
+```
+:::
+
+Since the p-value = 5.29 $\times$ 10<sup>-5</sup>) and thus substantially less than 0.05 we can reject the null hypothesis and state:
+
+> A two-tailed, paired t-test indicated that the average cortisol level in adult females differed significantly between the morning (313.5 nmol/l) and the evening (197.4 nmol/l) (t = -5.2, df = 19, p = 5.3 \* 10<sup>-5</sup>).
+
+## Exercise: Assumptions
+
+Check the assumptions necessary for this this paired t-test. Was a paired t-test an appropriate test?
+
+::: {.callout-tip collapse="true"}
+## Answer
+
+A paired test is really just a one-sample test in disguise. We actually don't care too much about the distributions of the individual groups. Instead we care about the properties of the **differences**. So for a paired t-test to be valid for this data set, we need the differences between the morning and evening values to be normally distributed.
+
+Let's check this with the Shapiro-Wilk test and Q-Q plots, using the wide data frames we created earlier.
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+Perform Shapiro-Wilk test:
+
+```{r}
+# perform Shapiro-Wilk test on cortisol differences
+cortisol_diff %>% 
+  shapiro_test(cortisol_change)
+```
+
+Create Q-Q plot:
+
+```{r}
+# create the Q-Q plot
+cortisol_diff %>% 
+  ggplot(aes(sample = cortisol_change)) +
+  stat_qq() +
+  stat_qq_line(colour = "red")
+```
+
+## base R
+
+Perform Shapiro-Wilk test:
+
+```{r}
+# perform Shapiro-Wilk test on cortisol differences
+shapiro.test(cortisol_diff_r$cortisol_change)
+```
+
+Create Q-Q plot:
+
+```{r}
+qqnorm(cortisol_diff_r$cortisol_change)
+qqline(cortisol_diff_r$cortisol_change, col = "red")
+```
+
+## Python
+
+Perform Shapiro-Wilk test:
+
+```{python}
+# perform Shapiro-Wilk test on cortisol differences
+pg.normality(cortisol_diff_py["cortisol_change"])
+```
+
+Create Q-Q plot:
+
+```{python}
+#| results: hide
+# create the Q-Q plot
+(
+  ggplot(cortisol_diff_py,
+    aes(sample = "cortisol_change"))
+    + stat_qq()
+    + stat_qq_line(colour = "red")
+)
+```
+:::
+
+The Shapiro-Wilk test says that the data are normal enough and whilst the Q-Q plot is mostly fine, there is some suggestion of snaking at the bottom left. I'm actually OK with this because the suggestion of snaking is actually only due to a single point (the last point on the left). If you cover that point up with your thumb (or finger of your choice) then the remaining points in the Q-Q plot look pretty darn good, and so the suggestion of snaking is actually driven by only a single point (which can happen by chance). As such I'm happy that the assumption of normality is well-met in this case. This **single point** check is a useful thing to remember when assessing diagnostic plots.
+
+So, yep, a paired t-test is appropriate for this data set.
+:::
