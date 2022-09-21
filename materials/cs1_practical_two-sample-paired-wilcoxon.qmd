@@ -60,7 +60,8 @@ library(rstatix)
 ```{r}
 #| eval: false
 #| warning: false
-# Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
+# Performs a one-sample t-test, Student's t-test
+# and Welch's t-test in later sections
 rstatix::t_test()
 
 # Performs a Shapiro-Wilk test for normality
@@ -72,7 +73,8 @@ ggplot2::stat_qq()
 # Adds a comparison line to the Q-Q plot
 ggplot2::stat_qq_line()
 
-# Plots jittered points by adding a small amount of random variation to each point, to handle overplotting
+# Plots jittered points by adding a small amount of random variation
+# to each point, to handle overplotting
 ggplot2::geom_jitter()
 
 # "Widens" the data, increasing the number of columns
@@ -86,20 +88,21 @@ tidyr::pivot_wider()
 ```{r}
 #| eval: false
 #| warning: false
-# Reshapes a data frame from 'long' to 'wide' and vice vers
+# Reshapes a data frame from 'long' to 'wide' and vice versa
 stats::reshape()
 
-# Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
-t.test()
+# Performs a one-sample t-test, Student's t-test
+# and Welch's t-test in later sections
+stats::t.test()
 
 # Plots a Q-Q plot for comparison with a normal distribution
-qqnorm()
+stats::qqnorm()
 
 # Adds a comparison line to the Q-Q plot
-qqline()
+stats::qqline()
 
 # Performs a Shapiro-Wilk test for normality
-shapiro.test()
+stats::shapiro.test()
 ```
 
 ## Python

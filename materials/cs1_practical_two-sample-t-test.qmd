@@ -42,11 +42,13 @@ library(rstatix)
 # Computes summary statistics                         
 rstatix::get_summary_stats() 
 
-# Performs Levene's test for equality of variance (non-normally distributed data)
+# Performs Levene's test for equality of variance
+# (non-normally distributed data)
 rstatix::levene_test()
 
-# Performs Bartlett's test for equality of variance (normally distributed data)
-bartlett.test()
+# Performs Bartlett's test for equality of variance
+# (normally distributed data)
+stats::bartlett.test()
 
 # Plots a Q-Q plot for comparison with a normal distribution
 ggplot2::stat_qq()
@@ -61,7 +63,8 @@ ggplot2::stat_qq_line()
 
 ```{r}
 #| eval: false
-# Companion to Applied Regression, provides additional statistical functionality
+# Companion to Applied Regression, provides additional
+# statistical functionality
 library(car)
 ```
 
@@ -70,29 +73,33 @@ library(car)
 ```{r}
 #| eval: false
 #| warning: false
-# Splits the data into subsets, computes summary statistics for each, and returns the result in a convenient form
-aggregate()
+# Splits the data into subsets, computes summary statistics
+# for each, and returns the result in a convenient form
+stats::aggregate()
 
-# Converts a stacked data frame into an unstacked data frame (or a list if the lengths of the samples are different)
-unstack()
+# Converts a stacked data frame into an unstacked data frame
+# (or a list if the lengths of the samples are different)
+utils::unstack()
 
-# Performs Bartlett's test for equality of variance (normally distributed data)
-bartlett.test()
+# Performs Bartlett's test for equality of variance
+# (normally distributed data)
+stats::bartlett.test()
 
-# Performs Levene's test for equality of variance (non-normally distributed data)
+# Performs Levene's test for equality of variance
+# (non-normally distributed data)
 car::leveneTest()
 
 # Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
-t.test()
+stats::t.test()
 
 # Plots a Q-Q plot for comparison with a normal distribution
-qqnorm()
+stats::qqnorm()
 
 # Adds a comparison line to the Q-Q plot
-qqline()
+stats::qqline()
 
 # Performs a Shapiro-Wilk test for normality
-shapiro.test()
+stats::shapiro.test()
 ```
 
 ## Python

@@ -69,8 +69,10 @@ rstatix::wilcox_test()
 ```{r}
 #| eval: false
 #| warning: false
-# Performs one- and two-sample Wilcoxon tests on vectors of data; the latter is also known as 'Mann-Whitney' test
-wilcoxon.test()
+# Performs one- and two-sample Wilcoxon tests
+# on vectors of data; the latter is also known
+# as 'Mann-Whitney' test
+stats::wilcoxon.test()
 ```
 
 ## Python

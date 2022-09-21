@@ -11,9 +11,12 @@ project:
     - setup.md
     - materials.md
     - materials/*
-    - "!development/"
+    - "!materials/*/_no-render"
 
 format: courseformat-html
+
+metadata-files:
+  - "materials/_sidebar.yml"
 
 execute:
   freeze: auto
@@ -49,7 +52,3 @@ website:
         aria-label: Bioinformatics Training Facility Twitter
   sidebar:
     - title: "Home"
-    - title: "Materials"
-      contents:
-        - materials.md
-        - auto: materials

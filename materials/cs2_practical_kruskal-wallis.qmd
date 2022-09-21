@@ -86,10 +86,10 @@ library(dunn.test)
 #| eval: false
 #| warning: false
 # Performs a Kruskal-Wallis test
-kruskal.test()
+stats::kruskal.test()
 
 # Performs Dunn's test for pairwise multiple comparisons of the ranked data
-dunn.test()
+dunn.test::dunn.test()
 ```
 
 ## Python

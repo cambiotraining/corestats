@@ -59,17 +59,18 @@ ggplot2::stat_qq_line()
 ```{r}
 #| eval: false
 #| warning: false
-# Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
-t.test()
+# Performs a one-sample t-test, Student's t-test
+# and Welch's t-test in later sections
+stats::t.test()
 
 # Plots a Q-Q plot for comparison with a normal distribution
-qqnorm()
+stats::qqnorm()
 
 # Adds a comparison line to the Q-Q plot
-qqline()
+stats::qqline()
 
 # Performs a Shapiro-Wilk test for normality
-shapiro.test()
+stats::shapiro.test()
 ```
 
 ## Python

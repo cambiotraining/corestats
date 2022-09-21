@@ -1,0 +1,22 @@
+# This is the sidebar configuration file
+website:
+  sidebar:
+    - title: "Materials"
+      contents:
+        - materials.md
+        - section: "Hypothesis testing"
+          contents:
+            - "materials/cs1_practical_one-sample-t-test.qmd"
+            - "materials/cs1_practical_one-sample-wilcoxon.qmd"
+            - "materials/cs1_practical_two-sample-t-test.qmd"
+            - "materials/cs1_practical_two-sample-mann-whitney.qmd"
+            - "materials/cs1_practical_two-sample-paired-t-test.qmd"
+            - "materials/cs1_practical_two-sample-paired-wilcoxon.qmd"
+        - section: "Categorical predictors"
+          contents:
+            - "materials/cs2_practical_anova.qmd"
+            - "materials/cs2_practical_kruskal-wallis.qmd"
+        - section: "Continuous predictors"
+          contents:
+            - "materials/cs3_practical_linear-regression.qmd"
+            - "materials/cs3_practical_correlations.qmd"
