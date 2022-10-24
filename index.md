@@ -1,6 +1,6 @@
 ---
 title: "Core statistics"
-author: ["Martin van Rongen", "Matt Castle", "Rob Nicholls", "Holly Pavey", "Vicki Hodgson"]
+author: ["Martin van Rongen, Matt Castle, Rob Nicholls, Holly Pavey, Vicki Hodgson"]
 date: today
 ---
 

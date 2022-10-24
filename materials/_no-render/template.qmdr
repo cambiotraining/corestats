@@ -55,7 +55,7 @@ from setup import *
 
 ## Exercise
 
-::: {.callout-caution collapse="true"}
+::: {.callout-tip collapse="true"}
 ## Answer
 ::: {.panel-tabset group="language"}
 ## tidyverse

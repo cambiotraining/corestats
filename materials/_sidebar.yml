@@ -20,3 +20,6 @@ website:
           contents:
             - "materials/cs3_practical_linear-regression.qmd"
             - "materials/cs3_practical_correlations.qmd"
+        - section: "Two predictors"
+          contents:
+            - "materials/cs4_practical_two-way-anova.qmd"
