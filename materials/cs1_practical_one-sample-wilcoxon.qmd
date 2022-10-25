@@ -175,12 +175,13 @@ Let's first determine the median, so we can use that to compare our data to.
 median_fishlength = fishlength_py.length.median()
 ```
 
-```{python, results='hide'}
+```{python}
+#| results: hide
 # create a histogram
 (
-ggplot(fishlength_py, aes(x = "length"))
-+ geom_histogram(bins = 10)
-+ geom_vline(xintercept = median_fishlength,
+ggplot(fishlength_py, aes(x = "length")) +
+geom_histogram(bins = 10) +
+geom_vline(xintercept = median_fishlength,
              colour = "red")
 )
 
@@ -188,8 +189,8 @@ ggplot(fishlength_py, aes(x = "length"))
 # create box plot
 ggplot(fishlength_py,
 aes(x = 1,
-    y = 'length'))
-+ geom_boxplot()
+    y = 'length')) +
+geom_boxplot()
 )
 ```
 :::

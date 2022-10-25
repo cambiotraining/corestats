@@ -191,8 +191,8 @@ fishlength_py.describe()
 (
   ggplot(fishlength_py,
     aes(x = 'river',
-        y = 'length'))
-  + geom_boxplot()
+        y = 'length')) +
+    geom_boxplot()
 )
 ```
 :::
@@ -245,10 +245,11 @@ hist(fishlength_r, breaks = 15)
 
 ## Python
 
-```{python, results='hide'}
+```{python}
+#| results: hide
 (
-  ggplot(fishlength_py, aes(x = "length"))
-  + geom_histogram(bins = 15)
+  ggplot(fishlength_py, aes(x = "length")) +
+  geom_histogram(bins = 15)
 )
 ```
 :::
@@ -287,9 +288,9 @@ qqline(fishlength_r)
 
 ```{python, results='hide'}
 (
-  ggplot(fishlength_py, aes(sample = "length"))
-  + stat_qq()
-  + stat_qq_line()
+  ggplot(fishlength_py, aes(sample = "length")) +
+  stat_qq() +
+  stat_qq_line()
 )
 ```
 :::
@@ -584,21 +585,23 @@ dissolving_py.describe()
 
 We can look at the histogram and box plot of the data:
 
-```{python, results='hide'}
+```{python}
+#| results: hide
 # create a histogram
 (
   ggplot(dissolving_py,
-    aes(x = "dissolving_time"))
-  + geom_histogram(bins = 4)
+    aes(x = "dissolving_time")) +
+  geom_histogram(bins = 4)
 )
 ```
 
-```{python, results='hide'}
+```{python}
+#| results: hide
 # create a box plot
 (
   ggplot(dissolving_py,
-    aes(x = 1, y = "dissolving_time"))
-  + geom_boxplot()
+    aes(x = 1, y = "dissolving_time")) +
+  geom_boxplot()
 )
 ```
 
@@ -654,9 +657,9 @@ pg.normality(dissolving_py.dissolving_time)
 # Create a Q-Q plot
 (
   ggplot(dissolving_py,
-    aes(sample = "dissolving_time"))
-  + stat_qq()
-  + stat_qq_line()
+    aes(sample = "dissolving_time")) +
+  stat_qq() +
+  stat_qq_line()
 )
 ```
 :::

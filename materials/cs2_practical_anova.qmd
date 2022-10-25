@@ -230,8 +230,8 @@ Finally, we plot the data:
 # plot the data
 (
   ggplot(oystercatcher_py,
-    aes(x = "site", y = "feeding"))
-    + geom_boxplot()
+    aes(x = "site", y = "feeding")) +
+    geom_boxplot()
 )
 ```
 :::
@@ -487,6 +487,7 @@ dgplot = dgplotsknitr(lm_oystercatcher_py)
 ```
 
 ```{r}
+library(reticulate)
 #| echo: false
 # display image
 knitr::include_graphics(py$dgplot)
@@ -637,6 +638,23 @@ boxplot(response ~ group, data = tukey)
 ```
 
 ## Python
+```{python}
+# load the data
+tukey_py = pd.read_csv("data/CS2-tukey.csv")
+
+# have a look at the data
+tukey_py.head()
+```
+
+```{python}
+#| results: hide
+# plot the data
+(
+  ggplot(tukey_py, aes(x = "group", y = "response")) +
+  geom_boxplot()
+)
+```
+
 :::
 
 ### Test for a significant difference in group means
@@ -662,6 +680,13 @@ anova(lm_tukey)
 ```
 
 ## Python
+
+```{python}
+pg.anova(dv = "response",
+         between = "group",
+         data = tukey_py,
+         detailed = True)
+```
 :::
 
 Here we have a p-value of 2.39 $\times$ 10<sup>-7</sup> and so the test has very conclusively rejected the hypothesis that all means are equal.
@@ -696,6 +721,13 @@ The first argument repeats our ANOVA using a different function `aov()`. We stor
 The bottom three lines contain the information that we want. The final column of each (entitled `p adj`) is the p-value that we're looking for. The null hypothesis in each case is that there is no difference in the mean between the two groups.
 
 ## Python
+
+```{python}
+pg.pairwise_tukey(dv = "response",
+                  between = "group",
+                  data = tukey_py).round(4)
+```
+
 :::
 
 As we can see that there isn't a significant difference between `sample1` and `sample2` but the 2nd and 3rd rows show that there is a significant difference between `sample1` and `sample3`, as well as `sample2` and `sample3`. This matches with what we expected based on the box plot.
@@ -804,6 +836,21 @@ boxplot(weight ~ diet, data = lobsters)
 ```
 
 ## Python
+
+```{python}
+lobsters_py = pd.read_csv("data/CS2-lobsters.csv")
+```
+
+Next, we visualise the data:
+
+```{python}
+#| results: hide
+(
+ggplot(lobsters_py, aes(x = "diet", y = "weight")) +
+  geom_boxplot()
+)
+```
+
 :::
 
 As always we use the plot and summary to assess three things:
@@ -958,6 +1005,97 @@ Here all three methods agree that there aren't any issues with equality of varia
 Overall, this assumption is pretty well met.
 
 ## Python
+
+**Normality**
+
+We'll be really thorough here and consider the normality of each group separately and jointly using the Shapiro-Wilk test, as well as looking at the Q-Q plot. In reality, and after these examples , we'll only use the Q-Q plot.
+
+First, we perform the Shapiro-Wilk test on the individual groups:
+
+```{python}
+# Shapiro-Wilk on lobster groups
+pg.normality(dv = "weight",
+             group = "diet",
+             data = lobsters_py)
+```
+
+`Flakes` and `Mussels` are fine, but, as we suspected from earlier, `Pellets` appears to have a marginally significant Normality test result.
+
+Let's look at the Shapiro-Wilk test for all of the data together:
+
+```{python}
+# create a linear model
+lm_lobsters_py = smf.ols(formula= "weight ~ C(diet)", data = lobsters_py)
+# and get the fitted parameters of the model
+lm_lobsters_py = model.fit()
+```
+
+```{python}
+# get the residuals from the model fit
+# and perform Shapiro-Wilk test
+pg.normality(lm_lobsters_py.resid)
+```
+
+This on the other hand says that everything is fine. Let's look at Q-Q plot.
+
+```{python}
+#| results: hide
+# Q-Q plots
+(
+  ggplot(lobsters_py, aes(sample = "weight")) +
+  stat_qq() +
+  stat_qq_line(colour = "red")
+)
+```
+
+The Q-Q plot looks OK, not perfect, but more than good enough for us to have confidence in the normality of the data.
+
+Overall, I'd be happy that the assumption of normality has been adequately well met here. The suggested lack of normality in the `Pellets` was only just significant and we have to take into account that there are only 5 data points in that group. If there had been a lot more points in that group, or if the Q-Q plot was considerably worse then I wouldn't be confident.
+
+**Equality of Variance**
+
+We'll consider the Bartlett test and we'll look at the diagnostic plots too.
+
+```{python}
+pg.homoscedasticity(dv = "weight",
+                    group = "diet",
+                    method = "bartlett",
+                    data = lobsters_py)
+```
+
+```{python}
+#| eval: false
+dgplots(lm_lobsters_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_lobsters_py)
+```
+
+```{r}
+library(reticulate)
+#| echo: false
+# display image
+knitr::include_graphics(py$dgplot)
+```
+
+We'll just focus on the following:
+
+1.  The Residuals Plot. What we're looking for there is that the points are evenly spread on either side of the line. Looks good.
+2.  The Location-Scale Plot (this is displayed by default in base R's diagnostic plots). Here we're looking at the red line. If that line is more or less horizontal, then the equality of variance assumption is met.
+
+Here all three methods agree that there aren't any issues with equality of variance:
+
+-   the Bartlett test p-value is large and non-significant
+-   the spread of points in all three groups in the residuals vs fitted graph are roughly the same
+-   the red line in the scale-location graph is pretty horizontal
+
+Overall, this assumption is pretty well met.
 :::
 
 ### Carry out one-way ANOVA
@@ -978,6 +1116,13 @@ anova(lm(weight ~ diet, data = lobsters))
 ```
 
 ## Python
+
+```{python}
+pg.anova(dv = "weight",
+         between = "diet",
+         data = lobsters_py,
+         detailed = True)
+```
 :::
 
 > A one-way ANOVA test indicated that the mean weight of juvenile lobsters did not differ significantly between diets (F = 1.64, df = 2,15, p = 0.23).

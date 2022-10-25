@@ -193,10 +193,10 @@ boxplot(cortisol ~ time,
 (
   ggplot(cortisol_py,
     aes(x = "time",
-        y = "cortisol"))
-  + geom_boxplot()
-  + geom_jitter(width = 0.05)
-  + ylab("Cortisol level (nmol/l)")
+        y = "cortisol")) +
+  geom_boxplot() +
+  geom_jitter(width = 0.05) +
+  ylab("Cortisol level (nmol/l)")
 )
 ```
 :::
@@ -313,9 +313,9 @@ After this we can plot our data:
 #| results: hide
 # plot the data
 (
-  ggplot(cortisol_diff_py, aes(x = "1", y = "cortisol_change"))
-  + geom_boxplot()
-  + ylab("Change in cortisol (nmol/l)")
+  ggplot(cortisol_diff_py, aes(x = "1", y = "cortisol_change")) +
+  geom_boxplot() +
+  ylab("Change in cortisol (nmol/l)")
 )
 ```
 
@@ -330,9 +330,9 @@ An alternative representation would be to plot the data points for both evening 
   ggplot(cortisol_py,
     aes(x = "time",
         y = "cortisol",
-        group = "patient_id"))
-  + geom_point()
-  + geom_line()
+        group = "patient_id")) +
+  geom_point() +
+  geom_line()
 )
 ```
 
@@ -460,9 +460,9 @@ Create Q-Q plot:
 # create the Q-Q plot
 (
   ggplot(cortisol_diff_py,
-    aes(sample = "cortisol_change"))
-    + stat_qq()
-    + stat_qq_line(colour = "red")
+    aes(sample = "cortisol_change")) +
+    stat_qq() +
+    stat_qq_line(colour = "red")
 )
 ```
 :::
