@@ -226,7 +226,7 @@ $H_1$ : foreleg average $\neq$ hindleg average
 
 ### Import data, summarise and visualise
 
-First of all, we need to get the data into a tidy format (every variable is a column, each observation is a row). Doing this in Excel, and adding a ID gives us:
+First of all, we need to load in the data.
 
 ::: {.panel-tabset group="language"}
 ## tidyverse
@@ -243,7 +243,7 @@ deer
 
 The ordering of the data is important here; the first hind leg row corresponds to the first fore leg row, the second to the second and so on. To indicate this we use an `id` column, where each observation has a unique ID.
 
-Let's look at the data and see what we can see.
+Let's look at the data and see what it tells us.
 
 ```{r}
 # summarise the data
@@ -272,7 +272,9 @@ All of this suggests that there might be a difference between the legs, with hin
 ```{r}
 # create a data set that contains the difference in leg length
 leg_diff <- deer %>% 
-  pivot_wider(names_from = leg, values_from = length) %>% 
+  pivot_wider(id_cols = id,
+              names_from = leg,
+              values_from = length) %>% 
   mutate(leg_diff = hindleg - foreleg)
 ```
 

@@ -213,11 +213,21 @@ In tidyverse we can use the `pivot_wider()` function.
 ```{r}
 # calculate the difference between evening and morning values
 cortisol_diff <- cortisol %>%
-  pivot_wider(names_from = time, values_from = cortisol) %>% 
+  pivot_wider(id_cols = patient_id,
+              names_from = time,
+              values_from = cortisol) %>% 
   mutate(cortisol_change = evening - morning)
 
 cortisol_diff
 ```
+
+There are three arguments in `pivot_wider()`:
+
+1. `id_cols = patient_id` tells it that each observational unit is determined by `patient_id`
+2. `names_from = time` says that there will be new columns, with names from the `time` column (in this case, there are two values in there, `morning` and `evening`)
+3. `values_from = cortisol` populates the new columns with the values coming from the `cortisol` column
+
+Lastly, we create a new column `cortisol_change` that contains the difference between the `evening` and `morning` measurements.
 
 After this we can plot our data:
 

@@ -501,11 +501,12 @@ The following data are the dissolving times (in seconds) of a drug in agitated g
 
 Do these results provide any evidence to suggest that dissolving time for this drug is different from 45 seconds?
 
-1.  Create a [tidy](#cs1-tidy-data) data frame and save it in `.csv` format
-2.  Write down the null and alternative hypotheses.
-3.  Summarise and visualise the data and perform an appropriate one-sample t-test.
+1.  Think about how you would organise these data into a  [tidy](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) format
+2. Load the data from `CS1-gastric_juices.csv`
+3.  Write down the null and alternative hypotheses.
+4.  Summarise and visualise the data and perform an appropriate one-sample t-test.
     -   What can you say about the dissolving time? (what sentence would you use to report this)
-4.  Check the assumptions for the test.
+5.  Check the assumptions for the test.
     -   Was the test valid?
 
 ::: {.callout-tip collapse="true"}
@@ -519,7 +520,7 @@ $H_1$ : mean $\neq$ 45s
 
 ### Data, summarise & visualise
 
-We can create a data frame in Excel and save it as an `.csv` file, for example as `CS1-gastric_juices.csv`. It contains two columns, an `id` column and a `dissolving_time` column with the measured values.
+We read in the data from `CS1-gastric_juices.csv`. It contains two columns, an `id` column and a `dissolving_time` column with the measured values.
 
 ::: {.panel-tabset group="language"}
 ## tidyverse
