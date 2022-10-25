@@ -1,0 +1,457 @@
+---
+title: "Linear regression with grouped data"
+---
+
+```{r}
+#| echo: false
+#| message: false
+#| results: hide
+source(file = "setup.R")
+```
+
+```{python}
+#| echo: false
+#| message: false
+from setup import *
+```
+
+::: callout-tip
+## Learning outcomes
+
+**Questions**
+
+- How do I perform a linear regression on grouped data?
+
+**Objectives**
+
+- Be able to perform a linear regression on grouped data in R
+- Calculate the linear regression for individual groups and visualise these with the data
+- Understand and be able to create equations of the regression line
+- Be able to deal with interactions in this context
+:::
+
+## Libraries and functions
+
+::: {.callout-note collapse="true"}
+## Click to expand
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+### Libraries
+
+```{r}
+#| eval: false
+# A collection of R packages designed for data science
+library(tidyverse)
+
+# Converts stats functions to a tidyverse-friendly format
+library(rstatix)
+
+# Creates diagnostic plots using ggplot2
+library(ggResidpanel)
+
+# Helper functions for tidying data
+library(broom)
+```
+
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+
+# Gets underlying data out of model object
+broom::augment()
+
+# Creates diagnostic plots
+ggResidpanel::resid_panel()
+```
+
+## R
+
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Creates a subset of the data
+subset()
+```
+
+
+## Python
+:::
+:::
+
+## Purpose and aim
+A linear regression analysis with grouped data is used when we have one categorical predictor variable (or factor), and one continuous predictor variable. The response variable must still be continuous however.
+
+For example in an experiment that looks at light intensity in woodland, how is light intensity (continuous: lux) affected by the height at which the measurement is taken, recorded as depth measured from the top of the canopy (continuous: metres) and by the type of woodland (categorical: Conifer or Broad leaf).
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, show_col_types = FALSE}
+read_csv("data/tidy/CS4-treelight.csv") %>% 
+  ggplot(aes(x = depth, y = light, colour = species)) +
+  geom_point() +
+  scale_color_brewer(palette = "Dark2") +
+  labs(x = "Depth (m)",
+       y = "Light intensity (lux)")
+```
+
+When analysing these type of data we want to know:
+
+1.	Is there a difference between the groups?
+2.	Does the continuous predictor variable affect the continuous response variable (does canopy depth affect measured light intensity?)
+3.	Is there any interaction between the two predictor variables? Here an interaction would display itself as a difference in the slopes of the regression lines for each group, so for example perhaps the conifer data set has a significantly steeper line than the broad leaf woodland data set.
+
+In this case, no interaction means that the regression lines will have the same slope.
+Essentially the analysis is identical to two-way ANOVA.
+
+1. We will plot the data and visually inspect it.
+2. We will test for an interaction and if it doesn’t exist then:
+    a. We can test to see if either predictor variable has an effect (i.e. do the regression lines have different intercepts? and is the common gradient significantly different from zero?)
+    
+We will first consider how to visualise the data before then carrying out an appropriate statistical test.
+
+## Data and hypotheses
+The data are stored in `data/CS4-treelight.csv`. This is a data frame with four variables; `id`, `light`, `depth` and `species`. `light` is the continuous response variable, `depth` is the continuous predictor variable and `species` is the categorical predictor variable.
+
+Read in the data and inspect them:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+#| message: false
+#| warning: false
+# read in the data
+treelight <- read_csv("data/CS4-treelight.csv")
+
+# inspect the data
+treelight
+```
+
+## R
+```{r}
+# read in the data
+treelight_r <- read.csv("data/CS4-treelight.csv")
+
+# inspect the data
+head(treelight_r)
+```
+
+## Python
+
+```{python}
+# load the data
+treelight_py = pd.read_csv("data/CS4-treelight.csv")
+
+# and have a look
+treelight_py.head()
+```
+:::
+
+## Summarise and visualise
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+# plot the data
+treelight %>% 
+  ggplot(aes(x = depth, y = light, colour = species)) +
+  geom_point() +
+  scale_color_brewer(palette = "Dark2") +
+  labs(x = "Depth (m)",
+       y = "Light intensity (lux)")
+```
+
+## R
+
+```{r}
+plot(light ~ depth,
+     data = treelight_r)
+```
+
+This plots all of the points in the data set on the same window. To visualise the data by `species`, we can use the `col` argument. This only takes data in the form of factors (categorical variables with inherit order), so we need to temporarily conver the `species` column to a factor with `col = factor(species)`:
+
+```{r}
+plot(light ~ depth,
+     data = treelight_r,
+     col = factor(species))
+```
+
+## Python
+
+```{python}
+# plot the data
+(
+  ggplot(treelight_py,
+    aes(x = "depth", y = "light", colour = "species")) +
+    geom_point() +
+    scale_color_brewer(type = "qual", palette = "Dark2") +
+    labs(x = "Depth (m)",
+       y = "Light intensity (lux)")
+)
+```
+
+:::
+
+It looks like there is a slight negative correlation between depth and light intensity, with light intensity reducing as the canopy depth increases. It would be useful to plot the regression lines in this plot.
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+#| message: false
+# plot the data
+treelight %>% 
+  ggplot(aes(x = depth, y = light, colour = species)) +
+  geom_point() +
+  # add regression lines
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_color_brewer(palette = "Dark2") +
+  labs(x = "Depth (m)",
+       y = "Light intensity (lux)")
+```
+
+## R
+
+Unfortunately there is not an easy way in base R to add regression line to individual groups. To do this, we need to do three things:
+
+1. Split the data by `species`
+2. Create a linear model for each group
+3. Determine the regression line (or line of best fit) for each group and then add this to the plot
+
+The `subset` function creates subsets of data frames. The first argument is the original data frame, and the subset argument is a logical expression that defines which observations (rows) should be extracted. The logical expression must be enclosed in parentheses. In the first case it says (`Species == "Conifer"`). This tells R to only extract the rows of the original data frame which have `Conifer` in the species variable column. Ditto for `Broadleaf`.
+
+First, we subset the data:
+```{r}
+# subset the conifers
+conLight <- subset(treelight_r,
+                   subset = (species == "Conifer"))
+
+# subset the broad leaf
+broLight <- subset(treelight_r,
+                   subset = (species == "Broadleaf"))
+```
+
+Then we create a linear model for each subgroup:
+```{r}
+# linear regression for Broadleaf
+lm_broadleaf <- lm(light ~ depth,
+                   data = broLight)
+
+# linear regression for Conifer
+lm_conifer <- lm(light ~ depth,
+                 data = conLight)
+```
+
+And plot it all together:
+```{r}
+plot(light ~ depth,
+     data = treelight_r,
+     col = factor(species))
+
+# add the Broadleaf linear regression
+abline(lm_broadleaf, col = "black")
+
+# add the Conifer linear regression
+abline(lm_conifer, col = "red")
+```
+
+## Python
+:::
+
+Looking at this plot, there doesn’t appear to be any significant interaction between the woodland type (`Broadleaf` and `Conifer`) and the depth at which light measurements were taken (`depth`) on the amount of light intensity getting through the canopy as the gradients of the two lines appear to be very similar. There does appear to be a noticeable slope to both lines and both lines look as though they have very different intercepts. All of this suggests that there isn’t any interaction but that both `depth` and `species` have a significant effect on `light` independently.
+
+## Implement and interpret the test
+In this case we're going to implement the test before checking the assumptions (I know, let's live a little!). You'll find out why soon...
+
+We can test for a possible interaction more formally:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+anova(lm(light ~ depth * species,
+         data = treelight))
+```
+
+Remember that `depth * species` is a shorthand way of writing the full set of `depth + species + depth:species` terms in R _i.e._ both main effects and the interaction effect.
+
+## R
+
+```{r}
+anova(lm(light ~ depth * species,
+         data = treelight))
+```
+
+Remember that `depth * species` is a shorthand way of writing the full set of `depth + species + depth:species` terms in R _i.e._ both main effects and the interaction effect.
+
+## Python
+```{python}
+#| eval: false
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+```
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "feeding ~ C(site)", data = oystercatcher_py)
+# and get the fitted parameters of the model
+lm_oystercatcher_py = model.fit()
+```
+:::
+
+As with two-way ANOVA we have a row in the table for each of the different effects. At this point we are particularly interested in the p-values. We need to look at the interaction first.
+
+The interaction term between `depth` and `species` has a p-value of 0.393 (which is bigger than 0.05) and so we can conclude that the interaction between `depth` and `species` isn’t significant. As such we can now consider whether each of the predictor variables independently has an effect.
+
+Both `depth` and `species` have very small p-values (2.86x10<sup>-9</sup> and 4.13x10 <sup>-11</sup>) and so we can conclude that they do have a significant effect on `light`.
+
+This means that the two regression lines should have the same non-zero slope, but different intercepts. We would now like to know what those values are.
+
+### Finding intercept values
+
+Finding the intercept values is not entirely straightforward and there is some deciphering required to get this right.
+
+For a simple straight line such as the linear regression for the conifer data by itself, the output is relatively straightforward:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+# filter the Conifer data and fit a linear model
+treelight %>% 
+  filter(species == "Conifer") %>% 
+  lm(light ~ depth, data = .)
+```
+
+## R
+
+```{r}
+lm(light ~ depth,
+   data = conLight)
+```
+## Python
+:::
+
+And we can interpret this as meaning that the intercept of the regression line is 5014 and the coefficient of the depth variable (the number in front of it in the equation) is -292.2.
+
+So, the equation of the regression line is given by:
+
+\begin{equation}
+light = 5014 + -292.2 \times depth
+\end{equation} 
+
+This came from fitting a simple linear model using the conifer data, and has the meaning that for every extra 1 m of depth of forest canopy we lose 292.2 lux of light.
+
+When we looked at the full data set, we found that interaction wasn’t important. This means that we will have a model with two distinct intercepts but only a single slope (that’s what you get for a linear regression without any interaction), so we need to calculate that specific combination. We do this is as follows:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+lm(light ~ depth + species,
+   data = treelight)
+```
+
+Notice the `+` symbol in the argument, as opposed to the `*` symbol used earlier. This means that we are explicitly _not_ including an interaction term in this fit, and consequently we are forcing R to calculate the equation of lines which have the same gradient.
+
+Ideally we would like R to give us two equations, one for each forest type, so four parameters in total.
+Unfortunately, R is parsimonious and doesn’t do that. Instead R gives you three coefficients, and these require a bit of interpretation.
+
+The first two numbers that R returns (underneath `Intercept` and `depth`) are the exact intercept and slope coefficients for one of the lines (in this case they correspond to the data for `Broadleaf` woodlands).
+
+For the coefficients belonging to the other line, R uses these first two coefficients as baseline values and expresses the other coefficients relative to these ones. R also doesn’t tell you explicitly which group it is using as its baseline reference group! (Did I mention that R can be very helpful at times 😉?)
+
+So, how to decipher the above output?
+
+First, I need to work out which group has been used as the baseline.
+
+* It will be the group that comes first alphabetically, so it should be `Broadleaf`
+* The other way to check would be to look and see which group is not mentioned in the above table. `Conifer` is mentioned (in the `SpeciesConifer` heading) and so again the baseline group is `Broadleaf.`
+
+This means that the intercept value and `depth` coefficient correspond to the `Broadleaf` group and as a result I know what the equation of one of my lines is:
+
+Broadleaf:
+
+\begin{equation}
+light = 7962 + -262.2 \times depth
+\end{equation} 
+
+In this example we know that the gradient is the same for both lines (because we explicitly asked to exclude an interaction), so all I need to do is find the intercept value for the `Conifer` group. Unfortunately, the final value given underneath `SpeciesConifer` does not give me the intercept for `Conifer`, instead it tells me the difference between the `Conifer` group intercept and the baseline intercept i.e. the equation for the regression line for conifer woodland is given by:
+
+\begin{equation}
+light = (7962 + -3113) + -262.2 \times depth
+\end{equation} 
+
+\begin{equation}
+light = 4829 + -262.2 \times depth
+\end{equation} 
+
+## R
+
+```{r}
+lm(light ~ depth + species,
+   data = treelight_r)
+```
+
+Notice the `+` symbol in the argument, as opposed to the `*` symbol used earlier. This means that we are explicitly _not_ including an interaction term in this fit, and consequently we are forcing R to calculate the equation of lines which have the same gradient.
+
+Ideally we would like R to give us two equations, one for each forest type, so four parameters in total.
+Unfortunately, R is parsimonious and doesn’t do that. Instead R gives you three coefficients, and these require a bit of interpretation.
+
+The first two numbers that R returns (underneath `Intercept` and `depth`) are the exact intercept and slope coefficients for one of the lines (in this case they correspond to the data for `Broadleaf` woodlands).
+
+For the coefficients belonging to the other line, R uses these first two coefficients as baseline values and expresses the other coefficients relative to these ones. R also doesn’t tell you explicitly which group it is using as its baseline reference group! (Did I mention that R can be very helpful at times 😉?)
+
+So, how to decipher the above output?
+
+First, I need to work out which group has been used as the baseline.
+
+* It will be the group that comes first alphabetically, so it should be `Broadleaf`
+* The other way to check would be to look and see which group is not mentioned in the above table. `Conifer` is mentioned (in the `SpeciesConifer` heading) and so again the baseline group is `Broadleaf.`
+
+This means that the intercept value and `depth` coefficient correspond to the `Broadleaf` group and as a result I know what the equation of one of my lines is:
+
+Broadleaf:
+
+\begin{equation}
+light = 7962 + -262.2 \times depth
+\end{equation} 
+
+In this example we know that the gradient is the same for both lines (because we explicitly asked to exclude an interaction), so all I need to do is find the intercept value for the `Conifer` group. Unfortunately, the final value given underneath `SpeciesConifer` does not give me the intercept for `Conifer`, instead it tells me the difference between the `Conifer` group intercept and the baseline intercept i.e. the equation for the regression line for conifer woodland is given by:
+
+\begin{equation}
+light = (7962 + -3113) + -262.2 \times depth
+\end{equation} 
+
+\begin{equation}
+light = 4829 + -262.2 \times depth
+\end{equation} 
+
+## Python
+:::
+
+
+
+## Exercise
+
+::: {.callout-tip collapse="true"}
+## Answer
+::: {.panel-tabset group="language"}
+## tidyverse
+## R
+## Python
+:::
+:::
+
+## Key points
+
+::: callout-note
+-
+-
+-
+:::
