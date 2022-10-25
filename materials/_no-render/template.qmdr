@@ -6,13 +6,13 @@ title: "Paired t-test"
 #| echo: false
 #| message: false
 #| results: hide
-source(file = "setup.R")
+source(file = "setup_files/setup.R")
 ```
 
 ```{python}
 #| echo: false
 #| message: false
-from setup import *
+exec(open('setup_files/setup.py').read())
 ```
 
 ::: callout-tip

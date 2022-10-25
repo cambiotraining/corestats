@@ -6,13 +6,13 @@ title: "Linear regression with grouped data"
 #| echo: false
 #| message: false
 #| results: hide
-source(file = "setup.R")
+source(file = "setup_files/setup.R")
 ```
 
 ```{python}
 #| echo: false
 #| message: false
-from setup import *
+exec(open('setup_files/setup.py').read())
 ```
 
 ::: callout-tip
@@ -90,7 +90,7 @@ A linear regression analysis with grouped data is used when we have one categori
 For example in an experiment that looks at light intensity in woodland, how is light intensity (continuous: lux) affected by the height at which the measurement is taken, recorded as depth measured from the top of the canopy (continuous: metres) and by the type of woodland (categorical: Conifer or Broad leaf).
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, show_col_types = FALSE}
-read_csv("data/tidy/CS4-treelight.csv") %>% 
+read_csv("data/CS4-treelight.csv") %>% 
   ggplot(aes(x = depth, y = light, colour = species)) +
   geom_point() +
   scale_color_brewer(palette = "Dark2") +
@@ -261,6 +261,20 @@ abline(lm_conifer, col = "red")
 ```
 
 ## Python
+```{python}
+#| results: hide
+# plot the data
+(
+ggplot(treelight_py,
+       aes(x = "depth", y = "light", colour = "species")) +
+  geom_point() +
+  # add regression lines
+  geom_smooth(method = "lm", se = False) +
+  scale_color_brewer(type = "qual", palette = "Dark2") +
+  labs(x = "Depth (m)",
+       y = "Light intensity (lux)")
+)
+```
 :::
 
 Looking at this plot, there doesn’t appear to be any significant interaction between the woodland type (`Broadleaf` and `Conifer`) and the depth at which light measurements were taken (`depth`) on the amount of light intensity getting through the canopy as the gradients of the two lines appear to be very similar. There does appear to be a noticeable slope to both lines and both lines look as though they have very different intercepts. All of this suggests that there isn’t any interaction but that both `depth` and `species` have a significant effect on `light` independently.
@@ -290,18 +304,32 @@ anova(lm(light ~ depth * species,
 Remember that `depth * species` is a shorthand way of writing the full set of `depth + species + depth:species` terms in R _i.e._ both main effects and the interaction effect.
 
 ## Python
+
+Unfortunately there is no clear way of defining interaction models in pingouin. So we're resorting back to `statsmodels`, just like we had to when we performed the Shapiro-Wilk test on the residuals.
+
+If you haven't loaded `statsmodels` yet, run the following:
+
 ```{python}
 #| eval: false
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 ```
 
+Next, we create a linear model and get the `.fit()`:
+
 ```{python}
 # create a linear model
-model = smf.ols(formula= "feeding ~ C(site)", data = oystercatcher_py)
+model = smf.ols(formula= "light ~ depth * C(species)", data = treelight_py)
 # and get the fitted parameters of the model
-lm_oystercatcher_py = model.fit()
+lm_treelight_py = model.fit()
 ```
+
+To get the relevant values, we can print the summary of the model fit. This gives us a rather huge table. Don't be too daunted by it - there is a logic to the madness and for now we're mainly interested in the `P>|t|` column.
+
+```{python}
+print(lm_treelight_py.summary())
+```
+
 :::
 
 As with two-way ANOVA we have a row in the table for each of the different effects. At this point we are particularly interested in the p-values. We need to look at the interaction first.
@@ -335,17 +363,37 @@ lm(light ~ depth,
    data = conLight)
 ```
 ## Python
+
+We have two options to obtain the intercept for conifers only. We could subset our data, keeping only the conifer values. We could then create a linear model of those data, and obtain the relevant intercept.
+
+However, since we already created a model for the entire data set (including the interaction term) and printed the summary of that, we can actually derive the intercept value with the information that we've got.
+
+In the `coef` table of the summary there are several values:
+
+```
+Intercept                      7798.5655
+C(species)[T.Conifer]         -2784.5833
+depth                         -221.1256
+depth:C(species)[T.Conifer]   -71.0357
+```
+
+This tells us that the _overall_ intercept value for the model with the interaction term is 7798.5655. The `C(species)[T.Conifer]` term means that, to go from this overall intercept value _to the intercept for conifer_, we need to add -2784.5833.
+
+Doing the maths gives us an intercept of $7798.5655 + (-2784.5833) = 5014$ if we round this.
+
+Equally, if we want to get the coefficient for `depth`, then we take the reference value of -221.1256 and add the value next to `depth:C(species)[T.Conifer]` to it. This gives us $-221.1256 + (-71.0357) = -292.2$ if we round it.
+
 :::
 
-And we can interpret this as meaning that the intercept of the regression line is 5014 and the coefficient of the depth variable (the number in front of it in the equation) is -292.2.
+We can interpret this as meaning that the intercept of the regression line is 5014 and the coefficient of the depth variable (the number in front of it in the equation) is -292.2.
 
-So, the equation of the regression line is given by:
+So, the equation of the regression line for the conifer data is given by:
 
 \begin{equation}
 light = 5014 + -292.2 \times depth
 \end{equation} 
 
-This came from fitting a simple linear model using the conifer data, and has the meaning that for every extra 1 m of depth of forest canopy we lose 292.2 lux of light.
+This means that for every extra 1 m of depth of forest canopy we lose 292.2 lux of light.
 
 When we looked at the full data set, we found that interaction wasn’t important. This means that we will have a model with two distinct intercepts but only a single slope (that’s what you get for a linear regression without any interaction), so we need to calculate that specific combination. We do this is as follows:
 
@@ -383,14 +431,6 @@ light = 7962 + -262.2 \times depth
 
 In this example we know that the gradient is the same for both lines (because we explicitly asked to exclude an interaction), so all I need to do is find the intercept value for the `Conifer` group. Unfortunately, the final value given underneath `SpeciesConifer` does not give me the intercept for `Conifer`, instead it tells me the difference between the `Conifer` group intercept and the baseline intercept i.e. the equation for the regression line for conifer woodland is given by:
 
-\begin{equation}
-light = (7962 + -3113) + -262.2 \times depth
-\end{equation} 
-
-\begin{equation}
-light = 4829 + -262.2 \times depth
-\end{equation} 
-
 ## R
 
 ```{r}
@@ -424,6 +464,41 @@ light = 7962 + -262.2 \times depth
 
 In this example we know that the gradient is the same for both lines (because we explicitly asked to exclude an interaction), so all I need to do is find the intercept value for the `Conifer` group. Unfortunately, the final value given underneath `SpeciesConifer` does not give me the intercept for `Conifer`, instead it tells me the difference between the `Conifer` group intercept and the baseline intercept i.e. the equation for the regression line for conifer woodland is given by:
 
+## Python
+
+The way we obtain the values for the model without the interaction is very similar to what we did for the conifer data. We need to update our model first, to remove the interaction:
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "light ~ depth + C(species)", data = treelight_py)
+# and get the fitted parameters of the model
+lm_treelight_add_py = model.fit()
+```
+
+Notice the `+` symbol in the argument, as opposed to the `*` symbol used earlier. This means that we are explicitly _not_ including an interaction term in this fit, and consequently we are forcing Python to calculate the equation of lines which have the same gradient.
+
+We can get the relevant coefficients as follows:
+
+```{python}
+print(lm_treelight_add_py.summary())
+```
+
+Again, I need to work out which group has been used as the baseline.
+
+* It will be the group that comes first alphabetically, so it should be `Broadleaf`
+* The other way to check would be to look and see which group is not mentioned in the above table. `Conifer` is mentioned (in the `C(species)[T.Conifer]` heading) and so again the baseline group is `Broadleaf.`
+
+This means that the intercept value and `depth` coefficient correspond to the `Broadleaf` group and as a result I know what the equation of one of my lines is:
+
+Broadleaf:
+
+\begin{equation}
+light = 7962 + -262.2 \times depth
+\end{equation} 
+
+In this example we know that the gradient is the same for both lines (because we explicitly asked to exclude an interaction), so all I need to do is find the intercept value for the `Conifer` group. Unfortunately, the final value given in `C(species)[T.Conifer]` does not give me the intercept for `Conifer`, instead it tells me the difference between the `Conifer` group intercept and the baseline intercept i.e. the equation for the regression line for conifer woodland is given by:
+:::
+
 \begin{equation}
 light = (7962 + -3113) + -262.2 \times depth
 \end{equation} 
@@ -431,9 +506,6 @@ light = (7962 + -3113) + -262.2 \times depth
 \begin{equation}
 light = 4829 + -262.2 \times depth
 \end{equation} 
-
-## Python
-:::
 
 
 
