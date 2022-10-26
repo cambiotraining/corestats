@@ -414,8 +414,8 @@ Finally, we can visualise this:
 (
   ggplot(leg_diff_py,
     aes(x = "1",
-        y = "leg_diff"))
-  + geom_boxplot()
+        y = "leg_diff")) +
+    geom_boxplot()
 )
 ```
 
@@ -428,9 +428,9 @@ All of this suggests that there might be a difference between the legs, with hin
   ggplot(deer_py,
     aes(x = "leg",
         y = "length",
-        group = "id"))
-  + geom_point()
-  + geom_line()
+        group = "id")) +
+    geom_point() +
+    geom_line()
 )
 ```
 :::
@@ -495,9 +495,9 @@ Create the Q-Q plot:
 # create the Q-Q plot
 (
   ggplot(leg_diff_py,
-    aes(sample = "leg_diff"))
-    + stat_qq()
-    + stat_qq_line(colour = "red")
+    aes(sample = "leg_diff")) +
+    stat_qq() +
+    stat_qq_line(colour = "red")
 )
 ```
 :::

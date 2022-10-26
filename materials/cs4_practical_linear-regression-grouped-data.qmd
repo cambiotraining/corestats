@@ -773,7 +773,7 @@ As before the Broadleaf line is used as the baseline regression and we can read 
 
 Broadleaf:
 \begin{equation}
-Light = 7798.57 + -221.13 \times Depth
+light = 7798.57 + -221.13 \times depth
 \end{equation}
 
 Note that this is different from the previous section, by allowing for an interaction all fitted values will change.
@@ -782,11 +782,11 @@ For the conifer line we will have a different intercept value and a different gr
 
 Conifer:
 \begin{equation}
-Light = (7798.57 + -2784.58) + (-221.13 + -71.04) \times Depth
+light = (7798.57 + -2784.58) + (-221.13 + -71.04) \times depth
 \end{equation}
 
 \begin{equation}
-Light = 5014 + -292.2 \times Depth
+light = 5014 + -292.2 \times depth
 \end{equation}
 
 ## R
@@ -818,7 +818,7 @@ As before the Broadleaf line is used as the baseline regression and we can read 
 
 Broadleaf:
 \begin{equation}
-Light = 7798.57 + -221.13 \times Depth
+light = 7798.57 + -221.13 \times depth
 \end{equation}
 
 Note that this is different from the previous section, by allowing for an interaction all fitted values will change.
@@ -827,11 +827,11 @@ For the conifer line we will have a different intercept value and a different gr
 
 Conifer:
 \begin{equation}
-Light = (7798.57 + -2784.58) + (-221.13 + -71.04) \times Depth
+light = (7798.57 + -2784.58) + (-221.13 + -71.04) \times depth
 \end{equation}
 
 \begin{equation}
-Light = 5014 + -292.2 \times Depth
+light = 5014 + -292.2 \times depth
 \end{equation}
 
 ## Python
@@ -857,7 +857,7 @@ As before the Broadleaf line is used as the baseline regression and we can read 
 
 Broadleaf:
 \begin{equation}
-Light = 7798.57 + -221.13 \times Depth
+light = 7798.57 + -221.13 \times depth
 \end{equation}
 
 Note that this is different from the previous section, by allowing for an interaction all fitted values will change.
@@ -866,11 +866,11 @@ For the conifer line we will have a different intercept value and a different gr
 
 Conifer:
 \begin{equation}
-Light = (7798.57 + -2784.58) + (-221.13 + -71.04) \times Depth
+light = (7798.57 + -2784.58) + (-221.13 + -71.04) \times depth
 \end{equation}
 
 \begin{equation}
-Light = 5014 + -292.2 \times Depth
+light = 5014 + -292.2 \times depth
 \end{equation}
 :::
 

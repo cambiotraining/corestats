@@ -251,10 +251,12 @@ rivers_py.groupby("river")["length"].describe()
 
 Numbers might not always give you the best insight into your data, so we also visualise our data:
 
-```{python, results='hide'}
+```{python}
+#| results: hide
 (
-  ggplot(rivers_py, aes(x = "river", y = "length"))
-  + geom_boxplot()
+  ggplot(rivers_py,
+         aes(x = "river", y = "length")) +
+      geom_boxplot()
 )
 ```
 :::
@@ -315,7 +317,7 @@ shapiro.test(uns_rivers$Guanapo)
 To perform a Shapiro-Wilk test we can use the `normality()` function from `pingouin`. We can give it the data in the original 'long' format, where we specify:
 
 -   `dv` = dependent variable, `length`
--   `group` = grouping variable, \`river
+-   `group` = grouping variable, `river`
 -   `data` = data frame
 
 ```{python}
@@ -363,12 +365,14 @@ qqline(uns_rivers$Guanapo, col = "red")
 
 ## Python
 
-```{python, results='hide'}
+```{python}
+#| results: hide
 (
-  ggplot(rivers_py, aes(sample = "length"))
-  + stat_qq()
-  + stat_qq_line(colour = "red")
-  + facet_wrap("river")
+  ggplot(rivers_py,
+         aes(sample = "length")) +
+      stat_qq() +
+      stat_qq_line(colour = "red") +
+      facet_wrap("river")
 )
 ```
 :::
@@ -493,7 +497,7 @@ Perform a two-sample, two-tailed, t-test:
 ::: {.panel-tabset group="language"}
 ## tidyverse
 
-```{r,}
+```{r}
 # two-sample, two-tailed t-test
 rivers %>% 
   t_test(length ~ river,
@@ -568,18 +572,9 @@ Now there's a conversation starter.
 
 This exercise explores serum cholesterol concentrations in turtles.
 
-Using the following data, test the null hypothesis that male and female turtles have the same mean serum cholesterol concentrations.
+Using the data in `data/CS1-turtle.csv`, test the null hypothesis that male and female turtles have the same mean serum cholesterol concentrations.
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-# serum cholesterol (mg/100 ml)
-read_csv("data/examples/cs1-turtle_example.csv") %>% 
-  pivot_wider(names_from = sex, values_from = serum) %>% 
-  select(-group) %>% 
-  kbl() %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, position = "center")
-```
-
-1.  Create a tidy data frame and save as a `.csv` file
+1.  Load the data
 2.  Write down the null and alternative hypotheses
 3.  Import the data
 4.  Summarise and visualise the data
@@ -592,17 +587,7 @@ read_csv("data/examples/cs1-turtle_example.csv") %>%
 
 ### Data
 
-We'll stop asking you to manually create your own data files soon, but it's meant to get you to think about how to record your data. If we're using a tidy data format, then each variable (thing that you measure) is in its own column. Each observation has its own row.
-
-This means that if you would restructure the data from above it would look like this:
-
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
-turtle <- read_csv("data/CS1-turtle.csv")
-```
-
-```{r}
-turtle
-```
+Once you've loaded the data, have a look at the structure. The data is in a tidy data format, where each variable (thing that you measure) is in its own column. Each observation has its own row.
 
 ### Hypotheses
 
@@ -612,12 +597,13 @@ $H_1$ : male mean $\neq$ female mean
 
 ### Load, summarise and visualise data
 
-Let's load the data (I've created the `.csv` file earlier) and explore our data a bit more before we dive into the statistics.
+Let's load the data and explore our data a bit more before we dive into the statistics.
 
 ::: {.panel-tabset group="language"}
 ## tidyverse
 
-```{r, warning=FALSE}
+```{r}
+#| warning: false
 # load the data
 turtle <- read_csv("data/CS1-turtle.csv")
 
@@ -627,7 +613,7 @@ turtle
 
 Let's summarise the data (although a visualisation is probably much easier to work with):
 
-```{r cs1-twosample-turtle-summary}
+```{r}
 # create summary statistics for each group
 turtle %>% 
   group_by(sex) %>% 
@@ -645,7 +631,8 @@ turtle %>%
 
 ## R
 
-```{r, warning=FALSE}
+```{r}
+#| warning: false
 # load the data
 turtle_r <- read.csv("data/CS1-turtle.csv")
 
@@ -670,11 +657,12 @@ turtle_py.describe()
 
 and visualise the data:
 
-```{python, results='hide'}
+```{python}
+#| results: hide
 (
-  ggplot(turtle_py, aes(x = "sex",
-                        y = "serum"))
-  + geom_boxplot()
+  ggplot(turtle_py,
+         aes(x = "sex", y = "serum")) +
+      geom_boxplot()
 )
 ```
 :::
@@ -725,11 +713,6 @@ shapiro.test(uns_turtle_r$Female)
 ## Python
 
 ```{python}
-turtle_male = turtle_py.query('sex == "Male"')["serum"]
-turtle_female = turtle_py.query('sex == "Female"')["serum"]
-```
-
-```{python}
 pg.normality(dv = "serum",
              group = "sex",
              data = turtle_py)
@@ -767,13 +750,15 @@ qqline(uns_turtle_r$Male, col = "red")
 
 ## Python
 
-```{python, results='hide', message='hide', warning='hide'}
+```{r}
+#| results: hide
 # create Q-Q plots for both groups
 (
-  ggplot(turtle_py, aes(sample = "serum"))
-  + stat_qq()
-  + stat_qq_line(colour = "red")
-  + facet_wrap("sex")
+  ggplot(turtle_py,
+         aes(sample = "serum")) +
+      stat_qq() +
+      stat_qq_line(colour = "red") +
+      facet_wrap("sex")
 )
 ```
 :::
@@ -873,6 +858,17 @@ t.test(serum ~ sex,
 
 ## Python
 
+To test if the two groups are different from one another, we can use the `pg.ttest()` function.
+
+This function requires the data to be separated into individual groups, so we need to split the `serum` data by `sex`. One of the ways we can do this is:
+
+```{python}
+turtle_male = turtle_py.query('sex == "Male"')["serum"]
+turtle_female = turtle_py.query('sex == "Female"')["serum"]
+```
+
+Next, we use these data to test for differences:
+
 ```{python}
 pg.ttest(turtle_female, turtle_male,
                 alternative = "two-sided",
@@ -880,7 +876,7 @@ pg.ttest(turtle_female, turtle_male,
 ```
 :::
 
-With a p-value of 0.544, this test tells me that there is insufficient evidence to suggest that the means of the two groups are different. A suitable summary sentence would be:
+With a p-value of 0.544, this test tells us that there is insufficient evidence to suggest that the means of the two groups are different. A suitable summary sentence would be:
 
 > A Student's two-sample t-test indicated that the mean serum cholesterol level did not differ significantly between Male and Female turtles (t = 0.627, df = 11, p = 0.544).
 
