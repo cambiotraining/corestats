@@ -866,21 +866,387 @@ Light = 5014 + -292.2 \times Depth
 \end{equation}
 :::
 
-## Exercise
+These also happen to be exactly the regression lines that you would get by calculating a linear regression on each group’s data separately.
+
+## Exercise: Clover and yarrow
+Clover and yarrow field trials
+
+The `data/CS4-clover.csv` data set contains information on field trials at three different farms (`A`, `B` and `C`). Each farm recorded the yield of clover in each of ten fields along with the density of yarrow stalks in each field.
+
+* Investigate how clover yield is affected by yarrow stalk density. Is there evidence of competition between the two species?
+* Is there a difference between farms?
 
 ::: {.callout-tip collapse="true"}
 ## Answer
 ::: {.panel-tabset group="language"}
 ## tidyverse
+```{r}
+#| message: false
+#| warning: false
+clover <- read_csv("data/CS4-clover.csv")
+```
+
+This data set has three variables; `yield` (which is the response variable), `yarrow` (which is a continuous predictor variable) and `farm` (which is the categorical predictor variables). As always we'll visualise the data first:
+
+```{r}
+# plot the data
+clover %>% 
+  ggplot(aes(x = yarrow, y = yield,
+             colour = farm)) +
+  geom_point() +
+  scale_color_brewer(palette = "Dark2")
+```
+
+Looking at this plot as it stands, it's pretty clear that yarrow density has a significant effect on yield, but it's pretty hard to see from the plot whether there is any effect of `farm`, or whether there is any interaction. In order to work that out we'll want to add the regression lines for each `farm` separately.
+
+```{r}
+#| message: false
+# plot the data
+clover %>% 
+  ggplot(aes(x = yarrow, y = yield,
+             colour = farm, group = farm)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_color_brewer(palette = "Dark2")
+```
+
+The regression lines are very close together, and it looks very much as if there isn't any interaction, but also that there isn't any effect of `farm`. Let's carry out the analysis:
+
+```{r}
+lm_clover <- lm(yield ~ yarrow * farm,
+                data = clover)
+
+anova(lm_clover)
+```
+
+This confirms our suspicions from looking at the plot. There isn't any interaction between `yarrow` and `farm.` `yarrow` density has a statistically significant effect on `yield` but there isn't any difference between the different farms on the yields of clover.
+
+Let's check the assumptions:
+
+```{r, message=FALSE}
+lm_clover %>% 
+  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
+              smoother = TRUE)
+```
+
+This is a borderline case.
+
+1. Normality is fine (Q-Q plot)
+2. There aren't any highly influential points (Cook's D plot)
+3. There is a strong suggestion of heterogeneity of variance (Location-Scale plot). Most of the points are relatively close to the regression lines, but the there is a much great spread of points low yarrow density (which corresponds to high yield values, which is what the predicted values correspond to).
+4. Finally, there is a slight suggestion that the data might not be linear, that it might curve slightly (Residual plot).
+
 ## R
+First, we read in the data. I'm using the `stringsAsFactors = TRUE` argument to ensure that the farms are viewed as categorical variables. This is important for later. We could have also converted them to factors when we needed to.
+
+```{r}
+clover_r <- read.csv("data/CS4-clover.csv",
+                   stringsAsFactors = TRUE)
+```
+
+This dataset has three variables; `yield` (which is the response variable), `yarrow` (which is a continuous predictor variable) and `farm` (which is the categorical predictor variables). As always we'll visualise the data first:
+
+```{r}
+plot(yield ~ yarrow,
+     data = clover_r, col = farm)
+```
+
+In our plot this means that farm `A` is black, farm `B` is red and farm `C` is green.
+
+As it stands, it's pretty clear that yarrow density has a significant effect on yield, but it's pretty hard to see from the plot whether there is any effect of `farm`, or whether there is any interaction. In order to work that out we'll want to add the regression lines (AKA lines of best fit) for each `farm` separately.
+
+```{r}
+plot(yield ~ yarrow,
+     data = clover_r, col = farm)
+
+farmA <- subset(clover_r, subset = (farm == "A"))
+farmB <- subset(clover_r, subset = (farm == "B"))
+farmC <- subset(clover_r, subset = (farm == "C"))
+
+lmA <- lm(yield ~ yarrow, data = farmA)
+lmB <- lm(yield ~ yarrow, data = farmB)
+lmC <- lm(yield ~ yarrow, data = farmC)
+
+abline(lmA, col = "black")
+abline(lmB, col = "red")
+abline(lmC, col = "green")
+```
+
+The lines of best fit are very close together, and it looks very much as if there isn't any interaction, but also that there isn't any effect of `Farm`. Let's carry out the analysis:
+
+```{r}
+lm_clover_r <- lm(yield ~ yarrow * farm,
+                data = clover_r)
+
+anova(lm_clover_r)
+```
+
+This confirms our suspicions from looking at the plot. There isn't any interaction between `yarrow` and `farm.` `yarrow` density has a statistically significant effect on `yield` but there isn't any difference between the different farms on the yields of clover.
+
+Let's check the assumptions:
+
+```{r}
+par(mfrow = c(2, 2))
+plot(lm_clover_r)
+```
+
+This is a borderline case.
+
+1. Normality is fine (Normal Q-Q)
+2. There aren't any highly influential points (Residuals vs Leverage)
+3. There is a strong suggestion of heterogeneity of variance. Most of the points are relatively close to the lines of best fit, but the there is a much great spread of points low Yarrow density (which corresponds to high Yield values, which is what the fitted values correspond to).
+4. Finally, there is a slight suggestion that the data might not be linear, that it might curve slightly.
+
 ## Python
+```{python}
+#| message: false
+#| warning: false
+clover_py = pd.read_csv("data/CS4-clover.csv")
+```
+
+This data set has three variables; `yield` (which is the response variable), `yarrow` (which is a continuous predictor variable) and `farm` (which is the categorical predictor variables). As always we'll visualise the data first:
+
+```{python}
+#| results: hide
+# plot the data
+(
+  ggplot(clover_py,
+       aes(x = "yarrow", y = "yield", colour = "farm")) +
+       geom_point() +
+       scale_color_brewer(type = "qual", palette = "Dark2")
+ )
+```
+
+Looking at this plot as it stands, it's pretty clear that yarrow density has a significant effect on yield, but it's pretty hard to see from the plot whether there is any effect of `farm`, or whether there is any interaction. In order to work that out we'll want to add the regression lines for each `farm` separately.
+
+```{python}
+#| results: hide
+# plot the data
+(
+  ggplot(clover_py,
+       aes(x = "yarrow", y = "yield", colour = "farm")) +
+       geom_point() +
+       geom_smooth(method = "lm", se = False) +
+       scale_color_brewer(type = "qual", palette = "Dark2")
+ )
+```
+
+The regression lines are very close together, and it looks very much as if there isn't any interaction, but also that there isn't any effect of `farm`. 
+
+Let's carry out the analysis. First, we need to change the name of the `yield` column, because `yield` is a keyword in Python, and we can't use it inside the model formula. How annoying.
+
+```{python}
+# rename yield column
+clover_py = clover_py.rename(columns = {"yield": "clover_yield"})
+
+# create a linear model
+model = smf.ols(formula = "clover_yield ~ yarrow * C(farm)",
+                data = clover_py)
+
+# and get the fitted parameters of the model
+lm_clover_py = model.fit()
+```
+
+Perform an ANOVA on the model:
+
+```{python}
+sm.stats.anova_lm(lm_clover_py, typ = 1)
+```
+
+This confirms our suspicions from looking at the plot. There isn't any interaction between `yarrow` and `farm.` `yarrow` density has a statistically significant effect on `yield` but there isn't any difference between the different farms on the yields of clover.
+
+Let's check the assumptions:
+
+```{python}
+#| eval: false
+dgplots(lm_clover_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_clover_py)
+```
+
+```{r}
+library(reticulate)
+#| echo: false
+# display image
+knitr::include_graphics(py$dgplot)
+```
+
+This is a borderline case.
+
+1. Normality is fine (Q-Q plot)
+2. There aren't any highly influential points (Influential points plot)
+3. There is a strong suggestion of heterogeneity of variance (Location-Scale plot). Most of the points are relatively close to the regression lines, but the there is a much great spread of points low yarrow density (which corresponds to high yield values, which is what the predicted values correspond to).
+4. Finally, there is a slight suggestion that the data might not be linear, that it might curve slightly (Residuals plot).
 :::
+
+We have two options; both of which are arguably OK to do in real life.
+
+1. We can claim that these assumptions are well enough met and just report the analysis that we've just done.
+2. We can decide that the analysis is not appropriate and look for other options.
+    a. We can try to transform the data by taking logs of `yield.` This might fix both of our problems: taking logs of the response variable has the effect of improving heterogeneity of variance when the Residuals plot is more spread out on the right vs. the left (like ours). It also is appropriate if we think the true relationship between the response and predictor variables is exponential rather than linear (which we might have). We do have the capabilities to try this option.
+    b. We could try a permutation based approach (beyond the remit of this course, and actually a bit tricky in this situation). This wouldn't address the non-linearity but it would deal with the variance assumption.
+    c. We could come up with a specific functional, mechanistic relationship between yarrow density and clover yield based upon other aspects of their biology. For example there might be a threshold effect such that for yarrow densities below a particular value, clover yields are unaffected, but as soon as yarrow values get above that threshold the clover yield decreases (maybe even linearly). This would require a much better understanding of clover-yarrow dynamics (of which I personally know very little).
+
+Let's do a quick little transformation of the data, and repeat our analysis see if our assumptions are better met this time (just for the hell of it):
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+#| message: false
+# plot log-transformed data
+clover %>% 
+  ggplot(aes(x = yarrow, y = log(yield), colour = farm)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_color_brewer(palette = "Dark2")
+```
+
+## R
+
+```{r}
+plot(log(yield) ~ yarrow,
+     data = clover_r, col = farm)
+
+lmlogA <- lm(log(yield) ~ yarrow, data = farmA)
+lmlogB <- lm(log(yield) ~ yarrow, data = farmB)
+lmlogC <- lm(log(yield) ~ yarrow, data = farmC)
+
+abline(lmlogA, col = "black")
+abline(lmlogB, col = "red")
+abline(lmlogC, col = "green")
+```
+
+## Python
+
+To log-transform our data, we require `numpy`.
+
+```{python}
+#| eval: false
+# import numpy
+import numpy as np
+```
+
+First, we create a new column containing the log-transformed data:
+
+```{python}
+clover_py["log_yield"] = np.log(clover_py["clover_yield"])
+```
+
+Then we can plot them:
+
+```{python}
+#| results: hide
+# plot log-transformed data
+(
+  ggplot(clover_py,
+         aes(x = "yarrow", y = "log_yield", colour = "farm")) +
+  geom_point() +
+  geom_smooth(method = "lm", se = False) +
+  scale_color_brewer(type = "qual", palette = "Dark2")
+)
+```
+
+:::
+
+Again, this looks plausible. There's a noticeable outlier from Farm B (data point at the bottom of the plot) but otherwise we see that: there probably isn't an interaction; there is likely to be an effect of `yarrow` on `log_yield`; and there probably isn't any difference between the farms.
+
+Let's do the analysis:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+# define linear model
+lm_log_clover <- lm(log(yield) ~ yarrow * farm,
+                    data = clover)
+
+anova(lm_log_clover)
+```
+
+Woop. All good so far. We have the same conclusions as before in terms of what is significant and what isn't. Now we just need to check the assumptions:
+
+```{r, message=FALSE}
+lm_log_clover %>% 
+  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
+              smoother = TRUE)
+```
+
+## R
+
+```{r}
+lm_log_clover_r <- lm(log(yield) ~ yarrow * farm,
+             data = clover_r)
+anova(lm_log_clover_r)
+```
+
+Woop. All good so far. We have the same conclusions as before in terms of what is significant and what isn't. Now we just need to check the assumptions:
+
+```{r}
+par(mfrow = c(2, 2))
+plot(lm_log_clover_r)
+```
+
+## Python
+
+```{python}
+# create a linear model
+model = smf.ols(formula = "log_yield ~ yarrow * C(farm)",
+                data = clover_py)
+
+# and get the fitted parameters of the model
+lm_log_clover_py = model.fit()
+```
+
+
+Perform an ANOVA on the model:
+
+```{python}
+sm.stats.anova_lm(lm_clover_py, typ = 1)
+```
+
+Woop. All good so far. We have the same conclusions as before in terms of what is significant and what isn't. Now we just need to check the assumptions:
+
+```{python}
+#| eval: false
+dgplots(lm_clover_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_log_clover_py)
+```
+
+```{r}
+library(reticulate)
+#| echo: false
+# display image
+knitr::include_graphics(py$dgplot)
+```
+:::
+
+Well, this is actually a better set of diagnostic plots. Whilst one data point (for example in the Q-Q plot) is a clear outlier, if we ignore that point then all of the other plots do look better.
+
+So now we know that `yarrow` is a significant predictor of `yield` and we're happy that the assumptions have been met.
 :::
 
 ## Key points
 
 ::: callout-note
--
--
--
+- A linear regression analysis with grouped data is used when we have one categorical and one continuous predictor variable, together with one continuous response variable
+- We can visualise the data by plotting a regression line together with the original data
+- When performing an ANOVA, we need to check for interaction terms
+- We check the underlying assumptions using diagnostic plots
+- We can create an equation for the regression line for each group in the data using the parameter from the linear model output
 :::
