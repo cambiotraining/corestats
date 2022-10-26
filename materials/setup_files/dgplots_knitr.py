@@ -3,6 +3,7 @@ import glob
 from datetime import datetime
 from typing import Type
 import pandas as pd
+import numpy as np
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 from plotnine import *
@@ -15,7 +16,7 @@ def dgplotsknitr(results: Type[sm.regression.linear_model.RegressionResultsWrapp
         
         residuals = results.resid.rename("residuals")
         predicted_values = results.fittedvalues.rename("predicted_values")
-        std_resid = pd.Series(results.resid_pearson).rename("std_resid")
+        std_resid = pd.Series(np.sqrt(np.abs(results.get_influence().resid_studentized_internal))).rename("std_resid")
         influence = results.get_influence()
         cooks_d = pd.Series(influence.cooks_distance[0]).rename("cooks_d")
         leverage = pd.Series(influence.hat_matrix_diag).rename("leverage")
