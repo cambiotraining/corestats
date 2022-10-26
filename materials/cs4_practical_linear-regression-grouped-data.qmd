@@ -81,6 +81,14 @@ subset()
 
 
 ## Python
+| Libraries                                                             | Description                                                                                |
+|:-----------------------|:-----------------------------------------------|
+| [`numpy`](https://numpy.org)| A fundamental package for scientific computing with Python.|
+| [`pandas`](https://pandas.pydata.org/docs/getting_started/index.html) | A Python data analysis and manipulation tool.                                              |
+| [`pingouin`](https://pingouin-stats.org)                              | A Python module developed to have simple yet exhaustive stats functions.                   |
+| [`plotnine`](https://plotnine.readthedocs.io/en/stable/)              | The Python equivalent of `ggplot2`.|
+| [`statsmodels`](https://www.statsmodels.org/stable/index.html)        | A Python module for statistical models, conducting tests and statistical data exploration. |
+
 :::
 :::
 
@@ -716,8 +724,8 @@ dgplot = dgplotsknitr(lm_treelight_add_py)
 ```
 
 ```{r}
-library(reticulate)
 #| echo: false
+library(reticulate)
 # display image
 knitr::include_graphics(py$dgplot)
 ```
@@ -842,7 +850,7 @@ lm_treelight_py = model.fit()
 We get the model parameters as follows:
 
 ```{python}
-lm_treelight_py.summary()
+print(lm_treelight_py.summary())
 ```
 
 As before the Broadleaf line is used as the baseline regression and we can read off the values for its intercept and slope directly:
@@ -1072,8 +1080,8 @@ dgplot = dgplotsknitr(lm_clover_py)
 ```
 
 ```{r}
-library(reticulate)
 #| echo: false
+library(reticulate)
 # display image
 knitr::include_graphics(py$dgplot)
 ```
@@ -1229,8 +1237,8 @@ dgplot = dgplotsknitr(lm_log_clover_py)
 ```
 
 ```{r}
-library(reticulate)
 #| echo: false
+library(reticulate)
 # display image
 knitr::include_graphics(py$dgplot)
 ```
