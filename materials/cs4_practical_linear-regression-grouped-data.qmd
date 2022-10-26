@@ -184,6 +184,7 @@ plot(light ~ depth,
 ## Python
 
 ```{python}
+#| results: hide
 # plot the data
 (
   ggplot(treelight_py,
@@ -191,7 +192,7 @@ plot(light ~ depth,
     geom_point() +
     scale_color_brewer(type = "qual", palette = "Dark2") +
     labs(x = "Depth (m)",
-       y = "Light intensity (lux)")
+         y = "Light intensity (lux)")
 )
 ```
 
@@ -319,7 +320,9 @@ Next, we create a linear model and get the `.fit()`:
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "light ~ depth * C(species)", data = treelight_py)
+model = smf.ols(formula = "light ~ depth * C(species)",
+                data = treelight_py)
+
 # and get the fitted parameters of the model
 lm_treelight_py = model.fit()
 ```
@@ -431,6 +434,14 @@ light = 7962 + -262.2 \times depth
 
 In this example we know that the gradient is the same for both lines (because we explicitly asked to exclude an interaction), so all I need to do is find the intercept value for the `Conifer` group. Unfortunately, the final value given underneath `SpeciesConifer` does not give me the intercept for `Conifer`, instead it tells me the difference between the `Conifer` group intercept and the baseline intercept i.e. the equation for the regression line for conifer woodland is given by:
 
+\begin{equation}
+light = (7962 + -3113) + -262.2 \times depth
+\end{equation} 
+
+\begin{equation}
+light = 4829 + -262.2 \times depth
+\end{equation} 
+
 ## R
 
 ```{r}
@@ -464,13 +475,23 @@ light = 7962 + -262.2 \times depth
 
 In this example we know that the gradient is the same for both lines (because we explicitly asked to exclude an interaction), so all I need to do is find the intercept value for the `Conifer` group. Unfortunately, the final value given underneath `SpeciesConifer` does not give me the intercept for `Conifer`, instead it tells me the difference between the `Conifer` group intercept and the baseline intercept i.e. the equation for the regression line for conifer woodland is given by:
 
+\begin{equation}
+light = (7962 + -3113) + -262.2 \times depth
+\end{equation} 
+
+\begin{equation}
+light = 4829 + -262.2 \times depth
+\end{equation} 
+
 ## Python
 
 The way we obtain the values for the model without the interaction is very similar to what we did for the conifer data. We need to update our model first, to remove the interaction:
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "light ~ depth + C(species)", data = treelight_py)
+model = smf.ols(formula = "light ~ depth + C(species)",
+                data = treelight_py)
+
 # and get the fitted parameters of the model
 lm_treelight_add_py = model.fit()
 ```
@@ -497,7 +518,6 @@ light = 7962 + -262.2 \times depth
 \end{equation} 
 
 In this example we know that the gradient is the same for both lines (because we explicitly asked to exclude an interaction), so all I need to do is find the intercept value for the `Conifer` group. Unfortunately, the final value given in `C(species)[T.Conifer]` does not give me the intercept for `Conifer`, instead it tells me the difference between the `Conifer` group intercept and the baseline intercept i.e. the equation for the regression line for conifer woodland is given by:
-:::
 
 \begin{equation}
 light = (7962 + -3113) + -262.2 \times depth
@@ -506,8 +526,345 @@ light = (7962 + -3113) + -262.2 \times depth
 \begin{equation}
 light = 4829 + -262.2 \times depth
 \end{equation} 
+:::
 
+### Adding custom regression lines
+In the example above we determined that the interaction term `species:depth` was not significant. It would be good to visualise the model without the interaction term.
 
+::: {.panel-tabset group="language"}
+## tidyverse
+This is relatively straightforward if we understand the output of the model a bit better.
+
+First of all, we load the `broom` library. This is part of tidyverse, so you don't have to install it. It is not loaded by default, hence us loading it. What broom does it changes the format of many common base R outputs into a more tidy format, so we can work with the output in our analyses more easily.
+
+The function we use here is called `augment()`. What this does is take a model object and a dataset and adds information about each observation in the dataset.
+
+```{r}
+# define the model without interaction term
+lm_additive <- lm(light ~ species + depth,
+                  data = treelight)
+
+# load the broom package
+library(broom)
+
+# augment the model
+lm_additive %>% augment()
+```
+
+The output shows us lots of data. Our original `light` values are in the `light` column and it's the same for `species` and `depth`. What has been added is information about the fitted (or predicted) values based on the `light ~ depth + species` model we defined.
+
+The fitted or predicted values are in the `.fitted` column, with corresponding residuals in the `.resid` column. Remember, your data = predicted values + error, so if you would add `.fitted` + `resid` then you would end up with your original data again.
+
+Using this information we can now plot the regression lines by `species`:
+
+```{r}
+# plot the regression lines by species
+lm_additive %>%
+  augment() %>% 
+  ggplot(aes(x = depth, y = .fitted, colour = species)) +
+  geom_line() +
+  scale_color_brewer(palette = "Dark2")
+  
+```
+
+Lastly, if we would want to plot the data and regression lines together, we could change the code as follows:
+
+```{r}
+# plot the regression lines
+lm_additive %>%
+  augment() %>% 
+  ggplot(aes(x = depth, y = .fitted, colour = species)) +
+  # add the original data points
+  geom_point(data = treelight,
+             aes(x = depth, y = light, colour = species)) +
+  geom_line() +
+  scale_color_brewer(palette = "Dark2") +
+  labs(x = "Depth (m)",
+       y = "Light intensity (lux)")
+```
+
+## R
+Unfortunately, base R doesn’t have a sensible way of automatically adding multiple regression lines to a plot and so if we want to do this, we will have to do it manually.
+
+First, we create a linear regression without the interaction term.
+
+```{r}
+lm_treelight_r_add <- lm(light ~ depth + species,
+             data = treelight_r)
+```
+
+We first need to extract the relative coefficient values from the `lm` object and then combine them manually to create separate vectors containing the intercept and slope coefficients for each line. This next set of command is a bit annoying but stick with it; it’ll pay dividends (no, really it will – you always secretly wanted to be a computer programmer didn’t you? This medic/biologist/life scientist thing is just a passing phase that you’ll grow out of…)
+
+```{r}
+cf <- coef(lm_treelight_r_add)
+cf
+
+cf_Broadleaf <- c(cf[1], cf[2])
+cf_Conifer <- c(cf[1] + cf[3], cf[2])
+
+cf_Broadleaf
+cf_Conifer
+```
+
+* The first line extracts the three (in this case) coefficients from the `lm` object as a vector called `cf`, and the second line prints this to the screen.
+* In the third line we take the 1st and 2nd components of `cf` and store them as the coefficients for the `Broadleaf` line in a vector called `cf_Broadleaf`
+* The fourth line is where we do some actual calculations. Here we realise that the intercept of the conifer line is actually the sum of the 1st and 3rd values of `cf`, whereas the slope is just the 2nd value, and so we create a vector for the conifer line that reflects this.
+* The 5th and 6th lines just print these two vectors to the screen.
+
+We can now use these two vectors to add the appropriate regression lines to the plot with the original data. We've created _that_ particular plot before, so we can copy/paste the code.
+
+```{r}
+# plot original data
+plot(light ~ depth,
+     data = treelight_r,
+     col = factor(species))
+
+# add the Broadleaf regression line
+abline(cf_Broadleaf, col = "black")
+
+# add the Conifer regression line
+abline(cf_Conifer, col = "red")
+```
+
+## Python
+To do this, we need to do the following:
+
+* create a linear model _without_ the interaction term (we did this previously)
+* extract the predicted values of the model
+* plot these against the original data
+
+```{python}
+# get predicted values
+lm_treelight_add_py.predict()
+```
+
+We can't easily use the predicted values in this kind of format, so we're adding them to the existing data, in a column called `.fitted`:
+
+```{python}
+# add predicted values to data set
+treelight_py['.fitted'] = lm_treelight_add_py.predict()
+
+# have a peek at the data
+treelight_py.head()
+```
+
+Now we can simply plot the data:
+
+```{python}
+#| results: hide
+# plot the data
+(
+  ggplot(treelight_py,
+    aes(x = "depth", y = "light", colour = "species")) +
+    geom_point() +
+    # add regression lines
+    geom_line(aes(x = "depth", y = ".fitted", colour = "species")) +
+    scale_color_brewer(type = "qual", palette = "Dark2") +
+    labs(x = "Depth (m)",
+         y = "Light intensity (lux)")
+)
+```
+:::
+
+## Assumptions
+In this case we first wanted to check if the interaction was significant, prior to checking the assumptions. If we would have checked the assumptions first, then we would have done that one the full model (with the interaction), then done the ANOVA if everything was OK. We would have then found out that the interaction was not significant, meaning we'd have to re-check the assumptions with the new model. In what order you do it is a bit less important here. The main thing is that you check the assumptions and report on it!
+
+Anyway, hopefully you’ve got the gist of checking assumptions for linear models by now: diagnostic plots!
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+#| message: false
+lm_additive %>% 
+  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
+              smoother = TRUE)
+```
+
+* The **Residuals plot** looks OK, no systematic pattern.
+* The **Q-Q plot** isn’t perfect, but I’m happy with the normality assumption.
+* The **Location-Scale plot** is OK, some very slight suggestion of heterogeneity of variance, but nothing to be too worried about.
+* The **Cook's D plot** shows that all of the points are OK
+
+## R
+
+```{r}
+par(mfrow = c(2, 2))
+plot(lm(light ~ depth + species,
+        data = treelight_r))
+```
+
+* The top left graph looks OK, no systematic pattern.
+* The top right graph isn’t perfect, but I’m happy with the normality assumption.
+* The bottom left graph is OK, some very slight suggestion of heterogeneity of variance, but nothing to be too worried about.
+* The bottom right graph shows that all of the points are OK
+
+## Python
+
+```{python}
+#| eval: false
+dgplots(lm_treelight_add_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_treelight_add_py)
+```
+
+```{r}
+library(reticulate)
+#| echo: false
+# display image
+knitr::include_graphics(py$dgplot)
+```
+
+* The **Residuals plot** looks OK, no systematic pattern.
+* The **Q-Q plot** isn’t perfect, but I’m happy with the normality assumption.
+* The **Location-Scale plot** is OK, some very slight suggestion of heterogeneity of variance, but nothing to be too worried about.
+* The **Influential points plot** shows that all of the points are OK
+
+:::
+
+Woohoo!
+
+## Dealing with interaction
+If there _had been_ a significant interaction between the two predictor variables (for example, if light intensity had dropped off significantly faster in conifer woods than in broad leaf woods, in addition to being lower overall, then we would again be looking for two equations for the linear regression, but this time the gradients vary as well.
+In this case interaction is important and so we need the output from a linear regression that explicitly includes the interaction term:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+#| results: hide
+lm(light ~ depth + species + depth:species,
+   data = treelight)
+```
+
+or written using the short-hand:
+
+```{r}
+#| results: hide
+lm(light ~ depth * species,
+   data = treelight)
+```
+
+There really is absolutely no difference in the end result.
+Either way this gives us the following output:
+
+```{r}
+#| echo: false
+lm(light ~ depth * species,
+   data = treelight)
+```
+
+As before the Broadleaf line is used as the baseline regression and we can read off the values for its intercept and slope directly:
+
+Broadleaf:
+\begin{equation}
+Light = 7798.57 + -221.13 \times Depth
+\end{equation}
+
+Note that this is different from the previous section, by allowing for an interaction all fitted values will change.
+
+For the conifer line we will have a different intercept value and a different gradient value. As before the value underneath `speciesConifer` gives us the difference between the intercept of the conifer line and the broad leaf line. The new, additional term `depth:speciesConifer` tells us how the coefficient of `depth` varies for the conifer line i.e. how the gradient is different. Putting these two together gives us the following equation for the regression line conifer woodland:
+
+Conifer:
+\begin{equation}
+Light = (7798.57 + -2784.58) + (-221.13 + -71.04) \times Depth
+\end{equation}
+
+\begin{equation}
+Light = 5014 + -292.2 \times Depth
+\end{equation}
+
+## R
+
+```{r}
+#| results: hide
+lm(light ~ depth + species + depth:species,
+   data = treelight_r)
+```
+
+or written using the short-hand:
+
+```{r}
+#| results: hide
+lm(light ~ depth * species,
+   data = treelight_r)
+```
+
+There really is absolutely no difference in the end result.
+Either way this gives us the following output:
+
+```{r}
+#| echo: false
+lm(light ~ depth * species,
+   data = treelight_r)
+```
+
+As before the Broadleaf line is used as the baseline regression and we can read off the values for its intercept and slope directly:
+
+Broadleaf:
+\begin{equation}
+Light = 7798.57 + -221.13 \times Depth
+\end{equation}
+
+Note that this is different from the previous section, by allowing for an interaction all fitted values will change.
+
+For the conifer line we will have a different intercept value and a different gradient value. As before the value underneath `speciesConifer` gives us the difference between the intercept of the conifer line and the broad leaf line. The new, additional term `depth:speciesConifer` tells us how the coefficient of `depth` varies for the conifer line i.e. how the gradient is different. Putting these two together gives us the following equation for the regression line conifer woodland:
+
+Conifer:
+\begin{equation}
+Light = (7798.57 + -2784.58) + (-221.13 + -71.04) \times Depth
+\end{equation}
+
+\begin{equation}
+Light = 5014 + -292.2 \times Depth
+\end{equation}
+
+## Python
+
+We've actually created this model before, but for clarity we'll define it here again.
+
+```{python}
+# create a linear model
+model = smf.ols(formula = "light ~ depth * C(species)",
+                data = treelight_py)
+
+# and get the fitted parameters of the model
+lm_treelight_py = model.fit()
+```
+
+We get the model parameters as follows:
+
+```{python}
+lm_treelight_py.summary()
+```
+
+As before the Broadleaf line is used as the baseline regression and we can read off the values for its intercept and slope directly:
+
+Broadleaf:
+\begin{equation}
+Light = 7798.57 + -221.13 \times Depth
+\end{equation}
+
+Note that this is different from the previous section, by allowing for an interaction all fitted values will change.
+
+For the conifer line we will have a different intercept value and a different gradient value. As before the value next to `C(species)[T.Conifer]` gives us the difference between the intercept of the conifer line and the broad leaf line. The interaction term `depth:C(species)[T.Conifer]` tells us how the coefficient of `depth` varies for the conifer line i.e. how the gradient is different. Putting these two together gives us the following equation for the regression line conifer woodland:
+
+Conifer:
+\begin{equation}
+Light = (7798.57 + -2784.58) + (-221.13 + -71.04) \times Depth
+\end{equation}
+
+\begin{equation}
+Light = 5014 + -292.2 \times Depth
+\end{equation}
+:::
 
 ## Exercise
 
