@@ -664,7 +664,7 @@ pg.normality(dissolving_py.dissolving_time)
   ggplot(dissolving_py,
     aes(sample = "dissolving_time")) +
   stat_qq() +
-  stat_qq_line()
+  stat_qq_line(color="red")
 )
 ```
 :::
