@@ -15,6 +15,7 @@ source(file = "setup_files/setup.R")
 import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
+
 ```{r}
 #| echo: false
 #| message: false
@@ -50,9 +51,6 @@ A Wilcoxon signed-rank test is an alternative to a paired t-test. It does not re
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
-
-# Converts stats functions to a tidyverse-friendly format
-library(rstatix)
 ```
 
 ### Functions
@@ -62,10 +60,10 @@ library(rstatix)
 #| warning: false
 # Performs a one-sample t-test, Student's t-test
 # and Welch's t-test in later sections
-rstatix::t_test()
+stats::t.test()
 
 # Performs a Shapiro-Wilk test for normality
-rstatix::shapiro_test()
+stats::shapiro.test()
 
 # Plots a Q-Q plot for comparison with a normal distribution
 ggplot2::stat_qq()
@@ -150,14 +148,16 @@ Perform a two-tailed, Wilcoxon signed-rank test:
 ```{r}
 # perform the test
 cortisol %>% 
-  wilcox_test(cortisol ~ time,
-              alternative = "two.sided",
-              paired = TRUE)
+    wilcox.test(cortisol ~ time,
+                alternative = "two.sided",
+                paired = TRUE,
+                data = .)
 ```
 
 -   The first argument gives the formula
 -   The second argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
--   The third argument says that the data are paired
+-   The third argument indicates that the test is paired
+-   The last argument is the data set (coming from the pipe, so denoted as `.`)
 
 ## R
 
@@ -187,9 +187,8 @@ pg.wilcoxon(x = cortisol_diff_py["evening"],
 
 The p-value is given in the `p` column (p-value = 0.000168). Given that this is less than 0.05 we can still reject the null hypothesis.
 
-> A two-tailed, Wilcoxon signed-rank test indicated that the median cortisol level in adult females differed significantly between the morning (320.5 nmol/l) and the evening (188.9 nmol/l) (V = 13, p = 0.00017).
+> A two-tailed, Wilcoxon signed-rank test indicated that the median cortisol level in adult females differed significantly between the morning (320.5 nmol/l) and the evening (188.9 nmol/l, p = 0.00017).
 
-<br />
 
 ## Exercise: Deer legs
 
@@ -247,9 +246,7 @@ Let's look at the data and see what it tells us.
 
 ```{r}
 # summarise the data
-deer %>% 
-  select(-id) %>% 
-  get_summary_stats(type = "common")
+summary(deer)
 ```
 
 ```{r}
@@ -257,7 +254,10 @@ deer %>%
 deer %>% 
   select(-id) %>% 
   group_by(leg) %>% 
-  get_summary_stats(type = "common")
+  summarise(leg_mean = mean(length),
+            leg_median = median(length),
+            leg_min = min(length),
+            leg_max = max(length))
 ```
 
 ```{r}
@@ -314,7 +314,9 @@ summary(deer_r)
 
 ```{r}
 # or even summarise by leg type
-aggregate(length ~ leg, data = deer_r, summary)
+aggregate(length ~ leg,
+          FUN = summary,
+          data = deer_r)
 ```
 
 ```{r}
@@ -449,7 +451,8 @@ Shapiro-Wilk test:
 ```{r}
 # perform Shapiro-Wilk test on leg differences
 leg_diff %>% 
-  shapiro_test(leg_diff)
+    pull(leg_diff) %>% 
+    shapiro.test()
 ```
 
 Q-Q plot:
