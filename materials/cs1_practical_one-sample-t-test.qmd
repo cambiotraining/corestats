@@ -30,9 +30,6 @@ exec(open('setup_files/setup.py').read())
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
-
-# Converts stats functions to a tidyverse-friendly format
-library(rstatix)
 ```
 
 ### Functions
@@ -41,10 +38,10 @@ library(rstatix)
 #| eval: false
 #| warning: false
 # Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
-rstatix::t_test()
+stats::t.test()
 
 # Performs a Shapiro-Wilk test for normality
-rstatix::shapiro_test()
+stats::shapiro.test()
 
 # Plots a Q-Q plot for comparison with a normal distribution
 ggplot2::stat_qq()
@@ -111,7 +108,10 @@ Make sure you have downloaded the data (see: [Datasets](#index-datasets)) and pl
 
 First we load the relevant libraries:
 
-```{r, eval=FALSE, warning=FALSE, message=FALSE}
+```{r}
+#| eval: false
+#| warning: false
+#| message: false
 # load tidyverse
 library(tidyverse)
 
@@ -121,7 +121,9 @@ library(rstatix)
 
 We then read in the data and create a table containing the data.
 
-```{r cs1-one-sample-read-data, message=FALSE, warning=FALSE}
+```{r}
+#| warning: false
+#| message: false
 # import the data
 fishlengthDF <- read_csv("data/CS1-onesample.csv")
 
@@ -136,10 +138,10 @@ We then read in the data and create a vector containing the data.
 
 ```{r}
 # import the data
-fishlengthDF <- read.csv("data/CS1-onesample.csv")
+fishlengthDF_r <- read.csv("data/CS1-onesample.csv")
 
 # create a vector containing the data
-fishlength_r <- fishlengthDF$length
+fishlength_r <- fishlengthDF_r$length
 ```
 
 The first line reads the data into R and creates an object called a data frame. This data frame only contains a single column of numbers called "Guanapo" (the name of the river). In most situations, and for most statistical analyses, having our data stored in a data frame is exactly what we'd want. However, for one sample tests we actually need our data to be stored as a vector. So, the second line extracts the values that are in the `Guanapo` column of our `fishlengthDF` data frame and creates a simple vector of numbers that we have called `fishlength_r` This step is only necessary for one-sample tests and when we look at more complex data sets, we won't need to do this second step at all.
@@ -166,7 +168,11 @@ Summarise the data and visualise it:
 
 ```{r}
 summary(fishlengthDF)
+```
 
+From the `summary()` output we can see that the mean and median of the `length` variable are quite close together. The `id` column also has minimum, maximum, mean etc. values - these are not useful! The numbers in the `id` column have no numerical value, but are just to ensure each observation can be traced back, if needed.
+
+```{r}
 fishlengthDF %>% 
   ggplot(aes(x = river, y = length)) +
   geom_boxplot()
@@ -176,7 +182,11 @@ fishlengthDF %>%
 
 ```{r}
 summary(fishlength_r)
+```
 
+From the `summary()` output we can see that the mean and median of the `length` variable are quite close together. The `id` column also has minimum, maximum, mean etc. values - these are not useful! The numbers in the `id` column have no numerical value, but are just to ensure each observation can be traced back, if needed.
+
+```{r}
 boxplot(fishlength_r, main = "Male guppies", ylab = "Length (mm)")
 ```
 
@@ -188,7 +198,10 @@ First we have a look at a numerical summary of the data:
 fishlength_py.describe()
 ```
 
-```{python, results='hide'}
+From the `describe()` output we can see that the mean and median of the `length` variable are quite close together. The `id` column also has minimum, maximum, mean etc. values - these are not useful! The numbers in the `id` column have no numerical value, but are just to ensure each observation can be traced back, if needed.
+
+```{python}
+#| results: hide
 (
   ggplot(fishlength_py,
     aes(x = 'river',
@@ -261,7 +274,7 @@ NB. By even looking at this distribution to assess the assumption of normality w
 
 ### Q-Q plot of the data
 
-Q-Q plot is the short for quantile-quantile plot. This **diagnostic** plot (as it is sometimes called) is a way of comparing two distributions. How Q-Q plots work won't be explained here but ask a demonstrator if you really want to know what is going on.
+Q-Q plot is the short for quantile-quantile plot. This **diagnostic** plot (as it is sometimes called) is a way of comparing two distributions. How Q-Q plots work won't be explained here but will be addressed in the next session.
 
 Construct a Q-Q Plot of the quantiles of the data against the quantiles of a normal distribution:
 
@@ -287,7 +300,8 @@ qqline(fishlength_r)
 
 ## Python
 
-```{python, results='hide'}
+```{python}
+#| results: hide
 (
   ggplot(fishlength_py, aes(sample = "length")) +
   stat_qq() +
@@ -306,43 +320,98 @@ It is a very rare situation indeed where the assumptions necessary for a test wi
 
 Below are four examples of QQ plots for different types of distributions:
 
-```{r cs1-one-sample-qqplot-normal-dist, echo=FALSE}
-normalDat<-rnorm(200,0,1)
-par(mfrow=c(1,2))
-hist(normalDat,breaks=10 , freq=FALSE,main="Normal Distribution",xlab="")
-qqnorm(normalDat)
-qqline(normalDat)
+```{r}
+#| echo: false
+# load required libraries
+library(distributional)
+library(ggdist)
+
+# set.seed to make images reproducible
+set.seed(1984)
+
+# create data frame with sampled distributions
+df_dist <- data.frame(norm_dist = rnorm(200,0,1),
+           unif_dist = runif(200,-1,1),
+           t_dist = rt(200,5),
+           exp_dist = rexp(200))
+```
+
+```{r}
+#| echo: false
+norm1 <- ggplot(df_dist, aes(x = norm_dist)) +
+    stat_dots() +
+    labs(x = "sampled value",
+         y = NULL)
+
+norm2 <- ggplot(df_dist, aes(sample = norm_dist)) +
+    stat_qq() +
+    stat_qq_line(colour = "red") +
+    labs(x = "theoretical quantiles",
+         y = "sample quantiles")
+    
+norm1 + norm2 +
+    plot_annotation(title = "Normal distribution, 200 samples",
+                    tag_levels = "A")
 ```
 
 These two graphs relate to 200 data points that have been drawn from a normal distribution. Even here you can see that the points do not all lie perfectly on the diagonal line in the QQ plot, and a certain amount of deviation at the top and bottom of the graph can happen just by chance (if I were to draw a different set of point then the graph would look slightly different).
 
-```{r cs1-one-sample-qqplot-uniform-dist, echo=FALSE}
-uniformDat<-runif(200,-1,1)
-par(mfrow=c(1,2))
-hist(uniformDat,breaks=10 , freq=FALSE,main="Uniform Distribution",xlab="")
-qqnorm(uniformDat)
-qqline(uniformDat)
+```{r}
+#| echo: false
+unif1 <- ggplot(df_dist, aes(x = unif_dist)) +
+    stat_dots() +
+    labs(x = "sampled value",
+         y = NULL)
+
+unif2 <- ggplot(df_dist, aes(sample = unif_dist)) +
+    stat_qq() +
+    stat_qq_line(colour = "red") +
+    labs(x = "theoretical quantiles",
+         y = "sample quantiles")
+    
+unif1 + unif2 +
+    plot_annotation(title = "Uniform distribution, 200 samples",
+                    tag_levels = "A")
 ```
 
 These two graphs relate to 200 data points that have been drawn from a uniform distribution. Uniform distributions are more condensed than normal distributions, and this is reflected in the QQ plot having a very pronounced S-shaped pattern to it (this is colloquially known as **snaking**).
 
-```{r cs1-one-sample-qqplot-t-dist, echo=FALSE}
-tDat<-rt(200,1)
-par(mfrow=c(1,2))
-tDat<-tDat[which(abs(tDat)<20)]
-hist(tDat,breaks=20 , freq = FALSE,main="T Distribution",xlab="")
-qqnorm(tDat)
-qqline(tDat)
+```{r}
+#| echo: false
+tdist1 <- ggplot(df_dist, aes(x = t_dist)) +
+    stat_dots() +
+    labs(x = "sampled value",
+         y = NULL)
+
+tdist2 <- ggplot(df_dist, aes(sample = t_dist)) +
+    stat_qq() +
+    stat_qq_line(colour = "red") +
+    labs(x = "theoretical quantiles",
+         y = "sample quantiles")
+    
+tdist1 + tdist2 +
+    plot_annotation(title = "T distribution, 200 samples",
+                    tag_levels = "A")
 ```
 
 These two graphs relate to 200 data points that have been drawn from a t distribution. t distributions are more spread out than normal distributions, and this is reflected in the QQ plot again having a very pronounced S-shaped pattern to it, but this time the snaking is a reflection of that observed for the uniform distribution.
 
-```{r cs1-one-sample-qqplot-exponential-dist, echo=FALSE}
-expDat<-rexp(200)
-par(mfrow=c(1,2))
-hist(expDat,breaks=10 , freq=FALSE,main="Exponential Distribution",xlab="")
-qqnorm(expDat)
-qqline(expDat)
+```{r}
+#| echo: false
+exp_dist1 <- ggplot(df_dist, aes(x = exp_dist)) +
+    stat_dots() +
+    labs(x = "sampled value",
+         y = NULL)
+
+exp_dist2 <- ggplot(df_dist, aes(sample = exp_dist)) +
+    stat_qq() +
+    stat_qq_line(colour = "red") +
+    labs(x = "theoretical quantiles",
+         y = "sample quantiles")
+    
+exp_dist1 + exp_dist2 +
+    plot_annotation(title = "Exponential distribution, 200 samples",
+                    tag_levels = "A")
 ```
 
 These two graphs relate to 200 data points that have been drawn from an exponential distribution. Exponential distributions are not symmetric and are very skewed compared with normal distributions. The significant right-skew in this distribution is reflected in the QQ plot again having points that curve away above the diagonal line at both ends (a left-skew would have the points being below the line at both ends).
@@ -360,12 +429,14 @@ Perform a Shapiro-Wilk test on the data:
 
 ```{r}
 fishlengthDF %>% 
-  shapiro_test(length)
+    pull(length) %>% 
+    shapiro.test()
 ```
 
--   `variable` indicated the variable that was used to perform the test on
--   `statistic` gives the calculated W-value (`r fishlengthDF %>% shapiro_test(length) %>% select(statistic) %>% pull()`)
--   `p` gives the calculated p-value (`r fishlengthDF %>% shapiro_test(length) %>% select(p) %>% pull()`)
+-   The 1st line gives the name of the test and the `data:` tells you which data are used. The `shapiro.test()` function needs a numerical vector as input. We get this by extracting the `length` values with the `pull()` function. We then pipe this to the `shapiro.test()` function.
+-   The 3rd line contains the two key outputs from the test:
+-   The calculated W-statistic is 0.9494 (we don't need to know this)
+-   The p-value is 0.1764
 
 ## R
 
@@ -375,7 +446,7 @@ shapiro.test(fishlength_r)
 
 -   The 1st line gives the name of the test and the 2nd line reminds you what the data set was called
 -   The 3rd line contains the two key outputs from the test:
--   The calculated w-value is 0.9494 (we don't need to know this)
+-   The calculated W-statistic is 0.9494 (we don't need to know this)
 -   The p-value is 0.1764
 
 ## Python
@@ -414,22 +485,24 @@ Perform a one-sample, two-tailed t-test:
 
 ```{r}
 fishlengthDF %>% 
-  t_test(length ~ 1,
-         mu = 20,
-         alternative = "two.sided")
+    pull(length) %>% 
+    t.test(mu = 20, alternative = "two.sided")
 ```
 
-The `t_test()` function requires three arguments:
-
-1.  the `formula`, here we give it `length ~ 1` to indicate it is a one-sample test on `length`
-2.  the `mu` is the mean to be tested under the null hypothesis, here it is 20
-3.  the `alternative` argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`. We have no prior assumptions on whether the alternative fish length would be greater or less than 20, so we choose `two.sided`.
+-   The first argument must be a numerical vector of data values. We used the `pull()` function to get these from the data set. We don't have to specify this in `t.test()`, since those data are coming from the pipe.
+-   The second argument must be a number and is the mean to be tested under the null hypothesis.
+-   The third argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`. We have no prior assumptions on whether the alternative fish length would be greater or less than 20, so we choose `two.sided`.
 
 In the output:
 
--   the `statistic` column gives us the t-statistic of -3.5492 (we'll need this for reporting)
--   the `df` column tells us there are 28 degrees of freedom (again we'll need this for reporting)
--   the `p` column gives us the p-value of 0.00139
+-   The 1st line gives the name of the test and the 2nd line reminds you what the dataset was called
+-   The 3rd line contains the three key outputs from the test:
+    -   The calculated t-value is -3.5492 (we'll need this for reporting)
+    -   There are 28 degrees of freedom (again we'll need this for reporting)
+    -   The p-value is 0.001387.
+-   The 4th line simply states the alternative hypothesis
+-   The 5th and 6th lines give the 95th confidence interval (we don't need to know this)
+-   The 7th, 8th and 9th lines give the sample mean again (18.29655).
 
 ## R
 
@@ -629,7 +702,8 @@ Normality:
 ```{r}
 # perform Shapiro-Wilk test
 dissolving %>% 
-  shapiro_test(dissolving_time)
+    pull(dissolving_time) %>% 
+    shapiro.test()
 ```
 
 ```{r}
@@ -684,9 +758,9 @@ In reality, if I found myself in this situation I would also try doing a non-par
 ```{r}
 # perform one-sample t-test
 dissolving %>% 
-  t_test(dissolving_time ~ 1,
-         mu = 45,
-         alternative = "two.sided")
+    pull(dissolving_time) %>% 
+    t.test(mu = 45,
+           alternative = "two.sided")
 ```
 
 ## R

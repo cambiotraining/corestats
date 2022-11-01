@@ -19,8 +19,8 @@ gr_height <- gr_width / 1.618
 
 ## Distributions
 
-* Distributions = abstraction for populations
-* Data = abstraction for your sample
+-   Distributions = abstraction for populations
+-   Data = abstraction for your sample
 
 ### Normal distribution (global height)
 
@@ -58,6 +58,7 @@ plot1 <- data.frame(dist = dist_normal(169, 10)) %>%
 ```
 
 ### Normal distribution: variance
+
 ```{r}
 plot1 <- data.frame(dist = dist_normal(169, 10)) %>%
     ggplot(aes(xdist = dist)) +
@@ -140,7 +141,6 @@ plot1 <- ggplot(df, aes(xdist = dist)) +
 ggsave(plot1, filename = "cs1_dist-shapes.pdf",
            width = gr_width * 2, height = gr_height * 2 )
 ```
-
 
 ## Statistical tests
 
