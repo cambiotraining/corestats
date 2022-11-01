@@ -91,10 +91,6 @@ utils::unstack()
 # (normally distributed data)
 stats::bartlett.test()
 
-# Performs Levene's test for equality of variance
-# (non-normally distributed data)
-car::leveneTest()
-
 # Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
 stats::t.test()
 
