@@ -13,6 +13,7 @@ source(file = "setup_files/setup.R")
 #| echo: false
 #| message: false
 #| warning: false
+import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 

@@ -12,6 +12,7 @@ source(file = "setup_files/setup.R")
 ```{python}
 #| echo: false
 #| message: false
+import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
@@ -477,7 +478,7 @@ We're not focussing on *all* of the output just yet, but
 
 The p-value is what we're mostly interested in. It gives the probability of us getting a sample such as ours if the null hypothesis were actually true.
 
-::: callout-important
+::: {.callout-important}
 ## p-value interpretation
 
 -   a high p-value means that there is a high probability of observing a sample such as ours and the null hypothesis is probably true whereas
@@ -490,9 +491,13 @@ People, however like more definite answers and so we pick an artificial probabil
 
 In this case the p-value is much smaller than 0.05, so we reject our null hypothesis and state that:
 
-> A one-sample t-test indicated that the mean body length of male guppies ($\mu$ = 18.29mm) differs significantly from 20 mm (t = -3.55, df = 28, p = 0.0014).
+> A one-sample t-test indicated that the mean body length of male guppies ($\bar{x}$ = 18.29mm) differs significantly from 20 mm (p = 0.0014).
 
-The above sentence is an adequate concluding statement for this test and is what we would write in any paper or report. Note that we have included (in brackets) information on the actual mean value of our group($\mu$ = 18.29mm), the test statistic (t = -3.55), the degrees of freedom (df = 28), and the p-value (p = 0.0014). In some journals you are only required to report whether the p-value is less than the critical value (e.g. p \< 0.05) but I would always recommend reporting the actual p-value obtained.
+The above sentence is an adequate concluding statement for this test and is what we would write in any paper or report. Note that we have included (in brackets) information on the actual mean value of our group($\bar{x}$ = 18.29mm) and the p-value (p = 0.0014). In some journals you are only required to report whether the p-value is less than the critical value (e.g. p \< 0.05) but I would always recommend reporting the actual p-value obtained.
+
+::: {.callout-important}
+Additional information, such as the test statistic and degrees of freedom, are sometimes also reported. This is more of a legacy from the time where people did the calculations by hand and used tables. I personally find it much more useful to report as above and supply the data and analysis, so other people can see what I've done and why!
+:::
 
 ## Exercise: gastric juices
 
@@ -701,9 +706,17 @@ pg.ttest(x = dissolving_py.dissolving_time,
 ```
 :::
 
-> A one-sample t-test indicated that the mean dissolving time of the drug is not significantly different from 45s (t=0.366 , df=7 , p=0.725)
+> A one-sample t-test indicated that the mean dissolving time of the drug is not significantly different from 45s ($\bar{x}$ = 45.2, p=0.725).
 
 \
 
 And that, is that.
+:::
+
+## Key points
+
+::: callout-note
+-   One-sample tests are used when you have a single sample of continuous data
+-   The t-test assumes that the data are normally distributed and independent of each other
+-   A good way of assessing the assumption of normality is by checking the data against a Q-Q plot
 :::

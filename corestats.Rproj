@@ -16,5 +16,5 @@ AutoAppendNewline: Yes
 StripTrailingWhitespace: Yes
 
 PythonType: conda
-PythonVersion: 3.10.5
-PythonPath: ~/opt/miniconda3/envs/py_rstudio/bin/python3.10
+PythonVersion: 3.9.12
+PythonPath: ~/opt/miniconda3/bin/python3.9

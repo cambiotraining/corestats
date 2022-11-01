@@ -12,6 +12,7 @@ source(file = "setup_files/setup.R")
 ```{python}
 #| echo: false
 #| message: false
+import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
@@ -594,14 +595,14 @@ Since the p-value is very small (much smaller than the standard significance lev
 One drawback with using an ANOVA test is that it only tests to see if all of the means are the same, and if we get a significant result using ANOVA then all we can say is that not all of the means are the same, rather than anything about how the pairs of groups differ. For example, consider the following box plot for three samples.
 
 ```{r}
+#| echo: false
 #| message: false
 # load the data
 tukey <- read_csv("data/CS2-tukey.csv")
-
-tukey
 ```
 
 ```{r}
+#| echo: false
 tukey %>%
     ggplot(aes(x = group, y = response)) +
     geom_boxplot()

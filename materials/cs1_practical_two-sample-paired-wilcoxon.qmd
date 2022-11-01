@@ -12,9 +12,9 @@ source(file = "setup_files/setup.R")
 ```{python}
 #| echo: false
 #| message: false
+import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
-
 ```{r}
 #| echo: false
 #| message: false
