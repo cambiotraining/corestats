@@ -93,6 +93,12 @@ dunn.test::dunn.test()
 ```
 
 ## Python
+| Libraries                                                             | Description                                                                                |
+|:-----------------------|:-----------------------------------------------|
+| [`pandas`](https://pandas.pydata.org/docs/getting_started/index.html) | A Python data analysis and manipulation tool.                                              |
+| [`pingouin`](https://pingouin-stats.org)                              | A Python module developed to have simple yet exhaustive stats functions.                   |
+| [`plotnine`](https://plotnine.readthedocs.io/en/stable/)              | The Python equivalent of `ggplot2`.|
+| [`statsmodels`](https://www.statsmodels.org/stable/index.html)        | A Python module for statistical models, conducting tests and statistical data exploration. |
 :::
 :::
 
@@ -141,21 +147,46 @@ spidermonkey %>%
 First we read the data in:
 
 ```{r}
-spidermonkey <- read.csv("data/CS2-spidermonkey.csv")
+spidermonkey_r <- read.csv("data/CS2-spidermonkey.csv")
 ```
 
 ```{r}
 # look at the data format
-head(spidermonkey)
+head(spidermonkey_r)
 
 # summarise the data
-aggregate(aggression ~ familiarity, data = spidermonkey, summary)
+aggregate(aggression ~ familiarity, data = spidermonkey_r, summary)
 
 # create boxplot
-boxplot(aggression ~ familiarity, data = spidermonkey)
+boxplot(aggression ~ familiarity, data = spidermonkey_r)
 ```
 
 ## Python
+First we read the data in:
+
+```{python}
+spidermonkey_py = pd.read_csv("data/CS2-spidermonkey.csv")
+```
+
+```{python}
+# look at the data
+spidermonkey_py.head()
+
+# summarise the data
+spidermonkey_py.describe()["aggression"]
+```
+
+```{python}
+#| results: hide
+# create boxplot
+(
+ggplot(spidermonkey_py,
+       aes(x = "familiarity", y = "aggression")) +
+    geom_boxplot()
+)
+```
+
+
 :::
 
 The data appear to show a very significant difference in aggression rates between the three types of familiarity. We would probably expect a reasonably significant result here.
@@ -205,7 +236,7 @@ Remember to load the library with `library(car)`.
 Perform Levene's test on the data:
 
 ```{r}
-leveneTest(aggression ~ familiarity, data = spidermonkey)
+leveneTest(aggression ~ familiarity, data = spidermonkey_r)
 ```
 
 The relevant p-value is given on the 3rd line (`Pr(>F) = 0.893`). As it is quite large we see that each group do appear to have the same variance.
@@ -213,6 +244,14 @@ The relevant p-value is given on the 3rd line (`Pr(>F) = 0.893`). As it is quite
 There is also a warning about `group coerced to factor`. There is no need to worry about this - Levene's test needs to compare different groups and because `aggression` is encoded as a numeric value, it converts it to a categorical one before running the test.
 
 ## Python
+We can run Levene's test with the `pg.homoscedasticity()` function. We previously used this for Bartlett's test, but it allows us to define Levene's instead.
+
+```{python}
+pg.homoscedasticity(dv = "aggression",
+                    group = "familiarity",
+                    method = "levene",
+                    data = spidermonkey_py)
+```
 :::
 
 ## Implement and interpret the test
@@ -235,7 +274,7 @@ The p-value is given in the `p` column. This shows us the probability of getting
 ## R
 
 ```{r}
-kruskal.test(aggression ~ familiarity, data = spidermonkey)
+kruskal.test(aggression ~ familiarity, data = spidermonkey_r)
 ```
 
 -   The first argument must be in the formula format: `variable ~ category`
@@ -244,6 +283,14 @@ kruskal.test(aggression ~ familiarity, data = spidermonkey)
 The p-value is given in the 3rd line. This shows us the probability of getting samples such as ours if the null hypothesis were actually true.
 
 ## Python
+We can use the `kruskal()` function from `pingouin` to perform the Kruskal-Wallis test:
+
+```{python}
+pg.kruskal(dv = "aggression",
+           between = "familiarity",
+           data = spidermonkey_py)
+```
+
 :::
 
 Since the p-value is very small (much smaller than the standard significance level of 0.05) we can say "that it is very unlikely that these three samples came from the same parent distribution and as such we can reject our null hypothesis" and state that:
@@ -269,7 +316,7 @@ The `dunn_test()` function performs a Kruskal-Wallis test on the data, followed 
 
 The comparison between the pairs of groups is reported in the table at the bottom. Each row contains a single comparison. We are interested in the `p` and `p.adj` columns, which contain the the p-values that we want. This table shows that there isn't a significant difference between the high and low groups, as the p-value (0.1598) is too high. The other two comparisons between the high familiarity and no familiarity groups and between the low and no groups are significant though.
 
-The `dunn_test()` function has several arguments, of which the `p.adjust.method` is likely to be of interest. Here you can define which method needs to be used to account for multiple comparisons. The default is `"holm"`. We'll cover more about this in the chapter on [Power analysis](#cs6-intro).
+The `dunn_test()` function has several arguments, of which the `p.adjust.method` is likely to be of interest. Here you can define which method needs to be used to account for multiple comparisons. The default is `"none"`. We'll cover more about this in the chapter on [Power analysis](#cs6-intro).
 
 ## R
 
@@ -289,7 +336,7 @@ Remember to load the library with `library(dunn.test)`.
 Test for a significant difference in group medians:
 
 ```{r}
-dunn.test(spidermonkey$aggression, spidermonkey$familiarity,
+dunn.test(spidermonkey_r$aggression, spidermonkey_r$familiarity,
           altp = TRUE)
 ```
 
@@ -300,6 +347,30 @@ You can see that the `dunn.test()` function also performs a Kruskal-Wallis test 
 The comparison between the pairs of groups is reported in the table at the bottom. Each cell in the table has two rows. The bottom row contains the p-values that we want. This table shows that there isn't a significant difference between the high and low groups, as the p-value (0.1598) is too high. The other two comparisons between the high familiarity and no familiarity groups and between the low and no groups are significant though.
 
 ## Python
+Unfortunately `pingouin` does not seem to have function that can perform Dunn's test, so we need to import this from elsewhere.
+
+There is a series of post-hocs tests available via `scikit_posthocs`. You'll need to install this by running:
+
+```{python}
+#| eval: false
+pip install scikit-posthocs
+```
+
+After installation, load it with:
+```{python}
+import scikit_posthocs as sp
+```
+
+Finally, we can perform Dunn's test as follows:
+```{python}
+sp.posthoc_dunn(spidermonkey_py,
+                val_col = "aggression",
+                group_col = "familiarity")
+```
+
+The p-values of the pairwise comparisons are reported in the table. This table shows that there isn't a significant difference between the high and low groups, as the p-value (0.1598) is too high. The other two comparisons between the high familiarity and no familiarity groups and between the low and no groups are significant though.
+
+The `sp.posthoc_dunn()` function has several arguments, of which the `p_adjust` is likely to be of interest. Here you can define which method needs to be used to account for multiple comparisons. We'll cover more about this in the chapter on [Power analysis](#cs6-intro).
 :::
 
 ## Exercise: Lobster weight (revisited)
@@ -333,7 +404,7 @@ All done previously.
 
 ```{r}
 #| echo: false
-lobsters <- read.csv("data/CS2-lobsters.csv")
+lobsters_r <- read.csv("data/CS2-lobsters.csv")
 ```
 
 All done previously.
@@ -358,7 +429,7 @@ lobsters %>%
 
 ```{r}
 #| warning: false
-leveneTest(weight ~ diet, data = lobsters)
+leveneTest(weight ~ diet, data = lobsters_r)
 ```
 
 ## Python
@@ -382,7 +453,7 @@ lobsters %>%
 ## R
 
 ```{r}
-kruskal.test(weight ~ diet, data = lobsters)
+kruskal.test(weight ~ diet, data = lobsters_r)
 ```
 
 ## Python

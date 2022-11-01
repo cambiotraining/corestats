@@ -1,0 +1,147 @@
+---
+title: "CS1-Hypothesis-testing"
+author: "Martin van Rongen"
+format: revealjs
+editor: visual
+---
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(ggdist)
+library(distributional)
+
+gr_width <- 4
+gr_height <- gr_width / 1.618
+```
+
+## Statistical inference
+
+## Distributions
+
+* Distributions = abstraction for populations
+* Data = abstraction for your sample
+
+### Normal distribution (global height)
+
+```{r}
+#| echo: false
+# CS1 slides: normal distribution of global height
+global_height <- data.frame(dist = dist_normal(169, 10)) %>%
+    ggplot(aes(xdist = dist)) +
+    stat_slab(fill = "gray85", colour = "#c44101", alpha =0.7) +
+    scale_x_continuous(breaks = seq(140, 200, by = 10), limits = c(140, 200)) +
+    #geom_vline(xintercept = 169, linetype = "dashed", size = 1) +
+    labs(title = "Global height distribution",
+         x = "height (cm)",
+         y = "probability density") +
+    theme_classic()
+
+ggsave(global_height,
+       filename = "cs1_dist-global-height.pdf",
+       width = gr_width, height = gr_height)
+```
+
+```{r}
+plot1 <- data.frame(dist = dist_normal(169, 10)) %>%
+    ggplot(aes(xdist = dist)) +
+    stat_slab(fill = "gray85", colour = "#c44101", alpha =0.7) +
+    scale_x_continuous(breaks = seq(140, 200, by = 10), limits = c(140, 200)) +
+    geom_vline(xintercept = 169, linetype = "dashed", size = 1) +
+    labs(title = "Global height distribution",
+         x = "height (cm)",
+         y = "probability density") +
+    theme_classic()
+
+    ggsave(plot1, filename = "cs1_dist-global-height-full.pdf",
+           width = gr_width * 2, height = gr_height * 2 )
+```
+
+### Normal distribution: variance
+```{r}
+plot1 <- data.frame(dist = dist_normal(169, 10)) %>%
+    ggplot(aes(xdist = dist)) +
+    stat_slab(fill = "gray85", colour = "#c44101", alpha =0.7) +
+    scale_x_continuous(breaks = seq(140, 200, by = 10), limits = c(140, 200)) +
+    geom_vline(xintercept = 169, linetype = "dashed", size = 1) +
+    geom_segment(x = 158, y = 0.4, xend = 180, yend = 0.4,
+                 arrow = arrow(length = unit(0.03, "npc"),
+                               ends = "both")) +
+    labs(title = "Global height distribution",
+         x = "height (cm)",
+         y = "probability density") +
+    theme_classic()
+
+    ggsave(plot1, filename = "cs1_dist-global-height-median.pdf",
+           width = gr_width * 2, height = gr_height * 2 )
+```
+
+```{r}
+plot1 <- data.frame(dist = dist_normal(169, 10)) %>%
+    ggplot(aes(xdist = dist)) +
+    stat_slab(fill = "gray85", colour = "#c44101", alpha =0.7) +
+    scale_x_continuous(breaks = seq(140, 200, by = 10), limits = c(140, 200)) +
+    geom_vline(xintercept = 169, linetype = "dashed", size = 1) +
+    geom_segment(x = 158, y = 0.4, xend = 180, yend = 0.4,
+                 arrow = arrow(length = unit(0.03, "npc"),
+                               ends = "both")) +
+    labs(title = "Global height distribution",
+         x = "height (cm)",
+         y = "probability density") +
+    theme_classic()
+
+    ggsave(plot1, filename = "cs1_dist-global-height-median-small.pdf",
+           width = gr_width, height = gr_height )
+```
+
+### Sample global height
+
+```{r}
+#| echo: false
+# CS1 slides: sample of 10 humans
+human_height <- data.frame(r_sample = rnorm(10, 169, 10)) %>% 
+    ggplot(aes(x = r_sample, y = 1)) +
+    geom_point(alpha = 0.7) +
+    scale_x_continuous(breaks = seq(140, 200, by = 10), limits = c(140, 200)) +
+    labs(title = "Sample of human heights",
+         x = "height (cm)",
+         y = NULL) +
+    theme_classic() +
+    theme(axis.text.y = element_blank())
+
+ggsave(human_height,
+       filename = "cs1_sample-human-height.pdf",
+       width = 3.57, height = 3.57 / 1.618)
+    
+```
+
+## Other distributions
+
+```{r}
+df <- data.frame(
+  name = c("Uniform", "Gamma", "F", "Normal", "Student's t", "Binomial", "Poisson", "Chi-square", "Poisson inverse gaussian"),
+  dist = c(dist_uniform(-2, 8),
+           dist_gamma(2,1),
+           dist_f(8, 15),
+           dist_normal(3,1),
+           dist_student_t(4,2),
+           dist_binomial(10, 0.2),
+           dist_poisson(2),
+           dist_chisq(4),
+           dist_poisson_inverse_gaussian(2,3))
+)
+
+plot1 <- ggplot(df, aes(xdist = dist)) +
+  stat_slab(fill = "gray85", colour = "#c44101", alpha =0.7) + 
+    facet_wrap(facets = vars(name), scales = "free") +
+  labs(title = "Distribution density functions",
+       y = "probability", x = NULL)
+
+ggsave(plot1, filename = "cs1_dist-shapes.pdf",
+           width = gr_width * 2, height = gr_height * 2 )
+```
+
+
+## Statistical tests
+
+## Key concepts

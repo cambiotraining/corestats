@@ -12,6 +12,7 @@ source(file = "setup_files/setup.R")
 ```{python}
 #| echo: false
 #| message: false
+#| warning: false
 exec(open('setup_files/setup.py').read())
 ```
 
@@ -142,14 +143,17 @@ The data are stored in the file `data/CS1-twosample.csv`.
 
 Let's read in the data and have a quick look at the first rows to see how the data is structured.
 
-Make sure you have downloaded the data (see: [Datasets](#index-datasets)) and placed it within your working directory.
+Make sure you have downloaded the data and placed it within your working directory.
 
 ::: {.panel-tabset group="language"}
 ## tidyverse
 
 First we load the relevant libraries:
 
-```{r, eval=FALSE, warning=FALSE, message=FALSE}
+```{r}
+#| eval: false
+#| warning: false
+#| message: false
 # load tidyverse
 library(tidyverse)
 
@@ -159,7 +163,8 @@ library(rstatix)
 
 We then read in the data and create a table containing the data.
 
-```{r, message=FALSE, warning=FALSE}
+```{r}
+#| message: false
 rivers <- read_csv("data/CS1-twosample.csv")
 
 rivers
@@ -750,7 +755,7 @@ qqline(uns_turtle_r$Male, col = "red")
 
 ## Python
 
-```{r}
+```{python}
 #| results: hide
 # create Q-Q plots for both groups
 (
