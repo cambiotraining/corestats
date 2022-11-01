@@ -66,6 +66,9 @@ library(ggResidpanel)
 # Computes summary statistics
 rstatix::get_summary_stats()
 
+# Perform Tukey's range test
+rstatix::tukey_hsd()
+
 # Creates diagnostic plots
 ggResidpanel::resid_panel()
 ```
@@ -91,6 +94,9 @@ stats::qqline()
 
 # Performs a Shapiro-Wilk test for normality
 stats::shapiro.test()
+
+# Perform Tukey's range test
+stats::TukeyHSD()
 ```
 
 ## Python
@@ -137,7 +143,9 @@ The data are stored in the file `data/CS2-oystercatcher.csv`.
 
 First we read in the data.
 
-```{r, message=FALSE, warning=FALSE}
+```{r}
+#| message: false
+#| warning: false
 # load data
 oystercatcher <- read_csv("data/CS2-oystercatcher-feeding.csv")
 
@@ -180,7 +188,7 @@ oystercatcher_r <- read.csv("data/CS2-oystercatcher-feeding.csv")
 head(oystercatcher_r)
 ```
 
-The `oystercatcher` data set contains two columns:
+The `oystercatcher_r` data set contains two columns:
 
 1.  a `site` column with information on the amount of shelter of the feeding location
 2.  a `feeding` column containing feeding rates
@@ -189,8 +197,8 @@ Next, we get some basic descriptive statistics. We have three groups, so to get 
 
 ```{r}
 aggregate(feeding ~ site,
-          data = oystercatcher_r,
-          summary)
+          FUN = summary,
+          data = oystercatcher_r)
 ```
 
 Finally, we plot the data by `site`:
@@ -262,8 +270,19 @@ We take the data, and `group_by()` site:
 #| results: hide
 # Shapiro-Wilk test on each site
 oystercatcher %>% 
-  group_by(site) %>% 
-  shapiro_test(feeding)
+    filter(site == "exposed") %>% 
+    pull(feeding) %>% 
+    shapiro.test()
+
+oystercatcher %>% 
+    filter(site == "partial") %>% 
+    pull(feeding) %>% 
+    shapiro.test()
+
+oystercatcher %>% 
+    filter(site == "sheltered") %>% 
+    pull(feeding) %>% 
+    shapiro.test()
 ```
 
 ## R
@@ -320,7 +339,7 @@ resid_oyster <- residuals(lm_oystercatcher)
 
 # perform Shapiro-Wilk test on residuals
 resid_oyster %>% 
-  shapiro_test()
+  shapiro.test()
 ```
 
 ## R
@@ -430,6 +449,17 @@ This does not convey that things aren't always so clear-cut and that there is a 
 ## tidyverse
 
 In the first session we already created diagnostic Q-Q plots directly from our data, using `stat_qq()` and `stat_qq_line()`. For more specific plots this becomes a bit cumbersome. There is an option to create ggplot-friendly diagnostic plots, using the `ggResidPanel` package.
+
+If you haven't got `ggResidpanel` installed, please run the following code:
+
+```{r}
+#| eval: false
+# install package
+install.packages("ggResidpanel")
+
+# load library
+library(ggResidpanel)
+```
 
 Let's create the diagnostic plots we're interested in using `ggResidPanel`:
 
@@ -701,6 +731,8 @@ This will compare all of the groups in a pairwise fashion and reports on whether
 ::: {.panel-tabset group="language"}
 ## tidyverse
 
+To perform Tukey's range test we can use the `tukey_hsd()` function from the `rstatix` package. Note, there is a `TukeyHSD()` function in base R as well, but the `tukey_hsd()` function can take a linear model object as input, whereas the `TukeyHSD()` function cannot. So the former is a bit easier to work with.
+
 ```{r}
 # perform Tukey's range test on linear model
 lm_tukey %>%
@@ -726,12 +758,15 @@ The bottom three lines contain the information that we want. The final column of
 ```{python}
 pg.pairwise_tukey(dv = "response",
                   between = "group",
-                  data = tukey_py).round(4)
+                  data = tukey_py).transpose()
 ```
 
+The `dv` argument is the response variable, whereas the `between` argument defines the explanatory variable.
+
+We `.transpose()` the data, so we can look at the output a bit easier. Doing so, we focus on the `p-tukey` values.
 :::
 
-As we can see that there isn't a significant difference between `sample1` and `sample2` but the 2nd and 3rd rows show that there is a significant difference between `sample1` and `sample3`, as well as `sample2` and `sample3`. This matches with what we expected based on the box plot.
+As we can see that there isn't a significant difference between `sample1` and `sample2` but there is a significant difference between `sample1` and `sample3`, as well as `sample2` and `sample3`. This matches with what we expected based on the box plot.
 
 ### Assumptions
 
@@ -831,7 +866,9 @@ lobsters
 ```
 
 ```{r}
-aggregate(weight ~ diet, data = lobsters, summary)
+aggregate(weight ~ diet,
+          FUN = summary,
+          data = lobsters)
 
 boxplot(weight ~ diet, data = lobsters)
 ```
@@ -884,8 +921,19 @@ First, we perform the Shapiro-Wilk test on the individual groups:
 ```{r}
 # Shapiro-Wilk on lobster groups
 lobsters %>% 
-  group_by(diet) %>% 
-  shapiro_test(weight)
+    filter(diet == "Flakes") %>% 
+    pull(weight) %>% 
+    shapiro.test()
+
+lobsters %>% 
+    filter(diet == "Mussels") %>% 
+    pull(weight) %>% 
+    shapiro.test()
+
+lobsters %>% 
+    filter(diet == "Pellets") %>% 
+    pull(weight) %>% 
+    shapiro.test()
 ```
 
 `Flakes` and `Mussels` are fine, but, as we suspected from earlier, `Pellets` appears to have a marginally significant Normality test result.
@@ -902,7 +950,7 @@ resid_lobsters <- residuals(lm_lobsters)
 
 # and perform the Shapiro-Wilk test on the residuals
 resid_lobsters %>% 
-  shapiro_test()
+  shapiro.test()
 ```
 
 This on the other hand says that everything is fine. Let's look at Q-Q plot.
@@ -923,7 +971,8 @@ Overall, I'd be happy that the assumption of normality has been adequately well 
 
 We'll consider the Bartlett test and we'll look at some diagnostic plots too.
 
-```{r, message=FALSE}
+```{r}
+#| message: false
 # perform Bartlett's test
 bartlett.test(weight ~ diet,
               data = lobsters)
@@ -967,14 +1016,17 @@ shapiro.test(lobst_uns$Pellets)
 Let's look at the Shapiro-Wilk test for all of the data together:
 
 ```{r}
-resid_lobst <- residuals(lm(weight ~ diet, data = lobsters))
+lm_lobsters_r <- lm(weight ~ diet,
+                    data = lobsters)
+
+resid_lobst <- residuals(lm_lobsters_r)
 shapiro.test(resid_lobst)
 ```
 
 This on the other hand says that everything is fine. Let's look at the Q-Q-plot:
 
 ```{r}
-plot(lm(weight ~ diet , data = lobsters),
+plot(lm_lobsters_r,
      which = 2)
 ```
 
@@ -989,9 +1041,10 @@ Overall, I'd be happy that the assumption of normality has been adequately well 
 We'll consider the Bartlett test and we'll look at some diagnostic plots too.
 
 ```{r}
-bartlett.test(weight ~ diet, data = lobsters)
+bartlett.test(weight ~ diet,
+              data = lobsters)
 
-plot(lm(weight ~ diet, data = lobsters),
+plot(lm_lobsters_r,
      which = c(1,3))
 ```
 
@@ -1113,7 +1166,7 @@ anova(lm_lobsters)
 ## R
 
 ```{r}
-anova(lm(weight ~ diet, data = lobsters))
+anova(lm_lobsters_r)
 ```
 
 ## Python
@@ -1126,7 +1179,7 @@ pg.anova(dv = "weight",
 ```
 :::
 
-> A one-way ANOVA test indicated that the mean weight of juvenile lobsters did not differ significantly between diets (F = 1.64, df = 2,15, p = 0.23).
+> A one-way ANOVA test indicated that the mean weight of juvenile lobsters did not differ significantly between diets (p = 0.23).
 
 ### Post-hoc testing with Tukey
 
