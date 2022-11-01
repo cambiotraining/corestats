@@ -426,6 +426,7 @@ Perform a Shapiro-Wilk test on the data:
 
 ::: {.panel-tabset group="language"}
 ## tidyverse
+The `shapiro.test()` function needs a numerical vector as input. We get this by extracting the `length` values with the `pull()` function. We then pipe this to the `shapiro.test()` function.
 
 ```{r}
 fishlengthDF %>% 
@@ -433,7 +434,7 @@ fishlengthDF %>%
     shapiro.test()
 ```
 
--   The 1st line gives the name of the test and the `data:` tells you which data are used. The `shapiro.test()` function needs a numerical vector as input. We get this by extracting the `length` values with the `pull()` function. We then pipe this to the `shapiro.test()` function.
+-   The 1st line gives the name of the test and the `data:` tells you which data are used. In our case this is coming from the pipe and is denoted as `.`
 -   The 3rd line contains the two key outputs from the test:
 -   The calculated W-statistic is 0.9494 (we don't need to know this)
 -   The p-value is 0.1764

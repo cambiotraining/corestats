@@ -52,9 +52,6 @@ This test also compares two samples, however for this test (in contrast to Stude
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
-
-# Converts stats functions to a tidyverse-friendly format
-library(rstatix)
 ```
 
 ### Functions
@@ -62,8 +59,10 @@ library(rstatix)
 ```{r}
 #| eval: false
 #| warning: false
-# Performs one and two sample Wilcoxon tests
-rstatix::wilcox_test()
+# Performs one- and two-sample Wilcoxon tests
+# on vectors of data; the latter is also known
+# as 'Mann-Whitney' test
+stats::wilcox.test()
 ```
 
 ## R
@@ -112,17 +111,24 @@ We have checked these previously.
 
 ## Implement and interpret the test
 
-Perform a two-tailed, Mann-Whitney U test:
+Calculate the median for each group (for reference) and perform a two-tailed, Mann-Whitney U test:
 
 ::: {.panel-tabset group="language"}
 ## tidyverse
+Calculate the median:
+
+```{r}
+rivers %>% 
+    group_by(river) %>% 
+    summarise(median_length = median(length))
+```
+
+Perform the Mann-Whitney U test:
 
 ```{r}
 #| warning: false
-
-rivers %>% 
-  wilcox_test(length ~ river,
-              alternative = "two.sided")
+wilcox.test(length ~ river, data = rivers,
+            alternative = "two.sided")
 ```
 
 -   The first argument must be in the formula format: `variable ~ category`
@@ -130,13 +136,26 @@ rivers %>%
 
 You *may* get a warning message in the console stating `cannot compute exact p-value with ties`. This just means that some of the data points have exactly the same value which affects the internal mathematics slightly. However, given that the p-value is so very small, this is not something that we need to worry about.
 
--   The first 5 columns give you information on the variable (`.y.`), groups and sample size of each group
--   The `statistic` column gives the t-value of 841 (we need this for reporting)
--   The `p` column gives us a p-value of 0.0006464.
+After the warning message:
+
+-   The 1st line gives the name of the test and the 2nd line reminds you what the dataset was called, and what variables were used
+-   The 3rd line contains the two key outputs from the test:
+    -   The calculated W-value is 841 (we'll use this in reporting)
+    -   The p-value is 0.0006464.
+-   The 4th line simply states the alternative hypothesis in terms of the difference between the two sample medians in that if there were a difference then one distribution would be shifted relative to the other.
 
 ## R
+Calculate the median:
 
-```{r, warning=FALSE}
+```{r}
+aggregate(length ~ river,
+          FUN = median,
+          data = rivers_r)
+```
+
+The `aggregate()` function uses the same formula notation as we've used previously. It also takes a `FUN =` argument, which is the function it applies to each subgroup. In this case we're calculating the `median` `length` for each `river`.
+
+```{r}
 wilcox.test(length ~ river, data = rivers_r,
             alternative = "two.sided")
 ```
@@ -147,7 +166,7 @@ After the warning message:
 
 -   The 1st line gives the name of the test and the 2nd line reminds you what the dataset was called, and what variables were used
 -   The 3rd line contains the two key outputs from the test:
-    -   The calculated W-value is 841 (we'll use this in reporting)
+    -   The calculated W-value is 841
     -   The p-value is 0.0006464.
 -   The 4th line simply states the alternative hypothesis in terms of the difference between the two sample medians in that if there were a difference then one distribution would be shifted relative to the other.
 
@@ -171,6 +190,15 @@ rivers_py_wide = pd.pivot(rivers_py,
 rivers_py_wide.head()
 ```
 
+Next, we can calculate the median values for each river:
+
+```{python}
+rivers_py_wide['Aripo'].median()
+rivers_py_wide['Guanapo'].median()
+```
+
+Finally, we can perform the Mann-Whitney U test:
+
 ```{python}
 # perform the Mann-Whitney U test
 # ignoring the missing values
@@ -183,7 +211,7 @@ Given that the p-value is less than 0.05 we can reject the null hypothesis at th
 
 To put it more completely, we can state that:
 
-> A Mann-Whitney test indicated that the median body length of male guppies in the Guanapo river (18.8 mm) differs significantly from the median body length of male guppies in the Aripo river (20.1 mm) (W = 841, p = 0.0006).
+> A Mann-Whitney test indicated that the median body length of male guppies in the Guanapo river ($\tilde{x}$ = 18.8 mm) differs significantly from the median body length of male guppies in the Aripo river ($\tilde{x}$ = 20.1 mm, p = 0.0006).
 
 ## Exercise: Turtles (revisited)
 
@@ -213,18 +241,18 @@ We've already checked that the variances of the two groups are similar, so we're
 ::: {.panel-tabset group="language"}
 ## tidyverse
 
-```{r cs1-twosample-mannwhitney-exercise}
-turtle %>% 
-  wilcox_test(serum ~ sex,
-              alternative = "two.sided")
+```{r}
+wilcox.test(serum ~ sex,
+            alternative = "two.sided",
+            data = turtle)
 ```
 
 ## R
 
 ```{r}
 wilcox.test(serum ~ sex,
-            data = turtle_r,
-            alternative = "two.sided")
+            alternative = "two.sided",
+            data = turtle_r)
 ```
 
 ## Python
@@ -247,7 +275,7 @@ pg.mwu(turtle_py_wide['Male'],
 ```
 :::
 
-This gives us exactly the same conclusion that we got from the two-sample t-test *i.e*. that there isn't any significant difference between the two groups.
+This gives us exactly the same conclusion that we got from the two-sample t-test _i.e_. that there isn't any significant difference between the two groups.
 
-> A Mann-Whitney test indicated that there wasn't a significant difference in the median Serum Cholesterol levels between male and female turtles (W = 26, p = 0.534)
+> A Mann-Whitney test indicated that there wasn't a significant difference in the median serum cholesterol levels between male and female turtles (p = 0.534)
 :::
