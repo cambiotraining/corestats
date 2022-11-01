@@ -65,9 +65,9 @@ ggplot2::stat_qq_line()
 
 ```{r}
 #| eval: false
-# Companion to Applied Regression, provides additional
-# statistical functionality
-library(car)
+# Provides additional statistical functionality
+# and converts stats functions to a tidyverse-friendly format
+library(rstatix)
 ```
 
 ### Functions
@@ -75,6 +75,10 @@ library(car)
 ```{r}
 #| eval: false
 #| warning: false
+# Performs Levene's test for equality of variance
+# (non-normally distributed data)
+rstatix::levene_test()
+
 # Splits the data into subsets, computes summary statistics
 # for each, and returns the result in a convenient form
 stats::aggregate()
@@ -226,13 +230,13 @@ This gives us the standard summary statistics, but in this case we have more tha
 
 ```{r}
 aggregate(length ~ river,
-          data = rivers_r,
-          summary)
+          FUN = summary,
+          data = rivers_r)
 ```
 
 -   The first argument defines the variable that is being used (`length`) and grouping (`river`)
--   The second argument is the data frame that is used
--   The third argument defines the function that is applied across the subsets (in this case that's the `summary()` function)
+- The second argument defines the function that is applied across the subsets (in this case that's the `summary()` function)   
+- The third argument is the data frame that is used
 
 Numbers might not always give you the best insight into your data, so we also visualise our data:
 
@@ -290,13 +294,19 @@ So we perform a [Shapiro-Wilk test](#shapiro-wilk-test) on both samples separate
 ::: {.panel-tabset group="language"}
 ## tidyverse
 
-We can use the `group_by()` function to group the data by `river`, then we perform the Shapiro-Wilk test on the `length` measurements:
+We can use the `filter()` function to filter the data by `river`, then we perform the Shapiro-Wilk test on the `length` measurements:
 
 ```{r}
-# group data by river and perform test
+# filter data by river and perform test
 rivers %>% 
-  group_by(river) %>% 
-  shapiro_test(length)
+    filter(river == "Aripo") %>% 
+    pull(length) %>% 
+    shapiro.test()
+
+rivers %>% 
+    filter(river == "Guanapo") %>% 
+    pull(length) %>% 
+    shapiro.test()
 ```
 
 ## R
@@ -383,7 +393,7 @@ qqline(uns_rivers$Guanapo, col = "red")
 ```
 :::
 
-The Q-Q plots show the opposite of what we found with the Shapiro-Wilk tests: the data for Aripo look pretty normally distributed, whereas the assumption of normality for the Guanapo data is less certain.
+The Q-Q plots show the opposite of what we found with the Shapiro-Wilk tests: the data for Aripo look pretty normally distributed apart from one data point, whereas the assumption of normality for the Guanapo data is less certain.
 
 What to do? Well, you could be conservative and state that you are not confident that the data in either group are normally distributed. That would be a perfectly reasonable conclusion.
 
@@ -409,7 +419,7 @@ The function we use is `levene_test()` from the `rstatix` library.
 
 It takes the data in the form of a formula as follows:
 
-```{r, warning=FALSE}
+```{r}
 rivers %>% 
   levene_test(length ~ river)
 ```
@@ -418,25 +428,24 @@ The key bit of information is the `p` column. This is the p-value (0.1876) for t
 
 ## R
 
-Levene's test is not included in the default R packages and may require the installation of an additional package called `car` (Companion to Applied Regression).
+Levene's test is not included in the default R packages. Instead, we're using the additional functionality from the `rstatix` package. You will have to install _and_ load the package, as follows:
 
-To install the `car` package, run the following command in your console:
+```{r}
+#| eval: false
+install.packages("rstatix")
 
-```{r cs1-two-sample-car, eval=FALSE}
-install.packages("car")
+library(rstatix)
 ```
 
-Alternatively, go to <kbd>Tools</kbd> \> <kbd>Install packages...</kbd> \> <kbd>Packages</kbd>, type in `car` and press <kbd>Install</kbd>
-
-We can now perform Levene's test:
-
-```{r cs1-twosample-levene, warning=FALSE}
-leveneTest(length ~ river, data = rivers)
+We can now perform Levene's test using the `levene_test()` function. It takes the data in the form of a formula as follows:
+```{r}
+levene_test(length ~ river,
+            data = rivers_r)
 ```
 
 Ignore any warning you might get about coercion to factors (the test needs to create grouped variables to work and R versions from 4.x onwards do not read in the data as factors).
 
-The key bit of information is the 3rd line under the text `Pr(>F)`. This is the p-value for this test.
+The key bit of information is the `p` column. This is the p-value (0.1876) for this test.
 
 ## Python
 
@@ -461,19 +470,13 @@ If we had wanted to carry out Bartlett's test (i.e. if the data *had* been suffi
 ::: {.panel-tabset group="language"}
 ## tidyverse
 
-Here we use `bartlett.test()` from base R. Surprisingly, the `rstatix` package does not have a built-in equivalent.
-
-If we wanted to get the output of the Bartlett test into a tidy format, we could do the following, where we take the `rivers` data set and pipe it to the `bartlett.test()` function. Note that we need to define the data using a dot (`.`), because the first input into `bartlett.test()` is not the data. We then pipe the output to the `tidy()` function, which is part of the `broom` library, which kindly converts the output into a tidy format. Handy!
+Here we use `bartlett.test()` function. As before, the data is coming from the pipe, so we define this with `.`.
 
 ```{r}
-# load the broom package
-library(broom)
-
 # perform Bartlett's test on the data and tidy
 rivers %>% 
   bartlett.test(length ~ river,
-                data = .) %>% 
-  tidy()
+                data = .)
 ```
 
 ## R
@@ -506,24 +509,29 @@ Perform a two-sample, two-tailed, t-test:
 ```{r}
 # two-sample, two-tailed t-test
 rivers %>% 
-  t_test(length ~ river,
+  t.test(length ~ river,
          alternative = "two.sided",
-         var.equal = TRUE)
+         var.equal = TRUE,
+         data = .)
 ```
 
 Here we do the following:
 
--   We take the data set and pipe it to the `t_test()` function
--   The `t_test()` function takes the formula in the format `variable ~ category`
--   Again the alternative is `two.sided` because we have no prior knowledge about whether the alternative should be `greater` or `less`
--   The last argument says whether the variance of the two samples can be assumed to be equal (Student's t-test) or unequal (Welch's t-test)
+-   The first argument must be in the formula format: `variables ~ category`
+-   The second argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
+-   The third argument says whether the variance of the two samples can be assumed to be equal (Student's t-test) or unequal (Welch's t-test)
+- The fourth argument says where the data are coming from (in this case the pipe `.`)
 
 So, how do we interpret these results?
 
--   The first 5 columns give you information on the variable (`.y.`), groups and sample size of each group
--   The `statistic` column gives the t-value of 3.8433 (we need this for reporting)
--   The `df` column tell us there are 66 degrees of freedom (we need this for reporting)
--   The `p` column gives us a p-value of 0.0002754
+-   The 1st line gives the name of the test and the 2nd line reminds you what the data set was called, and what variables were used.
+-   The 3rd line contains the three key outputs from the test:
+    -   The calculated t-value is 3.8433
+    -   There are 66 degrees of freedom
+    -   The p-value is 0.0002754.
+-   The 4th line simply states the alternative hypothesis in terms of the difference between the two sample means (testing if the two sample means are different is equivalent to testing whether the difference in the means is equal to zero).
+-   The 5th and 6th lines give the 95th confidence interval (we don't need to know this here).
+-   The 7th, 8th and 9th lines give the sample means for each group (20.33077 in Aripo and 18.29655 in Guanapo) which we found earlier.
 
 ## R
 
@@ -567,8 +575,8 @@ pg.ttest(aripo, guanapo,
 :::
 
 Again, the p-value is what we're most interested in. Since the p-value is very small (much smaller than the standard significance level) we choose to say "that it is very unlikely that these two samples came from the same parent distribution and as such we can reject our null hypothesis" and state that:
-
-> A Student's t-test indicated that the mean body length of male guppies in the Guanapo river (18.29 mm) differs significantly from the mean body length of male guppies in the Aripo river (20.33 mm) (t = 3.8433, df = 66, p = 0.0003).
+$\bar{x}$
+> A Student's t-test indicated that the mean body length of male guppies in the Guanapo river ($\bar{x}$ = 18.29 mm) differs significantly from the mean body length of male guppies in the Aripo river ($\bar{x}$ = 20.33 mm, p = 0.0003).
 
 <br />
 
@@ -695,8 +703,14 @@ Let's look at the normality of each of the groups separately. There are several 
 ```{r}
 # perform Shapiro-Wilk test on each group
 turtle %>% 
-  group_by(sex) %>% 
-  shapiro_test(serum)
+    filter(sex == "Female") %>% 
+    pull(serum) %>% 
+    shapiro.test()
+
+turtle %>% 
+    filter(sex == "Male") %>% 
+    pull(serum) %>% 
+    shapiro.test()
 ```
 
 ## R
@@ -712,8 +726,8 @@ uns_turtle_r
 You can see that the data has been split by `sex`.
 
 ```{r}
-shapiro.test(uns_turtle_r$Male)
 shapiro.test(uns_turtle_r$Female)
+shapiro.test(uns_turtle_r$Male)
 ```
 
 ## Python
@@ -746,7 +760,7 @@ turtle %>%
 
 ## R
 
-```{r cs1-twosample-turtle-qqplot}
+```{r}
 par(mfrow=c(1,2))
 qqnorm(uns_turtle_r$Female, main = "Female")
 qqline(uns_turtle_r$Female, col = "red")
@@ -790,7 +804,8 @@ bartlett.test(serum ~ sex,
 
 and Levene's test gives us:
 
-```{r, warning=FALSE}
+```{r}
+#| warning: false
 # perform Levene's test
 turtle %>% 
   levene_test(serum ~ sex)
@@ -801,16 +816,17 @@ turtle %>%
 Bartlett's test gives us:
 
 ```{r}
-bartlett.test(serum ~ sex, turtle_r)
+bartlett.test(serum ~ sex,
+              data = turtle_r)
 ```
 
 and Levene's test gives us:
 
-```{r, warning=FALSE}
-# load if needed
-# library(car)
-
-leveneTest(serum ~ sex, turtle_r)
+```{r}
+#| warning: false
+# perform Levene's test
+turtle %>% 
+  levene_test(serum ~ sex)
 ```
 
 ## Python
@@ -847,19 +863,19 @@ Because of the result of the Bartlett test I know that I can carry out a two-sam
 
 ```{r}
 # perform two-sample t-test
-turtle %>% 
-  t_test(serum ~ sex,
-         alternative = "two.sided",
-         var.equal = TRUE)
+t.test(serum ~ sex,
+       alternative = "two.sided",
+       var.equal = TRUE,
+       data = turtle)
 ```
 
 ## R
 
 ```{r}
 t.test(serum ~ sex,
-       data = turtle_r,
        alternative = "two.sided",
-       var.equal = TRUE)
+       var.equal = TRUE,
+       data = turtle_r)
 ```
 
 ## Python
@@ -884,7 +900,7 @@ pg.ttest(turtle_female, turtle_male,
 
 With a p-value of 0.544, this test tells us that there is insufficient evidence to suggest that the means of the two groups are different. A suitable summary sentence would be:
 
-> A Student's two-sample t-test indicated that the mean serum cholesterol level did not differ significantly between Male and Female turtles (t = 0.627, df = 11, p = 0.544).
+> A Student's two-sample t-test indicated that the mean serum cholesterol level did not differ significantly between Male and Female turtles (p = 0.544).
 
 ### Discussion
 

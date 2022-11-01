@@ -51,6 +51,9 @@ A Wilcoxon signed-rank test is an alternative to a paired t-test. It does not re
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
+
+# Converts stats functions to a tidyverse-friendly format
+library(rstatix)
 ```
 
 ### Functions
@@ -58,6 +61,9 @@ library(tidyverse)
 ```{r}
 #| eval: false
 #| warning: false
+# Computes summary statistics                         
+rstatix::get_summary_stats() 
+
 # Performs a one-sample t-test, Student's t-test
 # and Welch's t-test in later sections
 stats::t.test()
@@ -254,10 +260,7 @@ summary(deer)
 deer %>% 
   select(-id) %>% 
   group_by(leg) %>% 
-  summarise(leg_mean = mean(length),
-            leg_median = median(length),
-            leg_min = min(length),
-            leg_max = max(length))
+  get_summary_stats(type = "common")
 ```
 
 ```{r}
