@@ -32,9 +32,6 @@ A paired t-test is used when we have two samples of continuous data that can be 
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
-
-# Converts stats functions to a tidyverse-friendly format
-library(rstatix)
 ```
 
 ### Functions
@@ -44,10 +41,10 @@ library(rstatix)
 #| warning: false
 # Performs a one-sample t-test, Student's t-test
 # and Welch's t-test in later sections
-rstatix::t_test()
+stats::t.test()
 
 # Performs a Shapiro-Wilk test for normality
-rstatix::shapiro_test()
+stats::shapiro.test()
 
 # Plots a Q-Q plot for comparison with a normal distribution
 ggplot2::stat_qq()
@@ -354,15 +351,17 @@ Perform a two-sample, two-tailed, paired t-test:
 ```{r}
 #| results: hide
 # perform the test
-cortisol %>% 
-  t_test(cortisol ~ time,
-         alternative = "two.sided",
-         paired = TRUE)
+t.test(cortisol ~ time,
+       alternative = "two.sided",
+       paired = TRUE,
+       data = cortisol)
 ```
 
--   The first argument gives the formula
--   The second argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
--   The third argument says that the data are paired
+-   The first two arguments define the formula
+-   The third argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
+-   The fourth argument says that the data are paired
+
+From our perspective the value of interest is the `p-value`.
 
 ## R
 
@@ -377,7 +376,7 @@ t.test(cortisol ~ time,
 -   The third argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
 -   The fourth argument says that the data are paired
 
-From our perspective the value of interested is in the `p` column (p-value = 5.29 $\times$ 10<sup>-5</sup>). Given that this is substantially less than 0.05 we can reject the null hypothesis and state:
+From our perspective the value of interest is the `p-value`.
 
 ## Python
 
@@ -391,11 +390,13 @@ pg.ttest(cortisol_diff_py["evening"],
          alternative = "two-sided",
          paired = True).transpose()
 ```
+
+From our perspective the value of interest is the `p-val`.
 :::
 
 Since the p-value = 5.29 $\times$ 10<sup>-5</sup>) and thus substantially less than 0.05 we can reject the null hypothesis and state:
 
-> A two-tailed, paired t-test indicated that the average cortisol level in adult females differed significantly between the morning (313.5 nmol/l) and the evening (197.4 nmol/l) (t = -5.2, df = 19, p = 5.3 \* 10<sup>-5</sup>).
+> A two-tailed, paired t-test indicated that the average cortisol level in adult females differed significantly between the morning (313.5 nmol/l) and the evening (197.4 nmol/l, p = 5.3 \* 10<sup>-5</sup>).
 
 ## Exercise: Assumptions
 
@@ -416,7 +417,8 @@ Perform Shapiro-Wilk test:
 ```{r}
 # perform Shapiro-Wilk test on cortisol differences
 cortisol_diff %>% 
-  shapiro_test(cortisol_change)
+    pull(cortisol_change) %>% 
+    shapiro.test()
 ```
 
 Create Q-Q plot:
