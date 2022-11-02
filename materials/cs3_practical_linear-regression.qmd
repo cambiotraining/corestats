@@ -65,7 +65,63 @@ ggResidpanel::resid_panel()
 
 ## R
 
+### Functions
+
+```{r}
+#| eval: false
+# Creates a linear model
+stats::lm()
+
+# Creates an ANOVA table for a linear model
+stats::anova()
+```
+
+
 ## Python
+
+### Libraries
+
+```{python}
+#| eval: false
+# A Python data analysis and manipulation tool
+import pandas as pd
+
+# Simple yet exhaustive stats functions.
+import pingouin as pg
+
+# Python equivalent of `ggplot2`
+from plotnine import *
+
+# Statistical models, conducting tests and statistical data exploration
+import statsmodels.api as sm
+
+# Convenience interface for specifying models using formula strings and DataFrames
+import statsmodels.formula.api as smf
+```
+
+### Functions
+
+```{python}
+#| eval: false
+# Summary statistics
+pandas.DataFrame.describe()
+
+# Plots the first few rows of a DataFrame
+pandas.DataFrame.head()
+
+# Query the columns of a DataFrame with a boolean expression
+pandas.DataFrame.query()
+
+# Reads in a .csv file
+pandas.read_csv
+
+# Creates a model from a formula and data frame
+statsmodels.formula.api.ols
+
+# Creates an ANOVA table for one or more fitted linear models
+statsmodels.stats.anova.anova_lm
+```
+
 :::
 :::
 
@@ -98,7 +154,6 @@ And then will be testing the following null and alternative hypotheses:
 
 ::: {.panel-tabset group="language"}
 ## tidyverse
-
 First, we read in the data:
 
 ```{r}
@@ -116,7 +171,6 @@ USArrests %>%
 ```
 
 ## R
-
 First, we read in the data:
 
 ```{r}
@@ -131,6 +185,23 @@ plot(murder ~ assault, data = USArrests_r)
 ```
 
 ## Python
+First, we read in the data:
+
+```{python}
+USArrests_py = pd.read_csv("data/CS3-usarrests.csv")
+```
+
+You can visualise the data with:
+
+```{python}
+#| results: hide
+# create scatterplot of the data
+(
+  ggplot(USArrests_py,
+         aes(x = "assault", y = "murder")) +
+    geom_point()
+)
+```
 :::
 
 Perhaps unsurprisingly, there appears to be a relatively strong positive relationship between these two variables. Whilst there is a reasonable scatter of the points around any trend line, we would probably expect a significant result in this case.
@@ -180,7 +251,8 @@ lm_1 %>%
 First we need to define the linear model:
 
 ```{r}
-lm_1 <- lm(murder ~ assault, data = USArrests_r)
+lm_1 <- lm(murder ~ assault,
+           data = USArrests_r)
 ```
 
 -   The first argument to `lm` is a formula saying that `Murder` depends on `Assaults`. As we have seen before, the syntax is generally `dependent variable` \~ `independent variable`.
@@ -202,6 +274,37 @@ plot(lm_1)
 -   The last graph shows the **Cook's distance** and tests if any one point has an unnecessarily large effect on the fit. The important aspect here is to see if any points lie beyond the red dashed contour line in the top right corner of this plot. If not, then no point has undue influence. This plot is good.
 
 ## Python
+First, we define the linear model:
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "murder ~ assault", data = USArrests_py)
+# and get the fitted parameters of the model
+lm_USArrests_py = model.fit()
+```
+
+Then we use `dgplots()` to create the diagnostic plots:
+
+```{python}
+#| eval: false
+dgplots(lm_USArrests_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_USArrests_py)
+```
+
+```{r}
+#| echo: false
+library(reticulate)
+# display image
+knitr::include_graphics(py$dgplot)
+```
 :::
 
 ::: callout-note
@@ -234,6 +337,12 @@ lm_1
 The `lm()` function returns a linear model object which is essentially a list containing everything necessary to understand and analyse a linear model. However, if we just type the model name (as we have above) then it just prints to the screen the actual coefficients of the model i.e. the intercept and the slope of the line.
 
 ## Python
+
+```{python}
+print(lm_USArrests_py.summary())
+```
+
+A rather large table, but the values we're interested in can be found more or less in the middle. We are after the `coef` values, where the intercept is 0.6317 and the slope is 0.0419.
 :::
 
 So here we have found that the line of best fit is given by:
@@ -259,8 +368,8 @@ This is exactly the same format as the table we saw for one-way ANOVA:
 -   The 1st line just tells you the that this is an ANOVA test
 -   The 2nd line tells you what the response variable is (in this case `Murder`)
 -   The 3rd, 4th and 5th lines are an ANOVA table which contain some useful values:
-    -   The `Df` column contains the degrees of freedom values on each row, 1 and 48 (which we'll need for the reporting)
-    -   The `F` value column contains the F statistic, 86.454 (which again we'll need for reporting).
+    -   The `Df` column contains the degrees of freedom values on each row, 1 and 48
+    -   The `F` value column contains the F statistic, 86.454
     -   The p-value is 2.596e-12 and is the number directly under the `Pr(>F)` on the 4th line.
     -   The other values in the table (in the `Sum Sq` and `Mean Sq`) column are used to calculate the F statistic itself and we don't need to know these.
 
@@ -277,17 +386,22 @@ This is exactly the same format as the table we saw for one-way ANOVA:
 -   The 1st line just tells you the that this is an ANOVA test
 -   The 2nd line tells you what the response variable is (in this case `Murder`)
 -   The 3rd, 4th and 5th lines are an ANOVA table which contain some useful values:
-    -   The `Df` column contains the degrees of freedom values on each row, 1 and 48 (which we'll need for the reporting)
-    -   The `F` value column contains the F statistic, 86.454 (which again we'll need for reporting).
+    -   The `Df` column contains the degrees of freedom values on each row, 1 and 48
+    -   The `F` value column contains the F statistic, 86.454
     -   The p-value is 2.596e-12 and is the number directly under the `Pr(>F)` on the 4th line.
     -   The other values in the table (in the `Sum Sq` and `Mean Sq`) column are used to calculate the F statistic itself and we don't need to know these.
 
 ## Python
+We can perform an ANOVA on the `lm_USArrests_py` object using the `anova_lm()` function from the `statsmodels` package.
+
+```{python}
+sm.stats.anova_lm(lm_USArrests_py, typ = 2)
+```
 :::
 
 Again, the p-value is what we're most interested in here and shows us the probability of getting data such as ours if the null hypothesis were actually true and the slope of the line were actually zero. Since the p-value is excruciatingly tiny we can reject our null hypothesis and state that:
 
-> A simple linear regression showed that the assault rate in US states was a significant predictor of the number of murders (F = 86.45, df = 1,48, p = 2.59x10<sup>-12</sup>).
+> A simple linear regression showed that the assault rate in US states was a significant predictor of the number of murders (p = 2.59x10<sup>-12</sup>).
 
 ### Plotting the regression line
 
@@ -312,7 +426,8 @@ USArrests %>%
 
 ```{r}
 # plot the data
-plot(murder ~ assault, data = USArrests_r)
+plot(murder ~ assault,
+     data = USArrests_r)
 
 # add the regression line
 abline(lm_1, col = "blue")
@@ -371,10 +486,12 @@ USAstate_r <- read.csv("data/CS3-statedata.csv")
 
 ```{r}
 # plot the data
-plot(life_exp ~ murder, data = USAstate_r)
+plot(life_exp ~ murder,
+     data = USAstate_r)
 
 # create a linear model
-lm1 <- lm(life_exp ~ murder, data = USAstate_r)
+lm1 <- lm(life_exp ~ murder,
+          data = USAstate_r)
 
 # and add a regression line
 abline(lm1, col = "blue")
@@ -474,10 +591,12 @@ USAstate %>%
 
 ```{r}
 # plot the data
-plot(hs_grad ~ frost, data = USAstate_r)
+plot(hs_grad ~ frost,
+     data = USAstate_r)
 
 # create a linear model
-lm2<-lm(hs_grad ~ frost, data = USAstate_r)
+lm2 <- lm(hs_grad ~ frost,
+          data = USAstate_r)
 
 # and add a regression line
 abline(lm2, col = "blue")
@@ -514,7 +633,7 @@ lm_frost %>%
 ## R
 
 ```{r}
-par(mfrow = c(2,2))
+par(mfrow = c(2, 2))
 plot(lm2)
 ```
 

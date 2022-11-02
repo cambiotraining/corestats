@@ -1,0 +1,118 @@
+---
+title: "Setup"
+---
+
+## Installation
+
+::: {.panel-tabset group="language"}
+## tidyverse
+## R
+## Python
+:::
+
+
+## Packages
+We will be using the following packages throughout this course:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+### tidyverse
+
+The `tidyverse` package is actually a collection of packages that provides functionality for data science. For more information see: [https://www.tidyverse.org](https://www.tidyverse.org).
+
+It can be installed with
+```{r}
+#| eval: false
+install.packages("tidyverse")
+```
+
+
+## R
+
+## Python
+
+### pandas
+The `pandas` package provides data structures to Python. For more information see: [https://pandas.pydata.org/docs/getting_started/install.html](https://pandas.pydata.org/docs/getting_started/install.html).
+
+It can be installed via `pip`
+```{python}
+#| eval: false
+pip install pandas
+```
+
+or `conda`
+```{python}
+#| eval: false
+conda install pandas
+```
+
+### pingouin
+The `pingouin` package provides statistical functionality to Python. For more information see: [https://pingouin-stats.org](https://pingouin-stats.org).
+
+It can be installed via `pip`
+
+```{python}
+#| eval: false
+pip install pingouin
+```
+
+or `conda`
+```{python}
+#| eval: false
+conda install -c conda-forge pingouin
+```
+
+### patchworklib
+The `patchworklib` package provides an easy way for assembling figures. This package is required to run the course-specific `dgplots()` function. For more information see: [https://pypi.org/project/patchworklib/](https://pypi.org/project/patchworklib/).
+
+It can be installed via `pip`
+```{python}
+#| eval: false
+pip install patchworklib
+```
+
+### plotnine
+The `plotnine` packages provides a grammar of graphics to Python - an equivalent to the `ggplot2` package in R. For more information see: [https://plotnine.readthedocs.io/en/stable/#](https://plotnine.readthedocs.io/en/stable/#).
+
+::: {.callout-important}
+November 2022: At the moment the `patchworklib` package (which we'll use for creating some plots) does not work with the latest version of `plotnine`. So we need to install version 0.9.0.
+:::
+
+It can be installed via `pip`
+```{python}
+#| eval: false
+pip install plotnine==0.9.0
+```
+
+or `conda`
+```{python}
+#| eval: false
+conda install -c conda-forge plotnine==0.9.0
+```
+
+### scikit-posthocs
+The `scikit-posthocs` package provides post-hoc functionality. For more information see: [https://scikit-posthocs.readthedocs.io/en/latest/](https://scikit-posthocs.readthedocs.io/en/latest/)
+
+It can be installed via `pip`
+```{python}
+#| eval: false
+pip install scikit-posthocs
+```
+
+### statsmodels
+The `statsmodels` package provides statistical functionality. For more information see: [https://www.statsmodels.org/stable/index.html](https://www.statsmodels.org/stable/index.html).
+
+It can be installed via `pip`
+```{python}
+#| eval: false
+pip install statsmodels
+```
+
+or `conda`
+```{python}
+#| eval: false
+conda install -c conda-forge statsmodels
+```
+:::
+

@@ -54,7 +54,7 @@ def dgplotsknitr(results: Type[sm.regression.linear_model.RegressionResultsWrapp
         + geom_smooth(se = False, colour = "red")
         + labs(title = "Location-Scale plot")
         + xlab("predicted values")
-        + ylab(u"\u221A"'standardised residuals')
+        + ylab(u"\u221A"'|standardised residuals|')
         + theme_bw()
         )
 

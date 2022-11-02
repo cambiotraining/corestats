@@ -8,7 +8,7 @@ project:
   output-dir: _site
   render:
     - index.md
-    - setup.md
+    - setup.qmd
     - materials.md
     - materials/*
     - "!materials/*/_no-render"
@@ -40,7 +40,7 @@ website:
       - text: "Home"
         href: index.md
       - text: "Setup"
-        href: setup.md
+        href: setup.qmd
       - text: "Materials"
         href: materials.md
     right:

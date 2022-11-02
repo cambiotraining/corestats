@@ -101,24 +101,58 @@ stats::TukeyHSD()
 
 ## Python
 
-| Libraries                                                             | Description                                                                                |
-|:-----------------------|:-----------------------------------------------|
-| [`pandas`](https://pandas.pydata.org/docs/getting_started/index.html) | A Python data analysis and manipulation tool.                                              |
-| [`pingouin`](https://pingouin-stats.org)                              | A Python module developed to have simple yet exhaustive stats functions.                   |
-| [`plotnine`](https://plotnine.readthedocs.io/en/stable/)              | The Python equivalent of `ggplot2`.                                                        |
-| [`statsmodels`](https://www.statsmodels.org/stable/index.html)        | A Python module for statistical models, conducting tests and statistical data exploration. |
+### Libraries
 
-| Functions                                                                                                                                  | Description                                                |
-|:-------------------------|:---------------------------------------------|
-| [`pandas.DataFrame.describe()`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html)                               | Gives summary statistics.                                  |
-| [`pandas.DataFrame.groupby()`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.groupby.html)                                 | Group DataFrame using a mapper or by a Series of columns   |
-| [`pandas.DataFrame.head()`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.head.html)                                       | Plots the first few rows of a DataFrame.                   |
-| [`pandas.DataFrame.query()`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.query.html)                                     | Query the columns of a DataFrame with a boolean expression |
-| [`pandas.read_csv`](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html)                                                     | Reads in a `.csv` file.                                    |
-| [`pingouin.anova()`](https://pingouin-stats.org/generated/pingouin.anova.html#pingouin.anova)                                              | Performs an analysis of variance.                          |
-| [`pingouin.homoscedasticity()`](https://pingouin-stats.org/generated/pingouin.homoscedasticity.html#pingouin.homoscedasticity)             | Tests equality of variance.                                |
-| [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)                                                     | Performs the Shapiro-Wilk test for normality.              |
-| [`statsmodels.formula.api.ols`](https://www.statsmodels.org/stable/generated/statsmodels.formula.api.ols.html#statsmodels.formula.api.ols) | Creates a model from a formula and data frame.             |
+```{python}
+#| eval: false
+# A Python data analysis and manipulation tool
+import pandas as pd
+
+# Simple yet exhaustive stats functions.
+import pingouin as pg
+
+# Python equivalent of `ggplot2`
+from plotnine import *
+
+# Statistical models, conducting tests and statistical data exploration
+import statsmodels.api as sm
+
+# Convenience interface for specifying models using formula strings and DataFrames
+import statsmodels.formula.api as smf
+```
+
+### Functions
+
+```{python}
+#| eval: false
+# Summary statistics
+pandas.DataFrame.describe()
+
+# Plots the first few rows of a DataFrame
+pandas.DataFrame.head()
+
+# Query the columns of a DataFrame with a boolean expression
+pandas.DataFrame.query()
+
+# Reads in a .csv file
+pandas.read_csv
+
+# Performs an analysis of variance
+pingouin.anova()
+
+# Tests for equality of variance
+pingouin.homoscedasticity()
+
+# Performs the Shapiro-Wilk test for normality
+pingouin.normality()
+
+# Creates a model from a formula and data frame
+statsmodels.formula.api.ols
+
+# Creates an ANOVA table for one or more fitted linear models
+statsmodels.stats.anova.anova_lm
+```
+
 :::
 :::
 

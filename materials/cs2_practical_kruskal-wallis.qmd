@@ -94,12 +94,65 @@ rstatix::dunn_test()
 ```
 
 ## Python
-| Libraries                                                             | Description                                                                                |
-|:-----------------------|:-----------------------------------------------|
-| [`pandas`](https://pandas.pydata.org/docs/getting_started/index.html) | A Python data analysis and manipulation tool.                                              |
-| [`pingouin`](https://pingouin-stats.org)                              | A Python module developed to have simple yet exhaustive stats functions.                   |
-| [`plotnine`](https://plotnine.readthedocs.io/en/stable/)              | The Python equivalent of `ggplot2`.|
-| [`statsmodels`](https://www.statsmodels.org/stable/index.html)        | A Python module for statistical models, conducting tests and statistical data exploration. |
+
+### Libraries
+
+```{python}
+#| eval: false
+# A Python data analysis and manipulation tool
+import pandas as pd
+
+# Simple yet exhaustive stats functions.
+import pingouin as pg
+
+# Python equivalent of `ggplot2`
+from plotnine import *
+
+# Post-hoc tests
+import scikit_posthocs as sp
+
+# Statistical models, conducting tests and statistical data exploration
+import statsmodels.api as sm
+
+# Convenience interface for specifying models using formula strings and DataFrames
+import statsmodels.formula.api as smf
+```
+
+### Functions
+
+```{python}
+#| eval: false
+# Summary statistics
+pandas.DataFrame.describe()
+
+# Plots the first few rows of a DataFrame
+pandas.DataFrame.head()
+
+# Query the columns of a DataFrame with a boolean expression
+#pandas.DataFrame.query()
+
+# Reads in a .csv file
+pandas.read_csv
+
+# Performs an analysis of variance
+#pingouin.anova()
+
+# Tests for equality of variance
+pingouin.homoscedasticity()
+
+# Performs the Kruskal-Wallis test
+pingouin.kruskal
+
+# Performs the Shapiro-Wilk test for normality
+#pingouin.normality()
+
+# Creates a model from a formula and data frame
+statsmodels.formula.api.ols
+
+# Creates an ANOVA table for one or more fitted linear models
+statsmodels.stats.anova.anova_lm
+```
+
 :::
 :::
 
