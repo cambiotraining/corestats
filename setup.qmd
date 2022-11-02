@@ -32,6 +32,21 @@ install.packages("tidyverse")
 
 ## Python
 
+### NumPy
+The `numpy` package provides fundamental data science functionality to Python. For more information see: [https://numpy.org/doc/stable/#](https://numpy.org/doc/stable/#)
+
+It can be installed via `pip`
+```{python}
+#| eval: false
+pip install numpy
+```
+
+or `conda`
+```{python}
+#| eval: false
+conda install -c conda-forge numpy
+```
+
 ### pandas
 The `pandas` package provides data structures to Python. For more information see: [https://pandas.pydata.org/docs/getting_started/install.html](https://pandas.pydata.org/docs/getting_started/install.html).
 

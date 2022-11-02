@@ -61,15 +61,23 @@ library(broom)
 ```{r}
 #| eval: false
 #| warning: false
-
 # Gets underlying data out of model object
 broom::augment()
 
 # Creates diagnostic plots
 ggResidpanel::resid_panel()
+
+# Performs an analysis of variance
+stats::anova()
+
+# Creates a linear model
+stats::lm()
 ```
 
 ## R
+
+### Libraries
+None.
 
 ### Functions
 
@@ -77,18 +85,61 @@ ggResidpanel::resid_panel()
 #| eval: false
 #| warning: false
 # Creates a subset of the data
-subset()
+base::subset()
+
+# Performs an analysis of variance
+stats::anova()
+
+# Extracts model coefficients
+stats::coef()
+
+# Creates a linear model
+stats::lm()
 ```
 
 
 ## Python
-| Libraries                                                             | Description                                                                                |
-|:-----------------------|:-----------------------------------------------|
-| [`numpy`](https://numpy.org)| A fundamental package for scientific computing with Python.|
-| [`pandas`](https://pandas.pydata.org/docs/getting_started/index.html) | A Python data analysis and manipulation tool.                                              |
-| [`pingouin`](https://pingouin-stats.org)                              | A Python module developed to have simple yet exhaustive stats functions.                   |
-| [`plotnine`](https://plotnine.readthedocs.io/en/stable/)              | The Python equivalent of `ggplot2`.|
-| [`statsmodels`](https://www.statsmodels.org/stable/index.html)        | A Python module for statistical models, conducting tests and statistical data exploration. |
+
+### Libraries
+
+```{python}
+#| eval: false
+# A fundamental package for scientific computing in Python
+import numpy as np
+
+# A Python data analysis and manipulation tool
+import pandas as pd
+
+# Simple yet exhaustive stats functions.
+import pingouin as pg
+
+# Python equivalent of `ggplot2`
+from plotnine import *
+
+# Statistical models, conducting tests and statistical data exploration
+import statsmodels.api as sm
+
+# Convenience interface for specifying models using formula strings and DataFrames
+import statsmodels.formula.api as smf
+```
+
+
+### Functions
+
+```{python}
+#| eval: false
+# Computes natural logarithm of value
+numpy.log()
+
+# Plots the first few rows of a DataFrame
+pandas.DataFrame.head()
+
+# Reads in a .csv file
+pandas.read_csv()
+
+# Creates a model from a formula and data frame
+statsmodels.formula.api.ols()
+```
 
 :::
 :::
