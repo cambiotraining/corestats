@@ -110,17 +110,8 @@ stats::heatmap()
 # A Python data analysis and manipulation tool
 import pandas as pd
 
-# Simple yet exhaustive stats functions.
-import pingouin as pg
-
 # Python equivalent of `ggplot2`
 from plotnine import *
-
-# Statistical models, conducting tests and statistical data exploration
-import statsmodels.api as sm
-
-# Convenience interface for specifying models using formula strings and DataFrames
-import statsmodels.formula.api as smf
 ```
 
 ### Functions
@@ -144,12 +135,6 @@ pandas.melt()
 
 # Reads in a .csv file
 pandas.read_csv()
-
-# Creates a model from a formula and data frame
-statsmodels.formula.api.ols()
-
-# Creates an ANOVA table for one or more fitted linear models
-statsmodels.stats.anova.anova_lm()
 ```
 :::
 :::
