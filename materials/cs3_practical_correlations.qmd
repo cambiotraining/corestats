@@ -45,12 +45,6 @@ exec(open('setup_files/setup.py').read())
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
-
-# Converts stats functions to a tidyverse-friendly format
-library(rstatix)
-
-# Creates diagnostic plots using ggplot2
-library(ggResidpanel)
 ```
 
 ### Functions
@@ -58,13 +52,105 @@ library(ggResidpanel)
 ```{r}
 #| eval: false
 #| warning: false
-# Creates diagnostic plots
-ggResidpanel::resid_panel()
+# Computes the absolute value
+base::abs()
+
+# Creates a matrix of scatter plots
+graphics::pairs()
+
+# Computes a correlation matrix
+stats::cor()
+
+# Turns object into tibble
+tibble::as.tibble()
+
+# Lengthens the data
+tidyr::pivot_longer()
 ```
 
 ## R
 
+### Libraries
+None.
+
+### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Computes the absolute value
+base::abs()
+
+# Creates a contingency table
+base::table()
+
+# Determines the minimum value
+base::which.min()
+
+# Determines the maximum value
+base::which.max()
+
+# Creates a matrix of scatter plots
+graphics::pairs()
+
+# Computes a correlation matrix
+stats::cor()
+
+# Creates a heat map
+stats::heatmap()
+```
+
+
 ## Python
+
+### Libraries
+
+```{python}
+#| eval: false
+# A Python data analysis and manipulation tool
+import pandas as pd
+
+# Simple yet exhaustive stats functions.
+import pingouin as pg
+
+# Python equivalent of `ggplot2`
+from plotnine import *
+
+# Statistical models, conducting tests and statistical data exploration
+import statsmodels.api as sm
+
+# Convenience interface for specifying models using formula strings and DataFrames
+import statsmodels.formula.api as smf
+```
+
+### Functions
+
+```{python}
+#| eval: false
+# Compute pairwise correlation of columns
+pandas.DataFrame.corr()
+
+# Plots the first few rows of a DataFrame
+pandas.DataFrame.head()
+
+# Query the columns of a DataFrame with a boolean expression
+pandas.DataFrame.query()
+
+# Set the name of the axis for the index or columns
+pandas.DataFrame.rename_axis()
+
+# Unpivot a DataFrame from wide to long format
+pandas.melt()
+
+# Reads in a .csv file
+pandas.read_csv()
+
+# Creates a model from a formula and data frame
+statsmodels.formula.api.ols()
+
+# Creates an ANOVA table for one or more fitted linear models
+statsmodels.stats.anova.anova_lm()
+```
 :::
 :::
 
