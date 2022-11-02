@@ -127,8 +127,9 @@ Perform the Mann-Whitney U test:
 
 ```{r}
 #| warning: false
-wilcox.test(length ~ river, data = rivers,
-            alternative = "two.sided")
+wilcox.test(length ~ river,
+            alternative = "two.sided",
+            data = rivers)
 ```
 
 -   The first argument must be in the formula format: `variable ~ category`

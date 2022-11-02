@@ -618,7 +618,7 @@ Again, the p-value is what we're most interested in here and shows us the probab
 
 Since the p-value is very small (much smaller than the standard significance level of 0.05) we can say "that it is very unlikely that these three samples came from the same parent distribution" and as such we can reject our null hypothesis and state that:
 
-> A one-way ANOVA showed that the mean feeding rate of oystercatchers differed significantly between locations (F = `r round(glance(lm_oystercatcher) %>% pull(statistic) %>% as.numeric(), digits = 2)`, df = `r glance(lm_oystercatcher) %>% pull(df) %>% as.numeric()`, `r glance(lm_oystercatcher) %>% pull(df.residual) %>% as.numeric()`, p = `r formatC((glance(lm_oystercatcher) %>% pull(p.value) %>% as.numeric()), format = "e", digits = 2)`).
+> A one-way ANOVA showed that the mean feeding rate of oystercatchers differed significantly between locations (p = `r formatC((glance(lm_oystercatcher) %>% pull(p.value) %>% as.numeric()), format = "e", digits = 2)`).
 
 ## Post-hoc testing (Tukey's rank test)
 

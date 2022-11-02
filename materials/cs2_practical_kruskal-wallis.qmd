@@ -378,9 +378,7 @@ Perform a Kruskal-Wallis test and do a post-hoc test on the `lobster` data set.
 -   $H_1$ : not all medians are equal
 
 ### Import data, summarise and visualise
-
-::: {.panel-tabset group="language"}
-## tidyverse
+All done previously.
 
 ```{r}
 #| echo: false
@@ -388,25 +386,15 @@ Perform a Kruskal-Wallis test and do a post-hoc test on the `lobster` data set.
 #| warning: false
 # load the data in the background
 lobsters <- read_csv("data/CS2-lobsters.csv")
-```
-
-All done previously.
-
-## R
-
-```{r}
-#| echo: false
 lobsters_r <- read.csv("data/CS2-lobsters.csv")
 ```
 
-All done previously.
-
-## Python
 ```{python}
+#| echo: false
+#| message: false
+#| warning: false
 lobsters_py = pd.read_csv("data/CS2-lobsters.csv")
 ```
-
-:::
 
 ### Assumptions
 
@@ -457,7 +445,8 @@ lobsters %>%
 ## R
 
 ```{r}
-kruskal.test(weight ~ diet, data = lobsters_r)
+kruskal.test(weight ~ diet,
+             data = lobsters_r)
 ```
 
 ## Python

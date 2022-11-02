@@ -431,7 +431,7 @@ cortisol_diff %>%
   stat_qq_line(colour = "red")
 ```
 
-## base R
+## R
 
 Perform Shapiro-Wilk test:
 
