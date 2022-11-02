@@ -274,7 +274,15 @@ plot(lm_1)
 -   The last graph shows the **Cook's distance** and tests if any one point has an unnecessarily large effect on the fit. The important aspect here is to see if any points lie beyond the red dashed contour line in the top right corner of this plot. If not, then no point has undue influence. This plot is good.
 
 ## Python
-First, we define the linear model:
+If you haven't loaded `statsmodels` yet, run the following:
+
+```{python}
+#| eval: false
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+```
+
+Next, we create a linear model and get the `.fit()`:
 
 ```{python}
 # create a linear model
@@ -437,6 +445,18 @@ abline(lm_1, col = "blue")
 -   The second command uses the results of the linear model fitting (the object `lm_1`) to add the line of best fit to the plot (and colour it blue).
 
 ## Python
+
+```{python}
+#| results: hide
+(
+  ggplot(USArrests_py,
+         aes(x = "assault", y = "murder")) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = False,
+              colour = "blue")
+)
+```
 :::
 
 ## Exercise: State data
@@ -465,7 +485,7 @@ First, we read in the data:
 USAstate <- read_csv("data/CS3-statedata.csv")
 ```
 
-Next, we visualise the `murder` variable against the `life_exp` variable.
+Next, we visualise the `murder` variable against the `life_exp` variable. We also add a regression line.
 
 ```{r}
 #| message: false
@@ -484,6 +504,8 @@ First, we read in the data:
 USAstate_r <- read.csv("data/CS3-statedata.csv")
 ```
 
+Next, we visualise the `murder` variable against the `life_exp` variable. We also add a regression line.
+
 ```{r}
 # plot the data
 plot(life_exp ~ murder,
@@ -498,6 +520,27 @@ abline(lm1, col = "blue")
 ```
 
 ## Python
+
+First, we read in the data:
+
+```{python}
+USAstate_py = pd.read_csv("data/CS3-statedata.csv")
+```
+
+Next, we visualise the `murder` variable against the `life_exp` variable. We also add a regression line.
+
+```{python}
+#| results: hide
+(
+  ggplot(USAstate_py,
+         aes(x = "life_exp", y = "murder")) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = False,
+              colour = "blue")
+)
+```
+
 :::
 
 We visualise for the same reasons as before:
@@ -537,6 +580,38 @@ plot(lm1)
 The **Residuals vs Fitted** plot appears symmetric enough (similar distribution of points above and below the horizontal grey dotted line) for me to happy with linearity. Similarly the red line in the **Scale-Location** plot looks horizontal enough for me to be happy with homogeneity of variance. There aren't any influential points in the residuals vs leverage. The only plot that does give me a bit of concern is the **Normal Q-Q** graph. Here we see clear evidence of snaking, although the degree of snaking isn't actually that bad. This just means that we can be pretty certain that the distribution of residuals isn't normal, but also that it isn't *very* non-normal.
 
 ## Python
+First, we create a linear model:
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "life_exp ~ murder", data = USAstate_py)
+# and get the fitted parameters of the model
+lm_USAstate_py = model.fit()
+```
+
+Next, we can create the diagnostic plots:
+```{python}
+#| eval: false
+dgplots(lm_USAstate_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_USAstate_py)
+```
+
+```{r}
+#| echo: false
+library(reticulate)
+# display image
+knitr::include_graphics(py$dgplot)
+```
+
+The **Residuals** plot appears symmetric enough (similar distribution of points above and below the horizontal blue line) for me to happy with linearity. Similarly the red line in the **Location-Scale** plot looks horizontal enough for me to be happy with homogeneity of variance. There aren't any influential points in the **Influential points** plot. The only plot that does give me a bit of concern is the **Q-Q** plot. Here we see clear evidence of snaking, although the degree of snaking isn't actually that bad. This just means that we can be pretty certain that the distribution of residuals isn't normal, but also that it isn't *very* non-normal.
 :::
 
 What do we do in this situation? Well, there are three possible options:
@@ -565,6 +640,10 @@ anova(lm_murder)
 ```
 
 ## Python
+
+```{python}
+sm.stats.anova_lm(lm_USAstate_py, typ = 2)
+```
 :::
 
 And after all of that we find that the murder rate is a statistically significant predictor of life expectancy in US states. Woohoo!
@@ -603,6 +682,18 @@ abline(lm2, col = "blue")
 ```
 
 ## Python
+
+```{python}
+#| results: hide
+(
+  ggplot(USAstate_py,
+         aes(x = "hs_grad", y = "frost")) +
+  geom_point() +
+  geom_smooth(method = "lm",
+              se = False,
+              colour = "blue")
+)
+```
 :::
 
 Once again, we look at the data.
@@ -638,6 +729,36 @@ plot(lm2)
 ```
 
 ## Python
+First, we create a linear model:
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "hs_grad ~ frost", data = USAstate_py)
+# and get the fitted parameters of the model
+lm_frost_py = model.fit()
+```
+
+Next, we can create the diagnostic plots:
+```{python}
+#| eval: false
+dgplots(lm_frost_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_frost_py)
+```
+
+```{r}
+#| echo: false
+library(reticulate)
+# display image
+knitr::include_graphics(py$dgplot)
+```
 :::
 
 We can see that what we suspected from before is backed up by the residuals plot. The data aren't linear and there appears to be some sort of odd down-up pattern here. Given the lack of linearity it just isn't worth worrying about the other plots because our model is **misspecified**: a straight line just doesn't represent our data at all.
