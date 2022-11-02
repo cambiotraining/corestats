@@ -138,7 +138,7 @@ where $\beta_0$ is the value of the intercept and $\beta_1$ is the slope of the 
 
 ## Data and hypotheses
 
-We will perform a simple linear regression analysis on the two variables `murder` and `assault` from the `USArrests` data set. We wish to determine whether the `assault` variable is a significant predictor of the `murder` variable. This means that we will need to find the coefficients $\beta_0$ and $\beta_1$ that best fit the following macabre equation:
+We will perform a simple linear regression analysis on the two variables `murder` and `assault` from the `USArrests` data set. This rather bleak data set contains statistics in arrests per 100,000 residents for assault, murder and robbery in each of the 50 US states in 1973, alongside the proportion of the population who lived in urban areas at that time. We wish to determine whether the `assault` variable is a significant predictor of the `murder` variable. This means that we will need to find the coefficients $\beta_0$ and $\beta_1$ that best fit the following macabre equation:
 
 ```{=tex}
 \begin{equation*}
@@ -460,8 +460,9 @@ abline(lm_1, col = "blue")
 :::
 
 ## Exercise: State data
+We will use the data from the file `data/CS3-statedata.csv` data set for this exercise. This rather more benign data set contains information on more general properties of each US state, such as population (1975), per capita income (1974), illiteracy proportion (1970), life expectancy (1969), murder rate per 100,000 people (there's no getting away from it), percentage of the population who are high-school graduates, average number of days where the minimum temperature is below freezing between 1931 and 1960, and the state area in square miles. The data set contains 50 rows and 8 columns, with column names: `population`, `income`, `illiteracy`, `life_exp`, `murder`, `hs_grad`, `frost` and `area`.
 
-Calculate two simple linear regressions using the `data/CS3-statedata.csv` data set, first for the variable `life_exp` on the variable `murder` and then for the variable `hs_grad` on `frost`.
+Calculate two simple linear regressions, first for the variable `life_exp` on the variable `murder` and then for the variable `hs_grad` on `frost`.
 
 Do the following in both cases:
 
@@ -617,7 +618,7 @@ The **Residuals** plot appears symmetric enough (similar distribution of points 
 What do we do in this situation? Well, there are three possible options:
 
 1.  Appeal to the **Central Limit Theorem**. This states that if we have a large enough sample size we don't have to worry about whether the distribution of the residuals are normally distributed. **Large enough** is a bit of a moving target here and to be honest it depends on how non-normal the underlying data are. If the data are only a little bit non-normal then we can get away with using a smaller sample than if the data are massively skewed (for example). This is not an exact science, but anything over 30 data points is considered a lot for mild to moderate non-normality (as we have in this case). If the data were very skewed then we would be looking for more data points (50-100). So, for this example we can legitimately just carry on with our analysis without worrying.
-2.  Try transforming the data. Here we would try applying some mathematical functions to the response variable (`life_exp`) in the hope that repeating the analysis with this transformed variable would make things better. To be honest with you it might not work and we won't know until we try. Dealing with transformed variables is legitimate as an approach but it can make interpreting the model a bit more challenging. In this particular example none of the traditional transformations (log, square-root, reciprocal) do anything to fix the slight lack of normality (you can take my word for it or you could try it using; `lm(log(life_exp ~ murder, data = USAstate))` for example.
+2.  Try transforming the data. Here we would try applying some mathematical functions to the response variable (`life_exp`) in the hope that repeating the analysis with this transformed variable would make things better. To be honest with you it might not work and we won't know until we try. Dealing with transformed variables is legitimate as an approach but it can make interpreting the model a bit more challenging. In this particular example none of the traditional transformations (log, square-root, reciprocal) do anything to fix the slight lack of normality.
 3.  Go with permutation methods / bootstrapping. This approach would definitely work. I don't have time to explain it here (it's the subject of an entire other practical). This approach also requires us to have a reasonably large sample size to work well as we have to assume that the distribution of the sample is a good approximation for the distribution of the entire data set.
 
 So in this case, because we have a large enough sample size and our deviation from normality isn't too bad, we can just crack on with the standard analysis.

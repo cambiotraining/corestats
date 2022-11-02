@@ -51,9 +51,6 @@ library(rstatix)
 
 # Creates diagnostic plots using ggplot2
 library(ggResidpanel)
-
-# A package for exploring correlations in R
-library(corrr)
 ```
 
 ### Functions
@@ -99,36 +96,27 @@ USArrests <- read_csv("data/CS3-usarrests.csv")
 USArrests
 ```
 
-We can create a visual overview of the potential correlations that might exist between the variables. For this, we use the `corrr` package.
-
-Make sure to install the package, if you haven't done so already:
+We can create a visual overview of the potential correlations that might exist between the variables. There are different ways of doing this, for example by creating scatter plots between variable pairs:
 
 ```{r}
-#| eval: false
-install.packages("corrr")
+# murder vs robbery
+ggplot(USArrests,
+       aes(x = murder, y = robbery)) +
+    geom_point()
+
+# assault vs urban_pop
+ggplot(USArrests,
+       aes(x = assault, y = urban_pop)) +
+    geom_point()
 ```
 
-and then load it:
+This gets a bit tedious if there are many unique variable pairs. Unfortunately `ggplot()` does not have a pairwise function, but we can borrow the one from base R. The `pairs()` function only wants numbers, so we need to remove the `state` column for this. The `pairs()` function has a `lower.panel` argument that allows you to remove duplicate combinations (after all `murder` vs `assault` is the same as `assault` vs `murder`):
 
 ```{r}
-#| eval: false
-library(corrr)
-```
-
-We can only calculate correlations between numerical variables, so we have to deselect the `state` variable. Next, we calculate the correlations with `correlate()`. We `shave()` off the redundant top results (`murder` vs `assault` is the same as `assault` vs `murder`) and plot the result using `rplot()`.
-
-```{r}
-# create correlation graph
 USArrests %>% 
     select(-state) %>% 
-    correlate() %>% 
-    shave() %>% 
-    rplot()
+    pairs(lower.panel = NULL)
 ```
-
-The output tells us that the correlation method used is `pearson` (see below) and that only paired observations without missing values are taken into account.
-
-On the right there is a scale of the strength of the correlation.
 
 ## R
 
@@ -162,35 +150,114 @@ pairs(USArrests_r, lower.panel = NULL)
 ```
 
 ## Python
+First, we load the data:
+
+```{python}
+USArrests_py = pd.read_csv("data/CS3-usarrests.csv")
+
+USArrests_py.head()
+```
+
+We can create a visual overview of the potential correlations that might exist between the variables. There are different ways of doing this, for example by creating scatter plots between variable pairs:
+
+```{python}
+#| results: hide
+# murder vs robbery
+(ggplot(USArrests_py,
+       aes(x = "murder", y = "robbery")) +
+    geom_point())
+
+# assault vs urban_pop
+(ggplot(USArrests_py,
+       aes(x = "assault", y = "urban_pop")) +
+    geom_point())
+```
+
+This gets a bit tedious if there are many unique variable pairs. There is an option to automatically create a matrix of scatter plots, using Seaborn. But that would involve installing the `seaborn` package just for this. And frankly, I don't want to - not least because staring at tons of scatter plots is probably not the best way forward anyway!
+
+If you have your heart set on creating a pairplot, then have a look [at the seaborn documentation](https://seaborn.pydata.org/generated/seaborn.pairplot.html).
+
 :::
 
 From the visual inspection we can see that there appears to be a slight positive correlation between all pairs of variables, although this may be very weak in some cases (`murder` and `urban_pop` for example).
 
-::: callout-note
 ## Correlation coefficients
 
-The method we used above is **Pearson's r**. This is a measure of the linear correlation between two variables. It has a value between -1 and +1, where +1 means a perfect positive correlation, -1 means a perfect negative correlation and 0 means no correlation at all.
+Instead of visualising the variables against each other in a scatter plot, we can also calculate correlation coefficients for each variable pair. There are different types of correlation coefficients, but the most well-known one is probably **Pearson's r**. This is a measure of the linear correlation between two variables. It has a value between -1 and +1, where +1 means a perfect positive correlation, -1 means a perfect negative correlation and 0 means no correlation at all.
 
 There are other correlation coefficients, most notably the **Spearman's rank correlation coefficient**, a non-parametric measure of rank correlation and is generally less sensitive to outliers.
-:::
 
-## Implement and interpret test
-
-A bit earlier we created a graph that visualised the possible correlations between the different variables. Underlying that were the values of Pearson's r. If we want to get the actual values, we can do the following:
+So, let's calculate **Pearson's r** for our data:
 
 ::: {.panel-tabset group="language"}
 ## tidyverse
+We can do this using the `cor()` function. Since we can only calculate correlations between numbers, we have to remove the `state` column from our data before calculating the correlations:
 
 ```{r}
-# calculate correlation matrix
 USArrests %>% 
     select(-state) %>% 
-    correlate() %>% 
-    shave()
+    cor()
 ```
 
-## R
+This gives us a numerical overview of the Pearson's r correlation coefficients between each variable pair. Note that across the diagonal the correlation coefficients are `1` - this should make sense since, for example, `murder` is perfectly correlated with itself.
 
+As before, the values are mirrored across the diagonal, since the correlation between, for example, `murder` and `assault` is the same as the one between `assault` and `murder`.
+
+### Visualise the correlation matrix
+Just staring at a matrix of numbers might not be very useful. It would be good to create some sort of heatmap of the values, so we can visually inspect the data a bit better. There are dedicated packages that allow you to do this (for example the [corrr](https://corrr.tidymodels.org)) package), but we'll just use `ggplot` here.
+
+Before we can plot the data we need to reformat the data. We're taking the following steps:
+
+1. we calculate the correlation matrix with `cor()` using the (default) method of `method = "pearson"`
+2. convert the output to a tibble so we can use
+3. `pivot_longer()` to reformat the data into pairwise variables and a column with the Pearson's r value
+4. use the `mutate()` and `round()` functions to round the Pearson's r values
+
+```{r}
+USArrests_pear <- USArrests %>% 
+    select(-state) %>% 
+    cor(method = "pearson") %>% 
+    as_tibble(rownames = "var1") %>% 
+    pivot_longer(cols = -var1,
+                 names_to = "var2",
+                 values_to = "pearson_cor") %>% 
+    mutate(pearson_cor = round(pearson_cor, digits = 3))
+```
+
+The output of that looks like this:
+
+```{r}
+head(USArrests_pear)
+```
+
+After all that, we can visualise the data with `geom_tile()`, adding the Pearson's r values as text labels:
+```{r}
+ggplot(USArrests_pear,
+       aes(x = var1, y = var2, fill = pearson_cor)) +
+    geom_tile() +
+    geom_text(aes(label = pearson_cor),
+              color = "white",
+              size = 4)
+```
+
+::: {.callout-note collapse=true}
+## Alternative method with rstatix
+As always, there are multiple ways to skin a proverbial cat. If you'd rather use a function from the `rstatix` package (which we've loaded before), then you can run the following code, which uses the `rstatix::cor_test()` function:
+```{r}
+USArrests %>% 
+    select(-state) %>% 
+    cor_test() %>%
+    select(var1, var2, cor) %>% 
+    ggplot(aes(x = var1, y = var2, fill = cor)) +
+    geom_tile() +
+    geom_text(aes(label = cor),
+              color = "white",
+              size = 4)
+```
+:::
+
+## R
+We can do this using the `cor()` function. We can only calculate correlations between numbers, but we've already moved the `state` column from our data before calculating the correlations:
 ```{r}
 cor(USArrests_r, method = "pearson")
 ```
@@ -198,16 +265,84 @@ cor(USArrests_r, method = "pearson")
 -   The first argument is a matrix or a data frame
 -   The argument `method` tells R which correlation coefficient to use (`pearson` (default), `kendall`, or `spearman`)
 
+This gives us a numerical overview of the Pearson's r correlation coefficients between each variable pair. Note that across the diagonal the correlation coefficients are `1` - this should make sense since, for example, `murder` is perfectly correlated with itself.
+
+As before, the values are mirrored across the diagonal, since the correlation between, for example, `murder` and `assault` is the same as the one between `assault` and `murder`.
+
+### Visualise the correlation matrix
+Just staring at a matrix of numbers might not be very useful. It would be good to create some sort of heatmap of the values, so we can visually inspect the data a bit better.
+
+Let's save the Pearson's r correlation matrix first.
+```{r}
+USArrests_pear_r <- cor(USArrests_r, method = "pearson")
+```
+
+Next, we can visualise the matrix using the `heatmap()` function. This function has a lot of features that we don't need and so I'm not going to go into it in detail here. The main reason I'm using it is that it displays matrices the right way round (other plotting functions display matrices rotated by 90 degrees) and automatically labels the rows and columns.
+
+```{r}
+heatmap(USArrests_pear_r, symm = TRUE, Rowv = NA)
+```
+
+The `symm` argument tells the function that we have a symmetric matrix and in conjunction with the `Rowv = NA` argument stops the plot from reordering the rows and columns. The `Rowv = NA` argument also stops the function from adding dendrograms to the margins of the plot.
+
+The plot itself is coloured from yellow, indicating the smallest values (which in this case correspond to no difference in correlation coefficients), through orange to dark red, indicating the biggest values (which in this case correspond to the variables with the biggest difference in correlation coefficients).
+
+The plot is symmetric along the leading diagonal (hopefully for obvious reasons).
+
 ## Python
+We can do this using the `pandas.DataFrame.corr()` function. This function takes the default `method = "pearson"` and ignores any non-numerical columns (such as the `state` column in our data set).
+
+```{python}
+USArrests_py.corr()
+```
+This gives us a numerical overview of the Pearson's r correlation coefficients between each variable pair. Note that across the diagonal the correlation coefficients are `1` - this should make sense since, for example, `murder` is perfectly correlated with itself.
+
+As before, the values are mirrored across the diagonal, since the correlation between, for example, `murder` and `assault` is the same as the one between `assault` and `murder`.
+
+### Visualise the correlation matrix
+Just staring at a matrix of numbers might not be very useful. It would be good to create some sort of heatmap of the values, so we can visually inspect the data a bit better.
+
+```{python}
+# create correlation matrix
+USArrests_cor_py = USArrests_py.corr()
+# put the row names into a column
+USArrests_cor_py = USArrests_cor_py.rename_axis("var1").reset_index()
+
+USArrests_cor_py.head()
+```
+
+Now that we have the correlation matrix in a workable format, we need to restructure it so that we can plot the data. For this, we need to create a "long" format, using the `melt()` function.
+```{python}
+USArrests_pear_py = pd.melt(USArrests_cor_py,
+        id_vars=['var1'],
+        value_vars=['murder', 'assault', 'urban_pop', 'robbery'],
+        var_name='var2',
+        value_name='cor').round(3)
+```
+
+Have a look at the structure:
+```{python}
+USArrests_pear_py.head()
+```
+
+```{python}
+#| results: hide
+(ggplot(USArrests_pear_py,
+        aes(x = "var1", y = "var2", fill = "cor")) +
+ geom_tile() +
+ geom_text(aes(label = "cor"),
+           colour = "white",
+           size = 10))
+```
 :::
 
-The table gives the correlation coefficient between each pair of variables in the data frame. The most correlated variables are murder and assault with an $r$ value of 0.80. This appears to agree well with the set plots that we produced earlier.
+The correlation matrix and visualisations give us the insight that we need. The most correlated variables are `murder` and `assault` with an $r$ value of 0.80. This appears to agree well with the set plots that we produced earlier.
 
 ## Exercise: Pearson's r for USA state data
 
 Pearson's correlation for USA state data
 
-We will use the data from the file `data/CS3-statedata.csv` data set for this exercise. This rather more benign data set contains information on more general properties of each US state, such as population (1975), per capita income (1974), illiteracy proportion (1970), life expectancy (1969), murder rate per 100,000 people (there's no getting away from it), percentage of the population who are high-school graduates, average number of days where the minimum temperature is below freezing between 1931 and 1960, and the state area in square miles. The data set contains 50 rows and 8 columns, with column names: `population`, `income`, `illiteracy`, `life_exp`, `murder`, `hs_grad`, `frost` and `area`.
+We will again use the data from the file `data/CS3-statedata.csv` data set for this exercise. The data set contains 50 rows and 8 columns, with column names: `population`, `income`, `illiteracy`, `life_exp`, `murder`, `hs_grad`, `frost` and `area`.
 
 Visually identify 3 different pairs of variables that appear to be
 
@@ -216,22 +351,6 @@ Visually identify 3 different pairs of variables that appear to be
 3.  not correlated at all
 
 Calculate Pearson's r for all variable pairs and see how well you were able to identify correlation visually.
-
-::: {.callout-tip collapse="true"}
-## Hint
-
-::: {.panel-tabset group="language"}
-## tidyverse
-
-Look at the help page of the `stretch()` function from the `corrr` package to help extract the correct values from the correlation matrix.
-
-## R
-
-Look at the help page of the `as.table()` function to help extract the correct values from the correlation matrix. Combine this with the `as.data.frame()` function.
-
-## Python
-:::
-:::
 
 ::: {.callout-tip collapse="true"}
 ## Answer
@@ -250,14 +369,39 @@ USAstate <- read_csv("data/CS3-statedata.csv")
 USAstate
 ```
 
+The code below may look a bit daunting, but it basically repeats what we've done previously:
+
 ```{r}
-# visualise the correlations
-USAstate %>% 
+USAstate_pear_cor <- USAstate %>%
+    # unselect the state column
     select(-state) %>% 
-    correlate() %>% 
-    shave() %>% 
-    rplot()
+    # calculate pearson's r
+    cor(method = "pearson") %>%
+    # convert to a tibble
+    # with rownames in a column called var1
+    as_tibble(rownames = "var1") %>% 
+    # pivot the table
+    pivot_longer(cols = -var1,
+                 names_to = "var2",
+                 values_to = "cor") %>% 
+    # round the Pearson's r values
+    mutate(cor = round(cor, digits = 3))
+
+head(USAstate_pear_cor)
 ```
+
+Next, we can plot the data:
+```{r}
+ggplot(USAstate_pear_cor,
+       aes(x = var1, y = var2, fill = cor)) +
+    # in a tile plot
+    geom_tile() +
+    # and add the values to the plot
+    geom_text(aes(label = cor),
+              color = "white",
+              size = 4)
+```
+
 
 ## R
 
@@ -270,10 +414,53 @@ head(USAstate_r)
 ```
 
 ```{r}
-pairs(USAstate_r, lower.panel = NULL)
+USAstate_pear_r <- cor(USAstate_r, method = "pearson")
+```
+
+```{r}
+heatmap(USAstate_pear_r, symm = TRUE, Rowv = NA)
 ```
 
 ## Python
+First, we load the data:
+
+```{python}
+USAstate_py = pd.read_csv("data/CS3-statedata.csv")
+
+USAstate_py.head()
+```
+
+```{python}
+# create correlation matrix
+USAstate_cor_py = USAstate_py.corr()
+# put the row names into a column
+USAstate_cor_py = USAstate_cor_py.rename_axis("var1").reset_index()
+
+USAstate_cor_py.head()
+```
+
+Now that we have the correlation matrix in a workable format, we need to restructure it so that we can plot the data. For this, we need to create a "long" format, using the `melt()` function. Note that we're not setting the `values_var` argument. If not set, then it uses all but the `id_vars` column (which in our case is a good thing, since we don't want to manually specify lots of column names).
+```{python}
+USAstate_pear_py = pd.melt(USAstate_cor_py,
+        id_vars=['var1'],
+        var_name='var2',
+        value_name='cor').round(3)
+```
+
+Have a look at the structure:
+```{python}
+USArrests_pear_py.head()
+```
+
+```{python}
+#| results: hide
+(ggplot(USAstate_pear_py,
+        aes(x = "var1", y = "var2", fill = "cor")) +
+ geom_tile() +
+ geom_text(aes(label = "cor"),
+           colour = "white",
+           size = 10))
+```
 :::
 
 It looks like:
@@ -287,35 +474,21 @@ We can explore that numerically, by doing the following:
 ::: {.panel-tabset group="language"}
 ## tidyverse
 
-We can use the `corrr::stretch()` function. This converts the correlation matrix into a long format. If we use the `remove.dups = TRUE` argument (it is `FALSE` by default) then the duplicate correlations are removed.
-
-```{r}
-#| message: false
-#| warning: false
-# calculate the correlation matrix
-# convert into long format, omitting
-# missing values and duplicates
-USAstate_cor <- USAstate %>% 
-    select(-state) %>% 
-    correlate() %>% 
-    stretch(remove.dups = TRUE) %>% 
-    drop_na()
-```
-
-Now we can extract the values we're interested in:
-
+We take the correlation matrix in the long format and extract the values we're interested in:
 ```{r}
 # most positively correlated pair
-USAstate_cor %>% 
-    filter(r == max(r))
+# but not 1 (self-pairs)
+USAstate_pear_cor %>% 
+    filter(cor != 1) %>% 
+    filter(cor == max(cor))
 
 # most negatively correlated pair
-USAstate_cor %>% 
-    filter(r == min(r))
+USAstate_pear_cor %>% 
+    filter(cor == min(cor))
 
 # least correlated pair
-USAstate_cor %>% 
-    filter(r == min(abs(r)))
+USAstate_pear_cor %>% 
+    filter(cor == min(abs(cor)))
 ```
 
 Note that we use the minimum *absolute* value (with the `abs()` function) to find the least correlated pair.
@@ -325,29 +498,24 @@ Note that we use the minimum *absolute* value (with the `abs()` function) to fin
 First, we need to create the pairwise comparisons, with the relevant Pearson's $r$ values:
 
 ```{r}
-USAstate_r_cor <- USAstate_r |>
-    # create the correlation matrix
-    cor(method = "pearson") |>
-    # build a contingency table
-    as.table() |>
-    # and create a dataframe
-    as.data.frame()
+# create the correlation matrix
+USAstate_r_cor <- cor(USAstate_r, method = "pearson")
 
+# build a contingency table with as.table()
+# and create a dataframe with as.data.frame()
+USAstate_r_cor <- as.data.frame(as.table(USAstate_r_cor))
+    
 # and have a look
-USAstate_r_cor
+head(USAstate_r_cor)
 ```
 
-Is this method obvious? No! Some create Googling led to [Stackoverflow](https://stackoverflow.com/questions/7074246/show-correlations-as-an-ordered-list-not-as-a-large-matrix) and here we are. But, it does give us what we need.
+Is this method obvious? No! Some creative Googling led to [Stackoverflow](https://stackoverflow.com/questions/7074246/show-correlations-as-an-ordered-list-not-as-a-large-matrix) and here we are. But, it does give us what we need.
 
 Now that we have the paired comparisons, we can extract the relevant data:
 
 ```{r}
 # first we remove the same-pair correlations
-USAstate_r_cor <- USAstate_r_cor |>
-    # remove the same-pair correlations
-    subset(Freq != 1)
-
-USAstate_r_cor[, max(USAstate_r_cor$Freq)]
+USAstate_r_cor <- subset(USAstate_r_cor, Freq != 1)
 
 # most positively correlated pair
 USAstate_r_cor[which.max(USAstate_r_cor$Freq), ]
@@ -362,6 +530,27 @@ USAstate_r_cor[which.min(abs(USAstate_r_cor$Freq)), ]
 Note that we use the minimum *absolute* value (with the `abs()` function) to find the least correlated pair.
 
 ## Python
+We take the correlation matrix in the long format:
+```{python}
+USAstate_pear_py.head()
+```
+
+and use it to extract the relevant values:
+```{python}
+# filter out self-pairs
+df_cor = USAstate_pear_py.query("cor != 1")
+
+# filter for the maximum correlation value
+df_cor[df_cor.cor == df_cor.cor.max()]
+
+# filter for the minimum correlation value
+df_cor[df_cor.cor == df_cor.cor.min()]
+
+# filter for the least correlated value
+# create a column containing absolute values
+df_cor["abs_cor"] = df_cor["cor"].abs()
+df_cor[df_cor.abs_cor == df_cor.abs_cor.min()]
+```
 :::
 :::
 
@@ -373,20 +562,22 @@ This test first calculates the rank of the numerical data (i.e. their position f
 ## tidyverse
 
 ```{r}
-# calculate correlation matrix
 USArrests %>% 
     select(-state) %>% 
-    correlate(method = "spearman") %>% 
-    shave()
+    cor(method = "spearman")
 ```
 
 ## R
 
 ```{r}
-cor(USArrests_r, method = "spearman")
+cor(USArrests_r,
+    method = "spearman")
 ```
 
 ## Python
+```{python}
+USArrests_py.corr(method = "spearman")
+```
 :::
 
 ## Exercise: State data (Spearman)
@@ -401,96 +592,131 @@ Thinking about the variables, can you explain why this might this be?
 
 ::: {.callout-tip collapse="true"}
 ## Answer
-
-::: {.panel-tabset group="language"}
-## tidyverse
-
-```{r}
-# calculate correlation matrix
-USAstate %>% 
-    select(-state) %>% 
-    correlate(method = "spearman") %>% 
-    shave()
-```
-
-## R
-
-```{r}
-cor(USAstate_r, method = "spearman")
-```
-
-## Python
-:::
-
 In order to determine which variables are most affected by the choice of Spearman vs Pearson you could just plot both matrices out side by side and try to spot what was going on, but one of the reasons we're using programming languages is that we can be a bit more **programmatic** about these things. Also, our eyes aren't that good at processing and parsing this sort of information display. A better way would be to somehow visualise the data.
 
 ::: {.panel-tabset group="language"}
 ## tidyverse
+First, calculate the Pearson and Spearman correlation matrices (technically, we've done the Pearson one already, but we're doing it again for clarity here).
+```{r}
+cor_pear <- USAstate %>% 
+    select(-state) %>% 
+    cor(method = "pearson")
 
-We're going to subtract two correlation matrices from one another. This only works on numerical data, so we do the following:
+cor_spear <- USAstate %>% 
+    select(-state) %>% 
+    cor(method = "spearman")
+```
 
-1.  calculate the correlations
-2.  remove the variable names
-3.  subtract the two matrices
-4.  find the absolute differences (we do not care about the direction of change)
-5.  put back the variable names
+We can calculate the difference between two matrices by subtracting them.
+```{r}
+cor_diff <- cor_pear - cor_spear
+```
+
+Again, we could now just look at a grid of 64 numbers and see if we can spot the biggest differences, but our eyes aren't that good at processing and parsing this sort of information display. A better way would be to visualise the data.
 
 ```{r}
-# create Pearson's r correlation matrix
-USAstate_pearson <- USAstate %>% 
-    select(-state) %>% 
-    correlate(method = "pearson") %>% 
-    shave() %>%
-    select(-term)
+cor_diff <- cor_diff %>% 
+    # convert to a tibble
+    # with rownames in a column called var1
+    as_tibble(rownames = "var1") %>% 
+    # pivot the table
+    pivot_longer(cols = -var1,
+                 names_to = "var2",
+                 values_to = "cor") %>% 
+    # round the correlation values
+    mutate(cor = round(cor, digits = 3))
 
-# create Spearmans correlation matrix
-USAstate_spearman <- USAstate %>% 
-    select(-state) %>% 
-    correlate(method = "spearman") %>% 
-    shave() %>% 
-    select(-term)
+head(cor_diff)
+```
 
-USAstate_diff <- USAstate_pearson - USAstate_spearman
+We're interested in the magnitude of difference, so we're looking for the maximum absolute difference. So we can add an extra column that contains these values.
 
-# get the row names of the correlation matrix
-USAstate_colnames <- USAstate %>%
-    select(-state) %>% 
-    correlate() %>% 
-    select(term)
+```{r}
+cor_diff <- cor_diff %>% 
+    mutate(abs_cor = abs(cor))
+```
 
-# combine the two tables
-# taking the absolute values of the differences
-# and plot
-bind_cols(USAstate_colnames, abs(USAstate_diff)) %>% 
-    rplot()
+Next, we can plot the data:
+```{r}
+ggplot(cor_diff,
+       aes(x = var1, y = var2, fill = abs_cor)) +
+    # in a tile plot
+    geom_tile() +
+    # and add the values to the plot
+    geom_text(aes(label = abs_cor),
+              color = "white",
+              size = 4)
 ```
 
 ## R
+First, calculate the Pearson and Spearman correlation matrices (technically, we've done the Pearson one already, but we're doing it again for clarity here).
 
 ```{r}
-corPear <- cor(USAstate_r, method = "pearson")
-corSpea <- cor(USAstate_r, method = "spearman")
-corDiff <- corPear - corSpea
+cor_pear_r <- cor(USAstate_r, method = "pearson")
+cor_spea_r <- cor(USAstate_r, method = "spearman")
 ```
 
-Again, we could now just look at a grid of 64 numbers and see if we can spot the biggest differences, but our eyes aren't that good at processing and parsing this sort of information display. A better way would be to somehow visualise the data. We can do that using some R plotting functions, `heatmap()` to be exact. The `heatmap()` function has a lot of features that we don't need and so I'm not going to go into it in detail here. The main reason I'm using it is that it displays matrices the right way round (other plotting functions display matrices rotated by 90 degrees) and automatically labels the rows and columns.
+We can calculate the difference between two matrices by subtracting them.
+```{r}
+cor_diff_r <- cor_pear_r - cor_spea_r
+```
+
+Again, we could now just look at a grid of 64 numbers and see if we can spot the biggest differences, but our eyes aren't that good at processing and parsing this sort of information display. A better way would be to visualise the data.
 
 ```{r}
-heatmap(abs(corDiff), symm = TRUE, Rowv = NA)
+heatmap(abs(cor_diff_r), symm = TRUE, Rowv = NA)
 ```
 
 The `abs()` function calculates the absolute value (i.e. just the magnitude) of the matrix values. This is just because I only care about situations where the two correlation coefficients are different from each other but I don't care which is the larger. The `symm` argument tells the function that we have a symmetric matrix and in conjunction with the `Rowv = NA` argument stops the plot from reordering the rows and columns. The `Rowv = NA` argument also stops the function from adding dendrograms to the margins of the plot.
 
-The plot itself is coloured from yellow, indicating the smallest values (which in this case correspond to no difference in correlation coefficients), through orange to dark red, indicating the biggest values (which in this case correspond to the variables with the biggest difference in correlation coefficients).
-
-The plot is symmetric along the leading diagonal (hopefully for obvious reasons) and we can see that the majority of squares are light yellow in colour, which means that there isn't much difference between Spearman and Pearson for the vast majority of variables. The squares appear darkest when we look along the `area` row/column suggesting that there's a big difference in the correlation coefficients there.
-
 ## Python
+First, calculate the Pearson and Spearman correlation matrices (technically, we've done the Pearson one already, but we're doing it again for clarity here).
+
+```{python}
+cor_pear_py = USAstate_py.corr(method = "pearson")
+cor_spea_py = USAstate_py.corr(method = "spearman")
+```
+
+We can calculate the difference between two matrices by subtracting them.
+```{python}
+cor_dif_py = cor_pear_py - cor_spea_py
+```
+
+Again, we could now just look at a grid of 64 numbers and see if we can spot the biggest differences, but our eyes aren't that good at processing and parsing this sort of information display. A better way would be to visualise the data.
+
+```{python}
+# get the row names in a column
+cor_dif_py = cor_dif_py.rename_axis("var1").reset_index()
+
+# reformat the data into a long format
+# and round the values
+cor_dif_py = pd.melt(cor_dif_py,
+        id_vars=['var1'],
+        var_name='var2',
+        value_name='cor').round(3)
+        
+# create a column with absolute correlation difference values
+cor_dif_py["abs_cor"] = cor_dif_py["cor"].abs()
+
+# have a look at the final data frame
+cor_dif_py.head()
+```
+
+Now we can plot the data:
+```{python}
+#| results: hide
+(ggplot(cor_dif_py,
+        aes(x = "var1", y = "var2", fill = "abs_cor")) +
+ geom_tile() +
+ geom_text(aes(label = "abs_cor"),
+           colour = "white",
+           size = 10))
+```
 :::
 
 All in all there is not a huge difference in correlation coefficients, since the values are all quite small. Most of the changes occur along the `area` variable. One possible explanation could be that certain states with a large area have a relatively large effect on the Pearson's r coefficient. For example, Alaska has an area that is over twice as big as the next state - Texas.
 
-If we'd look a bit closer then we would find for `area` and `income` that Pearson gives a value of 0.36, a slight positive correlation, whereas Spearman gives a value of 0.057, basically uncorrelated.
+If, for example, we'd look a bit closer then we would find for `area` and `income` that Pearson gives a value of 0.36, a slight positive correlation, whereas Spearman gives a value of 0.057, basically uncorrelated.
 
 This means that this is basically ignored by Spearman.
 
