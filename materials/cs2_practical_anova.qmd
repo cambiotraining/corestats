@@ -301,7 +301,6 @@ First we perform a Shapiro-Wilk test on each site separately.
 We take the data, and `group_by()` site:
 
 ```{r}
-#| results: hide
 # Shapiro-Wilk test on each site
 oystercatcher %>% 
     filter(site == "exposed") %>% 
@@ -619,7 +618,7 @@ In the output:
 
 ## Python
 
-There are different ways of conducting an ANOVA in Python, with `scipy.stats` [proving an option](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f_oneway.html). However, I find that [anova()](https://pingouin-stats.org/generated/pingouin.anova.html#pingouin.anova) function in `pingouin` provides the easiest and most-detailed option to do this.
+There are different ways of conducting an ANOVA in Python, with `scipy.stats` [proving an option](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f_oneway.html). However, I find that the [anova()](https://pingouin-stats.org/generated/pingouin.anova.html#pingouin.anova) function in `pingouin` provides the easiest and most-detailed option to do this, if you're using the data directly.
 
 It takes the following arguments:
 
@@ -646,6 +645,14 @@ In the output:
 -   `F`: Our F-statistic
 -   `p-unc`: p-value (`unc` stands for "uncorrected" - more on multiple testing correction later)
 -   `np2`: Partial eta-square effect sizes (more on this later)
+
+Alternatively, and we'll be using this method later on in the course, you can perform an ANOVA on the `lm_oystercatcher_py` object we created earlier.
+
+This uses the `sm.stats.anova_lm()` function from `statsmodels`. As you'll see, the output is very similar:
+
+```{python}
+sm.stats.anova_lm(lm_oystercatcher_py)
+```
 :::
 
 Again, the p-value is what we're most interested in here and shows us the probability of getting samples such as ours if the null hypothesis were actually true.
