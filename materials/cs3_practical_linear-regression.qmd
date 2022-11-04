@@ -65,6 +65,9 @@ ggResidpanel::resid_panel()
 
 ## R
 
+### Libraries
+None.
+
 ### Functions
 
 ```{r}
@@ -113,13 +116,13 @@ pandas.DataFrame.head()
 pandas.DataFrame.query()
 
 # Reads in a .csv file
-pandas.read_csv
+pandas.read_csv()
 
 # Creates a model from a formula and data frame
-statsmodels.formula.api.ols
+statsmodels.formula.api.ols()
 
 # Creates an ANOVA table for one or more fitted linear models
-statsmodels.stats.anova.anova_lm
+statsmodels.stats.anova.anova_lm()
 ```
 
 :::

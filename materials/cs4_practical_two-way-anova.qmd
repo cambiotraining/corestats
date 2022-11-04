@@ -64,7 +64,59 @@ ggResidpanel::resid_panel()
 
 ## R
 
+### Libraries
+None.
+
+### Functions
+
+```{r}
+#| eval: false
+# Creates a linear model
+stats::lm()
+
+# Creates an ANOVA table for a linear model
+stats::anova()
+```
+
 ## Python
+
+### Libraries
+
+```{python}
+#| eval: false
+# A Python data analysis and manipulation tool
+import pandas as pd
+
+# Python equivalent of `ggplot2`
+from plotnine import *
+
+# Statistical models, conducting tests and statistical data exploration
+import statsmodels.api as sm
+
+# Convenience interface for specifying models using formula strings and DataFrames
+import statsmodels.formula.api as smf
+```
+
+### Functions
+
+```{python}
+#| eval: false
+# Summary statistics
+pandas.DataFrame.describe()
+
+# Plots the first few rows of a DataFrame
+pandas.DataFrame.head()
+
+# Reads in a .csv file
+pandas.read_csv()
+
+# Creates a model from a formula and data frame
+statsmodels.formula.api.ols()
+
+# Creates an ANOVA table for one or more fitted linear models
+statsmodels.stats.anova.anova_lm()
+```
+
 :::
 :::
 
@@ -147,6 +199,27 @@ boxplot(weight ~ exercise, data = exercise_r)
 ```
 
 ## Python
+First, we read in the data:
+
+```{python}
+exercise_py = pd.read_csv("data/CS4-exercise.csv")
+```
+
+You can visualise the data with:
+
+```{python}
+#| results: hide
+# visualise the data, sex vs weight
+(ggplot(exercise_py,
+       aes(x = "sex", y = "weight")) +
+  geom_boxplot())
+
+# visualise the data, exercise vs weight
+(ggplot(exercise_py,
+       aes(x = "exercise", y = "weight")) +
+  geom_boxplot())
+```
+
 :::
 
 These produce box plots showing the response variable (`weight`) only in terms of one of the predictor variables. The values of the other predictor variable in each case aren’t taken into account.
@@ -155,6 +228,7 @@ A better way would be to visualise both variables at the same time. We can do th
 
 ::: {.panel-tabset group="language"}
 ## tidyverse
+
 ```{r}
 exercise %>% 
   ggplot(aes(x = sex, y = weight, fill = exercise)) +
@@ -176,8 +250,20 @@ This produces box plots for all (four) combinations of the predictor variables. 
 
 Again, this is a very basic plot that just shows the raw data and uses default arguments.
 
-
 ## Python
+
+```{python}
+#| results: hide
+(ggplot(exercise_py,
+       aes(x = "sex", y = "weight", fill = "exercise")) +
+  geom_boxplot() +
+  scale_fill_brewer(type = "qual", palette = "Dark2"))
+```
+
+This produces box plots for all (four) combinations of the predictor variables. We are plotting `sex` on the x-axis; `weight` on the y-axis and filling the box plot by `exercise` regime.
+
+Here I've also changed the default colouring scheme, by using `scale_fill_brewer(type = "qual", palette = "Dark2")`. This uses a colour-blind friendly colour palette (more about the Brewer colour pallete [here](https://ggplot2.tidyverse.org/reference/scale_brewer.html)).
+
 :::
 
 In this example there are only four box plots and so it is relatively easy to compare them and look for any interactions between variables, but if there were more than two groups per categorical variable, it would become harder to spot what was going on.
@@ -245,6 +331,37 @@ interaction.plot(exercise_r$exercise,
 ```
 
 ## Python
+We're adding a bit of jitter to the data, to avoid too much overlap between the data points. We can do this with `geom_jitter()`.
+```{python}
+#| results: hide
+(ggplot(exercise_py, aes(x = "sex", y = "weight",
+             colour = "exercise", group = "exercise")) +
+  geom_jitter(width = 0.05) +
+  stat_summary(fun_data = "mean_cl_boot", geom = "point", size = 3) +
+  stat_summary(fun_data = "mean_cl_boot", geom = "line") +
+  scale_colour_brewer(type = "qual", palette = "Dark2"))
+```
+
+Here we plot `weight` on the y-axis, by `sex` on the x-axis.
+
+* we `colour` the data by `exercise` regime and `group` the data by `exercise` to work out the mean values of each group
+* `geom_jitter(width = 0.05)` displays the data, with a tiny bit of random noise, to separate the data points a bit for visualisation
+* `stat_summary(fun_data = "mean_cl_boot")`calculates the mean for each group
+* `scale_colour_brewer()` lets us define the colour palette
+
+The choice of which categorical factor is plotted on the horizontal axis and which is plotted as different lines is completely arbitrary. Looking at the data both ways shouldn’t add anything but often you’ll find that you prefer one plot to another.
+
+Plot the interaction plot the other way round:
+```{python}
+#| results: hide
+(ggplot(exercise_py, aes(x = "exercise", y = "weight",
+             colour = "sex", group = "sex")) +
+  geom_jitter(width = 0.05) +
+  stat_summary(fun_data = "mean_cl_boot", geom = "point", size = 3) +
+  stat_summary(fun_data = "mean_cl_boot", geom = "line") +
+  scale_colour_brewer(type = "qual", palette = "Dark2"))
+```
+
 :::
 
 By now you should have a good feeling for the data and could already provide some guesses to the following three questions:
@@ -282,6 +399,13 @@ lm_exercise_r <- lm(weight ~ sex + exercise + sex:exercise,
 The `sex:exercise` term is how R represents the concept of an interaction between these two variables.
 
 ## Python
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "weight ~ exercise * sex", data = exercise_py)
+# and get the fitted parameters of the model
+lm_exercise_py = model.fit()
+```
 :::
 
 As the two-way ANOVA is a type of linear model we need to satisfy pretty much the same assumptions as we did for a simple linear regression or a one-way ANOVA:
@@ -295,7 +419,9 @@ Again, we will check these assumptions visually by producing four key diagnostic
 
 ::: {.panel-tabset group="language"}
 ## tidyverse
-```{r, message=FALSE}
+
+```{r}
+#| message: false
 lm_exercise %>% 
   resid_panel(plots = c("resid", "qq", "ls", "cookd"),
               smoother = TRUE)
@@ -364,6 +490,27 @@ anova(lm(weight ~ sex * exercise,
 :::
 
 ## Python
+
+```{python}
+#| eval: false
+dgplots(lm_exercise_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_exercise_py)
+```
+
+```{r}
+#| echo: false
+library(reticulate)
+# display image
+knitr::include_graphics(py$dgplot)
+```
 :::
 
 ## Implement and interpret test
@@ -379,8 +526,6 @@ anova(lm_exercise)
 
 We have a row in the table for each of the different effects that we’ve asked R to consider. The last column is the important one as this contains the p-values. We need to look at the interaction row first.
 
-`sex:exercise` has a p-value of about `r anova(lm_exercise) %>% broom::tidy() %>% filter(term == "sex:exercise") %>% pull(p.value) %>% formatC(format = "e", digits = 2)` (which is smaller than 0.05) and so we can conclude that the interaction between `sex` and `exercise` is significant.
-
 ## R
 
 ```{r}
@@ -388,12 +533,19 @@ We have a row in the table for each of the different effects that we’ve asked 
 anova(lm_exercise_r)
 ```
 
-We have a row in the table for each of the different effects that we’ve asked R to consider. The last column is the important one as this contains the p-values (although we will also need the F-values and the degrees of freedom for reporting purposes). We need to look at the interaction row first.
-
-`sex:exercise` has a p-value of about `r anova(lm_exercise) %>% broom::tidy() %>% filter(term == "sex:exercise") %>% pull(p.value) %>% formatC(format = "e", digits = 2)` (which is smaller than 0.05) and so we can conclude that the interaction between `sex` and `exercise` is significant.
+We have a row in the table for each of the different effects that we’ve asked R to consider. The last column is the important one as this contains the p-values. We need to look at the interaction row first.
 
 ## Python
+
+```{python}
+sm.stats.anova_lm(lm_exercise_py, typ = 2)
+```
+
+We have a row in the table for each of the different effects that we’ve asked Python to consider. The last column is the important one as this contains the p-values. We need to look at the interaction row first.
+
 :::
+
+`sex:exercise` has a p-value of about `r anova(lm_exercise) %>% broom::tidy() %>% filter(term == "sex:exercise") %>% pull(p.value) %>% formatC(format = "e", digits = 2)` (which is smaller than 0.05) and so we can conclude that the interaction between `sex` and `exercise` is significant.
 
 **This is where we must stop.**
 
