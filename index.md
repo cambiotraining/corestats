@@ -6,7 +6,7 @@ date: today
 
 Welcome to Core statistics!
 
-These sessions are intended to enable you to perform core data analysis techniques appropriately and confidently using R.
+These sessions are intended to enable you to perform core data analysis techniques appropriately and confidently using R or Python.
 
 -   6 lecture-practicals
 -   Ongoing formative assessment exercises
@@ -65,3 +65,7 @@ To combine conditions, use the following *logical operators*:
 ## Datasets {#index-datasets}
 
 This course uses various data sets. The easiest way of accessing these is by creating an R-project in RStudio. Then download the `data` folder [here](data.zip) by right-clicking on the link and <kbd>Save as...</kbd>. Next unzip the file and copy it into your working directory. Your data should then be accessible via `<working-directory-name>/data/`.
+
+The healthcare data set has been adapted from the synthetic [Synthea 1K Sample Synthetic Patient Records](https://synthea.mitre.org/downloads) data.
+
+> Jason Walonoski, Mark Kramer, Joseph Nichols, Andre Quina, Chris Moesel, Dylan Hall, Carlton Duffett, Kudakwashe Dube, Thomas Gallagher, Scott McLachlan, Synthea: An approach, method, and software mechanism for generating synthetic patients and the synthetic electronic health care record, Journal of the American Medical Informatics Association, Volume 25, Issue 3, March 2018, Pages 230–238, https://doi.org/10.1093/jamia/ocx079

@@ -70,7 +70,7 @@ ggResidpanel::resid_panel()
 
 ## Purpose and aim
 
-A two-way analysis of variance is used when we have two categorical predictor variables (or factors) and a single continuous response variable. For example, when we are looking at how body `weight` (continuous response variable in kilograms) is affected by sex (categorical variable, `Male` or `Female`) and `exercise` type (categorical variable, `Control` or `Runner`).
+A two-way analysis of variance is used when we have two categorical predictor variables (or factors) and a single continuous response variable. For example, when we are looking at how body `weight` (continuous response variable in kilograms) is affected by sex (categorical variable, `male` or `female`) and `exercise` type (categorical variable, `control` or `runner`).
 
 ```{r}
 #| echo: false
@@ -85,7 +85,7 @@ exercise <- read_csv("data/CS4-exercise.csv")
 #| message: false
 exercise %>% 
   ggplot(aes(x = exercise, y = weight, colour = sex)) +
-  geom_point() +
+  geom_jitter(width = 0.05) +
   scale_color_brewer(palette = "Dark2")
 ```
 
@@ -188,13 +188,13 @@ Create an interaction plot:
 
 ::: {.panel-tabset group="language"}
 ## tidyverse
-
+We're adding a bit of jitter to the data, to avoid too much overlap between the data points. We can do this with `geom_jitter()`.
 ```{r}
 exercise %>% 
   ggplot(aes(x = sex,
              y = weight,
              colour = exercise, group = exercise)) +
-  geom_point() +
+  geom_jitter(width = 0.05) +
   stat_summary(fun = mean, geom = "point", size = 3) +
   stat_summary(fun = mean, geom = "line") +
   scale_colour_brewer(palette = "Dark2")
@@ -203,7 +203,7 @@ exercise %>%
 Here we plot `weight` on the y-axis, by `sex` on the x-axis.
 
 * we `colour` the data by `exercise` regime and `group` the data by `exercise` to work out the mean values of each group
-* `geom_point()` displays the data
+* `geom_jitter(width = 0.05)` displays the data, with a tiny bit of random noise, to separate the data points a bit for visualisation
 * `stat_summary(fun = mean)`calculates the mean for each group
 * `scale_colour_brewer()` lets us define the colour palette
 
@@ -215,7 +215,7 @@ exercise %>%
   ggplot(aes(x = exercise,
              y = weight,
              colour = sex, group = sex)) +
-  geom_point() +
+  geom_jitter(width = 0.05) +
   stat_summary(fun = mean, geom = "point", size = 3) +
   stat_summary(fun = mean, geom = "line") +
   scale_colour_brewer(palette = "Dark2")
@@ -377,9 +377,9 @@ The assumptions appear to be met well enough, meaning we can implement the ANOVA
 anova(lm_exercise)
 ```
 
-We have a row in the table for each of the different effects that we’ve asked R to consider. The last column is the important one as this contains the p-values (although we will also need the F-values and the degrees of freedom for reporting purposes). We need to look at the interaction row first.
+We have a row in the table for each of the different effects that we’ve asked R to consider. The last column is the important one as this contains the p-values. We need to look at the interaction row first.
 
-`sex:exercise` has a p-value of about 0.028 (which is smaller than 0.05) and so we can conclude that the interaction between `sex` and `exercise` is significant.
+`sex:exercise` has a p-value of about `r anova(lm_exercise) %>% broom::tidy() %>% filter(term == "sex:exercise") %>% pull(p.value) %>% formatC(format = "e", digits = 2)` (which is smaller than 0.05) and so we can conclude that the interaction between `sex` and `exercise` is significant.
 
 ## R
 
@@ -390,7 +390,7 @@ anova(lm_exercise_r)
 
 We have a row in the table for each of the different effects that we’ve asked R to consider. The last column is the important one as this contains the p-values (although we will also need the F-values and the degrees of freedom for reporting purposes). We need to look at the interaction row first.
 
-`sex:exercise` has a p-value of about 0.028 (which is smaller than 0.05) and so we can conclude that the interaction between `sex` and `exercise` is significant.
+`sex:exercise` has a p-value of about `r anova(lm_exercise) %>% broom::tidy() %>% filter(term == "sex:exercise") %>% pull(p.value) %>% formatC(format = "e", digits = 2)` (which is smaller than 0.05) and so we can conclude that the interaction between `sex` and `exercise` is significant.
 
 ## Python
 :::
@@ -403,24 +403,21 @@ In this case, `weight` depends on _and_ the sex _and_ the exercise regime. This 
 
 We would report this as follows:
 
-> A two-way ANOVA test showed that there was a significant interaction between the effects of sex and Exercise on Weight (F = 5.8521, df = 1,16, p = 0.028). Exercise was associated with a small loss of weight in males but a larger loss of weight in females.
+> A two-way ANOVA test showed that there was a significant interaction between the effects of sex and exercise on weight (p = `r anova(lm_exercise) %>% broom::tidy() %>% filter(term == "sex:exercise") %>% pull(p.value) %>% formatC(format = "e", digits = 2)`). Exercise was associated with a small loss of weight in males but a larger loss of weight in females.
 
-## Exercise: Cells
+## Exercise: Auxin response
+Plant height responses to auxin in different genotypes
 
-Cell growth
+These `data/CS4-auxin.csv` data are from a simulated experiment that looks at the effect of the plant hormone auxin on plant height.
 
-These `data/CS4-cells.csv` data are from a fictional experiment that involves looking at the effect of different concentrations of a substance on the growth rate of two different cell types (all annoyingly vague I know – suggestions for context are welcome here!). There are two cell types and three concentrations.
+The experiment consists of two genotypes: a wild type control and a mutant (`genotype`). The plants are treated with auxin at different concentrations: `none`, `low` and `high`, which are stored in the `concentration` column.
 
-For each cell type we have a _control_ experiment in which no substance is added (i.e. concentration is `none`); a `low` concentration of substance and a `high` concentration of substance. The cells are called `A` and `B`.
-For each combination of cell type and substance concentration we add the substance to an individual cell in a petri dish and after 8 hours, we count the number of cells in the dish (again this may well be biologically weird/impossible – suggestions are welcome). Each experiment is repeated three times.
-
-For each cell type we have a _control_ experiment in which no substance is added (i.e. concentration is `none`); a `low` concentration of substance and a `high` concentration of substance. The cells are called `A` and `B`.
-For each combination of cell type and substance concentration we add the substance to an individual cell in a petri dish and after 8 hours, we count the number of cells in the dish (Again this may well be biologically weird/impossible – suggestions are welcome). Each experiment is repeated three times.
+The response variable plant height (`plant_height`) is then measured at the end of their life cycle, in centimeters.
 
 Questions to answer:
 
 * Visualise the data using boxplots and interaction plots.
-* Does there appear to be any interaction?
+* Does there appear to be any interaction between `genotype` and `concentration`?
 * Carry out a two-way ANOVA test.
 * Check the assumptions.
 * What can you conclude? (Write a sentence to summarise).
@@ -437,77 +434,77 @@ Questions to answer:
 #| warning: false
 #| message: false
 # read in the data
-cells <- read_csv("data/CS4-cells.csv")
+auxin_response <- read_csv("data/CS4-auxin.csv")
 
 # let's have a peek at the data
-cells
+head(auxin_response)
 ```
 
 ### Visualise the data
 
 ```{r}
-cells %>% 
-  ggplot(aes(x = concentration, y = cell_number)) +
+auxin_response %>% 
+  ggplot(aes(x = genotype, y = plant_height)) +
   geom_boxplot()
 
-cells %>% 
-  ggplot(aes(x = cell_type, y = cell_number)) +
+auxin_response %>% 
+  ggplot(aes(x = concentration, y = plant_height)) +
   geom_boxplot()
 ```
 
-Let's look at the interaction plots. We're omitting the actual data and just plotting the mean values:
+Let's look at the interaction plots. We're only plotting the mean values here, but feel free to explore the data itself by adding another `geom_`.
 
 ```{r}
-# by cell type
-cells %>% 
+# by genotype
+auxin_response %>% 
   ggplot(aes(x = concentration,
-             y = cell_number,
-             colour = cell_type, group = cell_type)) +
+             y = plant_height,
+             colour = genotype, group = genotype)) +
   stat_summary(fun = mean, geom = "point", size = 3) +
   stat_summary(fun = mean, geom = "line") +
   scale_colour_brewer(palette = "Dark2")
 
 # by concentration
-cells %>% 
-  ggplot(aes(x = cell_type,
-             y = cell_number,
+auxin_response %>% 
+  ggplot(aes(x = genotype,
+             y = plant_height,
              colour = concentration, group = concentration)) +
   stat_summary(fun = mean, geom = "point", size = 3) +
   stat_summary(fun = mean, geom = "line") +
   scale_colour_brewer(palette = "Dark2")
 ```
 
-We're constructed both box plots and we've also constructed two interaction plots. We only needed to do one interaction plot but I find it can be quite useful to look at the data from different angles. Both interaction plots suggest that there is an interaction here as the lines in the plots aren't parallel. Looking at the interaction plot with `concentration` on the x-axis, it appears that there is non-difference between cell types when the concentration is `none`, but that there is a difference between cell types when the concentration is `low` or `high`.
+We're constructed both box plots and we've also constructed two interaction plots. We only needed to do one interaction plot but I find it can be quite useful to look at the data from different angles. Both interaction plots suggest that there is an interaction here as the lines in the plots aren't parallel. Looking at the interaction plot with `concentration` on the x-axis, it appears that there is non-difference between genotypes when the concentration is `low`, but that there is a difference between genotypes when the concentration is `none` or `high`.
 
 ### Assumptions
 First we need to define the model:
 
 ```{r}
 # define the linear model, with interaction term
-lm_cells <- lm(cell_number ~ concentration * cell_type,
-          data = cells)
+lm_auxin <- lm(plant_height ~ concentration * genotype,
+          data = auxin_response)
 ```
 
 Next, we check the assumptions:
 
 ```{r, message=FALSE}
-lm_cells %>% 
+lm_auxin %>% 
   resid_panel(plots = c("resid", "qq", "ls", "cookd"),
               smoother = TRUE)
 ```
 
-So, these actually all look pretty good, although at first glance you might be a bit worried by some apparent heterogeneity of variance. The last group in the **Residual plot** does appear to be more spread out then the other 5 groups. This is echoed in the **Location-Scale plot**, where the red line kicks up at the end. Whilst this does technically signify that there is heterogeneity of variance we aren't too worried by this because there are only three data points per group. Because of this low number of data points per group when we get one data point that is a little bit more extreme than the others (purely by chance) then this has a large impact on our perception of the homogeneity of variance. If there were more data points in each group then we would be more certain that any observed heterogeneity of variance was a true feature of the underlying parent population (and therefore a problem) rather than just being caused by a single random point (and therefore not a problem).
+So, these actually all look pretty good, with the data looking normally distributed (**Q-Q plot**), linearity OK (**Residual plot**), homogeneity of variance looking sharp (**Location-scale plot**) and no clear influential points (**Cook's D plot**).
 
 ### Implement the test
 Let's carry out a two-way ANOVA:
 
 ```{r}
 # perform the ANOVA
-anova(lm_cells)
+anova(lm_auxin)
 ```
 
 ### Interpret the output and report the results
-There is definitely a significant interaction between `concentration` and `cell_type`.
+There is definitely a significant interaction between `concentration` and `genotype`.
 
 ## R
 
@@ -517,44 +514,44 @@ There is definitely a significant interaction between `concentration` and `cell_
 #| warning: false
 #| message: false
 # read in the data
-cells_r <- read.csv("data/CS4-cells.csv")
+auxin_reponse_r <- read.csv("data/CS4-auxin.csv")
 
 # let's have a peek at the data
-head(cells_r)
+head(auxin_reponse_r)
 ```
 
 ### Visualise the data
 
 ```{r}
-boxplot(cell_number ~ concentration,
-        data = cells_r)
+boxplot(plant_height ~ genotype,
+        data = auxin_reponse_r)
 
-boxplot(cell_number ~ cell_type,
-        data = cells_r)
+boxplot(plant_height ~ concentration,
+        data = auxin_reponse_r)
 ```
 
 Let's look at the interaction plots:
 ```{r}
-# by cell type
-interaction.plot(cells_r$concentration,
-                 cells_r$cell_type,
-                 cells_r$cell_number)
+# by genotype
+interaction.plot(auxin_reponse_r$concentration,
+                 auxin_reponse_r$genotype,
+                 auxin_reponse_r$plant_height)
 
 # by concentration
-interaction.plot(cells_r$cell_type,
-                 cells_r$concentration,
-                 cells_r$cell_number)
+interaction.plot(auxin_reponse_r$genotype,
+                 auxin_reponse_r$concentration,
+                 auxin_reponse_r$plant_height)
 ```
 
-We're constructed both box plots and we've also constructed two interaction plots. We only needed to do one interaction plot but I find it can be quite useful to look at the data from different angles. Both interaction plots suggest that there is an interaction here as the lines in the plots aren't parallel. Looking at the interaction plot with `concentration` on the x-axis, it appears that there is non-difference between cell types when the concentration is `none`, but that there is a difference between cell types when the concentration is `low` or `high`.
+We're constructed both box plots and we've also constructed two interaction plots. We only needed to do one interaction plot but I find it can be quite useful to look at the data from different angles. Both interaction plots suggest that there is an interaction here as the lines in the plots aren't parallel. Looking at the interaction plot with `concentration` on the x-axis, it appears that there is non-difference between genotypes when the concentration is `low`, but that there is a difference between genotypes when the concentration is `none` or `high`.
 
 ### Assumptions
 First we need to define the model:
 
 ```{r}
 # define the linear model, with interaction term
-lm_cells_r <- lm(cell_number ~ concentration * cell_type,
-          data = cells_r)
+lm_auxin_r <- lm(plant_height ~ concentration * genotype,
+          data = auxin_reponse_r)
 ```
 
 Next, we check the assumptions:
@@ -562,30 +559,126 @@ Next, we check the assumptions:
 ```{r}
 par(mfrow = c(2, 2))
 
-plot(lm_cells_r)
+plot(lm_auxin_r)
 ```
 
-So, these actually all look pretty good, although at first glance you might be a bit worried by some apparent heterogeneity of variance. The last group in the `Residuals vs fitted` graph does appear to be more spread out then the other 5 groups. This is echoed in the `Scale-Location` graph, where the red line kicks up at the end. Whilst this does technically signify that there is heterogeneity of variance we aren't too worried by this because there are only three data points per group. Because of this low number of data points per group when we get one data point that is a little bit more extreme than the others (purely by chance) then this has a large impact on our perception of the homogeneity of variance. If there were more data points in each group then we would be more certain that any observed heterogeneity of variance was a true feature of the underlying parent population (and therefore a problem) rather than just being caused by a single random point (and therefore not a problem).
+So, these actually all look pretty good, with the data looking normally distributed (**Normal Q-Q plot**), linearity OK (**Residual vs fitted plot**), homogeneity of variance looking sharp (**Scale-Location plot**) and no clear influential points (**Residuals vs Leverage plot**).
 
 ### Implement the test
 Let's carry out a two-way ANOVA:
 
 ```{r}
 # perform the ANOVA
-anova(lm_cells_r)
+anova(lm_auxin_r)
 ```
 
 ### Interpret the output and report the results
-There is definitely a significant interaction between `concentration` and `cell_type`.
+There is definitely a significant interaction between `concentration` and `genotype`.
 
 ## Python
+
+```{python}
+# read in the data
+auxin_response_py = pd.read_csv("data/CS4-auxin.csv")
+
+# let's have a peek at the data
+auxin_response_py.head()
+```
+
+### Visualise the data
+
+```{python}
+#| results: hide
+(ggplot(auxin_response_py,
+       aes(x = "genotype", y = "plant_height")) +
+  geom_boxplot())
+
+
+(ggplot(auxin_response_py,
+       aes(x = "concentration", y = "plant_height")) +
+  geom_boxplot())
+```
+
+Let's look at the interaction plots. We're only plotting the mean values here, but feel free to explore the data itself by adding another `geom_`.
+
+```{python}
+#| results: hide
+# by genotype
+(ggplot(auxin_response_py,
+         aes(x = "concentration",
+             y = "plant_height",
+             colour = "genotype", group = "genotype")) +
+  stat_summary(fun_data = "mean_cl_boot", geom = "point", size = 3) +
+  stat_summary(fun_data = "mean_cl_boot", geom = "line") +
+  scale_colour_brewer(type = "qual", palette = "Dark2"))
+
+# by concentration
+(ggplot(auxin_response_py,
+         aes(x = "genotype",
+             y = "plant_height",
+             colour = "concentration", group = "concentration")) +
+  stat_summary(fun_data = "mean_cl_boot", geom = "point", size = 3) +
+  stat_summary(fun_data = "mean_cl_boot", geom = "line") +
+  scale_colour_brewer(type = "qual", palette = "Dark2"))
+```
+
+We're constructed both box plots and we've also constructed two interaction plots. We only needed to do one interaction plot but I find it can be quite useful to look at the data from different angles. Both interaction plots suggest that there is an interaction here as the lines in the plots aren't parallel. Looking at the interaction plot with `concentration` on the x-axis, it appears that there is non-difference between genotypes when the concentration is `low`, but that there is a difference between genotypes when the concentration is `none` or `high`.
+
+### Assumptions
+First we need to define the model:
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "plant_height ~ C(genotype) * concentration", data = auxin_response_py)
+# and get the fitted parameters of the model
+lm_auxin_py = model.fit()
+```
+
+Next, we check the assumptions:
+
+```{python}
+#| eval: false
+dgplots(lm_auxin_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_auxin_py)
+```
+
+```{r}
+#| echo: false
+library(reticulate)
+# display image
+knitr::include_graphics(py$dgplot)
+```
+So, these actually all look pretty good, with the data looking normally distributed (**Q-Q plot**), linearity OK (**Residual plot**), homogeneity of variance looking sharp (**Location-scale plot**) and no clear influential points (**Influential points plot**).
+
+### Implement the test
+Let's carry out a two-way ANOVA:
+
+```{python}
+sm.stats.anova_lm(lm_auxin_py, typ = 2)
+```
+
+### Interpret the output and report the results
+There is definitely a significant interaction between `concentration` and `genotype`.
 :::
+
+So, we can conclude the following:
+
+> A two-way ANOVA showed that there is a significant interaction between genotype and auxin concentration on plant height (p = `r anova(lm_auxin) %>% broom::tidy() %>% filter(term == "concentration:genotype") %>%  pull(p.value) %>% formatC(format = "e", digits = 2)`). Increasing auxin concentration appears to result in a reduction of plant height in both wild type and mutant genotypes. The response in the mutant genotype seems to be less pronounced than in wild type.
+
 :::
 
 ## Exercise: Tulips
 Blooms and growing conditions
 
-The `data/CS4-tulip.csv` data set contains information on an experiment to determine the best conditions for growing tulips (well someone has to care about these sorts of things!). The average number of flower heads (blooms) were recorded for 27 different plots. Each plot experienced one of three different watering regimes and one of three different shade regimes.
+We're sticking with the plant theme and using the `data/CS4-tulip.csv` data set, which contains information on an experiment to determine the best conditions for growing tulips (well someone has to care about these sorts of things!). The average number of flower heads (blooms) were recorded for 27 different plots. Each plot experienced one of three different watering regimes and one of three different shade regimes.
 
 * Investigate how the number of blooms is affected by different growing conditions.
 
@@ -669,7 +762,7 @@ lm_tulip %>%
               smoother = TRUE)
 ```
 
-These are actually all OK. Point number 8 is messing with the homogeneity of variance assumption a little bit, but since it's only one point we won't worry about it. A two-way ANOVA analysis is still on the cards.
+These are actually all OK. A two-way ANOVA analysis is on the cards.
 
 ### Implement the test
 Let's carry out the two-way ANOVA.
@@ -731,7 +824,7 @@ par(mfrow = c(2, 2))
 plot(lm_tulip_r)
 ```
 
-These are actually all OK. Point number 8 is messing with the homogeneity of variance assumption a little bit, but since it's only one point we won't worry about it. A two-way ANOVA analysis is still on the cards.
+These are actually all OK. A two-way ANOVA analysis is on the cards.
 
 ### Implement the test
 Let's carry out the two-way ANOVA.
@@ -745,7 +838,108 @@ anova(lm_tulip_r)
 So we do appear to have a significant interaction between `water` and `shade` as expected.
 
 ## Python
+
+### Load the data
+In this data set the watering regime (`water`) and shading regime (`shade`) are encoded with numerical values. However, these numbers are actually categories, representing the amount of water/shade.
+
+As such, we don't want to treat these as numbers but as _factors_. We can convert the columns using the `as_factor()` function. Because we'd like to keep referring to these columns as factors, we will update our existing data set.
+
+```{python}
+# read in the data
+tulip_py = pd.read_csv("data/CS4-tulip.csv")
+
+# have a quick look at the data
+tulip_py.head()
+
+# convert watering and shade regimes to factor
+tulip_py['water'] = tulip_py['water'].astype(object)
+tulip_py['shade'] = tulip_py['shade'].astype(object)
+```
+
+This dataset has three variables; `blooms` (which is the response variable) and `water` and `shade` (which are the two potential predictor variables). 
+
+### Visualise the data
+As always we'll visualise the data first:
+
+```{python}
+#| results: hide
+# by watering regime
+(ggplot(tulip_py, aes(x = "water", y = "blooms")) +
+  geom_boxplot())
+  
+# by shading regime
+(ggplot(tulip_py, aes(x = "shade", y = "blooms")) +
+  geom_boxplot())
+
+# interaction plot by watering regime
+(ggplot(tulip_py,
+         aes(x = "shade",
+             y = "blooms",
+             colour = "water", group = "water")) +
+  stat_summary(fun_data = "mean_cl_boot", geom = "point", size = 3) +
+  stat_summary(fun_data = "mean_cl_boot", geom = "line") +
+  scale_colour_brewer(type = "qual", palette = "Dark2"))
+
+# interaction plot by shade regime
+(ggplot(tulip_py,
+         aes(x = "water",
+             y = "blooms",
+             colour = "shade", group = "shade")) +
+  stat_summary(fun_data = "mean_cl_boot", geom = "point", size = 3) +
+  stat_summary(fun_data = "mean_cl_boot", geom = "line") +
+  scale_colour_brewer(type = "qual", palette = "Dark2"))
+```
+
+Again, both interaction plots suggest that there might be an interaction here. Digging in a little deeper from a descriptive perspective, it looks as though that `water` regime 1 is behaving differently to `water` regimes 2 and 3 under different shade conditions.
+
+### Assumptions
+First we need to define the model:
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "blooms ~ water * shade", data = tulip_py)
+# and get the fitted parameters of the model
+lm_tulip_py = model.fit()
+```
+
+Next, we check the assumptions:
+
+```{python}
+#| eval: false
+dgplots(lm_tulip_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_tulip_py)
+```
+
+```{r}
+#| echo: false
+library(reticulate)
+# display image
+knitr::include_graphics(py$dgplot)
+```
+
+These are actually all OK. A two-way ANOVA analysis is on the cards.
+
+### Implement the test
+Let's carry out the two-way ANOVA.
+
+```{python}
+sm.stats.anova_lm(lm_tulip_py, typ = 2)
+```
+
+### Interpret the output and report results
+So we do appear to have a significant interaction between `water` and `shade` as expected.
 :::
+
+> A two-way ANOVA showed that there is a significant interaction between watering and shading regimes on number of blooms (p = `r anova(lm_tulip) %>% broom::tidy() %>% filter(term == "water:shade") %>%  pull(p.value) %>% formatC(format = "e", digits = 2)`). Increasing auxin concentration appears to result in a reduction of plant height in both wild type and mutant genotypes. The response in the mutant genotype seems to be less pronounced than in wild type.
+
 :::
 
 ## Key points

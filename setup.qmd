@@ -8,6 +8,19 @@ title: "Setup"
 ## tidyverse
 ## R
 ## Python
+
+For this course we'll be using [Visual Studio Code](https://code.visualstudio.com). This provides support for various programming languages (including Python and R). It works on Windows, MacOS and Linux. It's also open-source and free.
+
+Please refer to the [installation instructions](https://code.visualstudio.com/docs/python/python-tutorial) and make sure that you verify that Python code will run.
+
+A brief sequence of events:
+
+1. Install Visual Studio Code
+2. Install the VS Code Python extension
+3. Install a Python interpreter
+    * Windows: install from [Python.org](https://www.python.org/downloads/) or use the Microsoft Store
+    * MacOS: install the [Homebrew](https://brew.sh) package manager, then use this to install Python
+    * Linux: comes with Python 3, but needs `pip` to install additional packages
 :::
 
 
@@ -26,7 +39,6 @@ It can be installed with
 #| eval: false
 install.packages("tidyverse")
 ```
-
 
 ## R
 
