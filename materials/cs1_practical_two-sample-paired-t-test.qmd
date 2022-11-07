@@ -16,6 +16,25 @@ import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
+::: callout-tip
+## Learning outcomes
+
+**Questions**
+
+- When do I perform a paired two-sample test?
+- What are the assumptions?
+- How do I interpret and present the results of the test?
+
+**Objectives**
+
+- Set out your hypothesis for comparing two paired samples of continuous data
+- Be able to summarise and visualise the data
+- Understand and assess the underlying assumptions of the test
+- Perform a paired two-sample t-test
+- Be able to interpret and report the results
+
+:::
+
 A paired t-test is used when we have two samples of continuous data that can be paired (examples of these sort of data would be weights of individuals before and after a diet). This test is applicable if the number of paired points within the samples is large (\>30) or, if the number of points is small, then this test also works when the parent distributions are normally distributed.
 
 ## Libraries and functions

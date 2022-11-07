@@ -35,7 +35,26 @@ cortisol_diff_py = pd.pivot(cortisol_py, index = "patient_id", columns = "time",
 cortisol_diff_py["cortisol_change"] = cortisol_diff_py["evening"].subtract(cortisol_diff_py["morning"])
 ```
 
-A Wilcoxon signed-rank test is an alternative to a paired t-test. It does not require that the data are drawn from normal distributions, but it does require that the distribution of the differences is symmetric. We're effectively testing to see if the median of the differences between the two samples differs significantly from zero.
+::: callout-tip
+## Learning outcomes
+
+**Questions**
+
+- When do I perform a Wilcoxon signed-rank test?
+- What are the assumptions?
+- How do I interpret and present the results of the test?
+
+**Objectives**
+
+- Set out your hypothesis for comparing two samples of paired, non-normal continuous data
+- Be able to summarise and visualise the data
+- Understand and assess the underlying assumptions of the test
+- Perform a Wilcoxon signed-rank test
+- Be able to interpret and report the results
+
+:::
+
+A Wilcoxon signed-rank test is an alternative to a paired t-test. It does not require that the data are drawn from normal distributions, but it does require that the distribution of the differences is similar in shape. We're effectively testing to see if the median of the differences between the two samples differs significantly from zero.
 
 ## Libraries and functions
 

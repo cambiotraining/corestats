@@ -4,13 +4,11 @@ website:
     - title: "Materials"
       contents:
         - materials.md
-        - section: "Parametric tests"
+        - section: "Hypothesis testing"
           contents:
             - "materials/cs1_practical_one-sample-t-test.qmd"
             - "materials/cs1_practical_two-sample-t-test.qmd"
             - "materials/cs1_practical_two-sample-paired-t-test.qmd"
-        - section: "Non-parametric tests"
-          contents:
             - "materials/cs1_practical_one-sample-wilcoxon.qmd"
             - "materials/cs1_practical_two-sample-mann-whitney.qmd"
             - "materials/cs1_practical_two-sample-paired-wilcoxon.qmd"

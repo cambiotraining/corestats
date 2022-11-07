@@ -36,6 +36,25 @@ rivers_py = pd.read_csv("data/CS1-twosample.csv")
 turtle_py = pd.read_csv("data/CS1-turtle.csv")
 ```
 
+::: callout-tip
+## Learning outcomes
+
+**Questions**
+
+- When do I perform a two-sample test on non-normal data?
+- What are the assumptions?
+- How do I interpret and present the results of the test?
+
+**Objectives**
+
+- Set out your hypothesis for comparing two samples of non-normal continuous data
+- Be able to summarise and visualise the data
+- Understand and assess the underlying assumptions of the test
+- Perform a Mann-Whitney U test
+- Be able to interpret and report the results
+
+:::
+
 This test also compares two samples, however for this test (in contrast to Student's t-test) we don't have to assume that the parent distributions are normally distributed. In order to compare the medians of the two groups we do still need the parent distributions (and consequently the samples) to both have the same shape and variance. In this test we look to see if the medians of the two parent distributions differ significantly from each other.
 
 ## Libraries and functions

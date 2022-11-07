@@ -845,11 +845,11 @@ read_csv("data/examples/cs2-messy_lobsters.csv") %>%
 Is there any evidence that diet affects the growth rate of lobsters?
 
 1.  Write down the null and alternative hypotheses
-2.  Import the data into R from `data/CS2-lobsters.csv`
+2.  Import the data from `data/CS2-lobsters.csv`
 3.  Summarise and visualise the data
 4.  Check the assumptions using appropriate tests and graphical analyses
-5.  Perform an ANOVA test
-6.  Write down a sentence that summarise the results that you have found
+5.  Perform an ANOVA
+6.  Write down a sentence that summarises the results that you have found
 7.  Perform a post-hoc test and report the findings
 
 ::: {.callout-tip collapse="true"}

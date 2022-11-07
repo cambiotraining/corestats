@@ -17,6 +17,25 @@ import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
+::: callout-tip
+## Learning outcomes
+
+**Questions**
+
+- When do I perform a two-sample test?
+- What are the assumptions?
+- How do I interpret and present the results of the test?
+
+**Objectives**
+
+- Set out your hypothesis for comparing two samples of continuous data
+- Be able to summarise and visualise the data
+- Understand and assess the underlying assumptions of the test
+- Perform a two-sample t-test
+- Be able to interpret and report the results
+
+:::
+
 ## Libraries and functions
 
 ::: {.callout-note collapse="true"}

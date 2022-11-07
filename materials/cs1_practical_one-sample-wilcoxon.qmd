@@ -1,5 +1,5 @@
 ---
-title: "Wilcoxon signed-rank test"
+title: "Wilcoxon rank-sum test"
 ---
 ```{r}
 #| echo: false
@@ -31,6 +31,25 @@ dissolving_r <- read.csv("data/CS1-gastric_juices.csv")
 fishlength_py = pd.read_csv("data/CS1-onesample.csv")
 dissolving_py = pd.read_csv("data/CS1-gastric_juices.csv")
 ```
+
+::: callout-tip
+## Learning outcomes
+
+**Questions**
+
+- When do I perform a one-sample test on non-normal data?
+- What are the assumptions?
+- How do I interpret and present the results of the test?
+
+**Objectives**
+
+- Set out your hypothesis for single, non-normal sample of continuous data
+- Be able to summarise and visualise the data
+- Understand and assess the underlying assumptions of the test
+- Perform a wilcoxon rank-sum test
+- Be able to interpret and report the results
+
+:::
 
 This test also considers a single sample, however for this test (in contrast to the one sample t-test) we don't have to assume that the parent distribution is normally distributed. We do still need the parent distribution (and consequently the sample) to be the same shape and scale. In this test we look to see if the *median* of the parent distributions differs significantly from a given hypothesised value (in contrast with the t-test that looks at the *mean*).
 
@@ -82,18 +101,18 @@ stats::wilcox.test()
 
 | Functions                                                                                              | Description                |
 |:---------------------------|:-------------------------------------------|
-| [`pingouin.wilcoxon()`](https://pingouin-stats.org/generated/pingouin.wilcoxon.html#pingouin.wilcoxon) | Wilcoxon signed-rank test. |
+| [`pingouin.wilcoxon()`](https://pingouin-stats.org/generated/pingouin.wilcoxon.html#pingouin.wilcoxon) | Wilcoxon rank-sum test. |
 :::
 :::
 
 ## Data and hypotheses
 
-Again, we use the `fishlength` data set. The one-sample Wilcoxon signed-rank test allows to see if the *median* body length is different from a specified value. Here we want to test whether the data support the hypothesis that the median body is actually 20 mm. The following null and alternative hypotheses are very similar to those used for the one sample t-test:
+Again, we use the `fishlength` data set. The one-sample Wilcoxon rank-sum test allows to see if the *median* body length is different from a specified value. Here we want to test whether the data support the hypothesis that the median body is actually 20 mm. The following null and alternative hypotheses are very similar to those used for the one sample t-test:
 
 -   $H_0$: The median body length is equal to 20 mm ($\mu =$ 20).
 -   $H_1$: The median body length is not equal to 20 mm ($\mu \neq$ 20).
 
-We will use a one-sample, two-tailed Wilcoxon signed-rank test to see if we should reject the null hypothesis or not.
+We will use a one-sample, two-tailed Wilcoxon rank-sum test to see if we should reject the null hypothesis or not.
 
 ## Summarise and visualise
 
@@ -188,7 +207,7 @@ Here we can see that whilst the distribution isn't perfectly symmetric, neither 
 
 ## Implement and interpret the test
 
-Perform a one-sample, two-tailed Wilcoxon signed-rank test:
+Perform a one-sample, two-tailed Wilcoxon rank-sum test:
 
 ::: {.panel-tabset group="language"}
 ## tidyverse
@@ -250,7 +269,7 @@ The syntax is similar to what we did earlier:
 
 Again, the p-value is what we're most interested in. It gives the probability of us getting a sample such as ours if the null hypothesis were actually true. So, in this case since our p-value is less than 0.05 we can reject our null hypothesis and state that:
 
-> A one-sample Wilcoxon signed-rank test indicated that the median body length of male guppies ($\tilde{x}$ = 18.8 mm) differs significantly from 20 mm (p = 0.0012).
+> A one-sample Wilcoxon rank-sum test indicated that the median body length of male guppies ($\tilde{x}$ = 18.8 mm) differs significantly from 20 mm (p = 0.0012).
 
 \
 
@@ -258,9 +277,9 @@ The above sentence is an adequate concluding statement for this test and is what
 
 ## Exercise: Gastric juices (revisited)
 
-Performing a Wilcoxon signed-rank test:
+Performing a Wilcoxon rank-sum test:
 
-1.  Analyse the drug data set from before using a one-sample Wilcoxon signed-rank test
+1.  Analyse the drug data set from before using a one-sample Wilcoxon rank-sum test
 2.  Discuss with a (virtual) neighbour which of the two tests you feel is best suited to the data.
 3.  Does it matter in this case?
 
@@ -277,7 +296,7 @@ $H_1$ : median $\neq$ 45s
 
 From the box plot from the previous exercise we already know that the data are symmetric enough for the test to be valid.
 
-### Wilcoxon signed-rank test
+### Wilcoxon rank-sum test
 
 Calculating the median and performing the test:
 
@@ -339,6 +358,6 @@ In terms of choosing between the two test we can see that both meet their respec
 ::: callout-note
 -   One-sample tests are used when you have a single sample of continuous data
 -   The t-test assumes that the data are normally distributed and independent of each other
--   The Wilcoxon signed-rank test does not assume a normal distribution, but does require independent samples and symmetry around the median
+-   The Wilcoxon rank-sum test does not assume a normal distribution, but does require independent samples and symmetry around the median
 -   A good way of assessing the assumption of normality is by checking the data against a Q-Q plot
 :::
