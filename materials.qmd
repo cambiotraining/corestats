@@ -17,7 +17,7 @@ The data we will be using throughout all the sessions are contained in a single 
 #| echo: false
 download_link(
   link = "https://github.com/cambiotraining/corestats/raw/main/data.zip",
-  button_label = "Download data as CSV",
+  button_label = "download as CSV",
   button_type = "primary",
   has_icon = TRUE,
   icon = "fa fa-save",
@@ -26,7 +26,7 @@ download_link(
 ```
 
 ## Tidy data
-For two samples the data can be stored in one of three formats in R:
+For two samples the data can be stored in one of three formats:
 
 1.	as two separate vectors,
 2.	in a stacked data frame,
@@ -34,10 +34,10 @@ For two samples the data can be stored in one of three formats in R:
 
 Two separate vectors case is (hopefully) obvious.
 
-When using a data frame we have different options to organise our data. The best way of formatting data in R is by using [the tidy data format](https://r4ds.had.co.nz/tidy-data.html).
+When using a data frame we have different options to organise our data. The best way of formatting data is by using [the tidy data format](https://r4ds.had.co.nz/tidy-data.html).
 
 :::highlight
-**Tidy data** has the following properties:
+Tidy data has the following properties:
 
 - Each variable has its own column
 - Each observation has its own row
@@ -59,4 +59,21 @@ read_csv("materials/data/examples/cs1-meerkats.csv") %>%
   pivot_wider(names_from = country, values_from = weight)
 ```
 
-Having tidy data is the easiest way of doing analyses in R and I would strongly encourage you all to start adopting this format as standard for data collection and processing.
+Having tidy data is the easiest way of doing analyses in programming languages and I would strongly encourage you all to start adopting this format as standard for data collection and processing.
+
+## Conditional operators
+
+To set filtering conditions, use the following *relational operators*:
+
+-   `>` is greater than
+-   `>=` is greater than or equal to
+-   `<` is less than
+-   `<=` is less than or equal to
+-   `==` is equal to
+-   `!=` is different from
+-   `%in%` is contained in
+
+To combine conditions, use the following *logical operators*:
+
+-   `&` AND
+-   `|` OR

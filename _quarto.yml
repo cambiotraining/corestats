@@ -9,7 +9,7 @@ project:
   render:
     - index.md
     - setup.qmd
-    - materials.md
+    - materials.qmd
     - materials/*
     - "!materials/*/_no-render"
 

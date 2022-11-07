@@ -41,23 +41,4 @@ To know what to do when presented with an arbitrary data set e.g.
 
 ## Practicals
 
-Each practical document is divided up into various sections. In each section there will be some explanatory text which should help you to understand what is going on and what you're trying to achieve. There may be a list of commands relevant to that section which will be displayed in boxes like this:
-
-::: callout-tip
-## Conditional operators
-
-To set filtering conditions, use the following *relational operators*:
-
--   `>` is greater than
--   `>=` is greater than or equal to
--   `<` is less than
--   `<=` is less than or equal to
--   `==` is equal to
--   `!=` is different from
--   `%in%` is contained in
-
-To combine conditions, use the following *logical operators*:
-
--   `&` AND
--   `|` OR
-:::
+Each practical document is divided up into various sections. In each section there will be some explanatory text which should help you to understand what is going on and what you're trying to achieve.

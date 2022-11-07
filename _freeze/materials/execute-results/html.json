@@ -1,0 +1,20 @@
+{
+  "hash": "24d6264e00ab1a245f9994e85d62ad39",
+  "result": {
+    "markdown": "---\ntitle: \"Materials\"\nsubtitle: Detailed course materials can be found in this section, including exercises to practice. If you are a self-learner, make sure to check the [setup page](setup.qmd).\n---\n\n::: {.cell}\n\n:::\n\n\n## Data\nThe data we will be using throughout all the sessions are contained in a single ZIP file. They are all small CSV files (comma separated values). You can download the data below:\n\n\n::: {.cell}\n::: {.cell-output-display}\n```{=html}\n<a href=\"https://github.com/cambiotraining/corestats/raw/main/data.zip\">\n<button class=\"btn btn-primary\"><i class=\"fa fa-save\"></i> download as CSV</button>\n</a>\n```\n:::\n:::\n\n\n## Tidy data\nFor two samples the data can be stored in one of three formats:\n\n1.\tas two separate vectors,\n2.\tin a stacked data frame,\n3.\tor in an unstacked data frame/list.\n\nTwo separate vectors case is (hopefully) obvious.\n\nWhen using a data frame we have different options to organise our data. The best way of formatting data is by using [the tidy data format](https://r4ds.had.co.nz/tidy-data.html).\n\n:::highlight\nTidy data has the following properties:\n\n- Each variable has its own column\n- Each observation has its own row\n- Each value has its own cell\n:::\n\nStacked form (or [long format data](https://tidyr.tidyverse.org/reference/pivot_longer.html)) is where the data is arranged in such a way that each variable (thing that we measured) has its own column. If we consider a dataset containing meerkat weights (in g) from two different countries then a stacked format of the data would look like:\n\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n```\n# A tibble: 6 × 2\n  country  weight\n  <chr>     <dbl>\n1 Botswana    514\n2 Botswana    568\n3 Botswana    519\n4 Uganda      624\n5 Uganda      662\n6 Uganda      633\n```\n:::\n:::\n\n\nIn the unstacked (or [wide format](https://tidyr.tidyverse.org/reference/pivot_wider.html)) form a variable (measured thing) is present in more than one column. For example, let's say we measured meerkat weight in two countries over a period of years. We could then organise our data in such a way that for each year the measured values are split by country:\n\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n```\n# A tibble: 3 × 3\n   year Botswana Uganda\n  <dbl>    <dbl>  <dbl>\n1  1990      514    624\n2  1992      568    662\n3  1995      519    633\n```\n:::\n:::\n\n\nHaving tidy data is the easiest way of doing analyses in programming languages and I would strongly encourage you all to start adopting this format as standard for data collection and processing.\n\n## Conditional operators\n\nTo set filtering conditions, use the following *relational operators*:\n\n-   `>` is greater than\n-   `>=` is greater than or equal to\n-   `<` is less than\n-   `<=` is less than or equal to\n-   `==` is equal to\n-   `!=` is different from\n-   `%in%` is contained in\n\nTo combine conditions, use the following *logical operators*:\n\n-   `&` AND\n-   `|` OR\n",
+    "supporting": [
+      "materials_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<script src=\"site_libs/font-awesome-5.13.0/js/script.js\"></script>\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
