@@ -42,7 +42,7 @@ website:
       - text: "Setup"
         href: setup.qmd
       - text: "Materials"
-        href: materials.md
+        href: materials.qmd
     right:
       - icon: github
         href: https://github.com/cambiotraining/corestats/

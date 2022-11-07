@@ -1,4 +1,7 @@
 # essential libraries
+library(downloadthis)
+library(ggdist)
+library(distributional)
 library(downlit)
 library(corrr)
 library(reticulate)

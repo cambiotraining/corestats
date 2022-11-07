@@ -3,7 +3,7 @@ website:
   sidebar:
     - title: "Materials"
       contents:
-        - materials.md
+        - materials.qmd
         - section: "Hypothesis testing"
           contents:
             - "materials/cs1_practical_one-sample-t-test.qmd"

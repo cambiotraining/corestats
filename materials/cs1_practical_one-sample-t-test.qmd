@@ -107,6 +107,43 @@ stats::shapiro.test()
 :::
 :::
 
+## Purpose and aim
+One sample tests are used when we have a single sample of continuous data. It is used to find out if the sample came from a parent distribution with a given mean (or median). This essentially boils down to finding out if the sample mean (or median) is "close enough" to our hypothesised parent population mean (or median).
+So, in the figure below, we could use these tests to see what the probability is that the sample of ten points comes from the distribution plotted above it i.e. a population with a mean of 20 mm.
+
+```{r}
+#| echo: false
+set.seed(726)
+tibble(x = dist_normal(20, 5),
+       sample = rnorm(10,21,5)) %>% 
+    ggplot(aes(xdist = x)) +
+    stat_slab() +
+    geom_point(aes(x = sample, y = 0), size = 3) +
+    geom_vline(xintercept = 20, colour = "#c44101", size = 1) +
+    labs(title = "Male guppy length (mm)",
+         x = "length (mm)",
+         y = "probability density")
+
+set.seed(NULL)
+```
+
+## Choosing a test
+There are two tests that we are going to look at in this situation; the one-sample t-test, and the one-sample Wilcoxon signed rank-sum test. Both tests work on the sort of data that we’re considering here, but they both have different assumptions.
+
+If your data is normally distributed, then a one-sample t-test is appropriate. If your data aren’t normally distributed, but their distribution is symmetric, and the sample size is small then a one-sample Wilcoxon signed rank-sum test is more appropriate.
+
+For each statistical test we consider there will be five tasks. These will come back again and again, so pay extra close attention.
+
+::: {.callout-important}
+1. Setting out of the hypothesis
+2. Summarise and visualisation of the data
+3. Assessment of assumptions
+4. Implementation of the statistical test
+5. Interpreting the output and presentation of results
+:::
+
+We won’t always carry these out in exactly the same order, but we will always consider each of the five tasks for every test.
+
 ## Data and hypotheses
 
 For example, suppose we measure the body lengths of male guppies (in mm) collected from the Guanapo River in Trinidad. We want to test whether the data support the hypothesis that the mean body is actually 20 mm. We form the following null and alternative hypotheses:
@@ -375,6 +412,8 @@ norm1 + norm2 +
 
 These two graphs relate to 200 data points that have been drawn from a normal distribution. Even here you can see that the points do not all lie perfectly on the diagonal line in the QQ plot, and a certain amount of deviation at the top and bottom of the graph can happen just by chance (if I were to draw a different set of point then the graph would look slightly different).
 
+------------------------------------------------
+
 ```{r}
 #| echo: false
 unif1 <- ggplot(df_dist, aes(x = unif_dist)) +
@@ -395,6 +434,8 @@ unif1 + unif2 +
 
 These two graphs relate to 200 data points that have been drawn from a uniform distribution. Uniform distributions are more condensed than normal distributions, and this is reflected in the QQ plot having a very pronounced S-shaped pattern to it (this is colloquially known as **snaking**).
 
+------------------------------------------------
+
 ```{r}
 #| echo: false
 tdist1 <- ggplot(df_dist, aes(x = t_dist)) +
@@ -414,6 +455,8 @@ tdist1 + tdist2 +
 ```
 
 These two graphs relate to 200 data points that have been drawn from a t distribution. t distributions are more spread out than normal distributions, and this is reflected in the QQ plot again having a very pronounced S-shaped pattern to it, but this time the snaking is a reflection of that observed for the uniform distribution.
+
+------------------------------------------------
 
 ```{r}
 #| echo: false
