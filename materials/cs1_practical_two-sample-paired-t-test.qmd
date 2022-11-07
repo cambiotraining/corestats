@@ -207,14 +207,12 @@ boxplot(cortisol ~ time,
 
 ```{python}
 #| results: hide
-(
-  ggplot(cortisol_py,
-    aes(x = "time",
-        y = "cortisol")) +
-  geom_boxplot() +
-  geom_jitter(width = 0.05) +
-  ylab("Cortisol level (nmol/l)")
-)
+(ggplot(cortisol_py,
+        aes(x = "time",
+            y = "cortisol")) +
+     geom_boxplot() +
+     geom_jitter(width = 0.05) +
+     ylab("Cortisol level (nmol/l)"))
 ```
 :::
 
@@ -329,11 +327,11 @@ After this we can plot our data:
 ```{python}
 #| results: hide
 # plot the data
-(
-  ggplot(cortisol_diff_py, aes(x = "1", y = "cortisol_change")) +
-  geom_boxplot() +
-  ylab("Change in cortisol (nmol/l)")
-)
+(ggplot(cortisol_diff_py,
+        aes(x = "1",
+            y = "cortisol_change")) +
+     geom_boxplot() +
+     ylab("Change in cortisol (nmol/l)"))
 ```
 
 The differences in cortisol levels appear to be very much less than zero, meaning that the evening cortisol levels appear to be much lower than the morning ones. As such we would expect that the test would give a pretty significant result.
@@ -343,14 +341,12 @@ An alternative representation would be to plot the data points for both evening 
 ```{python}
 #| results: hide
 # plot cortisol levels by patient
-(
-  ggplot(cortisol_py,
-    aes(x = "time",
-        y = "cortisol",
-        group = "patient_id")) +
-  geom_point() +
-  geom_line()
-)
+(ggplot(cortisol_py,
+        aes(x = "time",
+            y = "cortisol",
+            group = "patient_id")) +
+     geom_point() +
+     geom_line())
 ```
 
 This gives a similar picture to what the boxplot was telling us, that for most patients the cortisol levels are higher in the morning than in the evening.
@@ -480,12 +476,10 @@ Create Q-Q plot:
 ```{python}
 #| results: hide
 # create the Q-Q plot
-(
-  ggplot(cortisol_diff_py,
-    aes(sample = "cortisol_change")) +
-    stat_qq() +
-    stat_qq_line(colour = "red")
-)
+(ggplot(cortisol_diff_py,
+        aes(sample = "cortisol_change")) +
+     stat_qq() +
+     stat_qq_line(colour = "red"))
 ```
 :::
 

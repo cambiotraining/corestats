@@ -186,20 +186,17 @@ median_fishlength = fishlength_py.length.median()
 ```{python}
 #| results: hide
 # create a histogram
-(
-ggplot(fishlength_py, aes(x = "length")) +
-geom_histogram(bins = 10) +
-geom_vline(xintercept = median_fishlength,
-             colour = "red")
-)
+(ggplot(fishlength_py,
+        aes(x = "length")) +
+     geom_histogram(bins = 10) +
+     geom_vline(xintercept = median_fishlength,
+                colour = "red"))
 
-(
 # create box plot
-ggplot(fishlength_py,
-aes(x = 1,
-    y = 'length')) +
-geom_boxplot()
-)
+(ggplot(fishlength_py,
+        aes(x = 1,
+            y = "length")) +
+     geom_boxplot())
 ```
 :::
 
@@ -271,8 +268,6 @@ Again, the p-value is what we're most interested in. It gives the probability of
 
 > A one-sample Wilcoxon rank-sum test indicated that the median body length of male guppies ($\tilde{x}$ = 18.8 mm) differs significantly from 20 mm (p = 0.0012).
 
-\
-
 The above sentence is an adequate concluding statement for this test and is what we would write in any paper or report. Note that we have included (in brackets) information on the median value of the group ($\tilde{x}$ = 18.8 mm) and the p-value (p = 0.0012). Keep in mind that, when publishing, you'd also submit your data and scripts, so people can follow your analysis.
 
 ## Exercise: Gastric juices (revisited)
@@ -340,9 +335,7 @@ pg.wilcoxon(dissolving_py.dissolving_time - 45,
 ```
 :::
 
-> A one-sample Wilcoxon-signed rank test indicated that the median dissolving time of the drug is not significantly different from 45 s ($\tilde{x}$ = 45.35 , p=0.64)
-
-\
+> A one-sample Wilcoxon-signed rank test indicated that the median dissolving time of the drug is not significantly different from 45 s ($\tilde{x}$ = 45.35 , p = 0.64)
 
 ### Discussion
 

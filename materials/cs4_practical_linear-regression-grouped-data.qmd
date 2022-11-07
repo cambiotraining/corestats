@@ -246,12 +246,13 @@ plot(light ~ depth,
 ```{python}
 #| results: hide
 # plot the data
-(
-  ggplot(treelight_py,
-    aes(x = "depth", y = "light", colour = "species")) +
-    geom_point() +
-    scale_color_brewer(type = "qual", palette = "Dark2") +
-    labs(x = "Depth (m)",
+(ggplot(treelight_py,
+        aes(x = "depth",
+            y = "light",
+            colour = "species")) +
+     geom_point() +
+     scale_color_brewer(type = "qual", palette = "Dark2") +
+     labs(x = "Depth (m)",
          y = "Light intensity (lux)")
 )
 ```
@@ -325,16 +326,16 @@ abline(lm_conifer, col = "red")
 ```{python}
 #| results: hide
 # plot the data
-(
-ggplot(treelight_py,
-       aes(x = "depth", y = "light", colour = "species")) +
-  geom_point() +
-  # add regression lines
-  geom_smooth(method = "lm", se = False) +
-  scale_color_brewer(type = "qual", palette = "Dark2") +
-  labs(x = "Depth (m)",
-       y = "Light intensity (lux)")
-)
+(ggplot(treelight_py,
+        aes(x = "depth",
+            y = "light",
+            colour = "species")) +
+     geom_point() +
+     # add regression lines
+     geom_smooth(method = "lm", se = False) +
+     scale_color_brewer(type = "qual", palette = "Dark2") +
+     labs(x = "Depth (m)",
+          y = "Light intensity (lux)"))
 ```
 :::
 
@@ -713,16 +714,18 @@ Now we can simply plot the data:
 ```{python}
 #| results: hide
 # plot the data
-(
-  ggplot(treelight_py,
-    aes(x = "depth", y = "light", colour = "species")) +
-    geom_point() +
-    # add regression lines
-    geom_line(aes(x = "depth", y = ".fitted", colour = "species")) +
-    scale_color_brewer(type = "qual", palette = "Dark2") +
-    labs(x = "Depth (m)",
-         y = "Light intensity (lux)")
-)
+(ggplot(treelight_py,
+        aes(x = "depth",
+            y = "light",
+            colour = "species")) +
+     geom_point() +
+     # add regression lines
+     geom_line(aes(x = "depth",
+                   y = ".fitted",
+                   colour = "species")) +
+     scale_color_brewer(type = "qual", palette = "Dark2") +
+     labs(x = "Depth (m)",
+          y = "Light intensity (lux)"))
 ```
 :::
 
@@ -1069,12 +1072,11 @@ This data set has three variables; `yield` (which is the response variable), `ya
 ```{python}
 #| results: hide
 # plot the data
-(
-  ggplot(clover_py,
-       aes(x = "yarrow", y = "yield", colour = "farm")) +
-       geom_point() +
-       scale_color_brewer(type = "qual", palette = "Dark2")
- )
+(ggplot(clover_py,
+        aes(x = "yarrow",
+            y = "yield", colour = "farm")) +
+     geom_point() +
+     scale_color_brewer(type = "qual", palette = "Dark2"))
 ```
 
 Looking at this plot as it stands, it's pretty clear that yarrow density has a significant effect on yield, but it's pretty hard to see from the plot whether there is any effect of `farm`, or whether there is any interaction. In order to work that out we'll want to add the regression lines for each `farm` separately.
@@ -1082,13 +1084,12 @@ Looking at this plot as it stands, it's pretty clear that yarrow density has a s
 ```{python}
 #| results: hide
 # plot the data
-(
-  ggplot(clover_py,
-       aes(x = "yarrow", y = "yield", colour = "farm")) +
-       geom_point() +
-       geom_smooth(method = "lm", se = False) +
-       scale_color_brewer(type = "qual", palette = "Dark2")
- )
+(ggplot(clover_py,
+        aes(x = "yarrow",
+            y = "yield", colour = "farm")) +
+     geom_point() +
+     geom_smooth(method = "lm", se = False) +
+     scale_color_brewer(type = "qual", palette = "Dark2"))
 ```
 
 The regression lines are very close together, and it looks very much as if there isn't any interaction, but also that there isn't any effect of `farm`. 
@@ -1205,13 +1206,12 @@ Then we can plot them:
 ```{python}
 #| results: hide
 # plot log-transformed data
-(
-  ggplot(clover_py,
-         aes(x = "yarrow", y = "log_yield", colour = "farm")) +
-  geom_point() +
-  geom_smooth(method = "lm", se = False) +
-  scale_color_brewer(type = "qual", palette = "Dark2")
-)
+(ggplot(clover_py,
+         aes(x = "yarrow",
+             y = "log_yield", colour = "farm")) +
+     geom_point() +
+     geom_smooth(method = "lm", se = False) +
+     scale_color_brewer(type = "qual", palette = "Dark2"))
 ```
 
 :::

@@ -286,7 +286,7 @@ deer %>%
 # we can also visualise the data
 deer %>% 
   ggplot(aes(x = leg, y = length)) +
-  geom_boxplot()
+    geom_boxplot()
 ```
 
 All of this suggests that there might be a difference between the legs, with hind legs being longer than forelegs. However, this representation obscures the fact that we have *paired* data. What we really need to look at is the difference in leg length for each observation:
@@ -313,8 +313,8 @@ Additionally, we can also plot the data by observation:
 # plot the data by observation
 deer %>% 
   ggplot(aes(x = leg, y = length, group = id)) +
-  geom_point() +
-  geom_line()
+      geom_point() +
+      geom_line()
 ```
 
 ## R
@@ -435,12 +435,10 @@ Finally, we can visualise this:
 ```{python}
 #| results: hide
 # we can also visualise the data
-(
-  ggplot(leg_diff_py,
-    aes(x = "1",
-        y = "leg_diff")) +
-    geom_boxplot()
-)
+(ggplot(leg_diff_py,
+        aes(x = "1",
+            y = "leg_diff")) +
+     geom_boxplot())
 ```
 
 All of this suggests that there might be a difference between the legs, with hind legs being longer than forelegs. However, this representation obscures the fact that we have *paired* data. What we really need to look at is the difference in leg length for each observation:
@@ -448,14 +446,12 @@ All of this suggests that there might be a difference between the legs, with hin
 ```{python}
 #| results: hide
 # plot paired observations
-(
-  ggplot(deer_py,
-    aes(x = "leg",
-        y = "length",
-        group = "id")) +
-    geom_point() +
-    geom_line()
-)
+(ggplot(deer_py,
+        aes(x = "leg",
+            y = "length",
+            group = "id")) +
+     geom_point() +
+     geom_line())
 ```
 :::
 
@@ -518,12 +514,10 @@ Create the Q-Q plot:
 ```{python}
 #| results: hide
 # create the Q-Q plot
-(
-  ggplot(leg_diff_py,
-    aes(sample = "leg_diff")) +
-    stat_qq() +
-    stat_qq_line(colour = "red")
-)
+(ggplot(leg_diff_py,
+        aes(sample = "leg_diff")) +
+     stat_qq() +
+     stat_qq_line(colour = "red"))
 ```
 :::
 

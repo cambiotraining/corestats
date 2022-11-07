@@ -146,6 +146,9 @@ stats::shapiro.test()
 :::
 :::
 
+### Purpose and aim
+These two-sample Student's t-test is used when we have two samples of continuous data where we are trying to find out if the samples came from the same parent distribution or not. This essentially boils down to finding out if there is a difference in the means of the two samples.
+
 ## Data and hypotheses
 
 For example, suppose we now measure the body lengths of male guppies (in mm) collected from two rivers in Trinidad; the Aripo and the Guanapo. We want to test whether the mean body length differs between samples. We form the following null and alternative hypotheses:
@@ -278,11 +281,9 @@ Numbers might not always give you the best insight into your data, so we also vi
 
 ```{python}
 #| results: hide
-(
-  ggplot(rivers_py,
-         aes(x = "river", y = "length")) +
-      geom_boxplot()
-)
+(ggplot(rivers_py,
+        aes(x = "river", y = "length")) + 
+     geom_boxplot())
 ```
 :::
 
@@ -398,13 +399,11 @@ qqline(uns_rivers$Guanapo, col = "red")
 
 ```{python}
 #| results: hide
-(
-  ggplot(rivers_py,
-         aes(sample = "length")) +
-      stat_qq() +
-      stat_qq_line(colour = "red") +
-      facet_wrap("river")
-)
+(ggplot(rivers_py,
+        aes(sample = "length")) +
+     stat_qq() +
+     stat_qq_line(colour = "red") +
+     facet_wrap("river"))
 ```
 :::
 
@@ -590,10 +589,8 @@ pg.ttest(aripo, guanapo,
 :::
 
 Again, the p-value is what we're most interested in. Since the p-value is very small (much smaller than the standard significance level) we choose to say "that it is very unlikely that these two samples came from the same parent distribution and as such we can reject our null hypothesis" and state that:
-$\bar{x}$
-> A Student's t-test indicated that the mean body length of male guppies in the Guanapo river ($\bar{x}$ = 18.29 mm) differs significantly from the mean body length of male guppies in the Aripo river ($\bar{x}$ = 20.33 mm, p = 0.0003).
 
-<br />
+> A Student's t-test indicated that the mean body length of male guppies in the Guanapo river ($\bar{x}$ = 18.29 mm) differs significantly from the mean body length of male guppies in the Aripo river ($\bar{x}$ = 20.33 mm, p = 0.0003).
 
 Now there's a conversation starter.
 
@@ -688,11 +685,9 @@ and visualise the data:
 
 ```{python}
 #| results: hide
-(
-  ggplot(turtle_py,
-         aes(x = "sex", y = "serum")) +
-      geom_boxplot()
-)
+(ggplot(turtle_py,
+        aes(x = "sex", y = "serum")) +
+     geom_boxplot())
 ```
 :::
 
@@ -788,13 +783,11 @@ qqline(uns_turtle_r$Male, col = "red")
 ```{python}
 #| results: hide
 # create Q-Q plots for both groups
-(
-  ggplot(turtle_py,
-         aes(sample = "serum")) +
-      stat_qq() +
-      stat_qq_line(colour = "red") +
-      facet_wrap("sex")
-)
+(ggplot(turtle_py,
+        aes(sample = "serum")) +
+     stat_qq() +
+     stat_qq_line(colour = "red") +
+     facet_wrap("sex"))
 ```
 :::
 
@@ -915,7 +908,7 @@ pg.ttest(turtle_female, turtle_male,
 
 With a p-value of 0.544, this test tells us that there is insufficient evidence to suggest that the means of the two groups are different. A suitable summary sentence would be:
 
-> A Student's two-sample t-test indicated that the mean serum cholesterol level did not differ significantly between Male and Female turtles (p = 0.544).
+> A Student's two-sample t-test indicated that the mean serum cholesterol level did not differ significantly between male and female turtles (p = 0.544).
 
 ### Discussion
 

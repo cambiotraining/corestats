@@ -211,12 +211,12 @@ You can visualise the data with:
 #| results: hide
 # visualise the data, sex vs weight
 (ggplot(exercise_py,
-       aes(x = "sex", y = "weight")) +
+        aes(x = "sex", y = "weight")) +
   geom_boxplot())
 
 # visualise the data, exercise vs weight
 (ggplot(exercise_py,
-       aes(x = "exercise", y = "weight")) +
+        aes(x = "exercise", y = "weight")) +
   geom_boxplot())
 ```
 
@@ -255,9 +255,10 @@ Again, this is a very basic plot that just shows the raw data and uses default a
 ```{python}
 #| results: hide
 (ggplot(exercise_py,
-       aes(x = "sex", y = "weight", fill = "exercise")) +
-  geom_boxplot() +
-  scale_fill_brewer(type = "qual", palette = "Dark2"))
+        aes(x = "sex",
+            y = "weight", fill = "exercise")) +
+     geom_boxplot() +
+     scale_fill_brewer(type = "qual", palette = "Dark2"))
 ```
 
 This produces box plots for all (four) combinations of the predictor variables. We are plotting `sex` on the x-axis; `weight` on the y-axis and filling the box plot by `exercise` regime.
@@ -334,12 +335,15 @@ interaction.plot(exercise_r$exercise,
 We're adding a bit of jitter to the data, to avoid too much overlap between the data points. We can do this with `geom_jitter()`.
 ```{python}
 #| results: hide
-(ggplot(exercise_py, aes(x = "sex", y = "weight",
-             colour = "exercise", group = "exercise")) +
-  geom_jitter(width = 0.05) +
-  stat_summary(fun_data = "mean_cl_boot", geom = "point", size = 3) +
-  stat_summary(fun_data = "mean_cl_boot", geom = "line") +
-  scale_colour_brewer(type = "qual", palette = "Dark2"))
+(ggplot(exercise_py,
+        aes(x = "sex", y = "weight",
+            colour = "exercise", group = "exercise")) +
+     geom_jitter(width = 0.05) +
+     stat_summary(fun_data = "mean_cl_boot",
+                  geom = "point", size = 3) +
+     stat_summary(fun_data = "mean_cl_boot",
+                  geom = "line") +
+     scale_colour_brewer(type = "qual", palette = "Dark2"))
 ```
 
 Here we plot `weight` on the y-axis, by `sex` on the x-axis.
@@ -354,11 +358,14 @@ The choice of which categorical factor is plotted on the horizontal axis and whi
 Plot the interaction plot the other way round:
 ```{python}
 #| results: hide
-(ggplot(exercise_py, aes(x = "exercise", y = "weight",
-             colour = "sex", group = "sex")) +
-  geom_jitter(width = 0.05) +
-  stat_summary(fun_data = "mean_cl_boot", geom = "point", size = 3) +
-  stat_summary(fun_data = "mean_cl_boot", geom = "line") +
+(ggplot(exercise_py,
+        aes(x = "exercise", y = "weight",
+            colour = "sex", group = "sex")) +
+     geom_jitter(width = 0.05) +
+     stat_summary(fun_data = "mean_cl_boot",
+                  geom = "point", size = 3) +
+     stat_summary(fun_data = "mean_cl_boot",
+                  geom = "line") +
   scale_colour_brewer(type = "qual", palette = "Dark2"))
 ```
 
@@ -639,7 +646,8 @@ lm_auxin <- lm(plant_height ~ concentration * genotype,
 
 Next, we check the assumptions:
 
-```{r, message=FALSE}
+```{r}
+#| message: false
 lm_auxin %>% 
   resid_panel(plots = c("resid", "qq", "ls", "cookd"),
               smoother = TRUE)
@@ -757,21 +765,25 @@ Let's look at the interaction plots. We're only plotting the mean values here, b
 #| results: hide
 # by genotype
 (ggplot(auxin_response_py,
-         aes(x = "concentration",
-             y = "plant_height",
-             colour = "genotype", group = "genotype")) +
-  stat_summary(fun_data = "mean_cl_boot", geom = "point", size = 3) +
-  stat_summary(fun_data = "mean_cl_boot", geom = "line") +
-  scale_colour_brewer(type = "qual", palette = "Dark2"))
+        aes(x = "concentration",
+            y = "plant_height",
+            colour = "genotype", group = "genotype")) +
+     stat_summary(fun_data = "mean_cl_boot",
+                  geom = "point", size = 3) +
+     stat_summary(fun_data = "mean_cl_boot",
+                  geom = "line") +
+     scale_colour_brewer(type = "qual", palette = "Dark2"))
 
 # by concentration
 (ggplot(auxin_response_py,
-         aes(x = "genotype",
-             y = "plant_height",
-             colour = "concentration", group = "concentration")) +
-  stat_summary(fun_data = "mean_cl_boot", geom = "point", size = 3) +
-  stat_summary(fun_data = "mean_cl_boot", geom = "line") +
-  scale_colour_brewer(type = "qual", palette = "Dark2"))
+        aes(x = "genotype",
+            y = "plant_height",
+            colour = "concentration", group = "concentration")) +
+     stat_summary(fun_data = "mean_cl_boot",
+                  geom = "point", size = 3) +
+     stat_summary(fun_data = "mean_cl_boot",
+                  geom = "line") +
+     scale_colour_brewer(type = "qual", palette = "Dark2"))
 ```
 
 We're constructed both box plots and we've also constructed two interaction plots. We only needed to do one interaction plot but I find it can be quite useful to look at the data from different angles. Both interaction plots suggest that there is an interaction here as the lines in the plots aren't parallel. Looking at the interaction plot with `concentration` on the x-axis, it appears that there is non-difference between genotypes when the concentration is `low`, but that there is a difference between genotypes when the concentration is `none` or `high`.
@@ -1016,30 +1028,34 @@ As always we'll visualise the data first:
 ```{python}
 #| results: hide
 # by watering regime
-(ggplot(tulip_py, aes(x = "water", y = "blooms")) +
-  geom_boxplot())
+(ggplot(tulip_py,
+        aes(x = "water", y = "blooms")) +
+     geom_boxplot())
   
 # by shading regime
-(ggplot(tulip_py, aes(x = "shade", y = "blooms")) +
-  geom_boxplot())
+(ggplot(tulip_py,
+        aes(x = "shade", y = "blooms")) +
+     geom_boxplot())
 
 # interaction plot by watering regime
 (ggplot(tulip_py,
-         aes(x = "shade",
-             y = "blooms",
-             colour = "water", group = "water")) +
-  stat_summary(fun_data = "mean_cl_boot", geom = "point", size = 3) +
-  stat_summary(fun_data = "mean_cl_boot", geom = "line") +
-  scale_colour_brewer(type = "qual", palette = "Dark2"))
+        aes(x = "shade", y = "blooms",
+            colour = "water", group = "water")) +
+     stat_summary(fun_data = "mean_cl_boot",
+                  geom = "point", size = 3) +
+     stat_summary(fun_data = "mean_cl_boot",
+                  geom = "line") +
+     scale_colour_brewer(type = "qual", palette = "Dark2"))
 
 # interaction plot by shade regime
 (ggplot(tulip_py,
-         aes(x = "water",
-             y = "blooms",
-             colour = "shade", group = "shade")) +
-  stat_summary(fun_data = "mean_cl_boot", geom = "point", size = 3) +
-  stat_summary(fun_data = "mean_cl_boot", geom = "line") +
-  scale_colour_brewer(type = "qual", palette = "Dark2"))
+        aes(x = "water", y = "blooms",
+            colour = "shade", group = "shade")) +
+     stat_summary(fun_data = "mean_cl_boot",
+                  geom = "point", size = 3) +
+     stat_summary(fun_data = "mean_cl_boot",
+                  geom = "line") +
+     scale_colour_brewer(type = "qual", palette = "Dark2"))
 ```
 
 Again, both interaction plots suggest that there might be an interaction here. Digging in a little deeper from a descriptive perspective, it looks as though that `water` regime 1 is behaving differently to `water` regimes 2 and 3 under different shade conditions.

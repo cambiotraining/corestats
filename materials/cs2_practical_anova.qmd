@@ -271,11 +271,10 @@ Finally, we plot the data:
 ```{python}
 #| results: hide
 # plot the data
-(
-  ggplot(oystercatcher_py,
-    aes(x = "site", y = "feeding")) +
-    geom_boxplot()
-)
+(ggplot(oystercatcher_py,
+        aes(x = "site",
+            y = "feeding")) +
+     geom_boxplot())
 ```
 :::
 
@@ -500,7 +499,7 @@ Let's create the diagnostic plots we're interested in using `ggResidPanel`:
 #| message: false
 lm_oystercatcher %>% 
     resid_panel(plots = c("resid", "qq", "ls", "cookd"),
-              smoother = TRUE)
+                smoother = TRUE)
 ```
 
 -   The top left graph plots the **Residuals plot**. If the data are best explained by a linear line then there should be a uniform distribution of points above and below the horizontal blue line (and if there are sufficient points then the red line, which is a smoother line, should be on top of the blue line). This plot looks pretty good.
@@ -721,10 +720,10 @@ tukey_py.head()
 ```{python}
 #| results: hide
 # plot the data
-(
-  ggplot(tukey_py, aes(x = "group", y = "response")) +
-  geom_boxplot()
-)
+(ggplot(tukey_py,
+        aes(x = "group",
+            y = "response")) +
+     geom_boxplot())
 ```
 
 :::
@@ -836,10 +835,7 @@ Juvenile lobsters in aquaculture were grown on three different diets (fresh muss
 #| warning: false
 read_csv("data/examples/cs2-messy_lobsters.csv") %>%
     pivot_wider(names_from = diet, values_from = weight) %>%
-    select(-group) %>%
-    kbl() %>%
-    kable_styling(bootstrap_options = "striped",
-                  full_width = F, position = "center")
+    select(-group)
 ```
 
 Is there any evidence that diet affects the growth rate of lobsters?
@@ -924,10 +920,10 @@ Next, we visualise the data:
 
 ```{python}
 #| results: hide
-(
-ggplot(lobsters_py, aes(x = "diet", y = "weight")) +
-  geom_boxplot()
-)
+(ggplot(lobsters_py,
+        aes(x = "diet",
+            y = "weight")) +
+     geom_boxplot())
 ```
 
 :::
@@ -1136,11 +1132,10 @@ This on the other hand says that everything is fine. Let's look at Q-Q plot.
 ```{python}
 #| results: hide
 # Q-Q plots
-(
-  ggplot(lobsters_py, aes(sample = "weight")) +
-  stat_qq() +
-  stat_qq_line(colour = "red")
-)
+(ggplot(lobsters_py,
+        aes(sample = "weight")) +
+     stat_qq() +
+     stat_qq_line(colour = "red"))
 ```
 
 The Q-Q plot looks OK, not perfect, but more than good enough for us to have confidence in the normality of the data.

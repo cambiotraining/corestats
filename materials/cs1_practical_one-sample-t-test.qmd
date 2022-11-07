@@ -258,12 +258,10 @@ From the `describe()` output we can see that the mean and median of the `length`
 
 ```{python}
 #| results: hide
-(
-  ggplot(fishlength_py,
-    aes(x = 'river',
-        y = 'length')) +
-    geom_boxplot()
-)
+(ggplot(fishlength_py,
+        aes(x = 'river',
+            y = 'length')) +
+     geom_boxplot())
 ```
 :::
 
@@ -317,10 +315,9 @@ hist(fishlength_r, breaks = 15)
 
 ```{python}
 #| results: hide
-(
-  ggplot(fishlength_py, aes(x = "length")) +
-  geom_histogram(bins = 15)
-)
+(ggplot(fishlength_py,
+        aes(x = "length")) +
+     geom_histogram(bins = 15))
 ```
 :::
 
@@ -358,11 +355,10 @@ qqline(fishlength_r)
 
 ```{python}
 #| results: hide
-(
-  ggplot(fishlength_py, aes(sample = "length")) +
-  stat_qq() +
-  stat_qq_line()
-)
+(ggplot(fishlength_py,
+        aes(sample = "length")) +
+     stat_qq() +
+     stat_qq_line())
 ```
 :::
 
@@ -729,21 +725,18 @@ We can look at the histogram and box plot of the data:
 ```{python}
 #| results: hide
 # create a histogram
-(
-  ggplot(dissolving_py,
-    aes(x = "dissolving_time")) +
-  geom_histogram(bins = 4)
-)
+(ggplot(dissolving_py,
+        aes(x = "dissolving_time")) +
+     geom_histogram(bins = 4))
 ```
 
 ```{python}
 #| results: hide
 # create a box plot
-(
-  ggplot(dissolving_py,
-    aes(x = 1, y = "dissolving_time")) +
-  geom_boxplot()
-)
+(ggplot(dissolving_py,
+        aes(x = 1,
+            y = "dissolving_time")) +
+     geom_boxplot())
 ```
 
 Python (or `plotnine` in particular) gets a bit cranky if you try to create a `geom_boxplot` but do not define the `x` aesthetic. Hence us putting it as `1`. The value has no numerical meaning, however.
@@ -797,12 +790,10 @@ pg.normality(dissolving_py.dissolving_time)
 
 ```{python, results='hide'}
 # Create a Q-Q plot
-(
-  ggplot(dissolving_py,
-    aes(sample = "dissolving_time")) +
-  stat_qq() +
-  stat_qq_line()
-)
+(ggplot(dissolving_py,
+        aes(sample = "dissolving_time")) +
+     stat_qq() +
+     stat_qq_line())
 ```
 :::
 
@@ -844,8 +835,6 @@ pg.ttest(x = dissolving_py.dissolving_time,
 :::
 
 > A one-sample t-test indicated that the mean dissolving time of the drug is not significantly different from 45s ($\bar{x}$ = 45.2, p=0.725).
-
-\
 
 And that, is that.
 :::

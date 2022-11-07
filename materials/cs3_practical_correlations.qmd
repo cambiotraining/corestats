@@ -235,13 +235,15 @@ We can create a visual overview of the potential correlations that might exist b
 #| results: hide
 # murder vs robbery
 (ggplot(USArrests_py,
-       aes(x = "murder", y = "robbery")) +
-    geom_point())
+       aes(x = "murder",
+           y = "robbery")) +
+     geom_point())
 
 # assault vs urban_pop
 (ggplot(USArrests_py,
-       aes(x = "assault", y = "urban_pop")) +
-    geom_point())
+       aes(x = "assault",
+           y = "urban_pop")) +
+     geom_point())
 ```
 
 This gets a bit tedious if there are many unique variable pairs. There is an option to automatically create a matrix of scatter plots, using Seaborn. But that would involve installing the `seaborn` package just for this. And frankly, I don't want to - not least because staring at tons of scatter plots is probably not the best way forward anyway!
@@ -400,10 +402,10 @@ USArrests_pear_py.head()
 #| results: hide
 (ggplot(USArrests_pear_py,
         aes(x = "var1", y = "var2", fill = "cor")) +
- geom_tile() +
- geom_text(aes(label = "cor"),
-           colour = "white",
-           size = 10))
+     geom_tile() +
+     geom_text(aes(label = "cor"),
+               colour = "white",
+               size = 10))
 ```
 :::
 
@@ -527,10 +529,10 @@ USArrests_pear_py.head()
 #| results: hide
 (ggplot(USAstate_pear_py,
         aes(x = "var1", y = "var2", fill = "cor")) +
- geom_tile() +
- geom_text(aes(label = "cor"),
-           colour = "white",
-           size = 10))
+     geom_tile() +
+     geom_text(aes(label = "cor"),
+               colour = "white",
+               size = 10))
 ```
 :::
 
@@ -778,10 +780,10 @@ Now we can plot the data:
 #| results: hide
 (ggplot(cor_dif_py,
         aes(x = "var1", y = "var2", fill = "abs_cor")) +
- geom_tile() +
- geom_text(aes(label = "abs_cor"),
-           colour = "white",
-           size = 10))
+     geom_tile() +
+     geom_text(aes(label = "abs_cor"),
+               colour = "white",
+               size = 10))
 ```
 :::
 
