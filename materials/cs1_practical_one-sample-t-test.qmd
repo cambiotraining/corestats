@@ -157,7 +157,7 @@ We will use a one-sample, two-tailed t-test to see if we should reject the null 
 -   We use a **two-tailed** t-test because we want to know if our data suggest that the true (population) mean is different from 20 mm in either direction rather than just to see if it is greater than or less than 20 mm (in which case we would use a one-tailed test).
 -   We're using a **t-test** because we don't know any better yet and because I'm telling you to. We'll look at what the precise assumptions/requirements need to be in a moment.
 
-Make sure you have downloaded the data (see: [Datasets](#index-datasets)) and placed it within your working directory.
+Make sure you have downloaded the data (see: [Data section](/materials#index-datasets)) and placed it within your working directory.
 
 ::: {.panel-tabset group="language"}
 ## tidyverse

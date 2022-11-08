@@ -10,7 +10,7 @@ subtitle: Detailed course materials can be found in this section, including exer
 source(file = "materials/setup_files/setup.R")
 ```
 
-## Data
+## Data {#index-datasets}
 The data we will be using throughout all the sessions are contained in a single ZIP file. They are all small CSV files (comma separated values). You can download the data below:
 
 ```{r}
