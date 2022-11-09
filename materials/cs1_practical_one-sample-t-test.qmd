@@ -338,7 +338,7 @@ Construct a Q-Q Plot of the quantiles of the data against the quantiles of a nor
 fishlengthDF %>% 
   ggplot(aes(sample = length)) +
   stat_qq() +
-  stat_qq_line()
+  stat_qq_line(colour = "blue")
 ```
 
 ## R
@@ -358,7 +358,7 @@ qqline(fishlength_r)
 (ggplot(fishlength_py,
         aes(sample = "length")) +
      stat_qq() +
-     stat_qq_line())
+     stat_qq_line(colour = "blue"))
 ```
 :::
 
@@ -397,7 +397,7 @@ norm1 <- ggplot(df_dist, aes(x = norm_dist)) +
 
 norm2 <- ggplot(df_dist, aes(sample = norm_dist)) +
     stat_qq() +
-    stat_qq_line(colour = "red") +
+    stat_qq_line(colour = "blue") +
     labs(x = "theoretical quantiles",
          y = "sample quantiles")
     
@@ -419,7 +419,7 @@ unif1 <- ggplot(df_dist, aes(x = unif_dist)) +
 
 unif2 <- ggplot(df_dist, aes(sample = unif_dist)) +
     stat_qq() +
-    stat_qq_line(colour = "red") +
+    stat_qq_line(colour = "blue") +
     labs(x = "theoretical quantiles",
          y = "sample quantiles")
     
@@ -441,7 +441,7 @@ tdist1 <- ggplot(df_dist, aes(x = t_dist)) +
 
 tdist2 <- ggplot(df_dist, aes(sample = t_dist)) +
     stat_qq() +
-    stat_qq_line(colour = "red") +
+    stat_qq_line(colour = "blue") +
     labs(x = "theoretical quantiles",
          y = "sample quantiles")
     
@@ -463,7 +463,7 @@ exp_dist1 <- ggplot(df_dist, aes(x = exp_dist)) +
 
 exp_dist2 <- ggplot(df_dist, aes(sample = exp_dist)) +
     stat_qq() +
-    stat_qq_line(colour = "red") +
+    stat_qq_line(colour = "blue") +
     labs(x = "theoretical quantiles",
          y = "sample quantiles")
     
@@ -767,7 +767,7 @@ dissolving %>%
 dissolving %>% 
   ggplot(aes(sample = dissolving_time)) +
   stat_qq() +
-  stat_qq_line(colour = "red")
+  stat_qq_line(colour = "blue")
 ```
 
 ## R
@@ -793,7 +793,7 @@ pg.normality(dissolving_py.dissolving_time)
 (ggplot(dissolving_py,
         aes(sample = "dissolving_time")) +
      stat_qq() +
-     stat_qq_line())
+     stat_qq_line(colour = "blue"))
 ```
 :::
 
@@ -834,14 +834,14 @@ pg.ttest(x = dissolving_py.dissolving_time,
 ```
 :::
 
-> A one-sample t-test indicated that the mean dissolving time of the drug is not significantly different from 45s ($\bar{x}$ = 45.2, p=0.725).
+> A one-sample t-test indicated that the mean dissolving time of the drug is not significantly different from 45s ($\bar{x}$ = 45.2, p = 0.725).
 
 And that, is that.
 :::
 
 ## Key points
 
-::: callout-note
+::: {.callout-note}
 -   One-sample tests are used when you have a single sample of continuous data
 -   The t-test assumes that the data are normally distributed and independent of each other
 -   A good way of assessing the assumption of normality is by checking the data against a Q-Q plot

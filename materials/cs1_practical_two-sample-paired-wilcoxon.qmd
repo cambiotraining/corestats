@@ -543,16 +543,9 @@ As Jeremy Clarkson [would put it](https://www.quotes.net/mquote/941330):
 
 ## Key points
 
-::: callout-note
--   We use two-sample tests to see if two samples of continuous data come from the same parent distribution
--   This essentially boils down to testing if the mean or median differs between the two samples
--   There are 5 key two-sample tests: Student's t-test, Welch's t-test, Mann-Whitney U test, paired t-test and Wilcoxon signed-rank test
--   Which one you use depends on normality of the distribution, sample size, paired or unpaired data and variance of the samples
--   Parametric tests are used if the data are normally distributed or the sample size is large
--   Non-parametric tests are used if the data are not normally distributed *and* the sample size is small
--   Equality of variance then determines which test is appropriate
--   You three questions to determine the test:
-    1.  is my data paired?
-    2.  do I need a parametric or non-parametric test
-    3.  can I assume equality of variance?
+::: {.callout-note}
+-   The Wilcoxon signed-rank test is used when you have two paired samples of continuous data, which are not normally distributed, but have equal variance
+-   A good way of assessing the assumption of normality is by checking the data against a Q-Q plot
+- We can check equality of variance (homoscedasticity) with Bartlett's (normal data) or Levene's (non-normal data) test
 :::
+

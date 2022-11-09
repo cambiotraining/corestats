@@ -299,3 +299,11 @@ This gives us exactly the same conclusion that we got from the two-sample t-test
 
 > A Mann-Whitney test indicated that there wasn't a significant difference in the median serum cholesterol levels between male and female turtles (p = 0.534)
 :::
+
+## Key points
+
+::: {.callout-note}
+-   The Mann-Whitney U test is used when you have two samples of continuous data, which are not normally distributed, but are independent of each other and have equal variance
+-   A good way of assessing the assumption of normality is by checking the data against a Q-Q plot
+- We can check equality of variance (homoscedasticity) with Bartlett's (normal data) or Levene's (non-normal data) test
+:::

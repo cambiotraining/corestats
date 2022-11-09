@@ -487,3 +487,12 @@ The Shapiro-Wilk test says that the data are normal enough and whilst the Q-Q pl
 
 So, yep, a paired t-test is appropriate for this data set.
 :::
+
+## Key points
+
+::: {.callout-note}
+-   Paired t tests are used when you have two paired samples of continuous data, which are normally distributed and have equal variance
+-   A good way of assessing the assumption of normality is by checking the data against a Q-Q plot
+- We can check equality of variance (homoscedasticity) with Bartlett's (normal data) or Levene's (non-normal data) test
+:::
+

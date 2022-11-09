@@ -914,3 +914,11 @@ With a p-value of 0.544, this test tells us that there is insufficient evidence 
 
 In reality, because of the ambiguous normality assumption assessment, for this data set I would actually carry out two different tests; the two-sample t-test with equal variance and the Mann-Whitney U test. If both of them agreed then it wouldn't matter too much which one I reported (I'd personally report both with a short sentence to say that I'm doing that because it wasn't clear whether the assumption of normality had or had not been met), but it would be acceptable to report just one.
 :::
+
+## Key points
+
+::: {.callout-note}
+-   Student's t tests are used when you have two samples of continuous data, which are normally distributed, independent of each other and have equal variance
+-   A good way of assessing the assumption of normality is by checking the data against a Q-Q plot
+- We can check equality of variance (homoscedasticity) with Bartlett's (normal data) or Levene's (non-normal data) test
+:::
