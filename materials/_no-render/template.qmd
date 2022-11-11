@@ -1,0 +1,74 @@
+---
+title: "Paired t-test"
+---
+
+```{r}
+#| echo: false
+#| message: false
+#| results: hide
+source(file = "setup_files/setup.R")
+```
+
+```{python}
+#| echo: false
+#| message: false
+import shutup;shutup.please()
+exec(open('setup_files/setup.py').read())
+```
+
+::: callout-tip
+## Learning outcomes
+
+**Questions**
+
+-
+-
+
+**Objectives**
+
+-
+-
+-
+:::
+
+## Libraries and functions
+
+::: {.callout-note collapse="true"}
+## Click to expand
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+### Libraries
+### Functions
+
+## R
+
+### Libraries
+### Functions
+
+## Python
+
+### Libraries
+### Functions
+:::
+:::
+
+## Exercise
+
+::: {.callout-tip collapse="true"}
+## Answer
+::: {.panel-tabset group="language"}
+## tidyverse
+## R
+## Python
+:::
+:::
+
+## Key points
+
+::: callout-note
+-
+-
+-
+:::

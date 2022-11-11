@@ -24,3 +24,6 @@ website:
           contents:
             - "materials/cs4_practical_two-way-anova.qmd"
             - "materials/cs4_practical_linear-regression-grouped-data.qmd"
+        - section: "Multiple predictors"
+          contents:
+            - "materials/cs5_practical_multiple-linear-regression.qmd"

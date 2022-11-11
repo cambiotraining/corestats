@@ -1,0 +1,102 @@
+---
+title: "data_sim"
+format: html
+editor: visual
+---
+
+```{r}
+set.seed(2372)
+N <- 730
+true_coef <- c(
+  beta0 = 18,
+  beta1 = -0.3,   # slope for x1 for reference group
+  beta2 = -2,    # difference in intercepts between groups
+  beta3 = -0.42  # difference in slopes
+)
+
+error = runif(N, min = 0, max = 0.5)
+
+sim <- data.frame(
+  wind_m_s = runif(N, min = 1, max = 8),
+  location = rep(c("inner", "outer"), each = N/2)
+)
+
+# simulate response variable
+sim <- sim |> 
+  mutate(
+    pm2_5 = rnorm(n = nrow(sim), 
+              mean = model.matrix(~ wind_m_s + location + wind_m_s:location) %*% true_coef + error)
+  )
+
+# visualise
+ggplot(sim, aes(wind_m_s, pm2_5, colour = location)) + 
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+```{r}
+# taking simulated PM2.5 and wind speed data
+quality_sim <- sim %>% 
+    group_by(location) %>% 
+    mutate(id = 1:n())
+
+
+# take orginal weather data from Heathrow 2019
+# and simulate difference between inner/outer London
+london <- read_csv("heathrow_weather_2019.csv") %>% 
+    select(date, avg_temp, rain_mm) %>% 
+    mutate(id = 1:n()) %>% 
+    left_join(., quality_sim, by = "id") %>% 
+    mutate(temp_error = runif(n(), min = 0, max = 1)) %>% 
+    mutate(avg_temp = if_else(location == "outer",
+                              round((avg_temp - temp_error), digits = 1),
+                              avg_temp)) %>% 
+    mutate(pm2_5 = round(pm2_5, digits = 3),
+           wind_m_s = round(wind_m_s, digits = 2)) %>% 
+    select(-temp_error, -id) %>% 
+    select(sort(names(.)))
+
+write_csv(london, "../data/CS5-pm2_5.csv")
+```
+
+```{r}
+# avg daily temperature by day
+london %>% 
+ggplot(aes(x = id, y = avg_temp, colour = location)) +
+    geom_point()
+
+# wind speed by day
+london %>% 
+ggplot(aes(x = id, y = wind_m_s, colour = location)) +
+    geom_point()
+
+london %>% 
+    ggplot(aes(x = wind_m_s, y = pm2_5, colour = location)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE)
+
+# wind speed vs pm2.5
+london %>% 
+    ggplot(aes(wind_m_s, pm2_5, colour = location)) +
+    geom_point()
+```
+
+```{r}
+london %>% 
+    select(-date, - location) %>% 
+    pairs()
+```
+
+```{r}
+lm_wind <- lm(pm2_5 ~ wind_m_s * location,
+   data = london)
+
+lm_full <- lm(pm2_5 ~ avg_temp + rain_mm + wind_m_s * location,
+   data = london)
+
+step(lm_full)
+
+lm_wind %>%
+    resid_panel(plots = c("resid", "qq", "ls", "cookd"),
+                smoother = TRUE)
+```

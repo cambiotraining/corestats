@@ -17,7 +17,7 @@ The data we will be using throughout all the sessions are contained in a single 
 #| echo: false
 download_link(
   link = "https://github.com/cambiotraining/corestats/raw/main/data.zip",
-  button_label = "Download as CSV",
+  button_label = "Download ZIP file",
   button_type = "primary",
   has_icon = TRUE,
   icon = "fa fa-save",

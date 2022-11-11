@@ -254,7 +254,7 @@ If you have your heart set on creating a pairplot, then have a look [at the seab
 
 From the visual inspection we can see that there appears to be a slight positive correlation between all pairs of variables, although this may be very weak in some cases (`murder` and `urban_pop` for example).
 
-## Correlation coefficients
+## Correlation coefficients {#correlation-coefficients}
 
 Instead of visualising the variables against each other in a scatter plot, we can also calculate correlation coefficients for each variable pair. There are different types of correlation coefficients, but the most well-known one is probably **Pearson's r**. This is a measure of the linear correlation between two variables. It has a value between -1 and +1, where +1 means a perfect positive correlation, -1 means a perfect negative correlation and 0 means no correlation at all.
 
@@ -330,7 +330,9 @@ USArrests %>%
 :::
 
 ## R
+
 We can do this using the `cor()` function. We can only calculate correlations between numbers, but we've already moved the `state` column from our data before calculating the correlations:
+
 ```{r}
 cor(USArrests_r, method = "pearson")
 ```
@@ -343,6 +345,7 @@ This gives us a numerical overview of the Pearson's r correlation coefficients b
 As before, the values are mirrored across the diagonal, since the correlation between, for example, `murder` and `assault` is the same as the one between `assault` and `murder`.
 
 ### Visualise the correlation matrix
+
 Just staring at a matrix of numbers might not be very useful. It would be good to create some sort of heatmap of the values, so we can visually inspect the data a bit better.
 
 Let's save the Pearson's r correlation matrix first.
@@ -363,6 +366,7 @@ The plot itself is coloured from yellow, indicating the smallest values (which i
 The plot is symmetric along the leading diagonal (hopefully for obvious reasons).
 
 ## Python
+
 We can do this using the `pandas.DataFrame.corr()` function. This function takes the default `method = "pearson"` and ignores any non-numerical columns (such as the `state` column in our data set).
 
 ```{python}

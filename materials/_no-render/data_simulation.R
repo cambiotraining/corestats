@@ -197,3 +197,65 @@ lm_auxin %>% resid() %>% shapiro_test()
 anova(lm_auxin)
 
 write_csv(auxin_response, "materials/data/CS4-auxin.csv")
+
+## CS5 data ----
+
+h2s <- read_csv("materials/data/CS5-H2S.csv")
+
+h2s %>%
+    group_by(treatment_plant) %>%
+    get_summary_stats()
+
+set.seed(271)
+inner_london <- tibble(inner = rgamma(365, 15.6, 2.62) + 8) %>%
+    mutate(id = 1:n())
+
+ggplot(inner_london, aes(id, inner)) +
+    geom_point()
+
+outer_london <- tibble(outer = rgamma(365, 11.4, 3.81) + 6) %>%
+    mutate(id = 1:n())
+
+ggplot(outer_london, aes(id, outer)) +
+    geom_point()
+
+london <- left_join(inner_london, outer_london, by = "id")
+
+
+# read in weather data
+weather_data <- read_csv("materials/_no-render/heathrow_weather_2019.csv")
+
+# add some jitter to the wind speed
+weather_data <- weather_data %>%
+    mutate(wind_m_s = jitter(wind_m_s, factor = 2, amount = 0.3))
+
+london_airquality <- weather_data %>%
+    mutate(id = 1:n()) %>%
+    left_join(london, by = "id") %>%
+    rename(inner_pm2_5 = inner,
+           outer_pm2_5 = outer)
+
+london_airquality %>%
+    pivot_longer(cols = c(inner_pm2_5, outer_pm2_5),
+                 names_to = "location",
+                 values_to = "pm2_5") %>%
+    ggplot(aes(location, pm2_5)) +
+    geom_boxplot() +
+    geom_jitter(width = 0.1)
+
+london_airquality %>%
+    pivot_longer(cols = c(inner_pm2_5, outer_pm2_5),
+                 names_to = "location",
+                 values_to = "pm2_5") %>%
+    ggplot(aes(wind_m_s, pm2_5, colour = location)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE)
+
+london_airquality %>%
+    pivot_longer(cols = c(inner_pm2_5, outer_pm2_5),
+                 names_to = "location",
+                 values_to = "pm2_5") %>%
+    lm(pm2_5 ~ avg_temp * location, data = .) %>%
+    anova()
+
+

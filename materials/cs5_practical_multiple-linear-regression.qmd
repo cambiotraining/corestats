@@ -1,0 +1,284 @@
+---
+title: "Multiple linear regression"
+---
+
+```{r}
+#| echo: false
+#| message: false
+#| results: hide
+source(file = "setup_files/setup.R")
+```
+
+```{python}
+#| echo: false
+#| message: false
+import shutup;shutup.please()
+exec(open('setup_files/setup.py').read())
+```
+
+::: callout-tip
+## Learning outcomes
+
+**Questions**
+
+- How do I use the linear model framework with three predictor variables?
+
+**Objectives**
+
+- Be able to expand the linear model framework with three predictor variables
+- Define the equation for the line of best fit for each categorical variable
+- Be able to construct and analyse any possible combination of predictor variables in the data
+:::
+
+## Libraries and functions
+
+::: {.callout-note collapse="true"}
+## Click to expand
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+### Libraries
+### Functions
+
+## R
+
+### Libraries
+### Functions
+
+## Python
+
+### Libraries
+### Functions
+:::
+:::
+
+## Purpose and aim
+Revisiting the linear model framework and expanding to systems with three predictor variables.
+
+## Data and hypotheses
+
+The data set we'll be using is located in `data/CS5-pm2_5.csv`. It contains data on air pollution levels measured in London, in 2019. It also contains several meteorological measurements. Each variable was recorded on a daily basis.
+
+Note: some of the variables are based on simulations.
+
+It contains the following variables:
+
+| variable | explanation |
+|:--|:--|
+| `avg_temp`| average daily temperature ($^\circ C$)|
+| `date`| date of record|
+| `location`| location in London (`inner` or `outer`) |
+| `pm2_5`| concentration of PM2.5 ($\mu g / m^3$)|
+| `rain_mm`| daily rainfall in mm (same across both locations)|
+| `wind_m_s`| wind speed in $m/s$|
+
+## Summarise and visualise
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+Let's first load the data:
+
+```{r}
+pm2_5 <- read_csv("data/CS5-pm2_5.csv")
+
+head(pm2_5)
+```
+
+It's the `pm2_5` response variable we're interested in here. Let's start by checking if there might be a difference between PM2.5 level in inner and outer London:
+
+```{r}
+ggplot(pm2_5, aes(x = location, y = pm2_5)) +
+    geom_boxplot() +
+    geom_jitter(width = 0.1, alpha = 0.7)
+```
+
+I've added the (jittered) data to the plot, with some transparency (`alpha = 0.7`). It's always good to look at the actual data and not just summary statistics (which is what the box plot is).
+
+There seems to be quite a difference between the PM2.5 levels in the two London areas, with the levels in inner London being markedly higher. I'm not surprised by this! So when we do our statistical testing, I would expect to find a clear difference between the locations.
+
+Apart from the location, there are quite a few numerical descriptor variables. We could plot them one-by-one, but that's a bit tedious. So instead we use the `pairs()` function again. This only works on numerical data, so we select all the columns that are numeric with `select_if(is.numeric)`:
+
+```{r}
+pm2_5 %>% 
+    select_if(is.numeric) %>% 
+    pairs(lower.panel = NULL)
+```
+
+We can see that there is not much of a correlation between `pm2_5` and `avg_temp` or `rain_mm`, whereas there might be something going on in relation to `wind_m_s`.
+
+Other notable things include that rainfall seems completely independent of wind speed (rain fall seems pretty constant). Nor does the average temperature seem in any way related to wind speed (it looks like a random collection of data points!).
+
+We can visualise the relationship between `pm2_5` and `wind_m_s` in a bit more detail, by plotting the data against each other and colouring by `location`:
+
+```{r}
+ggplot(pm2_5, aes(x = wind_m_s, y = pm2_5,
+                  colour = location)) +
+    geom_point()
+```
+
+This seems to show that there might be some linear relationship between PM2.5 levels and wind speed.
+
+Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](materials/cs3_practical_correlations.qmd#correlation-coefficients):
+
+```{r}
+pm2_5 %>% 
+    select_if(is.numeric) %>% 
+    cor()
+```
+
+This confirms what we saw in the plots, there aren't any very strong correlations between the different (numerical) variables, apart from a negative correlation between `pm2_5` and `wind_m_s`, which has a Pearson's r of $r$ = `r pm2_5 %>% select_if(is.numeric) %>% cor_test() %>% filter(cor != 1) %>% arrange(desc(abs(cor))) %>% slice(1) %>% pull(cor)`.
+
+## R
+
+Let's first load the data:
+
+```{r}
+pm2_5_r <- read.csv("data/CS5-pm2_5.csv")
+
+head(pm2_5_r)
+```
+
+It's the `pm2_5` response variable we're interested in here. Let's start by checking if there might be a difference between PM2.5 level in inner and outer London:
+
+```{r}
+boxplot(pm2_5 ~ location, col = "white", data = pm2_5_r)
+
+stripchart(pm2_5 ~ location,
+           data = pm2_5_r,
+           method = "jitter",
+           pch = 19,
+           col = alpha("black", 0.4),
+           vertical = TRUE,
+           add = TRUE)
+```
+
+I've added the (jittered) data to the plot. To do this I've used the `stripchart()` function and added some transparency (`col = alpha("black", 0.4)`). It's always good to look at the actual data and not just summary statistics (which is what the box plot is).
+
+There seems to be quite a difference between the PM2.5 levels in the two London areas, with the levels in inner London being markedly higher. I'm not surprised by this! So when we do our statistical testing, I would expect to find a clear difference between the locations.
+
+Apart from the location, there are quite a few numerical descriptor variables. We could plot them one-by-one, but that's a bit tedious. So instead we use the `pairs()` function again. This only works on numerical data, so we select all the columns that are numeric with the base R `Filter()` function (not to be confused with the `dplyr::filter()` function). Note that there are many different ways to select numeric-only columns and a quick Google search will lead you to [Stackoverflow](https://stackoverflow.com/questions/5863097/selecting-only-numeric-columns-from-a-data-frame).
+
+We could save the output of the `Filter()` operation into a new variable and use that with the `pairs()` function. However, since version 4.1 R has had a native pipe, using the `|>` symbol. There are some  [differences](https://towardsdatascience.com/understanding-the-native-r-pipe-98dea6d8b61b) between tidyverse's `%>%` and base R's `|>`, but we won't delve into this here.
+
+Suffice to say, we can do the following:
+
+```{r}
+Filter(is.numeric, pm2_5_r) |> pairs(lower.panel = NULL)
+```
+
+We can see that there is not much of a correlation between `pm2_5` and `avg_temp` or `rain_mm`, whereas there might be something going on in relation to `wind_m_s`.
+
+Other notable things include that rainfall seems completely independent of wind speed (rain fall seems pretty constant). Nor does the average temperature seem in any way related to wind speed (it looks like a random collection of data points!).
+
+We can visualise the relationship between `pm2_5` and `wind_m_s` in a bit more detail, by plotting the data against each other and colouring by `location`:
+
+```{r}
+plot(pm2_5 ~ wind_m_s,
+     col = factor(location),
+     data = pm2_5_r)
+```
+
+This seems to show that there might be some linear relationship between PM2.5 levels and wind speed.
+
+Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](materials/cs3_practical_correlations.qmd#correlation-coefficients). Again, this only works on numerical values, so we get all the numerical columns and send this to the `cor()` function:
+
+```{r}
+Filter(is.numeric, pm2_5_r) |> cor()
+```
+
+This confirms what we saw in the plots, there aren't any very strong correlations between the different (numerical) variables, apart from a negative correlation between `pm2_5` and `wind_m_s`, which has a Pearson's r of $r$ = `r pm2_5 %>% select_if(is.numeric) %>% cor_test() %>% filter(cor != 1) %>% arrange(desc(abs(cor))) %>% slice(1) %>% pull(cor)`.
+
+## Python
+
+Let's first load the data:
+
+```{python}
+pm2_5_py = pd.read_csv("data/CS5-pm2_5.csv")
+
+pm2_5_py.head()
+```
+
+It's the `pm2_5` response variable we're interested in here. Let's start by checking if there might be a difference between PM2.5 level in inner and outer London:
+
+```{python}
+#| results: hide
+(ggplot(pm2_5_py, aes(x = "location", y = "pm2_5")) +
+    geom_boxplot() +
+    geom_jitter(width = 0.1, alpha = 0.7))
+```
+
+I've added the (jittered) data to the plot, with some transparency (`alpha = 0.7`). It's always good to look at the actual data and not just summary statistics (which is what the box plot is).
+
+There seems to be quite a difference between the PM2.5 levels in the two London areas, with the levels in inner London being markedly higher. I'm not surprised by this! So when we do our statistical testing, I would expect to find a clear difference between the locations.
+
+Apart from the location, there are quite a few numerical descriptor variables. At this point I should probably bite the bullet and install `seaborn`, so I can use the [pairplot()](https://seaborn.pydata.org/generated/seaborn.pairplot.html) function.
+
+But I'm not going to ;-)
+
+I'll just tell you that there is not much of a correlation between `pm2_5` and `avg_temp` or `rain_mm`, whereas there might be something going on in relation to `wind_m_s`. So I plot that instead and colour it by location:
+
+```{python}
+#| results: hide
+(ggplot(pm2_5_py, aes(x = "wind_m_s",
+                      y = "pm2_5",
+                      colour = "location")) +
+     geom_point())
+
+```
+
+This seems to show that there might be some linear relationship between PM2.5 levels and wind speed.
+
+If I would plot all the other variables against each other, then I would spot that rainfall seems completely independent of wind speed (rain fall seems pretty constant). Nor does the average temperature seem in any way related to wind speed (it looks like a random collection of data points!). You can check this yourself!
+
+Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](materials/cs3_practical_correlations.qmd#correlation-coefficients):
+
+```{python}
+pm2_5_py.corr()
+```
+
+This confirms what we saw in the plots, there aren't any very strong correlations between the different (numerical) variables, apart from a negative correlation between `pm2_5` and `wind_m_s`, which has a Pearson's r of $r$ = `r pm2_5 %>% select_if(is.numeric) %>% cor_test() %>% filter(cor != 1) %>% arrange(desc(abs(cor))) %>% slice(1) %>% pull(cor)`.
+:::
+
+## Implement and interpret the test
+
+## Exploring models
+
+Rather than stop here however, we will use the concept of the linear model to its full potential and show that we can construct and analyse any possible combination of predictor variables for this data set. Namely we will consider the following four extra models:
+
+| Model| Description|
+|:- |:- |
+|1. `pm2_5 ~ 1` | The null model, where we have no predictors |
+|2. `pm2_5 ~ location` | Equivalent to a one-way ANOVA |
+|3. `pm2_5 ~ wind_m_s` | Equivalent to a simple linear regression |
+|4. `pm2_5 ~ wind_m_s + location`| An additive model |
+
+### The null model
+
+### Revisiting ANOVA
+
+### Revisiting linear regression
+
+### Additive model
+
+
+
+## Exercise
+
+::: {.callout-tip collapse="true"}
+## Answer
+::: {.panel-tabset group="language"}
+## tidyverse
+## R
+## Python
+:::
+:::
+
+## Key points
+
+::: callout-note
+-
+-
+-
+:::
