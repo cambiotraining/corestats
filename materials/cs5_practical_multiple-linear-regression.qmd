@@ -66,7 +66,7 @@ It contains the following variables:
 
 | variable | explanation |
 |:--|:--|
-| `avg_temp`*| average daily temperature ($^\circ C$)|
+| `avg_temp`| average daily temperature ($^\circ C$)|
 | `date`| date of record|
 | `location`| location in London (`inner` or `outer`) |
 | `pm2_5`| concentration of PM2.5 ($\mu g / m^3$)|
@@ -120,7 +120,7 @@ ggplot(pm2_5, aes(x = wind_m_s, y = pm2_5,
 
 This seems to show that there might be some linear relationship between PM2.5 levels and wind speed.
 
-Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](materials/cs3_practical_correlations.qmd#correlation-coefficients):
+Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](cs3_practical_correlations.qmd#correlation-coefficients):
 
 ```{r}
 pm2_5 %>% 
@@ -377,7 +377,7 @@ lm_pm2_5_add %>%
                aes(x = wind_m_s, y = pm2_5))
 ```
 
-Next, we perform the ANOVA and extract the coefficient estimates:
+Next, we extract the coefficient estimates:
 
 ```{r}
 lm_pm2_5_add %>%
@@ -430,7 +430,8 @@ ggplot(pm2_5, aes(x = wind_m_s, y = pm2_5)) +
     geom_smooth(method = "lm", se = FALSE)
 ```
 :::
-Next, we perform the ANOVA and extract the coefficient estimates:
+
+Next, we extract the coefficient estimates:
 
 ```{r}
 lm_pm2_5_wind %>%
@@ -448,7 +449,99 @@ $PM2.5 = 17.33 - 0.53 \times wind\_m\_s$
 
 ### Revisiting ANOVA
 
+If we're just looking at the effect of `location`, then we're essentially doing a one-way ANOVA.
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+First, we define the model:
+```{r}
+lm_pm2_5_loc <- lm(pm2_5 ~ location,
+                   data = pm2_5)
+```
+
+We can visualise this as follows:
+
+```{r}
+lm_pm2_5_loc %>% 
+    augment() %>% 
+    ggplot(aes(x = location, y = .fitted)) +
+    geom_point(colour = "blue", size = 3) +
+    geom_jitter(data = pm2_5,
+                aes(x = location, y = pm2_5),
+                width = 0.1,
+                alpha = 0.2)
+```
+
+OK, what's going on here? I've plotted the `.fitted` values (the values predicted by the model) in blue and overlaid the original (with a little bit of jitter to avoid overplotting). However, there are only two predicted values!
+
+We can check this and see that each unique fitted value occurs 365 times:
+
+```{r}
+lm_pm2_5_loc %>% 
+    augment() %>% 
+    count(location, .fitted)
+```
+
+This makes sense if we think back to our original ANOVA exploration. There we established that an ANOVA is just a special case of a linear model, where the fitted values are equal to the mean of each group.
+
+We could even check this:
+
+```{r}
+pm2_5 %>% 
+    group_by(location) %>% 
+    summarise(mean_pm2_5 = mean(pm2_5))
+```
+
+So, that matches. We move on and extract the coefficient estimates:
+
+```{r}
+lm_pm2_5_loc %>%
+    tidy() %>% 
+    select(term, estimate, p.value)
+```
+
+These values match up exactly with the predicted values for each individual location.
+
+## R
+## Python
+:::
+
+This gives us the following equation:
+
+$\bar{PM2.5_{inner}} = 16.94$
+
+$\bar{PM2.5_{outer}} = 16.94 - 4.11 = 12.83$
+
 ### The null model
+
+The null model by itself is rarely analysed for its own sake but is instead used a reference point for more sophisticated model selection techniques. It represents your data as an overal average value.
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+We define the null model as follows:
+
+```{r}
+lm_pm2_5_null <- lm(pm2_5 ~ 1,
+                    data = pm2_5)
+```
+We can just view the model:
+
+```{r}
+lm_pm2_5_null
+```
+
+
+## R
+## Python
+:::
+
+This shows us that there is just one value: `r round(lm_pm2_5_null %>% tidy() %>% pull(estimate), digits = 2)`. This is the average across all the PM2.5 values in the data set.
+
+Here we'd predict the PM2.5 values as follows:
+
+$PM2.5 = `r round(lm_pm2_5_null %>% tidy() %>% pull(estimate), digits = 2)`$ 
 
 ## Exercise
 
