@@ -290,12 +290,10 @@ The `subset` function creates subsets of data frames. The first argument is the 
 First, we subset the data:
 ```{r}
 # subset the conifers
-conLight <- subset(treelight_r,
-                   subset = (species == "Conifer"))
+conLight <- subset(treelight_r, species == "Conifer")
 
 # subset the broad leaf
-broLight <- subset(treelight_r,
-                   subset = (species == "Broadleaf"))
+broLight <- subset(treelight_r, species == "Broadleaf")
 ```
 
 Then we create a linear model for each subgroup:
@@ -316,10 +314,10 @@ plot(light ~ depth,
      col = factor(species))
 
 # add the Broadleaf linear regression
-abline(lm_broadleaf, col = "black")
+abline(lm_broadleaf, col = 1)
 
 # add the Conifer linear regression
-abline(lm_conifer, col = "red")
+abline(lm_conifer, col = 2)
 ```
 
 ## Python

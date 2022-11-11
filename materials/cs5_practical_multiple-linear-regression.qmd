@@ -270,7 +270,13 @@ This will give us quite a few coefficients, so instead of just calling the `lm` 
 ```{r}
 lm_pm2_5_full %>%
     tidy() %>% 
-    select(term, estimate, p.value)
+    select(term, estimate)
+```
+
+The question is, are all of these terms statistically significant? To find out we perform an ANOVA:
+
+```{r}
+anova(lm_pm2_5_full)
 ```
 
 From this we can see that the interaction between `location` and `wind_m_s` is statistically significant. Which means that we can't just talk about the effect of `location` or `wind_m_s` on PM2.5 levels, without taking the other variable into account!
@@ -288,7 +294,7 @@ Let's look at the new model coefficients:
 ```{r}
 lm_pm2_5_red %>%
     tidy() %>% 
-    select(term, estimate, p.value)
+    select(term, estimate)
 ```
 
 As we did in the linear regression on grouped data, we end up with two linear equations, one for `inner` London and one for `outer` London.
@@ -338,6 +344,84 @@ ggplot(data = pm2_5, aes(x = wind_m_s, y = pm2_5,
 ```
 
 ## R
+
+```{r}
+lm_pm2_5_full_r <- lm(pm2_5 ~ avg_temp + location + rain_mm + wind_m_s +
+                       wind_m_s:location, data = pm2_5_r)
+```
+
+Let's look at the model:
+
+```{r}
+lm_pm2_5_full_r
+```
+
+Quite a few coefficients! The question is, are all of these terms statistically significant? To find out we perform an ANOVA:
+
+```{r}
+anova(lm_pm2_5_full_r)
+```
+
+From this we can see that the interaction between `location` and `wind_m_s` is statistically significant. Which means that we can't just talk about the effect of `location` or `wind_m_s` on PM2.5 levels, without taking the other variable into account!
+
+The p-values for the `avg_temp` and `rain_mm` main effects are not significant. This means that they're not contributing much to model's ability to explain our data. This matches what we already saw when we visualised the data.
+
+What to do? We'll explore this in more detail in the chapter on model comparisons, but for now the most sensible option would be to redefine the model, but exclude those two variables. Here I have rewritten the model, using the shorthand `*` notation (`pm2_5 ~ location * wind_m_s` is equal to `pm2_5 ~ location + wind_m_s + wind_m_s:location`). I've named it `lm_pm2_5_red` to indicate it is a reduced model (with fewer variables than our original full model):
+
+```{r}
+lm_pm2_5_red_r <- lm(pm2_5 ~ location * wind_m_s, data = pm2_5_r)
+```
+
+Let's look at the new model coefficients:
+
+```{r}
+lm_pm2_5_red_r
+```
+
+As we did in the linear regression on grouped data, we end up with two linear equations, one for `inner` London and one for `outer` London.
+
+Our reference group is `inner` (remember, it takes a reference group in alphabetical order and we can see `outer` in the output).
+
+So we end up with:
+
+$PM2.5_{inner} = 18.24 - 0.29 \times wind\_m\_s$
+
+$PM2.5_{outer} = (18.24 - 2.06) + (-0.29 - 0.43) \times wind\_m\_s$
+
+which gives
+
+$PM2.5_{outer} = 16.18 - 0.72 \times wind\_m\_s$
+
+
+We still need to check the assumptions of the model:
+
+```{r}
+par(mfrow = c(2,2))
+plot(lm_pm2_5_red_r)
+```
+
+They all look pretty good, with the only weird thing being a small empty zone of predicted values just under 16. Nothing that is getting me worried though.
+
+It'd be useful to visualise the model. To do this, we need to split the data by `location`, create a linear model for each subset and then plot this with the original data.
+
+```{r}
+inner_r <- subset(pm2_5_r, location == "inner")
+outer_r <- subset(pm2_5_r, location == "outer")
+
+lm_inner_red <- lm(pm2_5 ~ wind_m_s, data = inner_r)
+lm_outer_red <- lm(pm2_5 ~ wind_m_s, data = outer_r)
+```
+
+```{r}
+plot(pm2_5 ~ wind_m_s,
+     col = factor(location),
+     data = pm2_5_r)
+
+abline(lm_inner_red, col = 1)
+abline(lm_outer_red, col = 2)
+```
+
+
 ## Python
 :::
 
