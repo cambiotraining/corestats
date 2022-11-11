@@ -48,9 +48,7 @@ london <- read_csv("heathrow_weather_2019.csv") %>%
     mutate(id = 1:n()) %>% 
     left_join(., quality_sim, by = "id") %>% 
     mutate(temp_error = runif(n(), min = 0, max = 1)) %>% 
-    mutate(avg_temp = if_else(location == "outer",
-                              round((avg_temp - temp_error), digits = 1),
-                              avg_temp)) %>% 
+    mutate(avg_temp = round((avg_temp - temp_error), digits = 1)) %>% 
     mutate(pm2_5 = round(pm2_5, digits = 3),
            wind_m_s = round(wind_m_s, digits = 2)) %>% 
     select(-temp_error, -id) %>% 

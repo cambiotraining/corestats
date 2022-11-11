@@ -66,7 +66,7 @@ It contains the following variables:
 
 | variable | explanation |
 |:--|:--|
-| `avg_temp`| average daily temperature ($^\circ C$)|
+| `avg_temp`*| average daily temperature ($^\circ C$)|
 | `date`| date of record|
 | `location`| location in London (`inner` or `outer`) |
 | `pm2_5`| concentration of PM2.5 ($\mu g / m^3$)|
@@ -243,26 +243,212 @@ This confirms what we saw in the plots, there aren't any very strong correlation
 
 ## Implement and interpret the test
 
+From our initial observations we derived that there might be some relationship between PM2.5 levels and wind speed. We also noticed that this is likely to be different between inner and outer London.
+
+If we would want to test for _every_ variable and interaction, then we would end up with a rather huge model, which would even include 3-way and a 4-way interaction! To illustrate the point that the process of model testing applies to as many variables as you like, we're adding the `avg_temp` and `rain_mm` variables to our model.
+
+So in this case we create a model that takes into account all of the main effects (`avg_temp`, `location`, `rain_mm`, `wind_m_s`). We also include a potential two-way interaction (`location:wind_m_s`). The two-way interaction may be of interest since the PM2.5 levels in response to wind speed seem to differ between the two locations.
+
+Our model is then as follows:
+
+`pm2_5 ~ avg_temp, location + rain_mm + wind_m_s + wind_m_s:location`
+
+So let's define and explore it!
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+We write the model as follows:
+
+```{r}
+lm_pm2_5_full <- lm(pm2_5 ~ avg_temp + location + rain_mm + wind_m_s +
+                       wind_m_s:location, data = pm2_5)
+```
+
+This will give us quite a few coefficients, so instead of just calling the `lm` object, I'm restructuring the output using the `tidy()` function from the `broom` package. It's installed with `tidyverse` but you have to load it separately using `library(broom)`.
+
+```{r}
+lm_pm2_5_full %>%
+    tidy() %>% 
+    select(term, estimate, p.value)
+```
+
+From this we can see that the interaction between `location` and `wind_m_s` is statistically significant. Which means that we can't just talk about the effect of `location` or `wind_m_s` on PM2.5 levels, without taking the other variable into account!
+
+The p-values for the `avg_temp` and `rain_mm` main effects are not significant. This means that they're not contributing much to model's ability to explain our data. This matches what we already saw when we visualised the data.
+
+What to do? We'll explore this in more detail in the chapter on model comparisons, but for now the most sensible option would be to redefine the model, but exclude those two variables. Here I have rewritten the model, using the shorthand `*` notation (`pm2_5 ~ location * wind_m_s` is equal to `pm2_5 ~ location + wind_m_s + wind_m_s:location`). I've named it `lm_pm2_5_red` to indicate it is a reduced model (with fewer variables than our original full model):
+
+```{r}
+lm_pm2_5_red <- lm(pm2_5 ~ location * wind_m_s, data = pm2_5)
+```
+
+Let's look at the new model coefficients:
+
+```{r}
+lm_pm2_5_red %>%
+    tidy() %>% 
+    select(term, estimate, p.value)
+```
+
+As we did in the linear regression on grouped data, we end up with two linear equations, one for `inner` London and one for `outer` London.
+
+Our reference group is `inner` (remember, it takes a reference group in alphabetical order and we can see `outer` in the output).
+
+So we end up with:
+
+$PM2.5_{inner} = 18.24 - 0.29 \times wind\_m\_s$
+
+$PM2.5_{outer} = (18.24 - 2.06) + (-0.29 - 0.43) \times wind\_m\_s$
+
+which gives
+
+$PM2.5_{outer} = 16.18 - 0.72 \times wind\_m\_s$
+
+
+We still need to check the assumptions of the model:
+
+```{r}
+lm_pm2_5_red %>% 
+    resid_panel(plots = c("resid", "qq", "ls", "cookd"),
+              smoother = TRUE)
+```
+
+They all look pretty good, with the only weird thing being a small empty zone of predicted values just under 16. Nothing that is getting me worried though.
+
+It'd be useful to visualise the model. We can take the model and use the `augment()` function to extract the fitted values (`.fitted`). These are the values for `pm2_5` that the model is predicting. We can then plot these against the `wind_m_s` measurements, colouring by `location`:
+
+```{r}
+lm_pm2_5_red %>% 
+    augment() %>% 
+    ggplot(aes(x = wind_m_s, y = .fitted, colour = location)) +
+    geom_line(size = 1) +
+    # add the original data
+    geom_point(data = pm2_5, aes(wind_m_s, pm2_5, colour = location))
+```
+
+Note: in this case we're actually visualising the model with both the main effects and the interaction between them. This is also the default behaviour for the `lm` method of `geom_smooth()`, so we could have also plotted it with:
+
+```{r}
+#| eval: false
+ggplot(data = pm2_5, aes(x = wind_m_s, y = pm2_5,
+                         colour = location)) +
+    geom_smooth(method = "lm", se = FALSE)
+
+```
+
+## R
+## Python
+:::
+
 ## Exploring models
 
-Rather than stop here however, we will use the concept of the linear model to its full potential and show that we can construct and analyse any possible combination of predictor variables for this data set. Namely we will consider the following four extra models:
+Rather than stop here however, we will use the concept of the linear model to its full potential and show that we can construct and analyse any possible combination of predictor variables for this data set. Namely we will consider the following four extra models, where reduce the complexity to the model, step-by-step:
 
 | Model| Description|
 |:- |:- |
-|1. `pm2_5 ~ 1` | The null model, where we have no predictors |
-|2. `pm2_5 ~ location` | Equivalent to a one-way ANOVA |
-|3. `pm2_5 ~ wind_m_s` | Equivalent to a simple linear regression |
-|4. `pm2_5 ~ wind_m_s + location`| An additive model |
-
-### The null model
-
-### Revisiting ANOVA
-
-### Revisiting linear regression
+|1. `pm2_5 ~ wind_m_s + location`| An additive model |
+|2. `pm2_5 ~ wind_m_s` | Equivalent to a simple linear regression |
+|3. `pm2_5 ~ location` | Equivalent to a one-way ANOVA |
+|4. `pm2_5 ~ 1` | The null model, where we have no predictors |
 
 ### Additive model
 
+To create the additive model, we drop the interaction term (keep in mind, this is to demonstrate the process - we would normally not do this because the interaction term is significant!).
 
+::: {.panel-tabset group="language"}
+## tidyverse
+
+First, we define the model:
+```{r}
+lm_pm2_5_add <- lm(pm2_5 ~ location + wind_m_s,
+                   data = pm2_5)
+```
+
+We can visualise this as follows:
+
+```{r}
+lm_pm2_5_add %>% 
+    augment() %>% 
+    ggplot(aes(x = wind_m_s, y = .fitted,
+               colour = location)) +
+    geom_line(size = 1) +
+    geom_point(data = pm2_5,
+               aes(x = wind_m_s, y = pm2_5))
+```
+
+Next, we perform the ANOVA and extract the coefficient estimates:
+
+```{r}
+lm_pm2_5_add %>%
+    tidy() %>% 
+    select(term, estimate, p.value)
+```
+
+## R
+## Python
+:::
+
+So our two equations would be as follows:
+
+$PM2.5_{inner} = 19.22 - 0.50 \times wind\_m\_s$
+
+$PM2.5_{outer} = (19.22 - 4.05) - 0.50 \times wind\_m\_s$
+
+gives
+
+$PM2.5_{outer} = 15.17 - 0.50 \times wind\_m\_s$
+
+### Revisiting linear regression
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+First, we define the model:
+```{r}
+lm_pm2_5_wind <- lm(pm2_5 ~ wind_m_s,
+                   data = pm2_5)
+```
+
+We can visualise this as follows:
+
+```{r}
+lm_pm2_5_wind %>% 
+    augment() %>% 
+    ggplot(aes(x = wind_m_s, y = .fitted)) +
+    geom_line(colour = "blue", size = 1) +
+    geom_point(data = pm2_5,
+               aes(x = wind_m_s, y = pm2_5))
+```
+
+::: {.callout-tip collapse="true"}
+## Alternative using `geom_smooth()`
+
+```{r}
+ggplot(pm2_5, aes(x = wind_m_s, y = pm2_5)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE)
+```
+:::
+Next, we perform the ANOVA and extract the coefficient estimates:
+
+```{r}
+lm_pm2_5_wind %>%
+    tidy() %>% 
+    select(term, estimate, p.value)
+```
+
+## R
+## Python
+:::
+
+This gives us the following equation:
+
+$PM2.5 = 17.33 - 0.53 \times wind\_m\_s$
+
+### Revisiting ANOVA
+
+### The null model
 
 ## Exercise
 
