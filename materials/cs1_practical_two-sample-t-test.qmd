@@ -522,11 +522,10 @@ Perform a two-sample, two-tailed, t-test:
 
 ```{r}
 # two-sample, two-tailed t-test
-rivers %>% 
-  t.test(length ~ river,
-         alternative = "two.sided",
-         var.equal = TRUE,
-         data = .)
+t.test(length ~ river,
+       alternative = "two.sided",
+       var.equal = TRUE,
+       data = rivers)
 ```
 
 Here we do the following:
@@ -534,7 +533,6 @@ Here we do the following:
 -   The first argument must be in the formula format: `variables ~ category`
 -   The second argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
 -   The third argument says whether the variance of the two samples can be assumed to be equal (Student's t-test) or unequal (Welch's t-test)
-- The fourth argument says where the data are coming from (in this case the pipe `.`)
 
 So, how do we interpret these results?
 

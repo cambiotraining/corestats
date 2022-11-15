@@ -120,7 +120,7 @@ ggplot(pm2_5, aes(x = wind_m_s, y = pm2_5,
 
 This seems to show that there might be some linear relationship between PM2.5 levels and wind speed.
 
-Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](cs3_practical_correlations.qmd#correlation-coefficients):
+Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](#correlation-coefficients):
 
 ```{r}
 pm2_5 %>% 
@@ -182,7 +182,7 @@ plot(pm2_5 ~ wind_m_s,
 
 This seems to show that there might be some linear relationship between PM2.5 levels and wind speed.
 
-Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](materials/cs3_practical_correlations.qmd#correlation-coefficients). Again, this only works on numerical values, so we get all the numerical columns and send this to the `cor()` function:
+Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](#correlation-coefficients). Again, this only works on numerical values, so we get all the numerical columns and send this to the `cor()` function:
 
 ```{r}
 Filter(is.numeric, pm2_5_r) |> cor()
@@ -232,7 +232,7 @@ This seems to show that there might be some linear relationship between PM2.5 le
 
 If I would plot all the other variables against each other, then I would spot that rainfall seems completely independent of wind speed (rain fall seems pretty constant). Nor does the average temperature seem in any way related to wind speed (it looks like a random collection of data points!). You can check this yourself!
 
-Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](materials/cs3_practical_correlations.qmd#correlation-coefficients):
+Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](#correlation-coefficients):
 
 ```{python}
 pm2_5_py.corr()
@@ -261,8 +261,10 @@ So let's define and explore it!
 We write the model as follows:
 
 ```{r}
-lm_pm2_5_full <- lm(pm2_5 ~ avg_temp + location + rain_mm + wind_m_s +
-                       wind_m_s:location, data = pm2_5)
+lm_pm2_5_full <- lm(pm2_5 ~ avg_temp + location +
+                            rain_mm + wind_m_s +
+                            wind_m_s:location,
+                    data = pm2_5)
 ```
 
 This will give us quite a few coefficients, so instead of just calling the `lm` object, I'm restructuring the output using the `tidy()` function from the `broom` package. It's installed with `tidyverse` but you have to load it separately using `library(broom)`.
@@ -346,8 +348,10 @@ ggplot(data = pm2_5, aes(x = wind_m_s, y = pm2_5,
 ## R
 
 ```{r}
-lm_pm2_5_full_r <- lm(pm2_5 ~ avg_temp + location + rain_mm + wind_m_s +
-                       wind_m_s:location, data = pm2_5_r)
+lm_pm2_5_full_r <- lm(pm2_5 ~ avg_temp + location +
+                              rain_mm + wind_m_s +
+                              wind_m_s:location,
+                      data = pm2_5_r)
 ```
 
 Let's look at the model:
@@ -421,8 +425,114 @@ abline(lm_inner_red, col = 1)
 abline(lm_outer_red, col = 2)
 ```
 
-
 ## Python
+
+We write the model as follows:
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "pm2_5 ~ avg_temp + C(location) + rain_mm + wind_m_s + wind_m_s:location", data = pm2_5_py)
+# and get the fitted parameters of the model
+lm_pm2_5_full_py = model.fit()
+```
+
+This will give us quite a few coefficients, so instead of just printing the entire summary table, we're extracting the parameters with `.params`:
+
+```{python}
+lm_pm2_5_full_py.params
+```
+
+The question is, are all of these terms statistically significant? To find out we perform an ANOVA:
+
+```{python}
+sm.stats.anova_lm(lm_pm2_5_full_py, typ = 2)
+```
+
+From this we can see that the interaction between `location` and `wind_m_s` is statistically significant. Which means that we can't just talk about the effect of `location` or `wind_m_s` on PM2.5 levels, without taking the other variable into account!
+
+The p-values for the `avg_temp` and `rain_mm` main effects are not significant. This means that they're not contributing much to model's ability to explain our data. This matches what we already saw when we visualised the data.
+
+What to do? We'll explore this in more detail in the chapter on model comparisons, but for now the most sensible option would be to redefine the model, but exclude those two variables. Here I have rewritten the model, using the shorthand `*` notation (`pm2_5 ~ location * wind_m_s` is equal to `pm2_5 ~ location + wind_m_s + wind_m_s:location`). I've named it `lm_pm2_5_red` to indicate it is a reduced model (with fewer variables than our original full model):
+
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "pm2_5 ~ C(location) * wind_m_s", data = pm2_5_py)
+# and get the fitted parameters of the model
+lm_pm2_5_red_py = model.fit()
+```
+
+Let's look at the new model coefficients:
+
+```{python}
+lm_pm2_5_red_py.params
+```
+
+As we did in the linear regression on grouped data, we end up with two linear equations, one for `inner` London and one for `outer` London.
+
+Our reference group is `inner` (remember, it takes a reference group in alphabetical order and we can see `outer` in the output).
+
+So we end up with:
+
+$PM2.5_{inner} = 18.24 - 0.29 \times wind\_m\_s$
+
+$PM2.5_{outer} = (18.24 - 2.06) + (-0.29 - 0.43) \times wind\_m\_s$
+
+which gives
+
+$PM2.5_{outer} = 16.18 - 0.72 \times wind\_m\_s$
+
+
+We still need to check the assumptions of the model:
+
+```{python}
+#| eval: false
+dgplots(lm_pm2_5_red_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_pm2_5_red_py)
+```
+
+```{r}
+#| echo: false
+library(reticulate)
+# display image
+knitr::include_graphics(py$dgplot)
+```
+
+They all look pretty good, with the only weird thing being a small empty zone of predicted values just under 16. Nothing that is getting me worried though.
+
+It'd be useful to visualise the model. We can take the model and extract the fitted values (`.fittedvalues`). These are the values for `pm2_5` that the model is predicting. We can then plot these against the `wind_m_s` measurements, colouring by `location`. We're also adding the original values to the plot with `geom_point(aes(y = "pm2_5"))`:
+
+```{python}
+#| results: hide
+(ggplot(pm2_5_py, aes(x = "wind_m_s",
+                     y = lm_pm2_5_red_py.fittedvalues,
+                     colour = "location")) +
+    geom_line(size = 1) +
+    geom_point(aes(y = "pm2_5")))
+```
+
+Note: in this case we're actually visualising the model with both the main effects and the interaction between them. This is also the default behaviour for the `lm` method of `geom_smooth()`, so we could have also plotted it with:
+
+```{python}
+#| eval: false
+#| results: hide
+(ggplot(pm2_5_py, aes(x = "wind_m_s",
+                      y = "pm2_5",
+                      colour = "location")) +
+     geom_smooth(method = "lm", se = False) +
+     geom_point())
+
+```
+
+
 :::
 
 ## Exploring models
@@ -466,11 +576,88 @@ Next, we extract the coefficient estimates:
 ```{r}
 lm_pm2_5_add %>%
     tidy() %>% 
-    select(term, estimate, p.value)
+    select(term, estimate)
 ```
 
 ## R
+
+First, we define the model:
+
+```{r}
+lm_pm2_5_add_r <- lm(pm2_5 ~ location + wind_m_s,
+                   data = pm2_5_r)
+```
+
+Visualising this is not exactly trivial. There is no easy way to extract the fitted/predicted values by `location`.
+
+So we'll have to do it manually. We can get the coefficients of the model as follows:
+
+```{r}
+# get the coefficients
+lm_pm2_5_add_r$coefficients
+```
+
+We can, for example, get the first coefficient with:
+
+```{r}
+#| eval: false
+lm_pm2_5_add_r$coefficients[1]
+```
+
+The linear model will be in the format of:
+
+$predicted\_value = \beta_0 + \beta_1 \times wind\_m\_s$
+
+with the $\beta_0$ for the `outer` location needing correcting, since it is relative to the `inner` location (this correction is given as the second coefficient).
+
+Thankfully we can create the linear model using the `abline()` function. This has a `coef =` argument that takes model coefficients. This then gives us:
+
+```{r}
+# plot the original data
+plot(pm2_5 ~ wind_m_s,
+     col = factor(location),
+     data = pm2_5_r)
+
+# add the regression line for the first (inner) location
+abline(coef = c(lm_pm2_5_add_r$coefficients[1],
+                lm_pm2_5_add_r$coefficients[3]), col = 1)
+
+# add the regression line for the second (outer) location
+abline(coef = c((lm_pm2_5_add_r$coefficients[1] +
+                 lm_pm2_5_add_r$coefficients[2]),
+                 lm_pm2_5_add_r$coefficients[3]), col = 2)
+```
+
 ## Python
+
+First, we define the model
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "pm2_5 ~ C(location) + wind_m_s",
+                data = pm2_5_py)
+                
+# and get the fitted parameters of the model
+lm_pm2_5_add_py = model.fit()
+```
+
+We can visualise this as follows:
+
+```{python}
+#| results: hide
+(ggplot(pm2_5_py, aes(x = "wind_m_s",
+                     y = lm_pm2_5_add_py.fittedvalues,
+                     colour = "location")) +
+    geom_line(size = 1) +
+    geom_point(aes(y = "pm2_5")))
+```
+
+Next, we extract the coefficient estimates:
+
+```{python}
+lm_pm2_5_add_py.params
+```
+
 :::
 
 So our two equations would be as follows:
@@ -489,6 +676,7 @@ $PM2.5_{outer} = 15.17 - 0.50 \times wind\_m\_s$
 ## tidyverse
 
 First, we define the model:
+
 ```{r}
 lm_pm2_5_wind <- lm(pm2_5 ~ wind_m_s,
                    data = pm2_5)
@@ -520,11 +708,77 @@ Next, we extract the coefficient estimates:
 ```{r}
 lm_pm2_5_wind %>%
     tidy() %>% 
-    select(term, estimate, p.value)
+    select(term, estimate)
 ```
 
 ## R
+
+First, we define the model:
+
+```{r}
+lm_pm2_5_wind_r <- lm(pm2_5 ~ wind_m_s,
+                   data = pm2_5_r)
+```
+
+Extract the model coefficients:
+
+```{r}
+lm_pm2_5_wind_r$coefficients
+```
+
+We can visualise this as follows:
+
+```{r}
+# plot the original data
+plot(pm2_5 ~ wind_m_s,
+     col = factor(location),
+     data = pm2_5_r)
+
+# add the regression line for the first (inner) location
+abline(coef = c(lm_pm2_5_wind_r$coefficients[1],
+                lm_pm2_5_wind_r$coefficients[2]), col = "blue")
+```
+
 ## Python
+
+First, we define the model
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "pm2_5 ~ wind_m_s",
+                data = pm2_5_py)
+                
+# and get the fitted parameters of the model
+lm_pm2_5_wind_py = model.fit()
+```
+
+We can visualise this as follows:
+
+```{python}
+#| results: hide
+(ggplot(pm2_5_py, aes(x = "wind_m_s",
+                      y = lm_pm2_5_wind_py.fittedvalues)) +
+    geom_line(colour = "blue", size = 1) +
+    geom_point(aes(y = "pm2_5")))
+```
+
+::: {.callout-tip collapse="true"}
+## Alternative using `geom_smooth()`
+
+```{python}
+#| results: hide
+(ggplot(pm2_5_py, aes(x = "wind_m_s", y = "pm2_5")) +
+    geom_point() +
+    geom_smooth(method = "lm", se = False, colour = "blue"))
+```
+:::
+
+Next, we extract the coefficient estimates:
+
+```{python}
+lm_pm2_5_wind_py.params
+```
+
 :::
 
 This gives us the following equation:
@@ -582,13 +836,126 @@ So, that matches. We move on and extract the coefficient estimates:
 ```{r}
 lm_pm2_5_loc %>%
     tidy() %>% 
-    select(term, estimate, p.value)
+    select(term, estimate)
 ```
 
 These values match up exactly with the predicted values for each individual location.
 
 ## R
+
+First, we define the model:
+```{r}
+lm_pm2_5_loc_r <- lm(pm2_5 ~ location,
+                   data = pm2_5_r)
+```
+
+Extract the model coefficients:
+
+```{r}
+lm_pm2_5_loc_r$coefficients
+```
+
+We can visualise this as follows:
+
+```{r}
+# get the location data (inner/outer)
+location <- pm2_5_r$location
+
+# get the PM2.5 levels
+pm2_5_levels <- pm2_5_r$pm2_5
+
+# and get the PM2.5 levels predicted by the model
+fitted.values <- lm_pm2_5_loc_r$fitted.values
+
+# plot the (jittered) data by location
+stripchart(pm2_5_levels ~ location,
+           method = "jitter",
+           pch = 19,
+           col = alpha("black", 0.4),
+           vertical = TRUE)
+
+# add the fitted values
+points(fitted.values, col = "blue", pch = 19)
+```
+
+OK, what's going on here? I've plotted the `fitted.values` (the values predicted by the model) in blue and overlaid the original (with a little bit of jitter to avoid overplotting). However, there are only two predicted values!
+
+We can check this and see that each unique fitted value occurs multiple times:
+
+```{r}
+table(lm_pm2_5_loc_r$fitted.values)
+```
+
+The `table()` function gives us an overview of each unique value in the data and counts the number of occurrences.
+
+If you look closely you'll see that each value actually occurs 365 times, with a tiny, tiny rounding difference on the last digit between 364 values and the one remaining one.
+
+Altogether, there are two values: one for the `inner` location (`r round(lm_pm2_5_loc %>% augment %>% count(.fitted) %>% slice(2) %>% pull(.fitted), digits = 2)`) and one for the `outer` location (`r round(lm_pm2_5_loc %>% augment %>% count(.fitted) %>% slice(1) %>% pull(.fitted), digits = 2)`).
+
+This makes sense if we think back to our original ANOVA exploration. There we established that an ANOVA is just a special case of a linear model, where the fitted values are equal to the mean of each group.
+
+We could even check this, since we stored the data per location in the `inner_r` and `outer_r` objects previously:
+
+```{r}
+mean(inner_r$pm2_5)
+mean(outer_r$pm2_5)
+```
+
+So, that matches. We move on and extract the coefficient estimates:
+
+```{r}
+lm_pm2_5_loc_r$coefficients
+```
+
+These values match up exactly with the predicted values for each individual location.
+
 ## Python
+
+First, we define the model:
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "pm2_5 ~ C(location)", data = pm2_5_py)
+# and get the fitted parameters of the model
+lm_pm2_5_loc_py = model.fit()
+```
+
+We can visualise this as follows:
+
+```{python}
+#| results: hide
+(ggplot(pm2_5_py, aes(x = "location",
+                     y = lm_pm2_5_loc_py.fittedvalues)) +
+    geom_point(colour = "blue", size = 3) +
+    geom_jitter(pm2_5_py, aes(x = "location", y = "pm2_5"),
+                       width = 0.1,
+                       alpha = 0.2))
+```
+
+OK, what's going on here? I've plotted the `fittedvalues` (the values predicted by the model) in blue and overlaid the original (with a little bit of jitter to avoid overplotting). However, there are only two predicted values!
+
+We can check this and see that each unique fitted value occurs 365 times, using the `value_counts()` function on the fitted values:
+
+```{python}
+lm_pm2_5_loc_py.fittedvalues.value_counts()
+```
+
+This makes sense if we think back to our original ANOVA exploration. There we established that an ANOVA is just a special case of a linear model, where the fitted values are equal to the mean of each group.
+
+We could even check this:
+
+```{python}
+pm2_5_py.groupby("location")["pm2_5"].mean()
+```
+
+So, that matches. We move on and extract the coefficient estimates:
+
+```{python}
+lm_pm2_5_loc_py.params
+```
+
+These values match up exactly with the predicted values for each individual location.
+
 :::
 
 This gives us the following equation:
@@ -607,9 +974,9 @@ The null model by itself is rarely analysed for its own sake but is instead used
 We define the null model as follows:
 
 ```{r}
-lm_pm2_5_null <- lm(pm2_5 ~ 1,
-                    data = pm2_5)
+lm_pm2_5_null <- lm(pm2_5 ~ 1, data = pm2_5)
 ```
+
 We can just view the model:
 
 ```{r}
@@ -618,7 +985,37 @@ lm_pm2_5_null
 
 
 ## R
+
+We define the null model as follows:
+
+```{r}
+lm_pm2_5_null_r <- lm(pm2_5 ~ 1,
+                      data = pm2_5_r)
+```
+
+We can just view the model:
+
+```{r}
+lm_pm2_5_null_r
+```
+
 ## Python
+
+We define the null model as follows:
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "pm2_5 ~ 1", data = pm2_5_py)
+# and get the fitted parameters of the model
+lm_pm2_5_null_py = model.fit()
+```
+
+We can just view the model parameters:
+
+```{python}
+lm_pm2_5_null_py.params
+```
+
 :::
 
 This shows us that there is just one value: `r round(lm_pm2_5_null %>% tidy() %>% pull(estimate), digits = 2)`. This is the average across all the PM2.5 values in the data set.
