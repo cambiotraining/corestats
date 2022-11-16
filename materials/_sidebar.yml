@@ -28,3 +28,6 @@ website:
           contents:
             - "materials/cs5_practical_multiple-linear-regression.qmd"
             - "materials/cs5_practical_model-comparisons.qmd"
+        - section: "Power analysis"
+          contents:
+            - "materials/cs6_practical_power-analysis.qmd"

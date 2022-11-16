@@ -148,6 +148,7 @@ We can visualise the data by `male`, so we can see if the eggs clutch size diffe
 We can also plot the egg clutch size against the weight, again for each male colour group:
 
 ```{python}
+#| results: hide
 (ggplot(ladybird_py,
         aes(x = "weight", y = "eggs",
             colour = "male")) +
@@ -390,7 +391,7 @@ Why have we made you work through this procedure then? Given their prevalence in
 Performing backwards stepwise elimination manually can be quite tedious. Thankfully R acknowledges this and there is a single inbuilt function called `step()` that can perform all of the necessary steps for you using AIC.
 
 ```{r}
-#| echo: false
+#| eval: false
 # define the full model
 lm_full <- lm(eggs ~ weight * male,
               data = ladybird)
@@ -422,8 +423,8 @@ NB: if an interaction term is significant then any main factor that is part of t
 
 Perform a BSE on the following data sets:
 
-`data/CS5-Trees.csv`
-`data/CS5-pm2_5.csv`
+* `data/CS5-Trees.csv`
+* `data/CS5-pm2_5.csv`
 
 ::: {.callout-tip collapse="true"}
 ## Answer
@@ -601,9 +602,17 @@ Can we drop the interaction term or any of the remaining main effects?
 
 ```{python}
 # define the model
-model_1 = smf.ols(formula= "pm2_5 ~ avg_temp + rain_mm + wind_m_s + C(location)", data = pm2_5_py)
-model_2 = smf.ols(formula= "pm2_5 ~ avg_temp + wind_m_s * C(location)", data = pm2_5_py)
-model_3 = smf.ols(formula= "pm2_5 ~ rain_mm + wind_m_s * C(location)", data = pm2_5_py)
+model_1 = smf.ols(
+    formula= "pm2_5 ~ avg_temp + rain_mm + wind_m_s + C(location)",
+    data = pm2_5_py)
+    
+model_2 = smf.ols(
+    formula= "pm2_5 ~ avg_temp + wind_m_s * C(location)",
+    data = pm2_5_py)
+    
+model_3 = smf.ols(
+    formula= "pm2_5 ~ rain_mm + wind_m_s * C(location)",
+    data = pm2_5_py)
 
 # get the AIC of the models
 model_1.fit().aic
@@ -618,14 +627,21 @@ The AIC goes up quite a bit if we drop the interaction term. This means that we 
 The model with the lowest AIC is the one without the `rain_mm` term, so our working model is:
 
 ```{python}
-working_model = smf.ols(formula= "pm2_5 ~ avg_temp + wind_m_s * C(location)", data = pm2_5_py)
+working_model = smf.ols(
+    formula= "pm2_5 ~ avg_temp + wind_m_s * C(location)",
+    data = pm2_5_py)
 ```
 
 Now we can again check if dropping the `avg_temp` term or the `wind_m_s:location` interaction has any effect on the model performance:
 
 ```{python}
-model_1 = smf.ols(formula= "pm2_5 ~ wind_m_s * C(location)", data = pm2_5_py)
-model_2 = smf.ols(formula= "pm2_5 ~ avg_temp + wind_m_s + C(location)", data = pm2_5_py)
+model_1 = smf.ols(
+    formula= "pm2_5 ~ wind_m_s * C(location)",
+    data = pm2_5_py)
+    
+model_2 = smf.ols(
+    formula= "pm2_5 ~ avg_temp + wind_m_s + C(location)",
+    data = pm2_5_py)
 
 # get the AIC of the models
 model_1.fit().aic
@@ -638,13 +654,17 @@ This shows that dropping the `avg_temp` term lowers the AIC, whereas dropping th
 So, our new working model is:
 
 ```{python}
-working_model = smf.ols(formula= "pm2_5 ~ wind_m_s * C(location)", data = pm2_5_py)
+working_model = smf.ols(
+    formula= "pm2_5 ~ wind_m_s * C(location)",
+    data = pm2_5_py)
 ```
 
 Lastly, now we've dropped the `avg_temp` term we can do one final check on the interaction term:
 
 ```{python}
-model_1 = smf.ols(formula= "pm2_5 ~ wind_m_s + C(location) + wind_m_s + C(location)", data = pm2_5_py)
+model_1 = smf.ols(
+    formula= "pm2_5 ~ wind_m_s + C(location) + wind_m_s + C(location)",
+    data = pm2_5_py)
 
 model_1.fit().aic
 working_model.fit().aic
