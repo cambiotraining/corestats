@@ -27,3 +27,4 @@ website:
         - section: "Multiple predictors"
           contents:
             - "materials/cs5_practical_multiple-linear-regression.qmd"
+            - "materials/cs5_practical_model-comparisons.qmd"

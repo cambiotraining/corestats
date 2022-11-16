@@ -1058,6 +1058,7 @@ Let's construct the four linear models in turn.
 First, we read in the data:
 
 ```{r}
+#| message: false
 trees <- read_csv("data/CS5-Trees.csv")
 ```
 

@@ -1,5 +1,5 @@
 ---
-title: "Paired t-test"
+title: "title"
 ---
 
 ```{r}
@@ -16,7 +16,7 @@ import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
-::: callout-tip
+::: {.callout-tip}
 ## Learning outcomes
 
 **Questions**
@@ -67,7 +67,7 @@ exec(open('setup_files/setup.py').read())
 
 ## Key points
 
-::: callout-note
+::: {.callout-note}
 -
 -
 -
