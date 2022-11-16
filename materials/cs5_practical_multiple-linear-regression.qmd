@@ -1026,19 +1026,469 @@ $PM2.5 = `r round(lm_pm2_5_null %>% tidy() %>% pull(estimate), digits = 2)`$
 
 ## Exercise
 
+Trees: an example with only continuous variables
+
+Use the `data/CS5-Trees.csv` data set. This is a data frame with 31 observations of 3 continuous variables. The variables are the height `Height`, diameter `Girth` and timber volume `Volume` of 31 felled black cherry trees.
+
+Investigate the relationship between `Volume` (as a dependent variable) and `Height` and `Girth` (as predictor variables).
+
+* Here all variables are continuous and so there isn’t a way of producing a 2D plot of all three variables for visualisation purposes using R’s standard plotting functions.
+* construct four linear models
+    * Assume volume depends on `Height`, `Girth` and an interaction between `Girth` and `Height`
+    * Assume `Volume` depends on `Height` and `Girth` but that there isn’t any interaction between them.
+    * Assume `Volume` only depends on `Girth` (plot the result, with the regression line).
+    * Assume `Volume` only depends on `Height` (plot the result, with the regression line).
+* For each linear model write down the algebraic equation that the linear model produces that relates volume to the two continuous predictor variables.
+* Check the assumptions of each model. Do you have any concerns?
+
+NB: For two continuous predictors, the interaction term is simply the two values multiplied together (so `Girth:Height` means `Girth x Height`)
+
+* Use the equations to calculate the predicted volume of a tree that has a diameter of 20 inches and a height of 67 feet in each case.
+
 ::: {.callout-tip collapse="true"}
 ## Answer
+
+Let's construct the four linear models in turn.
+
+### Full model
+
 ::: {.panel-tabset group="language"}
 ## tidyverse
+
+First, we read in the data:
+
+```{r}
+trees <- read_csv("data/CS5-Trees.csv")
+```
+
+```{r}
+# define the model
+lm_trees_full <- lm(Volume ~ Height * Girth,
+                   data = trees)
+
+# view the model
+lm_trees_full
+```
+
 ## R
+
+First, we read in the data:
+
+```{r}
+trees_r <- read.csv("data/CS5-Trees.csv")
+```
+
+```{r}
+# define the model
+lm_trees_full_r <- lm(Volume ~ Height * Girth,
+                     data = trees_r)
+
+# view the model
+lm_trees_full_r
+```
+
 ## Python
+
+First, we read in the data:
+
+```{python}
+trees_py = pd.read_csv("data/CS5-Trees.csv")
+```
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "Volume ~ Height * Girth",
+                data = trees_py)
+# and get the fitted parameters of the model
+lm_trees_full_py = model.fit()
+
+```
+
+Extract the parameters:
+
+```{python}
+lm_trees_full_py.params
+```
+
 :::
+
+We can use this output to get the following equation:
+
+Volume = 69.40 + -1.30 $\times$ Height + -5.86 $\times$ Girth + 0.13 $\times$ Height $\times$ Girth
+
+If we stick the numbers in (`Girth = 20` and `Height = 67`) we get the following equation:
+
+Volume = 69.40 + -1.30 $\times$ 67 + -5.86 $\times$ 20 + 0.13 $\times$ 67 $\times$ 20
+
+Volume =  45.81
+
+Here we note that the interaction term just requires us to multiple the three numbers together (we haven't looked at continuous predictors before in the examples and this exercise was included as a check to see if this whole process was making sense).
+
+If we look at the diagnostic plots for the model using the following commands we get:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+#| message: false
+lm_trees_full %>% 
+  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
+              smoother = TRUE)
+```
+
+## R
+
+```{r}
+par(mfrow = c(2, 2))
+
+plot(lm_trees_full_r)
+```
+
+## Python
+
+```{python}
+#| eval: false
+dgplots(lm_trees_full_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_trees_full_py)
+```
+
+```{r}
+#| echo: false
+library(reticulate)
+# display image
+knitr::include_graphics(py$dgplot)
+```
+:::
+
+All assumptions are OK.
+
+* There is some suggestion of heterogeneity of variance (with the variance being lower for small and large fitted (i.e. predicted `Volume`) values), but that can be attributed to there only being a small number of data points at the edges, so I'm not overly concerned.
+* Similarly, there is a suggestion of snaking in the Q-Q plot (suggesting some lack of normality) but this is mainly due to the inclusion of one data point and overall the plot looks acceptable.
+* There are no highly influential points
+
+### Additive model
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+# define the model
+lm_trees_add <- lm(Volume ~ Height + Girth,
+                  data = trees)
+
+# view the model
+lm_trees_add
+```
+
+## R
+
+```{r}
+# define the model
+lm_trees_add_r <- lm(Volume ~ Height + Girth,
+                     data = trees_r)
+
+# view the model
+lm_trees_add_r
+```
+
+## Python
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "Volume ~ Height + Girth",
+                data = trees_py)
+# and get the fitted parameters of the model
+lm_trees_add_py = model.fit()
+
+```
+
+Extract the parameters:
+
+```{python}
+lm_trees_add_py.params
+```
+
+:::
+
+We can use this output to get the following equation:
+
+Volume = -57.99 + 0.34 $\times$ Height + 4.71 $\times$ Girth
+
+If we stick the numbers in (`Girth = 20` and `Height = 67`) we get the following equation:
+
+Volume = -57.99 + 0.34 $\times$ 67 + 4.71 $\times$ 20
+
+Volume =  58.91
+
+If we look at the diagnostic plots for the model using the following commands we get the following:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r, message=FALSE}
+lm_trees_add %>% 
+  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
+              smoother = TRUE)
+```
+
+## R
+
+```{r}
+par(mfrow = c(2, 2))
+
+plot(lm_trees_add_r)
+```
+## Python
+
+```{python}
+#| eval: false
+dgplots(lm_trees_add_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_trees_add_py)
+```
+
+```{r}
+#| echo: false
+library(reticulate)
+# display image
+knitr::include_graphics(py$dgplot)
+```
+
+:::
+
+This model isn't great.
+
+* There is a worrying lack of linearity exhibited in the Residuals plot suggesting that this linear model isn't appropriate.
+* Assumptions of Normality seem OK
+* Equality of variance is harder to interpret. Given the lack of linearity in the data it isn't really sensible to interpret the Location-Scale plot as it stands (since the plot is generated assuming that we've fitted a straight line through the data), but for the sake of practising interpretation we'll have a go. There is definitely suggestions of heterogeneity of variance here with a cluster of points with fitted values of around 20 having noticeably lower variance than the rest of the dataset.
+* One point is influential and if there weren't issues with the linearity of the model I would remove this point and repeat the analysis. As it stands there isn't much point.
+
+### Height-only model
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+# define the model
+lm_height <- lm(Volume ~ Height,
+              data = trees)
+
+# view the model
+lm_height
+```
+
+## R
+
+```{r}
+# define the model
+lm_height_r <- lm(Volume ~ Height,
+                  data = trees_r)
+
+# view the model
+lm_height_r
+```
+
+## Python
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "Volume ~ Height",
+                data = trees_py)
+# and get the fitted parameters of the model
+lm_height_py = model.fit()
+
+```
+
+Extract the parameters:
+
+```{python}
+lm_height_py.params
+```
+
+:::
+
+We can use this output to get the following equation:
+
+Volume = -87.12 + 1.54 $\times$ Height
+
+If we stick the numbers in (`Girth = 20` and `Height = 67`) we get the following equation:
+
+Volume = -87.12 + 1.54 $\times$ 67
+
+Volume =  16.28
+
+If we look at the diagnostic plots for the model using the following commands we get the following:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r, message=FALSE}
+lm_height %>% 
+  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
+              smoother = TRUE)
+```
+
+## R
+
+```{r}
+par(mfrow = c(2, 2))
+
+plot(lm_height_r)
+```
+
+## Python
+
+```{python}
+#| eval: false
+dgplots(lm_height_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_height_py)
+```
+
+```{r}
+#| echo: false
+library(reticulate)
+# display image
+knitr::include_graphics(py$dgplot)
+```
+
+:::
+
+This model also isn't great.
+
+* The main issue here is the clear heterogeneity of variance. For trees with bigger volumes the data are much more spread out than for trees with smaller volumes (as can be seen clearly from the Location-Scale plot).
+* Apart from that, the assumption of Normality seems OK
+* And there aren't any hugely influential points in this model
+
+### Girth-only model
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+# define the model
+lm_girth <- lm(Volume ~ Girth,
+               data = trees)
+
+# view the model
+lm_girth
+```
+
+## R
+
+```{r}
+# define the model
+lm_girth_r <- lm(Volume ~ Girth,
+                 data = trees_r)
+
+# view the model
+lm_girth_r
+```
+
+## Python
+
+```{python}
+# create a linear model
+model = smf.ols(formula= "Volume ~ Girth",
+                data = trees_py)
+# and get the fitted parameters of the model
+lm_girth_py = model.fit()
+
+```
+
+Extract the parameters:
+
+```{python}
+lm_girth_py.params
+```
+:::
+
+We can use this output to get the following equation:
+
+Volume = -36.94 + 5.07 $\times$ Girth
+
+If we stick the numbers in (`Girth = 20` and `Height = 67`) we get the following equation:
+
+Volume = -36.94 + 5.07 $\times$ 20
+
+Volume =  64.37
+
+If we look at the diagnostic plots for the model using the following commands we get the following:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r, message=FALSE}
+lm_girth %>% 
+  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
+              smoother = TRUE)
+```
+
+## R
+
+```{r}
+par(mfrow = c(2, 2))
+
+plot(lm_girth_r)
+```
+
+## Python
+
+```{python}
+#| eval: false
+dgplots(lm_girth_py)
+```
+
+```{python}
+#| echo: false
+# load dgplots function for knitr
+exec(open('setup_files/dgplots_knitr.py').read())
+# create rendered diagnostic plots image
+# and save the file link
+dgplot = dgplotsknitr(lm_girth_py)
+```
+
+```{r}
+#| echo: false
+library(reticulate)
+# display image
+knitr::include_graphics(py$dgplot)
+```
+
+:::
+
+The diagnostic plots here look rather similar to the ones we generated for the additive model and we have the same issue with a lack of linearity, heterogeneity of variance and one of the data points being influential.
+
 :::
 
 ## Key points
 
-::: callout-note
--
--
--
+::: {.callout-note}
+
+- We can define a linear model with any combination of categorical and continuous predictor variables
+- Using the coefficients of the model we can construct the linear model equation
+- The underlying assumptions of a linear model with three (or more) predictor variables are the same as those of a two-way ANOVA
+
 :::
