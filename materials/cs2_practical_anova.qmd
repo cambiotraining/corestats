@@ -1116,7 +1116,7 @@ Let's look at the Shapiro-Wilk test for all of the data together:
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "weight ~ C(diet)", data = lobsters_py)
+model = smf.ols(formula = "weight ~ C(diet)", data = lobsters_py)
 # and get the fitted parameters of the model
 lm_lobsters_py = model.fit()
 ```

@@ -130,7 +130,7 @@ The key point about effect sizes and power analyses is that you need to specify 
 
 There a lot of different ways of specifying effects sizes, but we can split them up into three distinct families of estimates:
 
-1. **Correlation estimates**: these use R<sup>2</sup> as a measure of variance explained by a model (for linear models, anova etc. A large R<sup>2</sup> value would indicate that a lot of variance has been explained by our model and we would expect to see a lot of difference between groups, or a tight cluster of points around a line of best fit. The argument goes that we would need fewer data points to observe such a relationship with confidence. Trying to find a relationship with a low R<sup>2</sup> value would be trickier and would therefore require more data points for an equivalent power.
+1. **Correlation estimates**: these use $R^2$ as a measure of variance explained by a model (for linear models, anova etc. A large $R^2$ value would indicate that a lot of variance has been explained by our model and we would expect to see a lot of difference between groups, or a tight cluster of points around a line of best fit. The argument goes that we would need fewer data points to observe such a relationship with confidence. Trying to find a relationship with a low $R^2$ value would be trickier and would therefore require more data points for an equivalent power.
 2. **Difference between means**: these look at how far apart the means of two groups are, measured in units of standard deviations (for t-tests). An effect size of 2 in this case would be interpreted as the two groups having means that were two standard deviations away from each other (quite a big difference), whereas an effect size of 0.2 would be harder to detect and would require more data to pick it up.
 3. **Difference between count data**: these I freely admit I have no idea how to intuitively explain them (shock, horror). Mathematically they are based on the chi-squared statistic but that’s as good as I can tell you I’m afraid. They are, however, pretty easy to calculate.
 
@@ -791,13 +791,288 @@ pg.power_ttest(d = -1.434359,
 So we would have only needed 10 pairs of participants in this study given the size of effect we were trying to detect.
 
 :::
+:::
+
+## Linear model power calculations
+
+Thankfully the ideas we’ve covered in the t-test section should see us in good stead going forward and I can stop writing everything out in such excruciating detail (I do have other things to do you know...).
+
+Let's read in `data/CS2-lobsters.csv`. This data set was used in an earlier practical and describes the effect of three different food sources on lobster weight .
+
+As a quick reminder we'll also plot the data and perform an ANOVA:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+#| message: false
+# read in the data
+lobsters <- read_csv("data/CS2-lobsters.csv")
+```
+
+```{r}
+# visualise the data
+lobsters %>% 
+  ggplot(aes(x = diet, y = weight)) +
+  geom_boxplot()
+```
+
+```{r}
+# define the linear model
+lm_lobster <- lm(weight ~ diet,
+                 data = lobsters)
+
+# perform ANOVA on model
+anova(lm_lobster)
+```
+
+## R
+
+```{r}
+# read in the data
+lobsters_r <- read.csv("data/CS2-lobsters.csv")
+```
+
+```{r}
+# visualise the data
+boxplot(weight ~ diet, data = lobsters_r)
+```
+
+```{r}
+# define the linear model
+lm_lobster_r <- lm(weight ~ diet,
+                   data = lobsters_r)
+
+# perform ANOVA on model
+anova(lm_lobster_r)
+```
+
+## Python
+
+```{python}
+# read in the data
+lobsters_py = pd.read_csv("data/CS2-lobsters.csv")
+```
+
+```{python}
+#| results: hide
+# visualise the data
+(ggplot(lobsters_py, aes(x = "diet",
+                         y = "weight")) +
+     geom_boxplot())
+```
+
+```{python}
+# create a linear model
+model = smf.ols(formula = "weight ~ C(diet)", data = lobsters_py)
+# and get the fitted parameters of the model
+lm_lobsters_py = model.fit()
+```
+
+```{python}
+# perform the anova on the fitted model
+sm.stats.anova_lm(lm_lobsters_py)
+```
 
 :::
+
+* the box plot shows us that there might well be some differences between groups
+* the ANOVA analysis though shows that there isn’t sufficient evidence to support that claim given the insignificant p-value we observe.
+
+So the question we can ask is:
+
+> If there really is a difference between the different food sources as big as appears here, how big a sample would we need in order to be able to detect it statistically?
+
+First let’s calculate the observed effect size from this study.
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+For linear models the effect size is called Cohen’s $f^2$. We can calculate it easily by using the $R^2$ value from the model fit and shoving it in the following formula:
+
+\begin{equation}
+f^2 = \frac{R^2}{1-R^2}
+\end{equation}
+
+We find $R^2$ from the `lm_lobster` summary. We can either just look at the results (spoiler alert, the $R^2$ is `r round(summary(lm_lobster) %>% glance() %>% pull(r.squared), digits = 4)`) and add it manually or extract the value with the `broom::glance()` function.
+
+Either way, we can calculate Cohen's $f^2$:
+
+```{r}
+# get the effect size for ANOVA
+R2 <- summary(lm_lobster) %>%
+    glance() %>% 
+    pull(r.squared)
+
+# calculate Cohen's f2
+R2 / (1 - R2)
+```
+
+So now we've got Cohen's $f^2$. 
+
+## R
+
+For linear models the effect size is called Cohen’s $f^2$. We can calculate it easily by using the $R^2$ value from the model fit and shoving it in the following formula:
+
+\begin{equation}
+f^2 = \frac{R^2}{1-R^2}
+\end{equation}
+
+We find $R^2$ from the `lm_lobster_r` summary. We can either just look at the results (spoiler alert, the $R^2$ is `r round(summary(lm_lobster) %>% glance() %>% pull(r.squared), digits = 4)`) and add it manually or extract the value.
+
+Either way, we can calculate Cohen's $f^2$:
+
+```{r}
+# get the effect size for ANOVA
+R2 <- summary(lm_lobster_r)$r.squared
+
+# calculate Cohen's f2
+R2 / (1 - R2)
+```
+
+So now we've got Cohen's $f^2$. 
+
+## Python
+
+For linear models the effect size metric we use is called $\eta^2$, or eta-squared.
+
+The eta-squared value measures the contribution of the individual model terms. This is closely linked to the $R^2$ value, which measures the total amount of variation that is explained by the entire model.
+
+Since we only have one model term here (`diet`), the $R^2$ and $\eta^2$ values are the same.
+
+We can get the $R^2$  (`r round(summary(lm_lobster) %>% glance() %>% pull(r.squared), digits = 4)`) value from the model as follows:
+
+```{python}
+# get the R2 value
+R2 = lm_lobsters_py.rsquared
+```
+:::
+
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+There’s one more thing that we need for the power calculation for a linear model; the degrees of freedom.
+
+We have two different degrees of freedom: the **numerator degrees of freedom** and the **denominator degrees of freedom**. Here the numerator degrees of freedom is 2. This is the number that we want. It is simply the number of parameters in the model minus 1. In this model there are three parameters for the three groups, so 3 - 1 = 2 (see the math isn’t too bad). The other number is called the denominator degrees of freedom, which in this case is 15. This is actually the number we want the power analysis to calculate as it’s a proxy for the number of observations used in the model, and we’ll see how in a minute.
+
+The degrees of freedom are mentioned at the bottom of the model summary:
+
+```{r}
+summary(lm_lobster)
+```
+
+So, we now want to run a power analysis for this linear model, using the following information:
+
+* power = 0.8
+* significance = 0.05
+* effect size = 0.219
+* numerator DF = 2
+
+We can feed this into the `pwr.f2.test()` function, where we use
+
+* `u` to represent the numerator DF value
+* `f2` to represent Cohen’s $f^2$ effect size value
+
+```{r}
+pwr.f2.test(u = 2, f2 = 0.219,
+            sig.level = 0.05, power = 0.8)
+```
+
+As before most of these numbers are just what you’ve put into the function yourself. The new number is `v`. This is the denominator degrees of freedom required for the analysis to have sufficient power. Thankfully this number is related to the number of observations that we should use in a straightforward manner:
+
+$number\:of\:observations = u + v + 1$
+
+So in our case we would ideally have 48 observations (45 + 2 + 1, remembering to round up) in our experiment.
+
+The most challenging part for using power analyses for linear models is working out what the numerator degrees of freedom should be. The easiest way of thinking about it is to say that it’s the number of parameters in your model, excluding the intercept. If you look back at how we wrote out the linear model equations, then you should be able to see how many non-zero parameters would be expected. For some of the simple cases the table below will help you, but for complex linear models you will need to write out the linear model equation and count parameters (sorry!).
+
+| Test| u|
+|:- |:- |
+|one-way ANOVA| no. of groups - 1 |
+|simple linear regression| 1 |
+|two-way ANOVA with interaction| no. of groups (`v1`) x no. of groups (`v2`) - 1 |
+|two-way ANOVA without interaction| no. of groups (`v1`) + no. of groups (`v2`) - 2 |
+|ANCOVA with interaction| 2 x no. of groups – 1 |
+|ANCOVA without interaction| no. of groups |
+
+## R
+
+There’s one more thing that we need for the power calculation for a linear model; the degrees of freedom.
+
+We have two different degrees of freedom: the **numerator degrees of freedom** and the **denominator degrees of freedom**. Here the numerator degrees of freedom is 2. This is the number that we want. It is simply the number of parameters in the model minus 1. In this model there are three parameters for the three groups, so 3 - 1 = 2 (see the math isn’t too bad). The other number is called the denominator degrees of freedom, which in this case is 15. This is actually the number we want the power analysis to calculate as it’s a proxy for the number of observations used in the model, and we’ll see how in a minute.
+
+The degrees of freedom are mentioned at the bottom of the model summary:
+
+```{r}
+summary(lm_lobster_r)
+```
+
+So, we now want to run a power analysis for this linear model, using the following information:
+
+* power = 0.8
+* significance = 0.05
+* effect size = 0.219
+* numerator DF = 2
+
+We can feed this into the `pwr.f2.test()` function, where we use
+
+* `u` to represent the numerator DF value
+* `f2` to represent Cohen’s $f^2$ effect size value
+
+```{r}
+pwr.f2.test(u = 2, f2 = 0.219,
+            sig.level = 0.05, power = 0.8)
+```
+
+As before most of these numbers are just what you’ve put into the function yourself. The new number is `v`. This is the denominator degrees of freedom required for the analysis to have sufficient power. Thankfully this number is related to the number of observations that we should use in a straightforward manner:
+
+$number\:of\:observations = u + v + 1$
+
+So in our case we would ideally have 48 observations (45 + 2 + 1, remembering to round up) in our experiment.
+
+The most challenging part for using power analyses for linear models is working out what the numerator degrees of freedom should be. The easiest way of thinking about it is to say that it’s the number of parameters in your model, excluding the intercept. If you look back at how we wrote out the linear model equations, then you should be able to see how many non-zero parameters would be expected. For some of the simple cases the table below will help you, but for complex linear models you will need to write out the linear model equation and count parameters (sorry!).
+
+| Test| u|
+|:- |:- |
+|one-way ANOVA| no. of groups - 1 |
+|simple linear regression| 1 |
+|two-way ANOVA with interaction| no. of groups (`v1`) x no. of groups (`v2`) - 1 |
+|two-way ANOVA without interaction| no. of groups (`v1`) + no. of groups (`v2`) - 2 |
+|ANCOVA with interaction| 2 x no. of groups – 1 |
+|ANCOVA without interaction| no. of groups |
+
+## Python
+
+We can use the eta-squared value in the `power_anova()` function from `pingouin`.
+
+If we're trying to figure out the sample size, we need to give it the following information:
+
+- `eta_squared`, the effect size we're after (we saved this as `R2`)
+- `k`, the number of groups (three, in our case)
+- `power`, the statistical power we're after, in this case 80%
+- `alpha`, the significance threshold at which we want to detect it
+
+```{python}
+pg.power_anova(eta_squared = R2, k = 3, power = 0.80, alpha = 0.05)
+```
+
+When we fill in all that information, then we find that we need 15.701 samples _per group_ - rounding up this gives 16. This means that we need a total of $16 \times 3 = 48$ samples altogether.
+:::
+
+There are two questions you might now ask (if you’re still following all of this that is – you’re quite possibly definitely in need of a coffee by now):
+
+1. how many observations should go into each group?
+    * ideally they should be equally distributed (so in this case 16 per group).
+2. why is this so complicated, why isn’t there just a single function that just does this, and just tells me how many observations I need?
+    * Very good question – I have no answer to that sorry – sometimes life is just hard.
 
 ## Key points
 
 ::: {.callout-note}
--
--
--
+- Power is the capacity of a test to detect significant results and is affected by
+    1. the effect size
+    2. sample size
+    3. the significance level
+- Power analysis optimises the trade-off between power, significance level and the desired effect size that we would like to detect
 :::
