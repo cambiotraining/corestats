@@ -14,6 +14,8 @@ source(file = "setup_files/setup.R")
 #| message: false
 import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
+
+np.seterr(all='ignore')
 ```
 
 ::: {.callout-tip}
@@ -1066,6 +1068,185 @@ There are two questions you might now ask (if you’re still following all of th
     * ideally they should be equally distributed (so in this case 16 per group).
 2. why is this so complicated, why isn’t there just a single function that just does this, and just tells me how many observations I need?
     * Very good question – I have no answer to that sorry – sometimes life is just hard.
+    
+### Exercises
+
+::: {.callout-note icon=false}
+## Mussel muscles
+
+**Level:** {{< fa solid star >}} {{< fa solid star >}} {{< fa regular star >}}
+
+In this exercise we're going to determine a required sample size, dependent on a calculated effect size. The file `data/CS6-shelllength.csv` contains information from a pilot study looking at whether the standardised length of the anterior adductor muscle scar in the mussel _Mytilus trossulus_ differs across five locations around the world (well it might be of interest to someone...).
+
+Find the effect size from this study and perform a power calculation (at 0.8 and 0.05 significance level) to determine how many mussel muscles need to be recorded in order to be confident that an effect really exists.
+
+::: {.callout-tip collapse="true"}
+## Answer
+
+Let's first load in the data and have a look at them.
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+#| message: false
+mussels <- read_csv("data/CS6-shelllength.csv")
+```
+
+```{r}
+ggplot(mussels, aes(x = location,
+                    y = length)) +
+    geom_boxplot()
+```
+
+## R
+
+```{r}
+mussels_r <- read.csv("data/CS6-shelllength.csv")
+```
+
+```{r}
+boxplot(length ~ location,
+        data = mussels_r)
+```
+
+## Python
+
+```{python}
+mussels_py = pd.read_csv("data/CS6-shelllength.csv")
+```
+
+```{python}
+#| results: hide
+(ggplot(mussels_py, aes(x = "location",
+                        y = "length")) +
+    geom_boxplot())
+```
+
+:::
+
+So we are effectively looking at a one-way ANOVA with five groups. This will be useful to know later.
+
+Now we fit a linear model, and perform our calculations:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+# define the model
+lm_mussels <- lm(length ~ location,
+                data = mussels)
+
+# summarise the model
+summary(lm_mussels)
+```
+
+From this we can see that the R-squared value is `r round(summary(lm_mussels) %>% glance() %>% pull(r.squared), digits = 4)`. We can extract that as follows and then use it to calculate Cohen's $f^2$:
+
+```{r}
+# get the effect size for ANOVA
+R2 <- summary(lm_mussels) %>%
+    glance() %>% 
+    pull(r.squared)
+
+# calculate Cohen's f2
+f2 <- R2 / (1 - R2)
+```
+
+```{r}
+f2
+```
+
+Now, our model has 5 parameters (because we have 5 groups) and so the numerator degrees of freedom will be 4 $(5 - 1 = 4)$. This means that we can now carry our our power analysis:
+
+```{r}
+pwr.f2.test(u = 4, f2 = 0.837767,
+            sig.level = 0.05 , power = 0.8)
+```
+
+This tells us that the denominator degrees of freedom should be `r round(pwr.f2.test(u = 4, f2 = 0.837767, sig.level = 0.05 , power = 0.8)[[2]])` (`r round(pwr.f2.test(u = 4, f2 = 0.837767, sig.level = 0.05 , power = 0.8)[[2]], digits = 2)` rounded up), and this means that we would only need 20 observations in total across all five groups to detect this effect size (Remember: number of observations = numerator d.f. + denominator d.f. + 1)
+
+## R
+
+
+```{r}
+# define the model
+lm_mussels <- lm(length ~ location,
+                data = mussels)
+
+# summarise the model
+summary(lm_mussels)
+```
+
+From this we can see that the R-squared value is `r round(summary(lm_mussels) %>% glance() %>% pull(r.squared), digits = 4)`. We can extract that as follows and then use it to calculate Cohen's $f^2$:
+
+```{r}
+# get the effect size for ANOVA
+R2 <- summary(lm_mussels) %>%
+    glance() %>% 
+    pull(r.squared)
+
+# calculate Cohen's f2
+f2 <- R2 / (1 - R2)
+```
+
+```{r}
+f2
+```
+
+Now, our model has 5 parameters (because we have 5 groups) and so the numerator degrees of freedom will be 4 $(5 - 1 = 4)$. This means that we can now carry our our power analysis:
+
+```{r}
+pwr.f2.test(u = 4, f2 = 0.837767,
+            sig.level = 0.05 , power = 0.8)
+```
+
+This tells us that the denominator degrees of freedom should be `r round(pwr.f2.test(u = 4, f2 = 0.837767, sig.level = 0.05 , power = 0.8)[[2]])` (`r round(pwr.f2.test(u = 4, f2 = 0.837767, sig.level = 0.05 , power = 0.8)[[2]], digits = 2)` rounded up), and this means that we would only need 20 observations in total across all five groups to detect this effect size (Remember: number of observations = numerator d.f. + denominator d.f. + 1)
+
+## Python
+
+```{python}
+# create a linear model
+model = smf.ols(formula = "length ~ C(location)", data = mussels_py)
+# and get the fitted parameters of the model
+lm_mussels_py = model.fit()
+```
+
+```{python}
+# perform the anova on the fitted model
+sm.stats.anova_lm(lm_mussels_py)
+```
+
+Since we only have one model term here (`location`), the $R^2$ and $\eta^2$ values are the same.
+
+We can get the $R^2$  (`r round(summary(lm_mussels) %>% glance() %>% pull(r.squared), digits = 4)`) value from the model as follows:
+
+```{python}
+# get the R2 value
+R2 = lm_mussels_py.rsquared
+```
+
+We can now calculate the number of required samples.
+
+We use the following values:
+
+* `eta_squared` = `R2`
+* `k` = 5 (we have five groups)
+* `power` = 0.80
+* `alpha` = 0.05 (our significance threshold)
+
+```{python}
+#| warning: false
+#| message: false
+pg.power_anova(eta_squared = R2,
+               k = 5, power = 0.80, alpha = 0.05)
+```
+
+This means we need 4 samples per group, so 20 in total ($4 \times 5$).
+
+:::
+:::
+:::
 
 ## Key points
 
