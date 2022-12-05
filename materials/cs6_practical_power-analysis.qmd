@@ -12,6 +12,8 @@ source(file = "setup_files/setup.R")
 ```{python}
 #| echo: false
 #| message: false
+#| results: hide
+#| warning: false
 import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 
@@ -1245,6 +1247,279 @@ pg.power_anova(eta_squared = R2,
 This means we need 4 samples per group, so 20 in total ($4 \times 5$).
 
 :::
+:::
+:::
+
+::: {.callout-note icon=false}
+## Power and effect
+
+**Level:** {{< fa solid star >}} {{< fa solid star >}} {{< fa regular star >}}
+
+The file `/data/CS6-epilepsy1.csv` contains information on the ages and rates of seizures of 236 patients undertaking a clinical trial.
+
+a. Analyse the data using a linear model and calculate the effect size.
+b. If there would be a relationship that large between age and seizure rate how big a study would be needed to observe the effect with a 90% power?
+
+
+::: {.callout-tip collapse="true"}
+## Answer
+
+Let's first load in the data and have a look at them.
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+Let's load in the data:
+
+```{r}
+epilepsy <- read_csv("data/CS6-epilepsy1.csv")
+```
+
+Let's just have a quick look at the data to see what we're dealing with:
+
+```{r}
+ggplot(data = epilepsy,
+       mapping = aes(x = age,
+                     y = seizure)) +
+  geom_point()
+```
+
+## R
+
+Let's load in the data:
+
+```{r}
+epilepsy_r <- read.csv("data/CS6-epilepsy1.csv")
+```
+
+Let's just have a quick look at the data to see what we're dealing with:
+
+```{r}
+plot(seizure ~ age, data = epilepsy_r)
+```
+
+## Python
+
+Let's load in the data:
+
+```{python}
+epilepsy_py = pd.read_csv("data/CS6-epilepsy1.csv")
+```
+
+Let's just have a quick look at the data to see what we're dealing with:
+
+```{python}
+#| results: hide
+(ggplot(epilepsy_py, aes(x = "age",
+                         y = "seizure")) +
+  geom_point())
+```
+
+:::
+
+So we are effectively looking at a simple linear regression here.
+
+Now we fit a linear model and determine the number of samples for the observed effect size at 90% power:
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+# define the model
+lm_epilepsy <- lm(seizure ~ age,
+                  data = epilepsy)
+
+# summarise the model
+summary(lm_epilepsy)
+```
+
+From this we get that the $R^2$ value is `r round(lm_epilepsy %>% glance() %>% pull(r.squared), digits = 7)` (which is tiny!) and we can use this to calculate Cohen's $f^2$ value using the formula in the notes:
+
+```{r}
+R2 <- lm_epilepsy %>% 
+    glance() %>% 
+    pull(r.squared)
+
+f2 <- R2 / (1 - R2)
+f2
+```
+
+This effect size is absolutely tiny. If we really wanted to design an experiment to pick up an effect size this small then we would expect that we'll need 1000s of participants.
+
+Now, our model has 2 parameters (an intercept and a slope) and so the numerator degrees of freedom (`u`) will be 1 (2 - 1 = 1!). This means that we can now carry our our power analysis:
+
+```{r}
+pwr.f2.test(u = 1, f2 = f2,
+            sig.level = 0.05 , power = 0.9)
+```
+
+This tells us that the denominator degrees of freedom (`v`) should be `r ceiling(pwr.f2.test(u = 1, f2 = f2, sig.level = 0.05, power = 0.9)[[2]])` (rounded up to the nearest number), and this means that we would need 11496 participants to detect this effect size (Remember: number of observations = numerator d.f. (`u`) + denominator d.f. (`v`) + 1). 
+
+## R
+
+```{r}
+# define the model
+lm_epilepsy_r <- lm(seizure ~ age,
+                    data = epilepsy_r)
+
+# summarise the model
+summary(lm_epilepsy_r)
+```
+
+From this we get that the $R^2$ value is `r round(lm_epilepsy %>% glance() %>% pull(r.squared), digits = 7)` (which is tiny!) and we can use this to calculate Cohen's $f^2$ value using the formula in the notes:
+
+```{r}
+R2 <- lm_epilepsy_r %>% 
+    glance() %>% 
+    pull(r.squared)
+
+f2 <- R2 / (1 - R2)
+f2
+```
+
+This effect size is absolutely tiny. If we really wanted to design an experiment to pick up an effect size this small then we would expect that we'll need 1000s of participants.
+
+Now, our model has 2 parameters (an intercept and a slope) and so the numerator degrees of freedom (`u`) will be 1 (2 - 1 = 1!). This means that we can now carry our our power analysis:
+
+```{r}
+pwr.f2.test(u = 1, f2 = f2,
+            sig.level = 0.05 , power = 0.9)
+```
+
+This tells us that the denominator degrees of freedom (`v`) should be `r ceiling(pwr.f2.test(u = 1, f2 = f2, sig.level = 0.05, power = 0.9)[[2]])` (rounded up to the nearest number), and this means that we would need 11496 participants to detect this effect size (Remember: number of observations = numerator d.f. (`u`) + denominator d.f. (`v`) + 1). 
+
+## Python
+
+```{python}
+# create a linear model
+model = smf.ols(formula = "seizure ~ age", data = epilepsy_py)
+# and get the fitted parameters of the model
+lm_epilepsy_py = model.fit()
+```
+
+Since we only have one model term here (`age`), the $R^2$ and $\eta^2$ values are the same.
+
+We can get the $R^2$ value from the model as follows:
+
+```{python}
+# get the R2 value
+R2 = lm_epilepsy_py.rsquared
+
+R2
+```
+
+This is a tiny effect size! In order to detect this, we would need a hell of a lot of samples.
+
+There is no straightforward way (that I currently know of) to calculate sample sizes in Python for a linear model with a continuous predictor. We can use an external script that is based on the `pwr.f2.test()` function in R - this uses a couple of different metrics to calculate the sample size (or effect size, power or significance threshold - depending on which values are given).
+
+This takes the following arguments:
+
+* `f2`, Cohen's $f^2$ which is calculated as $f^2 = \frac{R^2}{1-R^2}$
+* `u`, numerator degrees of freedom. This is the number of parameters in the model minus 1
+* `v`, denominator degrees of freedom. This is the number of observations - number of parameters
+* `sig_level`, significance level
+* `power`, desired power of the test
+
+It has the following dependencies, so you'll need to load these:
+
+```{python}
+from numpy import sqrt, ceil, abs
+from scipy.optimize import brenth
+from scipy.stats import f
+from scipy.special import ncfdtr
+```
+
+Next, we load the `pwr_f2_test()` function (here I've saved it in `scripts/pwr_f2_test.py`):
+
+```{python}
+exec(open('scripts/pwr_f2_test.py').read())
+```
+
+Next, we calculated `f2`:
+
+```{python}
+f2 = R2 / (1 - R2)
+```
+
+```{python}
+pwr_f2_test(u = 1, f2 = f2, sig_level = 0.05 , power = 0.9)
+```
+
+So we see that the number of observations we need is 11495!
+:::
+:::
+:::
+
+::: {.callout-note icon=false}
+## Study size with multiple regression
+
+**Level:** {{< fa solid star >}} {{< fa solid star >}} {{< fa solid star >}}
+
+We wish to test the effectiveness of a new drug against a placebo. It is thought that the sex and age of the patients may have an effect on their response.
+
+a. Write down a linear model equation that might describe the relationship between these variables including all possible two-way interactions.
+b. How big a study would we need to detect a medium effect size (according to Cohen, this is 0.15) at a power of 90%, with significance level 0.05?
+
+::: {.callout-tip collapse="true"}
+## Answer
+
+Here we have a system with a single response variable, and three categorical predictor variables. One of them is `gender`, with two possible levels (M, F). One of them is `treatment`, again with two possible levels (Drug, placebo) and one of them is continuous (`age`). A linear model with all possible two-way interactions would look something like this:
+
+`response ~ treatment + gender + age + treatment:gender + treatment:age + age:gender`
+
+In order to do a power calculation for this set up, we'll need four things:
+
+1. the **effect size**. Here we're told it's a medium effect size according to Cohen so we can use his default values. Here the value is 0.15, see table further above. Alternatively, we could have looked this up online (which may give us different values, or values that are relevant to a specific discipline).
+2. The **desired power**. Here we're told it's 90%
+3. The **significance level** to work to. Again we're told this is going to be 0.05.
+4. The **numerator degrees of freedom**. This is the tricky bit. We can do this by adding up the degrees of freedom for each term separately.
+
+The numerator degrees of freedom is best calculated by working out the degrees of freedom of each of the six terms separately and then adding these up.
+
+There are three simple ideas here that you need:
+
+1. The degrees of freedom for a categorical variable is just the number of groups - 1
+2. The degrees of freedom for a continuous variable is always 1
+3. the degrees of freedom for any interaction is simple the product of the degrees of the main effects involved in the interaction.
+
+So this means:
+
+* The `df` for `gender` is 1 (2 groups - 1)
+* The `df` for `treatment` is 1 (2 groups -1)
+* The `df` for `age` is 1 (continuous predictor)
+* The `df` for `gender:treatment` is 1 (1 x 1)
+* The `df` for `gender:age` is 1 (1 x 1)
+* The `df` for `age:treatment` is 1 (1 x 1)
+
+Rather boring that all of them were 1 to be honest. Anyway, given that the denominator degrees of freedom is just the sum of all of these, we can see that $u = 6$.
+
+We now have all of the information to carry out the power analysis.
+
+::: {.panel-tabset group="language"}
+## tidyverse
+
+```{r}
+pwr.f2.test(u = 6, f2 = 0.15,
+            sig.level = 0.05, power = 0.9)
+```
+
+## R
+
+```{r}
+pwr.f2.test(u = 6, f2 = 0.15,
+            sig.level = 0.05, power = 0.9)
+```
+
+## Python
+
+```{python}
+pwr_f2_test(u = 6, f2 = 0.15,
+            sig_level = 0.05, power = 0.9)
+```
+:::
+
+We get a denominator df of 116, which means that we would need at least 123 participants in our study (Remember: number of observations = numerator d.f. (u) + denominator d.f. (v) + 1). Given that we have four unique combinations of `gender` and `treatment`, it would be practically sensible to round this up to 124 participants so that we could have an equal number (31) in each combination of sex and treatment. It would also be sensible to aim for a similar distribution of age ranges in each group as well.
+
 :::
 :::
 
