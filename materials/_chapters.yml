@@ -1,0 +1,40 @@
+# This is the chapter configuration
+book:
+  chapters:
+    - part: "Developer Guidelines"
+      chapters:
+        - materials/01-render_guidelines.md
+        - materials/02-content_guidelines.md
+
+book:
+  chapters:
+    - part: "Materials"
+      chapters:
+        - "materials.qmd"
+    - part: "Hypothesis testing"
+      chapters:
+        - "materials/cs1_practical_one-sample-t-test.qmd"
+        - "materials/cs1_practical_two-sample-t-test.qmd"
+        - "materials/cs1_practical_two-sample-paired-t-test.qmd"
+        - "materials/cs1_practical_one-sample-wilcoxon.qmd"
+        - "materials/cs1_practical_two-sample-mann-whitney.qmd"
+        - "materials/cs1_practical_two-sample-paired-wilcoxon.qmd"
+    - part: "Categorical predictors"
+      chapters:
+        - "materials/cs2_practical_anova.qmd"
+        - "materials/cs2_practical_kruskal-wallis.qmd"
+    - part: "Continuous predictors"
+      chapters:
+        - "materials/cs3_practical_linear-regression.qmd"
+        - "materials/cs3_practical_correlations.qmd"
+    - part: "Two predictors"
+      chapters:
+        - "materials/cs4_practical_two-way-anova.qmd"
+        - "materials/cs4_practical_linear-regression-grouped-data.qmd"
+    - part: "Multiple predictors"
+      chapters:
+            - "materials/cs5_practical_multiple-linear-regression.qmd"
+            - "materials/cs5_practical_model-comparisons.qmd"
+    - part: "Power analysis"
+      chapters:
+        - "materials/cs6_practical_power-analysis.qmd"

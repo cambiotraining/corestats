@@ -4,7 +4,7 @@
 #  Contact us if something doesn't look right on your rendered website
 
 project:
-  type: website
+  type: book
   output-dir: _site
   render:
     - index.md
@@ -16,7 +16,8 @@ project:
 format: courseformat-html
 
 metadata-files:
-  - "materials/_sidebar.yml"
+  - "materials/_chapters.yml"
+  # - "materials/_sidebar.yml"
 
 execute:
   freeze: auto
@@ -25,7 +26,7 @@ knitr:
   opts_knit:
     cache.path: .knitr_cache
 
-website:
+book:
   favicon: "_extensions/cambiotraining/courseformat/img/university-of-cambridge-favicon.ico"
   page-navigation: true
   page-footer:
@@ -50,5 +51,8 @@ website:
       - icon: twitter
         href: https://twitter.com/bioinfocambs
         aria-label: Bioinformatics Training Facility Twitter
-  sidebar:
-    - title: "Home"
+  chapters:
+    - part: "Overview"
+      chapters:
+        - index.md
+        - setup.qmd
