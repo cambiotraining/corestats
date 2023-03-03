@@ -1106,7 +1106,7 @@ sm.stats.anova_lm(lm_tulip_py, typ = 2)
 So we do appear to have a significant interaction between `water` and `shade` as expected.
 :::
 
-> A two-way ANOVA showed that there is a significant interaction between watering and shading regimes on number of blooms (p = `r anova(lm_tulip) %>% broom::tidy() %>% filter(term == "water:shade") %>%  pull(p.value) %>% formatC(format = "e", digits = 2)`). Increasing auxin concentration appears to result in a reduction of plant height in both wild type and mutant genotypes. The response in the mutant genotype seems to be less pronounced than in wild type.
+> A two-way ANOVA showed that there is a significant interaction between watering and shading regimes on number of blooms (p = `r anova(lm_tulip) %>% broom::tidy() %>% filter(term == "water:shade") %>%  pull(p.value) %>% formatC(format = "e", digits = 2)`).
 
 :::
 
