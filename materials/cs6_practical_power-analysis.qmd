@@ -500,7 +500,7 @@ Performing a power analysis on a one-sample data set
 
 Load in `data/CS1-onesample.csv` (this is the same data we looked at in the earlier practical containing information on fish lengths from the Guanapo river).
 
-a. Assume this was a pilot study and analyse the data using a one-sample t-test to see if there is any evidence that the mean length of fish differs from 19 mm.
+a. Assume this was a pilot study and analyse the data using a one-sample t-test to see if there is any evidence that the mean length of fish differs from 20 mm.
 b. Use the results of this analysis to estimate the effect size.
 c. Work out how big a sample size would be required to detect an effect this big with power 0.8 and significance 0.05.
 d. How would the sample size change if we wanted 0.9 power and significance 0.01?

@@ -51,8 +51,9 @@ book:
       - icon: twitter
         href: https://twitter.com/bioinfocambs
         aria-label: Bioinformatics Training Facility Twitter
+    title: "Core statistics"
   chapters:
-    - part: "Overview"
+    - part: "Welcome"
       chapters:
         - index.md
         - setup.qmd

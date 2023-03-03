@@ -1,6 +1,6 @@
 ---
 title: "Core statistics"
-author: ["Martin van Rongen, Matt Castle, Rob Nicholls, Holly Pavey, Vicki Hodgson"]
+author: ["Martin van Rongen, Matt Castle, Emer Jones, Rob Nicholls, Holly Pavey, Vicki Hodgson"]
 date: today
 ---
 
@@ -16,12 +16,12 @@ These sessions are intended to enable you to perform core data analysis techniqu
 
 They are **not** a "how to mindlessly use a stats program" course!
 
-## Core aims
+## Core aims {.unnumbered}
 
 There are several things that we try to achieve during this course.
 
 ::: callout-note
-## Course aims
+## Course aims {.unnumbered}
 
 To know what to do when presented with an arbitrary data set e.g.
 
@@ -30,7 +30,7 @@ To know what to do when presented with an arbitrary data set e.g.
 3.  Be able to carry these out and understand the results
 :::
 
-## Core topics
+## Core topics {.unnumbered}
 
 1.  Simple hypothesis testing
 2.  Categorical predictors
@@ -39,6 +39,6 @@ To know what to do when presented with an arbitrary data set e.g.
 5.  Multiple predictors
 6.  Power analysis
 
-## Practicals
+## Practicals {.unnumbered}
 
 Each practical document is divided up into various sections. In each section there will be some explanatory text which should help you to understand what is going on and what you're trying to achieve.
