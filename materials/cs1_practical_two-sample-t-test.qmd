@@ -146,7 +146,7 @@ stats::shapiro.test()
 :::
 :::
 
-### Purpose and aim
+## Purpose and aim
 These two-sample Student's t-test is used when we have two samples of continuous data where we are trying to find out if the samples came from the same parent distribution or not. This essentially boils down to finding out if there is a difference in the means of the two samples.
 
 ## Data and hypotheses
