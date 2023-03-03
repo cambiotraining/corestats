@@ -271,7 +271,7 @@ spidermonkey %>%
 
 The relevant p-value is given in the `p` column (0.893). As it is quite large we see that each group do appear to have the same variance.
 
-There is also a warning about `group coerced to factor`. There is no need to worry about this - Levene's test needs to compare different groups and because `aggression` is encoded as a numeric value, it converts it to a categorical one before running the test.
+There is also a warning about `group coerced to factor`. There is no need to worry about this - Levene's test needs to compare different groups and because `familiarity` is encoded as a character value, it converts it to a categorical one before running the test.
 
 ## R (base)
 
