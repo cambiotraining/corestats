@@ -363,48 +363,8 @@ We can see that whilst the Guanapo data is probably normally distributed (p = 0.
 
 The Shapiro-Wilk test is quite sensitive to sample size. This means that if you have a large sample then even small deviations from normality will cause the sample to fail the test, whereas smaller samples are allowed to pass with much larger deviations. Here the Aripo data has nearly 40 points in it compared with the Guanapo data and so it is much easier for the Aripo sample to fail compared with the Guanapo data.
 
-## Exercise: Q-Q plots rivers {#exercise-qq-rivers}
-
-Create the Q-Q plots for the two samples and discuss with your neighbour what you see in light of the results from the above Shapiro-Wilk test.
-
-::: {.callout-tip collapse="true"}
-## Answer
-
-::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r}
-# we group the data by river
-# then create a panel per river
-# containing the Q-Q plot for that river
-rivers %>% 
-  ggplot(aes(sample = length)) +
-  stat_qq() +
-  stat_qq_line(colour = "red") +
-  facet_wrap(facets = vars(river))
-```
-
-## R (base)
-
-```{r}
-par(mfrow=c(1,2))
-qqnorm(uns_rivers$Aripo, main = "Aripo")
-qqline(uns_rivers$Aripo, col = "red")
-
-qqnorm(uns_rivers$Guanapo, main = "Guanapo")
-qqline(uns_rivers$Guanapo, col = "red")
-```
-
-## Python
-
-```{python}
-#| results: hide
-(ggplot(rivers_py,
-        aes(sample = "length")) +
-     stat_qq() +
-     stat_qq_line(colour = "red") +
-     facet_wrap("river"))
-```
+:::{.callout-important}
+Complete [Exercise -@sec-exr_rivers].
 :::
 
 The Q-Q plots show the opposite of what we found with the Shapiro-Wilk tests: the data for Aripo look pretty normally distributed apart from one data point, whereas the assumption of normality for the Guanapo data is less certain.
@@ -412,11 +372,10 @@ The Q-Q plots show the opposite of what we found with the Shapiro-Wilk tests: th
 What to do? Well, you could be conservative and state that you are not confident that the data in either group are normally distributed. That would be a perfectly reasonable conclusion.
 
 I would personally not have issues with stating that the Aripo data are probably normally distributed *enough*.
-:::
 
 ## Equality of variance
 
-::: callout-tip
+:::{.callout-tip}
 Remember that statistical tests do not provide answers, they merely suggest patterns. Human interpretation is still a crucial aspect to what we do.
 :::
 
@@ -592,7 +551,65 @@ Again, the p-value is what we're most interested in. Since the p-value is very s
 
 Now there's a conversation starter.
 
-## Exercise: Turtles
+::: {.callout-important}
+Complete [Exercise -@sec-exr_turtles].
+:::
+
+## Exercises
+
+### Q-Q plots rivers {#sec-exr_rivers}
+
+:::{.callout-exercise}
+
+{{< level 1 >}}
+
+Create the Q-Q plots for the two rivers in the `data/CS1-twosample.csv` file and discuss with your neighbour what you see in light of the results from the above Shapiro-Wilk test.
+
+::: {.callout-answer collapse=true}
+
+::: {.panel-tabset group="language"}
+## R (tidyverse)
+
+```{r}
+# we group the data by river
+# then create a panel per river
+# containing the Q-Q plot for that river
+rivers %>% 
+  ggplot(aes(sample = length)) +
+  stat_qq() +
+  stat_qq_line(colour = "red") +
+  facet_wrap(facets = vars(river))
+```
+
+## R (base)
+
+```{r}
+par(mfrow=c(1,2))
+qqnorm(uns_rivers$Aripo, main = "Aripo")
+qqline(uns_rivers$Aripo, col = "red")
+
+qqnorm(uns_rivers$Guanapo, main = "Guanapo")
+qqline(uns_rivers$Guanapo, col = "red")
+```
+
+## Python
+
+```{python}
+#| results: hide
+(ggplot(rivers_py,
+        aes(sample = "length")) +
+     stat_qq() +
+     stat_qq_line(colour = "red") +
+     facet_wrap("river"))
+```
+:::
+:::
+:::
+
+### Turtles {#sec-exr_turtles}
+::: {.callout-exercise}
+
+{{< level 2 >}}
 
 This exercise explores serum cholesterol concentrations in turtles.
 
@@ -606,20 +623,18 @@ Using the data in `data/CS1-turtle.csv`, test the null hypothesis that male and 
 6.  Perform a two-sample t-test
 7.  Write down a sentence that summarises the results that you have found
 
-::: {.callout-tip collapse="true"}
-## Answer
-
-### Data
+::: {.callout-answer collapse=true}
+#### Data
 
 Once you've loaded the data, have a look at the structure. The data is in a tidy data format, where each variable (thing that you measure) is in its own column. Each observation has its own row.
 
-### Hypotheses
+#### Hypotheses
 
 $H_0$ : male mean $=$ female mean
 
 $H_1$ : male mean $\neq$ female mean
 
-### Load, summarise and visualise data
+#### Load, summarise and visualise data
 
 Let's load the data and explore our data a bit more before we dive into the statistics.
 
@@ -699,7 +714,7 @@ As always we use the plot and summary to assess three things:
     -   Normality looks a bit worrying: whilst the `Male` group appears nice and symmetric (and so might be normal), the `Female` group appears to be quite skewed (since the median is much closer to the bottom than the top). We'll have to look carefully at the more formal checks to decided whether we think the data are normal enough for us to use a t-test.
     -   Homogeneity of variance. At this stage the spread of the data within each group looks similar, but because of the potential skew in the `Female` group we'll again want to check the assumptions carefully.
 
-### Assumptions
+#### Assumptions
 
 **Normality**
 
@@ -860,7 +875,7 @@ The good news is that both Levene and Bartlett agree that there is homogeneity o
 
 Overall, what this means is that we're not too sure about normality, but that homogeneity of variance is pretty good.
 
-### Implement two-sample t-test
+#### Implement two-sample t-test
 
 Because of the result of the Bartlett test I know that I can carry out a two-sample Student's t-test. If the variances between the two groups were not equal, then we'd have to perform Welch's t-test.
 
@@ -908,9 +923,10 @@ With a p-value of 0.544, this test tells us that there is insufficient evidence 
 
 > A Student's two-sample t-test indicated that the mean serum cholesterol level did not differ significantly between male and female turtles (p = 0.544).
 
-### Discussion
+#### Discussion
 
 In reality, because of the ambiguous normality assumption assessment, for this data set I would actually carry out two different tests; the two-sample t-test with equal variance and the Mann-Whitney U test. If both of them agreed then it wouldn't matter too much which one I reported (I'd personally report both with a short sentence to say that I'm doing that because it wasn't clear whether the assumption of normality had or had not been met), but it would be acceptable to report just one.
+:::
 :::
 
 ## Key points

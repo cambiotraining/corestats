@@ -631,7 +631,13 @@ The above sentence is an adequate concluding statement for this test and is what
 Additional information, such as the test statistic and degrees of freedom, are sometimes also reported. This is more of a legacy from the time where people did the calculations by hand and used tables. I personally find it much more useful to report as above and supply the data and analysis, so other people can see what I've done and why!
 :::
 
-## Exercise: gastric juices
+## Exercises
+
+### Gastric juices {#sec-exr_gastric}
+
+:::{.callout-exercise}
+
+{{< level 2 >}}
 
 The following data are the dissolving times (in seconds) of a drug in agitated gastric juice:
 
@@ -647,23 +653,25 @@ Do these results provide any evidence to suggest that dissolving time for this d
 5.  Check the assumptions for the test.
     -   Was the test valid?
 
-::: {.callout-tip collapse="true"}
+::: {.callout-answer collapse=true}
 ## Answer
 
-### Hypotheses
+#### Hypotheses
 
 $H_0$ : mean $=$ 45s
 
 $H_1$ : mean $\neq$ 45s
 
-### Data, summarise & visualise
+#### Data, summarise & visualise
 
 We read in the data from `CS1-gastric_juices.csv`. It contains two columns, an `id` column and a `dissolving_time` column with the measured values.
 
 ::: {.panel-tabset group="language"}
 ## R (tidyverse)
 
-```{r, message=FALSE, warning=FALSE}
+```{r}
+#| message: false
+#| warning: false
 # load the data
 dissolving <- read_csv("data/CS1-gastric_juices.csv")
 
@@ -748,7 +756,7 @@ There are only 8 data points, so the histogram is rather uninformative. Thankful
 2.  The median value in the box-plot (the thick black line) is pretty close to 45 and so I wouldn't be surprised if the mean of the data isn't significantly different from 45. We can confirm that by looking at the mean and median values that we calculated using the summary command from earlier.
 3.  The data appear to be symmetric, and so whilst we can't tell if they're normal they're a least not massively skewed.
 
-### Assumptions
+#### Assumptions
 
 Normality:
 
@@ -804,7 +812,7 @@ Overall, we are somewhat confident that the assumption of normality is well-enou
 
 In reality, if I found myself in this situation I would also try doing a non-parametric test on the data (Wilcoxon signed-rank test) and see whether I get the same conclusion about whether the median dissolving time differs from 45s. Technically, you don't know about the Wilcoxon test yet as you haven't done that section of the materials. Anyway, if I get the same conclusion then my confidence in the result of the test goes up considerably; it doesn't matter how well an assumption has been met, I get the same result. If on the other hand I get a completely different conclusion from carrying out the non-parametric test then all bets are off; I now have very little confidence in my test result as I don't know which one to believe (in the case that the assumptions of the test are a bit unclear). In this example a Wilcoxon test also gives us a non-significant result and so all is good.
 
-### Implement test
+#### Implement test
 
 ::: {.panel-tabset group="language"}
 ## R (tidyverse)
@@ -837,6 +845,7 @@ pg.ttest(x = dissolving_py.dissolving_time,
 > A one-sample t-test indicated that the mean dissolving time of the drug is not significantly different from 45s ($\bar{x}$ = 45.2, p = 0.725).
 
 And that, is that.
+:::
 :::
 
 ## Key points
