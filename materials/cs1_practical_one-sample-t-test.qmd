@@ -41,7 +41,7 @@ exec(open('setup_files/setup.py').read())
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 
@@ -69,7 +69,7 @@ ggplot2::stat_qq()
 ggplot2::stat_qq_line()
 ```
 
-## R
+## R (base)
 
 ### Functions
 
@@ -160,7 +160,7 @@ We will use a one-sample, two-tailed t-test to see if we should reject the null 
 Make sure you have downloaded the data (see: [Data section](/materials#index-datasets)) and placed it within your working directory.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 First we load the relevant libraries:
 
@@ -188,7 +188,7 @@ fishlengthDF
 
 The first line reads the data into R and creates an object called a **tibble**, which is a type of **data frame**. This data frame contains 3 columns: a unique `id`, `river` encoding the river and `length` with the measured guppy length.
 
-## R
+## R (base)
 
 We then read in the data and create a vector containing the data.
 
@@ -220,7 +220,7 @@ fishlength_py.head()
 Summarise the data and visualise it:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 summary(fishlengthDF)
@@ -234,7 +234,7 @@ fishlengthDF %>%
   geom_boxplot()
 ```
 
-## R
+## R (base)
 
 ```{r}
 summary(fishlength_r)
@@ -297,7 +297,7 @@ In increasing order of rigour, we have
 Plot a histogram of the data, which gives:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 fishlengthDF %>% 
@@ -305,7 +305,7 @@ fishlengthDF %>%
   geom_histogram(bins = 15)
 ```
 
-## R
+## R (base)
 
 ```{r}
 hist(fishlength_r, breaks = 15)
@@ -332,7 +332,7 @@ Q-Q plot is the short for quantile-quantile plot. This **diagnostic** plot (as i
 Construct a Q-Q Plot of the quantiles of the data against the quantiles of a normal distribution:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 fishlengthDF %>% 
@@ -341,7 +341,7 @@ fishlengthDF %>%
   stat_qq_line(colour = "blue")
 ```
 
-## R
+## R (base)
 
 ```{r}
 # plot the Q-Q plot
@@ -483,7 +483,7 @@ This is one of a number of formal statistical test that assess whether a given s
 Perform a Shapiro-Wilk test on the data:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 The `shapiro.test()` function needs a numerical vector as input. We get this by extracting the `length` values with the `pull()` function. We then pipe this to the `shapiro.test()` function.
 
 ```{r}
@@ -497,7 +497,7 @@ fishlengthDF %>%
 -   The calculated W-statistic is 0.9494 (we don't need to know this)
 -   The p-value is 0.1764
 
-## R
+## R (base)
 
 ```{r}
 shapiro.test(fishlength_r)
@@ -540,7 +540,7 @@ In which case we would consider an alternative test that has less stringent assu
 Perform a one-sample, two-tailed t-test:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 fishlengthDF %>% 
@@ -563,7 +563,7 @@ In the output:
 -   The 5th and 6th lines give the 95th confidence interval (we don't need to know this)
 -   The 7th, 8th and 9th lines give the sample mean again (18.29655).
 
-## R
+## R (base)
 
 ```{r}
 t.test(fishlength_r,
@@ -661,7 +661,7 @@ $H_1$ : mean $\neq$ 45s
 We read in the data from `CS1-gastric_juices.csv`. It contains two columns, an `id` column and a `dissolving_time` column with the measured values.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r, message=FALSE, warning=FALSE}
 # load the data
@@ -688,7 +688,7 @@ dissolving %>%
   geom_boxplot()
 ```
 
-## R
+## R (base)
 
 ```{r}
 # load the data
@@ -753,7 +753,7 @@ There are only 8 data points, so the histogram is rather uninformative. Thankful
 Normality:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # perform Shapiro-Wilk test
@@ -770,7 +770,7 @@ dissolving %>%
   stat_qq_line(colour = "blue")
 ```
 
-## R
+## R (base)
 
 ```{r}
 shapiro.test(dissolving_r$dissolving_time)
@@ -807,7 +807,7 @@ In reality, if I found myself in this situation I would also try doing a non-par
 ### Implement test
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # perform one-sample t-test

@@ -37,12 +37,12 @@ exec(open('setup_files/setup.py').read())
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 ### Functions
 
-## R
+## R (base)
 
 ### Libraries
 ### Functions
@@ -69,7 +69,7 @@ This section uses the `data/CS5-Ladybird.csv` data set. This data set comprises 
 First, we load the data and visualise it:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -96,7 +96,7 @@ ggplot(ladybird, aes(x = weight, y = eggs,
     scale_color_brewer(palette = "Dark2")
 ```
 
-## R
+## R (base)
 
 ```{r}
 #| message: false
@@ -173,7 +173,7 @@ We start with the complete or _full_ model, that takes into account any possible
 Next, we define the reduced model. This is the next, most simple model. In this case we're removing the interaction and constructing an additive model.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # define the full model
@@ -194,7 +194,7 @@ AIC(lm_full)
 AIC(lm_add)
 ```
 
-## R
+## R (base)
 
 ```{r}
 # define the full model
@@ -250,7 +250,7 @@ This choice of language (supported vs significant) is deliberate and there are a
 Next, we see which of the remaining terms can be dropped. We will look at the models where we have dropped both `male` and `weight` (i.e. `eggs ~ weight` and `eggs ~ male`) and compare their AIC values with the AIC of our current minimal model (`eggs ~ weight + male`). If the AIC values of at least one of our new reduced models is lower (or at least no more than 2 greater) than the AIC of our current minimal model, then we can drop the relevant term and get ourselves a new minimal model. If we find ourselves in a situation where we can drop more than one term we will drop the term that gives us the model with the lowest AIC.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 Drop the variable `weight` and examine the AIC:
 
@@ -273,7 +273,7 @@ lm_weight <- lm(eggs ~ weight,
 # extract the AIC
 AIC(lm_weight)
 ```
-## R
+## R (base)
 
 Drop the variable `weight` and examine the AIC:
 
@@ -335,7 +335,7 @@ Our final comparison is to drop the variable `weight` and compare this simple mo
 Drop the variable `weight` and see if that has an effect:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # define the model
@@ -346,7 +346,7 @@ lm_null <- lm(eggs ~ 1,
 AIC(lm_null)
 ```
 
-## R
+## R (base)
 
 ```{r}
 # define the model
@@ -434,7 +434,7 @@ Perform a BSE on the following data sets:
 Let's start by reading in the data and checking which variables are in the data set.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -443,7 +443,7 @@ trees <- read_csv("data/CS5-Trees.csv")
 head(trees)
 ```
 
-## R
+## R (base)
 
 ```{r}
 #| message: false
@@ -475,7 +475,7 @@ The full model is `Volume ~ Girth * Height`.
 We perform the BSE as follows:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 Define the model and use the `step()` function:
 
@@ -488,7 +488,7 @@ lm_trees <- lm(Volume ~ Girth * Height,
 step(lm_trees)
 ```
 
-## R
+## R (base)
 
 Define the model and use the `step()` function:
 
@@ -529,7 +529,7 @@ This BSE approach only gets as far as the first step (trying to drop the interac
 Let's start by reading in the data and checking which variables are in the data set.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -538,7 +538,7 @@ pm2_5 <- read_csv("data/CS5-pm2_5.csv")
 head(pm2_5)
 ```
 
-## R
+## R (base)
 
 ```{r}
 #| message: false
@@ -564,7 +564,7 @@ pm2_5_py.head()
 `pm2_5 ~ avg_temp + rain_mm + wind_m_s * location`
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # define the model
@@ -575,7 +575,7 @@ lm_pm2_5 <- lm(pm2_5 ~ avg_temp + rain_mm + wind_m_s * location,
 step(lm_pm2_5)
 ```
 
-## R
+## R (base)
 
 ```{r}
 # define the model

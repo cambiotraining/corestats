@@ -42,7 +42,7 @@ exec(open('setup_files/setup.py').read())
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 
@@ -78,7 +78,7 @@ ggplot2::stat_qq()
 ggplot2::stat_qq_line()
 ```
 
-## R
+## R (base)
 
 ### Libraries
 
@@ -169,7 +169,7 @@ Let's read in the data and have a quick look at the first rows to see how the da
 Make sure you have downloaded the data and placed it within your working directory.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 First we load the relevant libraries:
 
@@ -193,7 +193,7 @@ rivers <- read_csv("data/CS1-twosample.csv")
 rivers
 ```
 
-## R
+## R (base)
 
 ```{r}
 rivers_r <- read.csv("data/CS1-twosample.csv")
@@ -215,7 +215,7 @@ rivers_py.head()
 Let's first summarise the data.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 summary(rivers)
@@ -238,7 +238,7 @@ rivers %>%
   geom_boxplot()
 ```
 
-## R
+## R (base)
 
 ```{r}
 summary(rivers_r)
@@ -308,7 +308,7 @@ This is where it gets a bit trickier. Although we don't care if the samples are 
 So we perform a [Shapiro-Wilk test](#shapiro-wilk-test) on both samples separately.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 We can use the `filter()` function to filter the data by `river`, then we perform the Shapiro-Wilk test on the `length` measurements:
 
@@ -325,7 +325,7 @@ rivers %>%
     shapiro.test()
 ```
 
-## R
+## R (base)
 
 Before we can do that, we need to convert the data to a format where the data is split by `river`:
 
@@ -371,7 +371,7 @@ Create the Q-Q plots for the two samples and discuss with your neighbour what yo
 ## Answer
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # we group the data by river
@@ -384,7 +384,7 @@ rivers %>%
   facet_wrap(facets = vars(river))
 ```
 
-## R
+## R (base)
 
 ```{r}
 par(mfrow=c(1,2))
@@ -427,7 +427,7 @@ If that is indeed the case, then the data themselves should have equal spread as
 The Shapiro-Wilk test and the Q-Q plots have shown that some of the data might not be normal *enough* (although in opposite directions!) and so in order to test for equality of variance we will use Levene's test.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 The function we use is `levene_test()` from the `rstatix` library.
 
@@ -440,7 +440,7 @@ rivers %>%
 
 The key bit of information is the `p` column. This is the p-value (0.1876) for this test.
 
-## R
+## R (base)
 
 Levene's test is not included in the default R packages. Instead, we're using the additional functionality from the `rstatix` package. You will have to install _and_ load the package, as follows:
 
@@ -482,7 +482,7 @@ The p-value tells us the probability of observing these two samples if they come
 If we had wanted to carry out Bartlett's test (i.e. if the data *had* been sufficiently normally distributed) then we would have done:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 Here we use `bartlett.test()` function. As before, the data is coming from the pipe, so we define this with `.`.
 
@@ -493,7 +493,7 @@ rivers %>%
                 data = .)
 ```
 
-## R
+## R (base)
 
 ```{r}
 bartlett.test(length ~ river, data = rivers_r)
@@ -518,7 +518,7 @@ In this case we're ignoring the fact that the data are not normal enough, accord
 Perform a two-sample, two-tailed, t-test:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # two-sample, two-tailed t-test
@@ -545,7 +545,7 @@ So, how do we interpret these results?
 -   The 5th and 6th lines give the 95th confidence interval (we don't need to know this here).
 -   The 7th, 8th and 9th lines give the sample means for each group (20.33077 in Aripo and 18.29655 in Guanapo) which we found earlier.
 
-## R
+## R (base)
 
 ```{r}
 t.test(length ~ river, data = rivers_r,
@@ -624,7 +624,7 @@ $H_1$ : male mean $\neq$ female mean
 Let's load the data and explore our data a bit more before we dive into the statistics.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| warning: false
@@ -653,7 +653,7 @@ turtle %>%
   geom_boxplot()
 ```
 
-## R
+## R (base)
 
 ```{r}
 #| warning: false
@@ -706,7 +706,7 @@ As always we use the plot and summary to assess three things:
 Let's look at the normality of each of the groups separately. There are several ways of getting at the `serum` values for `Male` and `Female` groups separately. All of them come down to splitting the data. Afterwards we use the Shapiro-Wilk ('formal' test), followed by Q-Q plots (much more informative).
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # perform Shapiro-Wilk test on each group
@@ -721,7 +721,7 @@ turtle %>%
     shapiro.test()
 ```
 
-## R
+## R (base)
 
 We can use the `unstack()` function to split the data, then access the relevant values.
 
@@ -755,7 +755,7 @@ The p-values for both Shapiro-Wilk tests are non-significant which suggests that
 Given these caveats of the Shapiro-Wilk test (I'll stop mentioning them now, I think I've made my opinion clear ;)), let's look at the Q-Q plots.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # create Q-Q plots for both groups
@@ -766,7 +766,7 @@ turtle %>%
   facet_wrap(facets = vars(sex))
 ```
 
-## R
+## R (base)
 
 ```{r}
 par(mfrow=c(1,2))
@@ -798,7 +798,7 @@ Overall, the assumption of normality of the data doesn't appear to be very well 
 It's not clear whether the data are normal or not, so it isn't clear which test to use here. The sensible approach is to do both and hope that they agree (fingers crossed!). Or err on the side of caution and assume they are not normal, but potentially throwing away statistical power (more on that later).
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 Bartlett's test gives us:
 
@@ -817,7 +817,7 @@ turtle %>%
   levene_test(serum ~ sex)
 ```
 
-## R
+## R (base)
 
 Bartlett's test gives us:
 
@@ -865,7 +865,7 @@ Overall, what this means is that we're not too sure about normality, but that ho
 Because of the result of the Bartlett test I know that I can carry out a two-sample Student's t-test. If the variances between the two groups were not equal, then we'd have to perform Welch's t-test.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # perform two-sample t-test
@@ -875,7 +875,7 @@ t.test(serum ~ sex,
        data = turtle)
 ```
 
-## R
+## R (base)
 
 ```{r}
 t.test(serum ~ sex,

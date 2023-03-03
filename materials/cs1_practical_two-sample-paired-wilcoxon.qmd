@@ -62,7 +62,7 @@ A Wilcoxon signed-rank test is an alternative to a paired t-test. It does not re
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 
@@ -104,7 +104,7 @@ ggplot2::geom_jitter()
 tidyr::pivot_wider()
 ```
 
-## R
+## R (base)
 
 ### Functions
 
@@ -168,7 +168,7 @@ These have been checked previously.
 Perform a two-tailed, Wilcoxon signed-rank test:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # perform the test
@@ -184,7 +184,7 @@ cortisol %>%
 -   The third argument indicates that the test is paired
 -   The last argument is the data set (coming from the pipe, so denoted as `.`)
 
-## R
+## R (base)
 
 ```{r}
 wilcox.test(cortisol ~ time,
@@ -253,7 +253,7 @@ $H_1$ : foreleg average $\neq$ hindleg average
 First of all, we need to load in the data.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -317,7 +317,7 @@ deer %>%
       geom_line()
 ```
 
-## R
+## R (base)
 
 ```{r}
 deer_r <- read.csv("data/CS1-deer.csv")
@@ -462,7 +462,7 @@ All of this gives us a much clearer picture. It looks as though the hindlegs are
 We need to consider the distribution of the *difference* in leg lengths rather than the individual distributions.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 Shapiro-Wilk test:
 
@@ -483,7 +483,7 @@ leg_diff %>%
   stat_qq_line(colour = "red")
 ```
 
-## R
+## R (base)
 
 Shapiro-Wilk test:
 

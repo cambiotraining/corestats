@@ -37,12 +37,12 @@ exec(open('setup_files/setup.py').read())
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 ### Functions
 
-## R
+## R (base)
 
 ### Libraries
 ### Functions
@@ -59,8 +59,10 @@ exec(open('setup_files/setup.py').read())
 ::: {.callout-tip collapse="true"}
 ## Answer
 ::: {.panel-tabset group="language"}
-## tidyverse
-## R
+## R (tidyverse)
+
+## R (base)
+
 ## Python
 :::
 :::

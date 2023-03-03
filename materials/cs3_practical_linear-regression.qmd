@@ -38,7 +38,7 @@ exec(open('setup_files/setup.py').read())
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 
@@ -63,7 +63,7 @@ library(ggResidpanel)
 ggResidpanel::resid_panel()
 ```
 
-## R
+## R (base)
 
 ### Libraries
 None.
@@ -156,7 +156,7 @@ And then will be testing the following null and alternative hypotheses:
 ## Summarise and visualise
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 First, we read in the data:
 
 ```{r}
@@ -173,7 +173,7 @@ USArrests %>%
   geom_point()
 ```
 
-## R
+## R (base)
 First, we read in the data:
 
 ```{r}
@@ -222,7 +222,7 @@ In order for a linear regression analysis to be valid 4 key assumptions need to 
 Whether these assumptions are met can easily be checked visually by producing four key diagnostic plots.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 First we need to define the linear model:
 
@@ -248,7 +248,7 @@ lm_1 %>%
 -   The bottom left **Location-scale** graph allows us to investigate whether there is any correlation between the residuals and the predicted values and whether the variance of the residuals changes significantly. If not, then the red line should be horizontal. If there is any correlation or change in variance then the red line will not be horizontal. This plot is fine.
 -   The last graph shows the **Cook's distance** and tests if any one point has an unnecessarily large effect on the fit. The important aspect here is to see if any points are larger than 0.5 (meaning you'd have to be careful) or 1.0 (meaning you'd definitely have to check if that point has an large effect on the model). If not, then no point has undue influence. This plot is good.
 
-## R
+## R (base)
 
 First we need to define the linear model:
 
@@ -328,7 +328,7 @@ Let's change this through leading by example!
 We have already defined the linear model, so we can have a closer look at it:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # show the linear model
@@ -337,7 +337,7 @@ lm_1
 
 The `lm()` function returns a linear model object which is essentially a list containing everything necessary to understand and analyse a linear model. However, if we just type the model name (as we have above) then it just prints to the screen the actual coefficients of the model i.e. the intercept and the slope of the line.
 
-## R
+## R (base)
 
 ```{r}
 # show the linear model
@@ -365,7 +365,7 @@ Murder = 0.63 + 0.042 Assault
 Next we can assess whether the slope is significantly different from zero:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 anova(lm_1)
@@ -383,7 +383,7 @@ This is exactly the same format as the table we saw for one-way ANOVA:
     -   The p-value is 2.596e-12 and is the number directly under the `Pr(>F)` on the 4th line.
     -   The other values in the table (in the `Sum Sq` and `Mean Sq`) column are used to calculate the F statistic itself and we don't need to know these.
 
-## R
+## R (base)
 
 ```{r}
 anova(lm_1)
@@ -418,7 +418,7 @@ Again, the p-value is what we're most interested in here and shows us the probab
 It can be very helpful to plot the regression line with the original data to see how far the data are from the predicted linear values. We can do this as follows:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -432,7 +432,7 @@ USArrests %>%
 -   We plot all the data using `geom_point()`
 -   Next, we add the linear model using `geom_smooth(method = "lm")`, hiding the confidence intervals (`se = FALSE`)
 
-## R
+## R (base)
 
 ```{r}
 # plot the data
@@ -477,7 +477,7 @@ Do the following in both cases:
 ### Load and visualise the data
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 First, we read in the data:
 
@@ -497,7 +497,7 @@ USAstate %>%
   geom_smooth(method = "lm", se = FALSE)
 ```
 
-## R
+## R (base)
 
 First, we read in the data:
 
@@ -553,7 +553,7 @@ We visualise for the same reasons as before:
 Now, let's check the assumptions with the diagnostic plots.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -569,7 +569,7 @@ lm_murder %>%
 
 The **Residuals** plot appears symmetric enough (similar distribution of points above and below the horizontal blue line) for me to happy with linearity. Similarly the red line in the **Location-Scale** plot looks horizontal enough for me to be happy with homogeneity of variance. There aren't any influential points in the **Cook's distance** plot. The only plot that does give me a bit of concern is the **Q-Q** plot. Here we see clear evidence of snaking, although the degree of snaking isn't actually that bad. This just means that we can be pretty certain that the distribution of residuals isn't normal, but also that it isn't *very* non-normal.
 
-## R
+## R (base)
 
 ```{r}
 par(mfrow = c(2,2))
@@ -626,13 +626,13 @@ So in this case, because we have a large enough sample size and our deviation fr
 So, let's actually do the analysis:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 anova(lm_murder)
 ```
 
-## R
+## R (base)
 
 ```{r}
 anova(lm_murder)
@@ -654,7 +654,7 @@ Now let's investigate the relationship between the proportion of High School Gra
 We'll run through this a bit quicker:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -665,7 +665,7 @@ USAstate %>%
   geom_smooth(method = "lm", se = FALSE)
 ```
 
-## R
+## R (base)
 
 ```{r}
 # plot the data
@@ -704,7 +704,7 @@ Let's check these out properly
 Now, let's check the assumptions with the diagnostic plots.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -718,7 +718,7 @@ lm_frost %>%
               smoother = TRUE)
 ```
 
-## R
+## R (base)
 
 ```{r}
 par(mfrow = c(2, 2))

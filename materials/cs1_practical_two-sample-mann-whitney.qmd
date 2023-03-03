@@ -63,7 +63,7 @@ This test also compares two samples, however for this test (in contrast to Stude
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 
@@ -84,7 +84,7 @@ library(tidyverse)
 stats::wilcox.test()
 ```
 
-## R
+## R (base)
 
 ### Functions
 
@@ -133,7 +133,7 @@ We have checked these previously.
 Calculate the median for each group (for reference) and perform a two-tailed, Mann-Whitney U test:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 Calculate the median:
 
 ```{r}
@@ -164,7 +164,7 @@ After the warning message:
     -   The p-value is 0.0006464.
 -   The 4th line simply states the alternative hypothesis in terms of the difference between the two sample medians in that if there were a difference then one distribution would be shifted relative to the other.
 
-## R
+## R (base)
 Calculate the median:
 
 ```{r}
@@ -259,7 +259,7 @@ We've already checked that the variances of the two groups are similar, so we're
 ### Carry out a Mann-Whitney test
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 wilcox.test(serum ~ sex,
@@ -267,7 +267,7 @@ wilcox.test(serum ~ sex,
             data = turtle)
 ```
 
-## R
+## R (base)
 
 ```{r}
 wilcox.test(serum ~ sex,

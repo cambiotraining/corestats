@@ -43,7 +43,7 @@ A paired t-test is used when we have two samples of continuous data that can be 
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 
@@ -79,7 +79,7 @@ ggplot2::geom_jitter()
 tidyr::pivot_wider()
 ```
 
-## R
+## R (base)
 
 ### Functions
 
@@ -139,7 +139,7 @@ We use a two-sample, two-tailed paired t-test to see if we can reject the null h
 The data are stored in a tidy format in the file `data/CS1-twopaired.csv`.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # load the data
@@ -149,7 +149,7 @@ cortisol <- read_csv("data/CS1-twopaired.csv")
 cortisol
 ```
 
-## R
+## R (base)
 
 ```{r}
 # load the data
@@ -182,7 +182,7 @@ For each `patient_id` there are two measurements: one in the morning and one in 
 It's always a good idea to visualise your data, so let's do that.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # create a boxplot
@@ -195,7 +195,7 @@ cortisol %>%
 
 Here we use also visualise the actual data points, to get a sense of how these data are spread out. To avoid overlapping the data points (try using `geom_point()` instead of `geom_jitter()`), we jitter the data points. What `geom_jitter()` does is add a small amount of variation to each point.
 
-## R
+## R (base)
 
 ```{r}
 # create a boxplot
@@ -221,7 +221,7 @@ However, this plot does not capture how the cortisol level of each *individual* 
 To do this, we need to put our data into a wide format, so we can calculate the change in cortisol level for each patient.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 In tidyverse we can use the `pivot_wider()` function.
 
@@ -269,7 +269,7 @@ cortisol %>%
 
 This gives a similar picture to what the boxplot was telling us, that for most patients the cortisol levels are higher in the morning than in the evening.
 
-## R
+## R (base)
 
 ```{r}
 cortisol_diff_r <- reshape(cortisol_r,
@@ -361,7 +361,7 @@ You will do this in the exercise!
 Perform a two-sample, two-tailed, paired t-test:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| results: hide
@@ -378,7 +378,7 @@ t.test(cortisol ~ time,
 
 From our perspective the value of interest is the `p-value`.
 
-## R
+## R (base)
 
 ```{r}
 t.test(cortisol ~ time,
@@ -425,7 +425,7 @@ A paired test is really just a one-sample test in disguise. We actually don't ca
 Let's check this with the Shapiro-Wilk test and Q-Q plots, using the wide data frames we created earlier.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 Perform Shapiro-Wilk test:
 
@@ -446,7 +446,7 @@ cortisol_diff %>%
   stat_qq_line(colour = "red")
 ```
 
-## R
+## R (base)
 
 Perform Shapiro-Wilk test:
 

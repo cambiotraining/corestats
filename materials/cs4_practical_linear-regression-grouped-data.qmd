@@ -37,7 +37,7 @@ exec(open('setup_files/setup.py').read())
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 
@@ -74,7 +74,7 @@ stats::anova()
 stats::lm()
 ```
 
-## R
+## R (base)
 
 ### Libraries
 None.
@@ -179,7 +179,7 @@ The data are stored in `data/CS4-treelight.csv`. This is a data frame with four 
 Read in the data and inspect them:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -191,7 +191,7 @@ treelight <- read_csv("data/CS4-treelight.csv")
 treelight
 ```
 
-## R
+## R (base)
 ```{r}
 # read in the data
 treelight_r <- read.csv("data/CS4-treelight.csv")
@@ -214,7 +214,7 @@ treelight_py.head()
 ## Summarise and visualise
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # plot the data
@@ -226,7 +226,7 @@ treelight %>%
        y = "Light intensity (lux)")
 ```
 
-## R
+## R (base)
 
 ```{r}
 plot(light ~ depth,
@@ -262,7 +262,7 @@ plot(light ~ depth,
 It looks like there is a slight negative correlation between depth and light intensity, with light intensity reducing as the canopy depth increases. It would be useful to plot the regression lines in this plot.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -277,7 +277,7 @@ treelight %>%
        y = "Light intensity (lux)")
 ```
 
-## R
+## R (base)
 
 Unfortunately there is not an easy way in base R to add regression line to individual groups. To do this, we need to do three things:
 
@@ -345,7 +345,7 @@ In this case we're going to implement the test before checking the assumptions (
 We can test for a possible interaction more formally:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 anova(lm(light ~ depth * species,
@@ -354,7 +354,7 @@ anova(lm(light ~ depth * species,
 
 Remember that `depth * species` is a shorthand way of writing the full set of `depth + species + depth:species` terms in R _i.e._ both main effects and the interaction effect.
 
-## R
+## R (base)
 
 ```{r}
 anova(lm(light ~ depth * species,
@@ -409,7 +409,7 @@ Finding the intercept values is not entirely straightforward and there is some d
 For a simple straight line such as the linear regression for the conifer data by itself, the output is relatively straightforward:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # filter the Conifer data and fit a linear model
@@ -418,7 +418,7 @@ treelight %>%
   lm(light ~ depth, data = .)
 ```
 
-## R
+## R (base)
 
 ```{r}
 lm(light ~ depth,
@@ -460,7 +460,7 @@ This means that for every extra 1 m of depth of forest canopy we lose 292.2 lux 
 When we looked at the full data set, we found that interaction wasn’t important. This means that we will have a model with two distinct intercepts but only a single slope (that’s what you get for a linear regression without any interaction), so we need to calculate that specific combination. We do this is as follows:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 lm(light ~ depth + species,
@@ -501,7 +501,7 @@ light = (7962 + -3113) + -262.2 \times depth
 light = 4829 + -262.2 \times depth
 \end{equation} 
 
-## R
+## R (base)
 
 ```{r}
 lm(light ~ depth + species,
@@ -591,7 +591,7 @@ light = 4829 + -262.2 \times depth
 In the example above we determined that the interaction term `species:depth` was not significant. It would be good to visualise the model without the interaction term.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 This is relatively straightforward if we understand the output of the model a bit better.
 
 First of all, we load the `broom` library. This is part of tidyverse, so you don't have to install it. It is not loaded by default, hence us loading it. What broom does it changes the format of many common base R outputs into a more tidy format, so we can work with the output in our analyses more easily.
@@ -642,7 +642,7 @@ lm_additive %>%
        y = "Light intensity (lux)")
 ```
 
-## R
+## R (base)
 Unfortunately, base R doesn’t have a sensible way of automatically adding multiple regression lines to a plot and so if we want to do this, we will have to do it manually.
 
 First, we create a linear regression without the interaction term.
@@ -733,7 +733,7 @@ In this case we first wanted to check if the interaction was significant, prior 
 Anyway, hopefully you’ve got the gist of checking assumptions for linear models by now: diagnostic plots!
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -747,7 +747,7 @@ lm_additive %>%
 * The **Location-Scale plot** is OK, some very slight suggestion of heterogeneity of variance, but nothing to be too worried about.
 * The **Cook's D plot** shows that all of the points are OK
 
-## R
+## R (base)
 
 ```{r}
 par(mfrow = c(2, 2))
@@ -797,7 +797,7 @@ If there _had been_ a significant interaction between the two predictor variable
 In this case interaction is important and so we need the output from a linear regression that explicitly includes the interaction term:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| results: hide
@@ -842,7 +842,7 @@ light = (7798.57 + -2784.58) + (-221.13 + -71.04) \times depth
 light = 5014 + -292.2 \times depth
 \end{equation}
 
-## R
+## R (base)
 
 ```{r}
 #| results: hide
@@ -940,7 +940,7 @@ The `data/CS4-clover.csv` data set contains information on field trials at three
 ::: {.callout-tip collapse="true"}
 ## Answer
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 ```{r}
 #| message: false
 #| warning: false
@@ -997,7 +997,7 @@ This is a borderline case.
 3. There is a strong suggestion of heterogeneity of variance (Location-Scale plot). Most of the points are relatively close to the regression lines, but the there is a much great spread of points low yarrow density (which corresponds to high yield values, which is what the predicted values correspond to).
 4. Finally, there is a slight suggestion that the data might not be linear, that it might curve slightly (Residual plot).
 
-## R
+## R (base)
 First, we read in the data. I'm using the `stringsAsFactors = TRUE` argument to ensure that the farms are viewed as categorical variables. This is important for later. We could have also converted them to factors when we needed to.
 
 ```{r}
@@ -1156,7 +1156,7 @@ We have two options; both of which are arguably OK to do in real life.
 Let's do a quick little transformation of the data, and repeat our analysis see if our assumptions are better met this time (just for the hell of it):
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -1168,7 +1168,7 @@ clover %>%
   scale_color_brewer(palette = "Dark2")
 ```
 
-## R
+## R (base)
 
 ```{r}
 plot(log(yield) ~ yarrow,
@@ -1219,7 +1219,7 @@ Again, this looks plausible. There's a noticeable outlier from Farm B (data poin
 Let's do the analysis:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # define linear model
@@ -1237,7 +1237,7 @@ lm_log_clover %>%
               smoother = TRUE)
 ```
 
-## R
+## R (base)
 
 ```{r}
 lm_log_clover_r <- lm(log(yield) ~ yarrow * farm,

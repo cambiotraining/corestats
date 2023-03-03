@@ -36,12 +36,12 @@ exec(open('setup_files/setup.py').read())
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 ### Functions
 
-## R
+## R (base)
 
 ### Libraries
 ### Functions
@@ -76,7 +76,7 @@ It contains the following variables:
 ## Summarise and visualise
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 Let's first load the data:
 
@@ -130,7 +130,7 @@ pm2_5 %>%
 
 This confirms what we saw in the plots, there aren't any very strong correlations between the different (numerical) variables, apart from a negative correlation between `pm2_5` and `wind_m_s`, which has a Pearson's r of $r$ = `r pm2_5 %>% select_if(is.numeric) %>% cor_test() %>% filter(cor != 1) %>% arrange(desc(abs(cor))) %>% slice(1) %>% pull(cor)`.
 
-## R
+## R (base)
 
 Let's first load the data:
 
@@ -256,7 +256,7 @@ Our model is then as follows:
 So let's define and explore it!
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 We write the model as follows:
 
@@ -345,7 +345,7 @@ ggplot(data = pm2_5, aes(x = wind_m_s, y = pm2_5,
 
 ```
 
-## R
+## R (base)
 
 ```{r}
 lm_pm2_5_full_r <- lm(pm2_5 ~ avg_temp + location +
@@ -551,7 +551,7 @@ Rather than stop here however, we will use the concept of the linear model to it
 To create the additive model, we drop the interaction term (keep in mind, this is to demonstrate the process - we would normally not do this because the interaction term is significant!).
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 First, we define the model:
 ```{r}
@@ -579,7 +579,7 @@ lm_pm2_5_add %>%
     select(term, estimate)
 ```
 
-## R
+## R (base)
 
 First, we define the model:
 
@@ -673,7 +673,7 @@ $PM2.5_{outer} = 15.17 - 0.50 \times wind\_m\_s$
 ### Revisiting linear regression
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 First, we define the model:
 
@@ -711,7 +711,7 @@ lm_pm2_5_wind %>%
     select(term, estimate)
 ```
 
-## R
+## R (base)
 
 First, we define the model:
 
@@ -790,7 +790,7 @@ $PM2.5 = 17.33 - 0.53 \times wind\_m\_s$
 If we're just looking at the effect of `location`, then we're essentially doing a one-way ANOVA.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 First, we define the model:
 ```{r}
@@ -841,7 +841,7 @@ lm_pm2_5_loc %>%
 
 These values match up exactly with the predicted values for each individual location.
 
-## R
+## R (base)
 
 First, we define the model:
 ```{r}
@@ -969,7 +969,7 @@ $\bar{PM2.5_{outer}} = 16.94 - 4.11 = 12.83$
 The null model by itself is rarely analysed for its own sake but is instead used a reference point for more sophisticated model selection techniques. It represents your data as an overal average value.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 We define the null model as follows:
 
@@ -984,7 +984,7 @@ lm_pm2_5_null
 ```
 
 
-## R
+## R (base)
 
 We define the null model as follows:
 
@@ -1053,7 +1053,7 @@ Let's construct the four linear models in turn.
 ### Full model
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 First, we read in the data:
 
@@ -1071,7 +1071,7 @@ lm_trees_full <- lm(Volume ~ Height * Girth,
 lm_trees_full
 ```
 
-## R
+## R (base)
 
 First, we read in the data:
 
@@ -1128,7 +1128,7 @@ Here we note that the interaction term just requires us to multiple the three nu
 If we look at the diagnostic plots for the model using the following commands we get:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -1137,7 +1137,7 @@ lm_trees_full %>%
               smoother = TRUE)
 ```
 
-## R
+## R (base)
 
 ```{r}
 par(mfrow = c(2, 2))
@@ -1178,7 +1178,7 @@ All assumptions are OK.
 ### Additive model
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # define the model
@@ -1189,7 +1189,7 @@ lm_trees_add <- lm(Volume ~ Height + Girth,
 lm_trees_add
 ```
 
-## R
+## R (base)
 
 ```{r}
 # define the model
@@ -1232,7 +1232,7 @@ Volume =  58.91
 If we look at the diagnostic plots for the model using the following commands we get the following:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r, message=FALSE}
 lm_trees_add %>% 
@@ -1240,7 +1240,7 @@ lm_trees_add %>%
               smoother = TRUE)
 ```
 
-## R
+## R (base)
 
 ```{r}
 par(mfrow = c(2, 2))
@@ -1282,7 +1282,7 @@ This model isn't great.
 ### Height-only model
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # define the model
@@ -1293,7 +1293,7 @@ lm_height <- lm(Volume ~ Height,
 lm_height
 ```
 
-## R
+## R (base)
 
 ```{r}
 # define the model
@@ -1336,7 +1336,7 @@ Volume =  16.28
 If we look at the diagnostic plots for the model using the following commands we get the following:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r, message=FALSE}
 lm_height %>% 
@@ -1344,7 +1344,7 @@ lm_height %>%
               smoother = TRUE)
 ```
 
-## R
+## R (base)
 
 ```{r}
 par(mfrow = c(2, 2))
@@ -1386,7 +1386,7 @@ This model also isn't great.
 ### Girth-only model
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # define the model
@@ -1397,7 +1397,7 @@ lm_girth <- lm(Volume ~ Girth,
 lm_girth
 ```
 
-## R
+## R (base)
 
 ```{r}
 # define the model
@@ -1439,7 +1439,7 @@ Volume =  64.37
 If we look at the diagnostic plots for the model using the following commands we get the following:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r, message=FALSE}
 lm_girth %>% 
@@ -1447,7 +1447,7 @@ lm_girth %>%
               smoother = TRUE)
 ```
 
-## R
+## R (base)
 
 ```{r}
 par(mfrow = c(2, 2))

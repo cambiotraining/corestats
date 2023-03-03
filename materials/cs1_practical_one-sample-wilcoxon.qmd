@@ -59,7 +59,7 @@ This test also considers a single sample, however for this test (in contrast to 
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 
@@ -78,7 +78,7 @@ library(tidyverse)
 stats::wilcox.test()
 ```
 
-## R
+## R (base)
 
 ### Functions
 
@@ -130,7 +130,7 @@ Whilst there are formal statistical tests for symmetry we will opt for a simple 
 Plot a histogram and a box plot of the data:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 Let's first determine the median, so we can use that to compare our data to.
 
@@ -155,7 +155,7 @@ fishlengthDF %>%
   geom_boxplot()
 ```
 
-## R
+## R (base)
 
 Let's first determine the median, so we can use that to compare our data to.
 
@@ -207,7 +207,7 @@ Here we can see that whilst the distribution isn't perfectly symmetric, neither 
 Perform a one-sample, two-tailed Wilcoxon rank-sum test:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 fishlengthDF %>% 
@@ -229,7 +229,7 @@ The syntax is identical to the one-sample t-test we carried out earlier.
 
 -   The last line simply states the alternative hypothesis
 
-## R
+## R (base)
 
 ```{r}
 wilcox.test(fishlength_r, 
@@ -296,7 +296,7 @@ From the box plot from the previous exercise we already know that the data are s
 Calculating the median and performing the test:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 dissolving %>% 
@@ -311,7 +311,7 @@ dissolving %>%
                 alternative = "two.sided")
 ```
 
-## R
+## R (base)
 
 ```{r}
 median(dissolving_r$dissolving_time)

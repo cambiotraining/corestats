@@ -42,7 +42,7 @@ Analysis of variance or ANOVA is a test than can be used when we have multiple s
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 
@@ -73,7 +73,7 @@ rstatix::tukey_hsd()
 ggResidpanel::resid_panel()
 ```
 
-## R
+## R (base)
 
 ### Functions
 
@@ -173,7 +173,7 @@ The data are stored in the file `data/CS2-oystercatcher.csv`.
 ## Summarise and visualise
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 First we read in the data.
 
@@ -210,7 +210,7 @@ oystercatcher %>%
   geom_boxplot()
 ```
 
-## R
+## R (base)
 
 First we read in the data.
 
@@ -295,7 +295,7 @@ In a similar way to the two-sample tests we will consider the normality and equa
 First we perform a Shapiro-Wilk test on each site separately.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 We take the data, and `group_by()` site:
 
@@ -317,7 +317,7 @@ oystercatcher %>%
     shapiro.test()
 ```
 
-## R
+## R (base)
 
 Unstack the data and perform a Shapiro-Wilk test on each group separately.
 
@@ -359,7 +359,7 @@ For ANOVA however, considering each group in turn is often considered quite exce
 So, we create a linear model, extract the residuals and check their normality:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # define the model
@@ -374,7 +374,7 @@ resid_oyster %>%
   shapiro.test()
 ```
 
-## R
+## R (base)
 
 ```{r}
 # define the model
@@ -437,7 +437,7 @@ We now test for equality of variance using Bartlett's test (since we've just fou
 Perform Bartlett's test on the data:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # check equality of variance
@@ -447,7 +447,7 @@ bartlett.test(feeding ~ site,
 
 Where the relevant p-value is given on the 3rd line. Here we see that each group appears to have the same variance.
 
-## R
+## R (base)
 
 ```{r}
 # check equality of variance
@@ -478,7 +478,7 @@ Assessing assumptions via these tests can be cumbersome, but also a bit misleadi
 This does not convey that things aren't always so clear-cut and that there is a lot of grey area that we need to navigate. As such, assessing assumptions through graphical means - using diagnostic plots - is often preferred.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 In the first session we already created diagnostic Q-Q plots directly from our data, using `stat_qq()` and `stat_qq_line()`. For more specific plots this becomes a bit cumbersome. There is an option to create ggplot-friendly diagnostic plots, using the `ggResidPanel` package.
 
@@ -507,7 +507,7 @@ lm_oystercatcher %>%
 -   The bottom left **Location-Scale** graph allows us to investigate whether there is any correlation between the residuals and the predicted values and whether the variance of the residuals changes significantly. If not, then the red line should be horizontal. If there is any correlation or change in variance then the red line will not be horizontal. This plot is fine.
 -   The last graph shows the **Cook's distance** and tests if any one point has an unnecessarily large effect on the fit. A rule of thumb is that if any value is larger than 1.0, then it might have a large effect on the model. If not, then no point has undue influence. This plot is good. There are different ways to determine the threshold (apart from simply setting it to 1) and in this plot the blue dashed line is at `4/n`, with `n` being the number of samples. At this threshold there are some data points that may be influential, but I personally find this threshold rather strict.
 
-## R
+## R (base)
 
 We can create the default diagnostic plots in base R by simply plotting the `lm` object.
 
@@ -577,7 +577,7 @@ Whilst the formal statistical tests (like Shapiro-Wilk) are technically fine, th
 Perform an ANOVA test on the data:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 anova(lm_oystercatcher)
@@ -596,7 +596,7 @@ In the output:
     -   The other values in the table (in the `Sum Sq` and `Mean Sq`) columns are used to calculate the F statistic itself and we don't need to know these.
 -   The 6th line has some symbolic codes to represent how big (small) the p-value is; so, a p-value smaller than 0.001 would have a \*\*\* symbol next to it (which ours does). Whereas if the p-value was between 0.01 and 0.05 then there would simply be a \* character next to it, etc. Thankfully we can all cope with actual numbers and don't need a short-hand code to determine the reporting of our experiments (please tell me that's true...!)
 
-## R
+## R (base)
 
 ```{r}
 anova(lm_oystercatcher_r)
@@ -683,7 +683,7 @@ Each group is a random sample of 20 points from a normal distribution with varia
 ### Read in data and plot
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # load the data
@@ -700,7 +700,7 @@ tukey %>%
     geom_boxplot()
 ```
 
-## R
+## R (base)
 
 ```{r}
 tukey <- read.csv("data/CS2-tukey.csv")
@@ -731,7 +731,7 @@ tukey_py.head()
 ### Test for a significant difference in group means
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # create a linear model
@@ -742,7 +742,7 @@ lm_tukey <- lm(response ~ group,
 anova(lm_tukey)
 ```
 
-## R
+## R (base)
 
 ```{r}
 lm_tukey <- lm(response ~ group, data = tukey)
@@ -769,7 +769,7 @@ This will compare all of the groups in a pairwise fashion and reports on whether
 ### Performing Tukey's test
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 To perform Tukey's range test we can use the `tukey_hsd()` function from the `rstatix` package. Note, there is a `TukeyHSD()` function in base R as well, but the `tukey_hsd()` function can take a linear model object as input, whereas the `TukeyHSD()` function cannot. So the former is a bit easier to work with.
 
@@ -781,7 +781,7 @@ lm_tukey %>%
 
 The `tukey_hsd()` function takes our linear model (`lm_tukey`) as its input. The output is a pair-by-pair comparison between the different groups (samples 1 to 3). We are interested in the `p.adj` column, which gives us the adjusted p-value. The null hypothesis in each case is that there is no difference in the mean between the two groups.
 
-## R
+## R (base)
 
 ```{r}
 aov_tukey <- aov(response ~ group, data = tukey)
@@ -860,7 +860,7 @@ $H_1$ : not all means are equal
 ### Import Data, summarise and visualise
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -890,7 +890,7 @@ lobsters %>%
   geom_boxplot()
 ```
 
-## R
+## R (base)
 
 ```{r}
 lobsters <- read.csv("data/CS2-lobsters.csv")
@@ -947,7 +947,7 @@ As always we use the plot and summary to assess three things:
 We'll explore the assumption of normality and equality of variance, assuming that the data are independent.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 **Normality**
 
@@ -1033,7 +1033,7 @@ Here all three methods agree that there aren't any issues with equality of varia
 
 Overall, this assumption is pretty well met.
 
-## R
+## R (base)
 
 **Normality**
 
@@ -1193,13 +1193,13 @@ Overall, this assumption is pretty well met.
 With our assumptions of normality and equality of variance met we can be confident that a one-way ANOVA is an appropriate test.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 anova(lm_lobsters)
 ```
 
-## R
+## R (base)
 
 ```{r}
 anova(lm_lobsters_r)

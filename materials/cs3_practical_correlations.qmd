@@ -37,7 +37,7 @@ exec(open('setup_files/setup.py').read())
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 
@@ -68,7 +68,7 @@ tibble::as.tibble()
 tidyr::pivot_longer()
 ```
 
-## R
+## R (base)
 
 ### Libraries
 None.
@@ -156,7 +156,7 @@ The data are stored in the file `data/CS3-usarrests.csv`.
 First, we load the data:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -189,7 +189,7 @@ USArrests %>%
     pairs(lower.panel = NULL)
 ```
 
-## R
+## R (base)
 
 First, we load the data:
 
@@ -263,7 +263,7 @@ There are other correlation coefficients, most notably the **Spearman's rank cor
 So, let's calculate **Pearson's r** for our data:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 We can do this using the `cor()` function. Since we can only calculate correlations between numbers, we have to remove the `state` column from our data before calculating the correlations:
 
 ```{r}
@@ -329,7 +329,7 @@ USArrests %>%
 ```
 :::
 
-## R
+## R (base)
 
 We can do this using the `cor()` function. We can only calculate correlations between numbers, but we've already moved the `state` column from our data before calculating the correlations:
 
@@ -435,7 +435,7 @@ Calculate Pearson's r for all variable pairs and see how well you were able to i
 Visually determining the most negative/positively and uncorrelated pairs of variables:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -480,7 +480,7 @@ ggplot(USAstate_pear_cor,
 ```
 
 
-## R
+## R (base)
 
 ```{r}
 USAstate_r <- read.csv("data/CS3-statedata.csv",
@@ -549,7 +549,7 @@ It looks like:
 We can explore that numerically, by doing the following:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 We take the correlation matrix in the long format and extract the values we're interested in:
 ```{r}
@@ -570,7 +570,7 @@ USAstate_pear_cor %>%
 
 Note that we use the minimum *absolute* value (with the `abs()` function) to find the least correlated pair.
 
-## R
+## R (base)
 
 First, we need to create the pairwise comparisons, with the relevant Pearson's $r$ values:
 
@@ -636,7 +636,7 @@ df_cor[df_cor.abs_cor == df_cor.abs_cor.min()]
 This test first calculates the rank of the numerical data (i.e. their position from smallest (or most negative) to the largest (or most positive)) in the two variables and then calculates Pearson's product moment correlation coefficient using the ranks. As a consequence, this test is less sensitive to outliers in the distribution.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 USArrests %>% 
@@ -644,7 +644,7 @@ USArrests %>%
     cor(method = "spearman")
 ```
 
-## R
+## R (base)
 
 ```{r}
 cor(USArrests_r,
@@ -672,7 +672,7 @@ Thinking about the variables, can you explain why this might this be?
 In order to determine which variables are most affected by the choice of Spearman vs Pearson you could just plot both matrices out side by side and try to spot what was going on, but one of the reasons we're using programming languages is that we can be a bit more **programmatic** about these things. Also, our eyes aren't that good at processing and parsing this sort of information display. A better way would be to somehow visualise the data.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 First, calculate the Pearson and Spearman correlation matrices (technically, we've done the Pearson one already, but we're doing it again for clarity here).
 ```{r}
 cor_pear <- USAstate %>% 
@@ -725,7 +725,7 @@ ggplot(cor_diff,
               size = 4)
 ```
 
-## R
+## R (base)
 First, calculate the Pearson and Spearman correlation matrices (technically, we've done the Pearson one already, but we're doing it again for clarity here).
 
 ```{r}

@@ -37,7 +37,7 @@ exec(open('setup_files/setup.py').read())
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 
@@ -62,7 +62,7 @@ library(ggResidpanel)
 ggResidpanel::resid_panel()
 ```
 
-## R
+## R (base)
 
 ### Libraries
 None.
@@ -156,7 +156,7 @@ We will recreate the example analysis used in the lecture. The data are stored a
 `exercise` is a data frame with three variables; `weight`, `sex` and `exercise.` `weight` is the continuous response variable, whereas `sex` and `exercise` are the categorical predictor variables.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 First, we read in the data:
 
@@ -181,7 +181,7 @@ exercise %>%
   geom_boxplot()
 ```
 
-## R
+## R (base)
 
 First, we read in the data:
 
@@ -227,7 +227,7 @@ These produce box plots showing the response variable (`weight`) only in terms o
 A better way would be to visualise both variables at the same time. We can do this as follows:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 exercise %>% 
@@ -240,7 +240,7 @@ This produces box plots for all (four) combinations of the predictor variables. 
 
 Here I've also changed the default colouring scheme, by using `scale_fill_brewer(palette = "Dark2")`. This uses a colour-blind friendly colour palette (more about the Brewer colour pallete [here](https://ggplot2.tidyverse.org/reference/scale_brewer.html)).
 
-## R
+## R (base)
 
 ```{r}
 boxplot(weight ~ sex + exercise, data = exercise_r)
@@ -274,7 +274,7 @@ To compare categorical variables more easily we can just plot the group means wh
 Create an interaction plot:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 We're adding a bit of jitter to the data, to avoid too much overlap between the data points. We can do this with `geom_jitter()`.
 ```{r}
 exercise %>% 
@@ -308,7 +308,7 @@ exercise %>%
   scale_colour_brewer(palette = "Dark2")
 ```
 
-## R
+## R (base)
 
 ```{r}
 interaction.plot(exercise_r$sex,
@@ -385,7 +385,7 @@ We can now attempt to answer these three questions more formally using an ANOVA 
 Before we can formally test these things we first need to define the model and check the underlying assumptions. We use the following code to define the model:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # define the linear model
@@ -395,7 +395,7 @@ lm_exercise <- lm(weight ~ sex + exercise + sex:exercise,
 
 The `sex:exercise` term is how R represents the concept of an interaction between these two variables.
 
-## R
+## R (base)
 
 ```{r}
 # define the linear model
@@ -425,7 +425,7 @@ As the two-way ANOVA is a type of linear model we need to satisfy pretty much th
 Again, we will check these assumptions visually by producing four key diagnostic plots.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| message: false
@@ -460,7 +460,7 @@ anova(lm(weight ~ sex * exercise,
 ```
 :::
 
-## R
+## R (base)
 
 ```{r}
 par(mfrow = c(2, 2))
@@ -524,7 +524,7 @@ knitr::include_graphics(py$dgplot)
 The assumptions appear to be met well enough, meaning we can implement the ANOVA. We do this as follows (this is probably the easiest bit!):
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # perform the ANOVA
@@ -533,7 +533,7 @@ anova(lm_exercise)
 
 We have a row in the table for each of the different effects that we’ve asked R to consider. The last column is the important one as this contains the p-values. We need to look at the interaction row first.
 
-## R
+## R (base)
 
 ```{r}
 # perform the ANOVA
@@ -585,7 +585,7 @@ Questions to answer:
 ## Answer
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Load the data
 
@@ -666,7 +666,7 @@ anova(lm_auxin)
 ### Interpret the output and report the results
 There is definitely a significant interaction between `concentration` and `genotype`.
 
-## R
+## R (base)
 
 ### Load the data
 
@@ -851,7 +851,7 @@ Note: have a look at the data and make sure that they are in the correct format!
 ::: {.callout-tip collapse="true"}
 ## Answer
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Load the data
 In this data set the watering regime (`water`) and shading regime (`shade`) are encoded with numerical values. However, these numbers are actually categories, representing the amount of water/shade.
@@ -939,7 +939,7 @@ anova(lm_tulip)
 ### Interpret the output and report results
 So we do appear to have a significant interaction between `water` and `shade` as expected.
 
-## R
+## R (base)
 
 ### Load the data
 

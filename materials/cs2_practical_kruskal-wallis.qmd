@@ -42,7 +42,7 @@ The Kruskal-Wallis one-way analysis of variance test is an analogue of ANOVA tha
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ### Libraries
 
@@ -70,7 +70,7 @@ rstatix::kruskal_test()
 rstatix::dunn_test()
 ```
 
-## R
+## R (base)
 
 ### Libraries
 
@@ -170,7 +170,7 @@ The data are stored in the file `data/CS2-spidermonkey.csv`.
 ## Summarise and visualise
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 First we read the data in:
 
@@ -196,7 +196,7 @@ spidermonkey %>%
   geom_boxplot()
 ```
 
-## R
+## R (base)
 
 First we read the data in:
 
@@ -261,7 +261,7 @@ Independence we'll ignore as usual. Similar shape is best assessed from the earl
 We test for equality of variance using Levene's test (since we can't assume normal parent distributions which rules out Bartlett's test).
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # perform Levene's test
@@ -273,7 +273,7 @@ The relevant p-value is given in the `p` column (0.893). As it is quite large we
 
 There is also a warning about `group coerced to factor`. There is no need to worry about this - Levene's test needs to compare different groups and because `aggression` is encoded as a numeric value, it converts it to a categorical one before running the test.
 
-## R
+## R (base)
 
 Levene's test is not included in the default R packages. Instead, we're using the additional functionality from the `rstatix` package.
 
@@ -304,7 +304,7 @@ pg.homoscedasticity(dv = "aggression",
 Perform a Kruskal-Wallis test on the data:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # implement Kruskal-Wallis test
@@ -317,7 +317,7 @@ kruskal.test(aggression ~ familiarity,
 
 The p-value is given in the 3rd line. This shows us the probability of getting samples such as ours if the null hypothesis were actually true.
 
-## R
+## R (base)
 
 ```{r}
 kruskal.test(aggression ~ familiarity,
@@ -351,7 +351,7 @@ The equivalent of Tukey's range test for non-normal data is **Dunn's test**.
 Dunn's test is used to check for significant differences in group medians:
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # perform Dunn's test
@@ -365,7 +365,7 @@ The comparison between the pairs of groups is reported in the table at the botto
 
 The `dunn_test()` function has several arguments, of which the `p.adjust.method` is likely to be of interest. Here you can define which method needs to be used to account for multiple comparisons. The default is `"none"`. We'll cover more about this in the chapter on [Power analysis](#cs6-intro).
 
-## R
+## R (base)
 
 Dunn's test is also not included in the default R packages and requires the `dunn_test()` function from the `rstatix` package.
 
@@ -453,7 +453,7 @@ lobsters_py = pd.read_csv("data/CS2-lobsters.csv")
 From before, since the data are normal enough they are definitely similar enough for a Kruskal-Wallis test and they do all have equality of variance from out assessment of the diagnostic plots. For completeness though we will look at Levene's test.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 #| warning: false
@@ -461,7 +461,7 @@ lobsters %>%
   levene_test(weight ~ diet)
 ```
 
-## R
+## R (base)
 
 ```{r}
 #| warning: false
@@ -486,7 +486,7 @@ Given that the p-value is so high, this again agrees with our previous assessmen
 So, we perform the Kruskall-Wallis test.
 
 ::: {.panel-tabset group="language"}
-## tidyverse
+## R (tidyverse)
 
 ```{r}
 # implement Kruskal-Wallis test
@@ -494,7 +494,7 @@ lobsters %>%
   kruskal_test(weight ~ diet)
 ```
 
-## R
+## R (base)
 
 ```{r}
 kruskal.test(weight ~ diet,
