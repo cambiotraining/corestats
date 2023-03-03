@@ -1,5 +1,5 @@
 ---
-title: "Core statistics"
+title: "Introduction"
 author: ["Martin van Rongen, Matt Castle, Emer Jones, Rob Nicholls, Holly Pavey, Vicki Hodgson"]
 date: today
 ---

@@ -37,13 +37,6 @@ book:
   navbar:
     pinned: true
     logo: "_extensions/cambiotraining/courseformat/img/university_crest_reversed.png"
-    left:
-      - text: "Home"
-        href: index.md
-      - text: "Setup"
-        href: setup.qmd
-      - text: "Materials"
-        href: materials.qmd
     right:
       - icon: github
         href: https://github.com/cambiotraining/corestats/
@@ -57,3 +50,4 @@ book:
       chapters:
         - index.md
         - setup.qmd
+        - materials.qmd
