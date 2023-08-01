@@ -37,7 +37,7 @@ exec(open('setup_files/setup.py').read())
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ### Libraries
 
@@ -74,30 +74,6 @@ stats::anova()
 stats::lm()
 ```
 
-## R (base)
-
-### Libraries
-None.
-
-### Functions
-
-```{r}
-#| eval: false
-#| warning: false
-# Creates a subset of the data
-base::subset()
-
-# Performs an analysis of variance
-stats::anova()
-
-# Extracts model coefficients
-stats::coef()
-
-# Creates a linear model
-stats::lm()
-```
-
-
 ## Python
 
 ### Libraries
@@ -123,7 +99,6 @@ import statsmodels.api as sm
 import statsmodels.formula.api as smf
 ```
 
-
 ### Functions
 
 ```{python}
@@ -145,11 +120,16 @@ statsmodels.formula.api.ols()
 :::
 
 ## Purpose and aim
+
 A linear regression analysis with grouped data is used when we have one categorical predictor variable (or factor), and one continuous predictor variable. The response variable must still be continuous however.
 
-For example in an experiment that looks at light intensity in woodland, how is light intensity (continuous: lux) affected by the height at which the measurement is taken, recorded as depth measured from the top of the canopy (continuous: metres) and by the type of woodland (categorical: Conifer or Broad leaf).
+For example in an experiment that looks at light intensity in woodland, how is light intensity (continuous: lux) affected by the height at which the measurement is taken, recorded as depth measured from the top of the canopy (continuous: meters) and by the type of woodland (categorical: Conifer or Broad leaf).
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE, show_col_types = FALSE}
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| show_col_types: false
 read_csv("data/CS4-treelight.csv") %>% 
   ggplot(aes(x = depth, y = light, colour = species)) +
   geom_point() +
@@ -174,12 +154,13 @@ Essentially the analysis is identical to two-way ANOVA.
 We will first consider how to visualise the data before then carrying out an appropriate statistical test.
 
 ## Data and hypotheses
+
 The data are stored in `data/CS4-treelight.csv`. This is a data frame with four variables; `id`, `light`, `depth` and `species`. `light` is the continuous response variable, `depth` is the continuous predictor variable and `species` is the categorical predictor variable.
 
 Read in the data and inspect them:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
@@ -189,15 +170,6 @@ treelight <- read_csv("data/CS4-treelight.csv")
 
 # inspect the data
 treelight
-```
-
-## R (base)
-```{r}
-# read in the data
-treelight_r <- read.csv("data/CS4-treelight.csv")
-
-# inspect the data
-head(treelight_r)
 ```
 
 ## Python
@@ -214,31 +186,16 @@ treelight_py.head()
 ## Summarise and visualise
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 # plot the data
-treelight %>% 
-  ggplot(aes(x = depth, y = light, colour = species)) +
+ggplot(treelight,
+       aes(x = depth, y = light, colour = species)) +
   geom_point() +
   scale_color_brewer(palette = "Dark2") +
   labs(x = "Depth (m)",
        y = "Light intensity (lux)")
-```
-
-## R (base)
-
-```{r}
-plot(light ~ depth,
-     data = treelight_r)
-```
-
-This plots all of the points in the data set on the same window. To visualise the data by `species`, we can use the `col` argument. This only takes data in the form of factors (categorical variables with inherit order), so we need to temporarily conver the `species` column to a factor with `col = factor(species)`:
-
-```{r}
-plot(light ~ depth,
-     data = treelight_r,
-     col = factor(species))
 ```
 
 ## Python
@@ -262,13 +219,13 @@ plot(light ~ depth,
 It looks like there is a slight negative correlation between depth and light intensity, with light intensity reducing as the canopy depth increases. It would be useful to plot the regression lines in this plot.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
 # plot the data
-treelight %>% 
-  ggplot(aes(x = depth, y = light, colour = species)) +
+ggplot(treelight,
+       aes(x = depth, y = light, colour = species)) +
   geom_point() +
   # add regression lines
   geom_smooth(method = "lm", se = FALSE) +
@@ -277,50 +234,8 @@ treelight %>%
        y = "Light intensity (lux)")
 ```
 
-## R (base)
-
-Unfortunately there is not an easy way in base R to add regression line to individual groups. To do this, we need to do three things:
-
-1. Split the data by `species`
-2. Create a linear model for each group
-3. Determine the regression line (or line of best fit) for each group and then add this to the plot
-
-The `subset` function creates subsets of data frames. The first argument is the original data frame, and the subset argument is a logical expression that defines which observations (rows) should be extracted. The logical expression must be enclosed in parentheses. In the first case it says (`Species == "Conifer"`). This tells R to only extract the rows of the original data frame which have `Conifer` in the species variable column. Ditto for `Broadleaf`.
-
-First, we subset the data:
-```{r}
-# subset the conifers
-conLight <- subset(treelight_r, species == "Conifer")
-
-# subset the broad leaf
-broLight <- subset(treelight_r, species == "Broadleaf")
-```
-
-Then we create a linear model for each subgroup:
-```{r}
-# linear regression for Broadleaf
-lm_broadleaf <- lm(light ~ depth,
-                   data = broLight)
-
-# linear regression for Conifer
-lm_conifer <- lm(light ~ depth,
-                 data = conLight)
-```
-
-And plot it all together:
-```{r}
-plot(light ~ depth,
-     data = treelight_r,
-     col = factor(species))
-
-# add the Broadleaf linear regression
-abline(lm_broadleaf, col = 1)
-
-# add the Conifer linear regression
-abline(lm_conifer, col = 2)
-```
-
 ## Python
+
 ```{python}
 #| results: hide
 # plot the data
@@ -340,21 +255,13 @@ abline(lm_conifer, col = 2)
 Looking at this plot, there doesn’t appear to be any significant interaction between the woodland type (`Broadleaf` and `Conifer`) and the depth at which light measurements were taken (`depth`) on the amount of light intensity getting through the canopy as the gradients of the two lines appear to be very similar. There does appear to be a noticeable slope to both lines and both lines look as though they have very different intercepts. All of this suggests that there isn’t any interaction but that both `depth` and `species` have a significant effect on `light` independently.
 
 ## Implement and interpret the test
+
 In this case we're going to implement the test before checking the assumptions (I know, let's live a little!). You'll find out why soon...
 
 We can test for a possible interaction more formally:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r}
-anova(lm(light ~ depth * species,
-         data = treelight))
-```
-
-Remember that `depth * species` is a shorthand way of writing the full set of `depth + species + depth:species` terms in R _i.e._ both main effects and the interaction effect.
-
-## R (base)
+## R
 
 ```{r}
 anova(lm(light ~ depth * species,
@@ -409,7 +316,9 @@ Finding the intercept values is not entirely straightforward and there is some d
 For a simple straight line such as the linear regression for the conifer data by itself, the output is relatively straightforward:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
+
+I'm being a bit lazy here. Since I don't want to save the filtered data in a separate object, I'm using the pipe to send the Conifer data to the `lm()` function. However, the first argument in the `lm()` function is *not* data, so we need to tell it specifically that the data is coming from the pipe. We do this with the `.` notation:
 
 ```{r}
 # filter the Conifer data and fit a linear model
@@ -418,12 +327,6 @@ treelight %>%
   lm(light ~ depth, data = .)
 ```
 
-## R (base)
-
-```{r}
-lm(light ~ depth,
-   data = conLight)
-```
 ## Python
 
 We have two options to obtain the intercept for conifers only. We could subset our data, keeping only the conifer values. We could then create a linear model of those data, and obtain the relevant intercept.
@@ -460,52 +363,11 @@ This means that for every extra 1 m of depth of forest canopy we lose 292.2 lux 
 When we looked at the full data set, we found that interaction wasn’t important. This means that we will have a model with two distinct intercepts but only a single slope (that’s what you get for a linear regression without any interaction), so we need to calculate that specific combination. We do this is as follows:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 lm(light ~ depth + species,
    data = treelight)
-```
-
-Notice the `+` symbol in the argument, as opposed to the `*` symbol used earlier. This means that we are explicitly _not_ including an interaction term in this fit, and consequently we are forcing R to calculate the equation of lines which have the same gradient.
-
-Ideally we would like R to give us two equations, one for each forest type, so four parameters in total.
-Unfortunately, R is parsimonious and doesn’t do that. Instead R gives you three coefficients, and these require a bit of interpretation.
-
-The first two numbers that R returns (underneath `Intercept` and `depth`) are the exact intercept and slope coefficients for one of the lines (in this case they correspond to the data for `Broadleaf` woodlands).
-
-For the coefficients belonging to the other line, R uses these first two coefficients as baseline values and expresses the other coefficients relative to these ones. R also doesn’t tell you explicitly which group it is using as its baseline reference group! (Did I mention that R can be very helpful at times 😉?)
-
-So, how to decipher the above output?
-
-First, I need to work out which group has been used as the baseline.
-
-* It will be the group that comes first alphabetically, so it should be `Broadleaf`
-* The other way to check would be to look and see which group is not mentioned in the above table. `Conifer` is mentioned (in the `SpeciesConifer` heading) and so again the baseline group is `Broadleaf.`
-
-This means that the intercept value and `depth` coefficient correspond to the `Broadleaf` group and as a result I know what the equation of one of my lines is:
-
-Broadleaf:
-
-\begin{equation}
-light = 7962 + -262.2 \times depth
-\end{equation} 
-
-In this example we know that the gradient is the same for both lines (because we explicitly asked to exclude an interaction), so all I need to do is find the intercept value for the `Conifer` group. Unfortunately, the final value given underneath `SpeciesConifer` does not give me the intercept for `Conifer`, instead it tells me the difference between the `Conifer` group intercept and the baseline intercept i.e. the equation for the regression line for conifer woodland is given by:
-
-\begin{equation}
-light = (7962 + -3113) + -262.2 \times depth
-\end{equation} 
-
-\begin{equation}
-light = 4829 + -262.2 \times depth
-\end{equation} 
-
-## R (base)
-
-```{r}
-lm(light ~ depth + species,
-   data = treelight_r)
 ```
 
 Notice the `+` symbol in the argument, as opposed to the `*` symbol used earlier. This means that we are explicitly _not_ including an interaction term in this fit, and consequently we are forcing R to calculate the equation of lines which have the same gradient.
@@ -591,7 +453,7 @@ light = 4829 + -262.2 \times depth
 In the example above we determined that the interaction term `species:depth` was not significant. It would be good to visualise the model without the interaction term.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 This is relatively straightforward if we understand the output of the model a bit better.
 
 First of all, we load the `broom` library. This is part of tidyverse, so you don't have to install it. It is not loaded by default, hence us loading it. What broom does it changes the format of many common base R outputs into a more tidy format, so we can work with the output in our analyses more easily.
@@ -642,49 +504,6 @@ lm_additive %>%
        y = "Light intensity (lux)")
 ```
 
-## R (base)
-Unfortunately, base R doesn’t have a sensible way of automatically adding multiple regression lines to a plot and so if we want to do this, we will have to do it manually.
-
-First, we create a linear regression without the interaction term.
-
-```{r}
-lm_treelight_r_add <- lm(light ~ depth + species,
-             data = treelight_r)
-```
-
-We first need to extract the relative coefficient values from the `lm` object and then combine them manually to create separate vectors containing the intercept and slope coefficients for each line. This next set of command is a bit annoying but stick with it; it’ll pay dividends (no, really it will – you always secretly wanted to be a computer programmer didn’t you? This medic/biologist/life scientist thing is just a passing phase that you’ll grow out of…)
-
-```{r}
-cf <- coef(lm_treelight_r_add)
-cf
-
-cf_Broadleaf <- c(cf[1], cf[2])
-cf_Conifer <- c(cf[1] + cf[3], cf[2])
-
-cf_Broadleaf
-cf_Conifer
-```
-
-* The first line extracts the three (in this case) coefficients from the `lm` object as a vector called `cf`, and the second line prints this to the screen.
-* In the third line we take the 1st and 2nd components of `cf` and store them as the coefficients for the `Broadleaf` line in a vector called `cf_Broadleaf`
-* The fourth line is where we do some actual calculations. Here we realise that the intercept of the conifer line is actually the sum of the 1st and 3rd values of `cf`, whereas the slope is just the 2nd value, and so we create a vector for the conifer line that reflects this.
-* The 5th and 6th lines just print these two vectors to the screen.
-
-We can now use these two vectors to add the appropriate regression lines to the plot with the original data. We've created _that_ particular plot before, so we can copy/paste the code.
-
-```{r}
-# plot original data
-plot(light ~ depth,
-     data = treelight_r,
-     col = factor(species))
-
-# add the Broadleaf regression line
-abline(cf_Broadleaf, col = "black")
-
-# add the Conifer regression line
-abline(cf_Conifer, col = "red")
-```
-
 ## Python
 To do this, we need to do the following:
 
@@ -728,37 +547,25 @@ Now we can simply plot the data:
 :::
 
 ## Assumptions
+
 In this case we first wanted to check if the interaction was significant, prior to checking the assumptions. If we would have checked the assumptions first, then we would have done that one the full model (with the interaction), then done the ANOVA if everything was OK. We would have then found out that the interaction was not significant, meaning we'd have to re-check the assumptions with the new model. In what order you do it is a bit less important here. The main thing is that you check the assumptions and report on it!
 
 Anyway, hopefully you’ve got the gist of checking assumptions for linear models by now: diagnostic plots!
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
-lm_additive %>% 
-  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
-              smoother = TRUE)
+resid_panel(lm_additive,
+            plots = c("resid", "qq", "ls", "cookd"),
+            smoother = TRUE)
 ```
 
 * The **Residuals plot** looks OK, no systematic pattern.
 * The **Q-Q plot** isn’t perfect, but I’m happy with the normality assumption.
 * The **Location-Scale plot** is OK, some very slight suggestion of heterogeneity of variance, but nothing to be too worried about.
 * The **Cook's D plot** shows that all of the points are OK
-
-## R (base)
-
-```{r}
-par(mfrow = c(2, 2))
-plot(lm(light ~ depth + species,
-        data = treelight_r))
-```
-
-* The top left graph looks OK, no systematic pattern.
-* The top right graph isn’t perfect, but I’m happy with the normality assumption.
-* The bottom left graph is OK, some very slight suggestion of heterogeneity of variance, but nothing to be too worried about.
-* The bottom right graph shows that all of the points are OK
 
 ## Python
 
@@ -793,11 +600,12 @@ knitr::include_graphics(py$dgplot)
 Woohoo!
 
 ## Dealing with interaction
+
 If there _had been_ a significant interaction between the two predictor variables (for example, if light intensity had dropped off significantly faster in conifer woods than in broad leaf woods, in addition to being lower overall, then we would again be looking for two equations for the linear regression, but this time the gradients vary as well.
 In this case interaction is important and so we need the output from a linear regression that explicitly includes the interaction term:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| results: hide
@@ -808,7 +616,7 @@ lm(light ~ depth + species + depth:species,
 or written using the short-hand:
 
 ```{r}
-#| results: hide
+#| eval: false
 lm(light ~ depth * species,
    data = treelight)
 ```
@@ -820,51 +628,6 @@ Either way this gives us the following output:
 #| echo: false
 lm(light ~ depth * species,
    data = treelight)
-```
-
-As before the Broadleaf line is used as the baseline regression and we can read off the values for its intercept and slope directly:
-
-Broadleaf:
-\begin{equation}
-light = 7798.57 + -221.13 \times depth
-\end{equation}
-
-Note that this is different from the previous section, by allowing for an interaction all fitted values will change.
-
-For the conifer line we will have a different intercept value and a different gradient value. As before the value underneath `speciesConifer` gives us the difference between the intercept of the conifer line and the broad leaf line. The new, additional term `depth:speciesConifer` tells us how the coefficient of `depth` varies for the conifer line i.e. how the gradient is different. Putting these two together gives us the following equation for the regression line conifer woodland:
-
-Conifer:
-\begin{equation}
-light = (7798.57 + -2784.58) + (-221.13 + -71.04) \times depth
-\end{equation}
-
-\begin{equation}
-light = 5014 + -292.2 \times depth
-\end{equation}
-
-## R (base)
-
-```{r}
-#| results: hide
-lm(light ~ depth + species + depth:species,
-   data = treelight_r)
-```
-
-or written using the short-hand:
-
-```{r}
-#| results: hide
-lm(light ~ depth * species,
-   data = treelight_r)
-```
-
-There really is absolutely no difference in the end result.
-Either way this gives us the following output:
-
-```{r}
-#| echo: false
-lm(light ~ depth * species,
-   data = treelight_r)
 ```
 
 As before the Broadleaf line is used as the baseline regression and we can read off the values for its intercept and slope directly:
@@ -929,7 +692,14 @@ light = 5014 + -292.2 \times depth
 
 These also happen to be exactly the regression lines that you would get by calculating a linear regression on each group’s data separately.
 
-## Exercise: Clover and yarrow
+## Exercises
+
+### Clover and yarrow {#sec-exr_clover}
+
+:::{.callout-exercise}
+
+{{< level 2 >}}
+
 Clover and yarrow field trials
 
 The `data/CS4-clover.csv` data set contains information on field trials at three different farms (`A`, `B` and `C`). Each farm recorded the yield of clover in each of ten fields along with the density of yarrow stalks in each field.
@@ -940,7 +710,7 @@ The `data/CS4-clover.csv` data set contains information on field trials at three
 ::: {.callout-tip collapse="true"}
 ## Answer
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 ```{r}
 #| message: false
 #| warning: false
@@ -951,9 +721,9 @@ This data set has three variables; `yield` (which is the response variable), `ya
 
 ```{r}
 # plot the data
-clover %>% 
-  ggplot(aes(x = yarrow, y = yield,
-             colour = farm)) +
+ggplot(clover,
+       aes(x = yarrow, y = yield,
+           colour = farm)) +
   geom_point() +
   scale_color_brewer(palette = "Dark2")
 ```
@@ -963,15 +733,17 @@ Looking at this plot as it stands, it's pretty clear that yarrow density has a s
 ```{r}
 #| message: false
 # plot the data
-clover %>% 
-  ggplot(aes(x = yarrow, y = yield,
-             colour = farm, group = farm)) +
+ggplot(clover,
+       aes(x = yarrow, y = yield,
+           colour = farm, group = farm)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   scale_color_brewer(palette = "Dark2")
 ```
 
-The regression lines are very close together, and it looks very much as if there isn't any interaction, but also that there isn't any effect of `farm`. Let's carry out the analysis:
+The regression lines are very close together. Although the line for `Farm C` crosses the other two, it doesn't look like we're going to see a very strong interaction - if there is one. There doesn't seem to be an effect of `farm` in general, since the lines are not separate from each other. 
+
+Let's carry out the analysis:
 
 ```{r}
 lm_clover <- lm(yield ~ yarrow * farm,
@@ -984,10 +756,11 @@ This confirms our suspicions from looking at the plot. There isn't any interacti
 
 Let's check the assumptions:
 
-```{r, message=FALSE}
-lm_clover %>% 
-  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
-              smoother = TRUE)
+```{r}
+#| message: false
+resid_panel(lm_clover,
+            plots = c("resid", "qq", "ls", "cookd"),
+            smoother = TRUE)
 ```
 
 This is a borderline case.
@@ -996,67 +769,6 @@ This is a borderline case.
 2. There aren't any highly influential points (Cook's D plot)
 3. There is a strong suggestion of heterogeneity of variance (Location-Scale plot). Most of the points are relatively close to the regression lines, but the there is a much great spread of points low yarrow density (which corresponds to high yield values, which is what the predicted values correspond to).
 4. Finally, there is a slight suggestion that the data might not be linear, that it might curve slightly (Residual plot).
-
-## R (base)
-First, we read in the data. I'm using the `stringsAsFactors = TRUE` argument to ensure that the farms are viewed as categorical variables. This is important for later. We could have also converted them to factors when we needed to.
-
-```{r}
-clover_r <- read.csv("data/CS4-clover.csv",
-                   stringsAsFactors = TRUE)
-```
-
-This dataset has three variables; `yield` (which is the response variable), `yarrow` (which is a continuous predictor variable) and `farm` (which is the categorical predictor variables). As always we'll visualise the data first:
-
-```{r}
-plot(yield ~ yarrow,
-     data = clover_r, col = farm)
-```
-
-In our plot this means that farm `A` is black, farm `B` is red and farm `C` is green.
-
-As it stands, it's pretty clear that yarrow density has a significant effect on yield, but it's pretty hard to see from the plot whether there is any effect of `farm`, or whether there is any interaction. In order to work that out we'll want to add the regression lines (AKA lines of best fit) for each `farm` separately.
-
-```{r}
-plot(yield ~ yarrow,
-     data = clover_r, col = farm)
-
-farmA <- subset(clover_r, subset = (farm == "A"))
-farmB <- subset(clover_r, subset = (farm == "B"))
-farmC <- subset(clover_r, subset = (farm == "C"))
-
-lmA <- lm(yield ~ yarrow, data = farmA)
-lmB <- lm(yield ~ yarrow, data = farmB)
-lmC <- lm(yield ~ yarrow, data = farmC)
-
-abline(lmA, col = "black")
-abline(lmB, col = "red")
-abline(lmC, col = "green")
-```
-
-The lines of best fit are very close together, and it looks very much as if there isn't any interaction, but also that there isn't any effect of `Farm`. Let's carry out the analysis:
-
-```{r}
-lm_clover_r <- lm(yield ~ yarrow * farm,
-                data = clover_r)
-
-anova(lm_clover_r)
-```
-
-This confirms our suspicions from looking at the plot. There isn't any interaction between `yarrow` and `farm.` `yarrow` density has a statistically significant effect on `yield` but there isn't any difference between the different farms on the yields of clover.
-
-Let's check the assumptions:
-
-```{r}
-par(mfrow = c(2, 2))
-plot(lm_clover_r)
-```
-
-This is a borderline case.
-
-1. Normality is fine (Normal Q-Q)
-2. There aren't any highly influential points (Residuals vs Leverage)
-3. There is a strong suggestion of heterogeneity of variance. Most of the points are relatively close to the lines of best fit, but the there is a much great spread of points low Yarrow density (which corresponds to high Yield values, which is what the fitted values correspond to).
-4. Finally, there is a slight suggestion that the data might not be linear, that it might curve slightly.
 
 ## Python
 ```{python}
@@ -1090,7 +802,7 @@ Looking at this plot as it stands, it's pretty clear that yarrow density has a s
      scale_color_brewer(type = "qual", palette = "Dark2"))
 ```
 
-The regression lines are very close together, and it looks very much as if there isn't any interaction, but also that there isn't any effect of `farm`. 
+The regression lines are very close together. Although the line for `Farm C` crosses the other two, it doesn't look like we're going to see a very strong interaction - if there is one. There doesn't seem to be an effect of `farm` in general, since the lines are not separate from each other. 
 
 Let's carry out the analysis. First, we need to change the name of the `yield` column, because `yield` is a keyword in Python, and we can't use it inside the model formula. How annoying.
 
@@ -1156,31 +868,16 @@ We have two options; both of which are arguably OK to do in real life.
 Let's do a quick little transformation of the data, and repeat our analysis see if our assumptions are better met this time (just for the hell of it):
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
 # plot log-transformed data
-clover %>% 
-  ggplot(aes(x = yarrow, y = log(yield), colour = farm)) +
+ggplot(clover,
+       aes(x = yarrow, y = log(yield), colour = farm)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   scale_color_brewer(palette = "Dark2")
-```
-
-## R (base)
-
-```{r}
-plot(log(yield) ~ yarrow,
-     data = clover_r, col = farm)
-
-lmlogA <- lm(log(yield) ~ yarrow, data = farmA)
-lmlogB <- lm(log(yield) ~ yarrow, data = farmB)
-lmlogC <- lm(log(yield) ~ yarrow, data = farmC)
-
-abline(lmlogA, col = "black")
-abline(lmlogB, col = "red")
-abline(lmlogC, col = "green")
 ```
 
 ## Python
@@ -1219,7 +916,7 @@ Again, this looks plausible. There's a noticeable outlier from Farm B (data poin
 Let's do the analysis:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 # define linear model
@@ -1231,25 +928,11 @@ anova(lm_log_clover)
 
 Woop. All good so far. We have the same conclusions as before in terms of what is significant and what isn't. Now we just need to check the assumptions:
 
-```{r, message=FALSE}
-lm_log_clover %>% 
-  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
-              smoother = TRUE)
-```
-
-## R (base)
-
 ```{r}
-lm_log_clover_r <- lm(log(yield) ~ yarrow * farm,
-             data = clover_r)
-anova(lm_log_clover_r)
-```
-
-Woop. All good so far. We have the same conclusions as before in terms of what is significant and what isn't. Now we just need to check the assumptions:
-
-```{r}
-par(mfrow = c(2, 2))
-plot(lm_log_clover_r)
+#| message: false
+resid_panel(lm_log_clover,
+            plots = c("resid", "qq", "ls", "cookd"),
+            smoother = TRUE)
 ```
 
 ## Python
@@ -1297,6 +980,7 @@ knitr::include_graphics(py$dgplot)
 Well, this is actually a better set of diagnostic plots. Whilst one data point (for example in the Q-Q plot) is a clear outlier, if we ignore that point then all of the other plots do look better.
 
 So now we know that `yarrow` is a significant predictor of `yield` and we're happy that the assumptions have been met.
+:::
 :::
 
 ## Key points

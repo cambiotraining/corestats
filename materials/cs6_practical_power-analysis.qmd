@@ -42,7 +42,7 @@ np.seterr(all='ignore')
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ### Libraries
 
@@ -58,11 +58,6 @@ library(tidyverse)
 library(rstatix)
 ```
 
-### Functions
-
-## R (base)
-
-### Libraries
 ### Functions
 
 ## Python
@@ -162,37 +157,7 @@ We first need to think about which test we would use to analyse the data. Here w
 The first thing we need to do is figure out what a "medium" effect size is. In absence of any further information we refer back to Cohen's effect sizes.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-We're using the `pwr` library, so make sure that you have installed and loaded it with the following commands:
-
-```{r}
-#| eval: false
-# install pwr package if needed
-install.packages("pwr")
-
-# load the pwr package
-library(pwr)
-```
-
-We can get Cohen's effect size using the `cohen.ES()` function (`ES` stands for Effect Size):
-
-```{r}
-cohen.ES(test = "t", size = "medium")
-```
-
-This function just returns the default conventional values for effect sizes as determined by Jacob Cohen back in the day. It just saves us scrolling back up the page to look at the table I provided. It only takes two arguments:
-
-*	test which is one of
-    * "t", for t-tests,
-    * "anova" for anova,
-    * "f2" for linear models
-    * "chisq" for chi-squared test
-* size, which is just one of "small", "medium" or "large".
-
-The bit we want is on the bottom line; we apparently want an effect size of 0.5.
-
-## R (base)
+## R
 
 We're using the `pwr` library, so make sure that you have installed and loaded it with the following commands:
 
@@ -232,29 +197,7 @@ For this sort of study effect size is measured in terms of Cohen’s d statistic
 ### Calculating sample sizes
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-We do this as follows:
-
-```{r}
-pwr.t.test(d = 0.5, sig.level = 0.05, power = 0.8,
-           type = "two.sample", alternative = "two.sided")
-```
-
-The first line is what we’re looking for `n = 63.76` tells that we need 64 (rounding up) students in each group (so 128 in total) in order to carry out this study with sufficient power. The other lines should be self-explanatory (well they should be by this stage; if you need me to tell you that the function is just returning the values that you’ve just typed in then you have bigger problems to worry about).
-
-The `pwr.t.test()` function has six arguments. Two of them specify what sort of t-test you’ll be carrying out
-* `type`; which describes the type of t-test you will eventually be carrying out (one of `two.sample`, `one.sample` or `paired`), and
-* `alternative`; which describes the type of alternative hypothesis you want to test (one of `two.sided`, `less` or `greater`)
-
-The other four arguments are what is used in the power analysis:
-
-* `d`; this is the effect size, a single number calculated using Cohen’s d statistic.
-* `sig.level`; this is the significance level
-* `power`; is the power
-* `n`; this is the number of observations per sample.
-
-## R (base)
+## R
 
 We do this as follows:
 
@@ -311,14 +254,7 @@ We can use the function to answer a different question:
 Let's see how we do this:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r}
-pwr.t.test(n = 30, sig.level = 0.05, power = 0.8,
-           type = "two.sample", alternative = "two.sided")
-```
-
-## R (base)
+## R
 
 ```{r}
 pwr.t.test(n = 30, sig.level = 0.05, power = 0.8,
@@ -347,7 +283,7 @@ Let’s look again at the `fishlength` data we saw in the first practical relati
 This is saved as `data/CS1-twosample.csv`.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
@@ -366,27 +302,6 @@ From the plot we can see that the groups appear to have different means. This di
 # perform t-test
 t.test(length ~ river,
        data = fishlength,
-       var.equal = TRUE)
-```
-
-## R (base)
-
-```{r}
-#| message: false
-# read in the data
-fishlength_r <- read.csv("data/CS1-twosample.csv")
-
-# visualise the data
-boxplot(length ~ river,
-        data = fishlength_r)
-```
-
-From the plot we can see that the groups appear to have different means. This difference is significant, as per a two-sample t-test:
-
-```{r}
-# perform t-test
-t.test(length ~ river,
-       data = fishlength_r,
        var.equal = TRUE)
 ```
 
@@ -425,26 +340,7 @@ Can we use this information to design a more efficient experiment? One that we w
 Let’s first work out exactly what the effect size of this previous study really was by estimating Cohen’s d using this data.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-To this, we use the `cohens_d` function from the `rstatix` package:
-
-```{r}
-cohens_d(length ~ river,
-         var.equal = TRUE,
-         data = fishlength)
-```
-
-The `cohens_d()` function calculates the effect size using the formula of the test. The `effsize` column contains the information that we want, in this case `r round(fishlength %>% cohens_d(length ~ river, var.equal = TRUE) %>% pull(effsize), digits = 2)` .
-
-We can now actually answer our question and see how many fish we really need to catch in the future:
-
-```{r}
-pwr.t.test(d = 0.94, power = 0.8, sig.level = 0.05,
-           type = "two.sample", alternative = "two.sided")
-```
-
-## R (base)
+## R
 
 To this, we use the `cohens_d` function from the `rstatix` package:
 
@@ -493,310 +389,6 @@ From this we can see that any future experiments would really only need to use 1
 
 This approach can also be used when the pilot study showed a smaller effect size that wasn’t observed to be significant (indeed arguably, a pilot study shouldn’t really concern itself with significance but should only really be used as a way of assessing potential effect sizes which can then be used in a follow-up study).
 
-
-## Exercise: One sample
-
-Performing a power analysis on a one-sample data set
-
-Load in `data/CS1-onesample.csv` (this is the same data we looked at in the earlier practical containing information on fish lengths from the Guanapo river).
-
-a. Assume this was a pilot study and analyse the data using a one-sample t-test to see if there is any evidence that the mean length of fish differs from 20 mm.
-b. Use the results of this analysis to estimate the effect size.
-c. Work out how big a sample size would be required to detect an effect this big with power 0.8 and significance 0.05.
-d. How would the sample size change if we wanted 0.9 power and significance 0.01?
-
-::: {.callout-tip collapse="true"}
-## Answer
-::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-First, read in the data:
-
-```{r}
-#| message: false
-fish_data <- read_csv("data/CS1-onesample.csv")
-```
-
-Let's run the one-sample t-test as we did before:
-
-```{r}
-t.test(length ~ 1,
-       mu = 20,
-       alternative = "two.sided",
-       data = fish_data)
-```
-
-## R (base)
-
-First, read in the data:
-
-```{r}
-fish_data_r <- read.csv("data/CS1-onesample.csv")
-```
-
-Let's run the one-sample t-test as we did before:
-
-```{r}
-t.test(length ~ 1,
-       mu = 20,
-       alternative = "two.sided",
-       data = fish_data_r)
-```
-
-## Python
-
-First, read in the data:
-
-```{python}
-fish_data_py = pd.read_csv("data/CS1-onesample.csv")
-```
-
-Let's run the one-sample t-test as we did before:
-
-```{python}
-pg.ttest(x = fish_data_py.length,
-         y = 20,
-         alternative = "two-sided").transpose()
-```
-
-:::
-
-There does appear to be a statistically significant result here; the mean length of the fish appears to be different from 20 mm.
-
-Let's calculate the effect size using these data. This gives us the following output for the effect size in terms of the Cohen's d metric.
-
-::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r}
-cohens_d(length ~ 1,
-         mu = 20,
-         data = fish_data)
-```
-
-## R (base)
-
-```{r}
-cohens_d(length ~ 1,
-         mu = 20,
-         data = fish_data_r)
-```
-
-## Python
-
-```{python}
-pg.compute_effsize(x = fish_data_py.length,
-                   y = 20,
-                   paired = False,
-                   eftype = "cohen")
-```
-:::
-
-Our effect size is `r round(fish_data %>% cohens_d(length ~ 1, mu = 20) %>% pull(effsize), digits = 2)` which is a moderate effect size. This is pretty good and it means we might have been able to detect this effect with fewer samples.
-
-::: {.callout-important}
-Although the effect size here is negative, it does not matter in terms of the power calculations whether it's negative or positive.
-:::
-
-So, let's do the power analysis to actually calculate the minimum sample size required:
-
-::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r}
-pwr.t.test(d = -0.6590669, sig.level = 0.05, power = 0.8,
-           type = "one.sample")
-```
-
-## R (base)
-
-```{r}
-pwr.t.test(d = -0.6590669, sig.level = 0.05, power = 0.8,
-           type = "one.sample")
-```
-
-## Python
-
-```{python}
-pg.power_ttest(d = -0.6590669,
-               alpha = 0.05,
-               power = 0.80,
-               contrast = "one-sample",
-               alternative = "two-sided")
-```
-:::
-
-We would need 21 (you round up the n value) observations in our experimental protocol in order to be able to detect an effect size this big (small?) at a 5% significance level and 80% power. Let's see what would happen if we wanted to be even more stringent and calculate this at a significance level of 1%:
-
-::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r}
-pwr.t.test(d = -0.6590669, sig.level = 0.01, power = 0.9,
-           type = "one.sample")
-```
-
-## R (base)
-
-```{r}
-pwr.t.test(d = -0.6590669, sig.level = 0.01, power = 0.9,
-           type = "one.sample")
-```
-
-## Python
-
-```{python}
-pg.power_ttest(d = -0.6590669,
-               alpha = 0.01,
-               power = 0.80,
-               contrast = "one-sample",
-               alternative = "two-sided")
-```
-:::
-
-Then we'd need quite a few more observations! We would need to do a bit more work if we wanted to work to this level of significance and power. Are such small differences in fish length biologically meaningful?
-:::
-
-## Exercise: Two sample paired
-
-Power analysis on a paired two-sample data set
-
-Load in `data/CS1-twopaired.csv` (again this is the same data that we used in an earlier practical and relates to cortisol levels measured on 20 participants in the morning and evening).
-
-a. first carry out a power analysis to work out how big of an effect size this experiment should be able to detect at a power of 0.8 and significance level of 0.05. Don’t look at the data just yet!
-b. Now calculate the actual observed effect size from the study.
-c. If you were to repeat the study in the future, how many observations would be necessary to detect the observed effect with 80% power and significance level 0.01?
-
-::: {.callout-tip collapse="true"}
-## Answer
-::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-First, read in the data:
-
-```{r}
-#| message: false
-cortisol <- read_csv("data/CS1-twopaired.csv")
-```
-
-## R (base)
-
-```{r}
-#| message: false
-cortisol_r <- read.csv("data/CS1-twopaired.csv")
-```
-
-## Python
-
-```{python}
-cortisol_py = pd.read_csv("data/CS1-twopaired.csv")
-```
-:::
-
-We have a paired data set with 20 pairs of observations, what sort of effect size could we detect at a significance level of 0.05 and power of 0.8?
-
-::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r}
-pwr.t.test(n = 20, sig.level = 0.05, power = 0.8,
-           type = "paired")
-```
-
-## R (base)
-
-```{r}
-pwr.t.test(n = 20, sig.level = 0.05, power = 0.8,
-           type = "paired")
-```
-
-## Python
-
-```{python}
-pg.power_ttest(n = 20,
-               alpha = 0.05,
-               power = 0.80,
-               contrast = "paired",
-               alternative = "two-sided")
-```
-:::
-
-Remember that we get effect size measured in Cohen's d metric. So here this experimental design would be able to detect a d value of 0.66, which is a medium to large effect size.
-
-Now let's look at the actual data and work out what the effect size actually is.
-
-::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r}
-cohens_d(cortisol ~ time,
-         paired = TRUE,
-         data = cortisol)
-```
-
-## R (base)
-
-```{r}
-cohens_d(cortisol ~ time,
-         paired = TRUE,
-         data = cortisol_r)
-```
-
-## Python
-
-To do this, we need reformat our data a bit:
-
-```{python}
-cortisol_wide_py = pd.pivot(cortisol_py, index = "patient_id", columns = "time", values = "cortisol")
-
-cortisol_wide_py.head()
-```
-
-```{python}
-pg.compute_effsize(x = cortisol_wide_py.evening,
-                   y = cortisol_wide_py.morning,
-                   paired = False,
-                   eftype = "cohen")
-```
-
-:::
-
-This value is a massive effect size. It's quite likely that we actually have more participants in this study than we actually need given such a large effect. Let calculate how many individuals we would actually need:
-
-::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r}
-pwr.t.test(d = -1.159019, sig.level = 0.01, power = 0.8,
-           type = "paired")
-```
-
-So we would have only needed 13 pairs of participants in this study given the size of effect we were trying to detect.
-
-## R (base)
-
-```{r}
-pwr.t.test(d = -1.159019, sig.level = 0.01, power = 0.8,
-           type = "paired")
-```
-
-So we would have only needed 13 pairs of participants in this study given the size of effect we were trying to detect.
-
-## Python
-
-```{python}
-pg.power_ttest(d = -1.434359,
-               alpha = 0.01,
-               power = 0.80,
-               contrast = "paired",
-               alternative = "two-sided")
-```
-
-So we would have only needed 10 pairs of participants in this study given the size of effect we were trying to detect.
-
-:::
-:::
-
 ## Linear model power calculations
 
 Thankfully the ideas we’ve covered in the t-test section should see us in good stead going forward and I can stop writing everything out in such excruciating detail (I do have other things to do you know...).
@@ -806,7 +398,7 @@ Let's read in `data/CS2-lobsters.csv`. This data set was used in an earlier prac
 As a quick reminder we'll also plot the data and perform an ANOVA:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
@@ -816,8 +408,8 @@ lobsters <- read_csv("data/CS2-lobsters.csv")
 
 ```{r}
 # visualise the data
-lobsters %>% 
-  ggplot(aes(x = diet, y = weight)) +
+ggplot(lobsters,
+       aes(x = diet, y = weight)) +
   geom_boxplot()
 ```
 
@@ -828,27 +420,6 @@ lm_lobster <- lm(weight ~ diet,
 
 # perform ANOVA on model
 anova(lm_lobster)
-```
-
-## R (base)
-
-```{r}
-# read in the data
-lobsters_r <- read.csv("data/CS2-lobsters.csv")
-```
-
-```{r}
-# visualise the data
-boxplot(weight ~ diet, data = lobsters_r)
-```
-
-```{r}
-# define the linear model
-lm_lobster_r <- lm(weight ~ diet,
-                   data = lobsters_r)
-
-# perform ANOVA on model
-anova(lm_lobster_r)
 ```
 
 ## Python
@@ -890,7 +461,7 @@ So the question we can ask is:
 First let’s calculate the observed effect size from this study.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 For linear models the effect size is called Cohen’s $f^2$. We can calculate it easily by using the $R^2$ value from the model fit and shoving it in the following formula:
 
@@ -907,28 +478,6 @@ Either way, we can calculate Cohen's $f^2$:
 R2 <- summary(lm_lobster) %>%
     glance() %>% 
     pull(r.squared)
-
-# calculate Cohen's f2
-R2 / (1 - R2)
-```
-
-So now we've got Cohen's $f^2$. 
-
-## R (base)
-
-For linear models the effect size is called Cohen’s $f^2$. We can calculate it easily by using the $R^2$ value from the model fit and shoving it in the following formula:
-
-\begin{equation}
-f^2 = \frac{R^2}{1-R^2}
-\end{equation}
-
-We find $R^2$ from the `lm_lobster_r` summary. We can either just look at the results (spoiler alert, the $R^2$ is `r round(summary(lm_lobster) %>% glance() %>% pull(r.squared), digits = 4)`) and add it manually or extract the value.
-
-Either way, we can calculate Cohen's $f^2$:
-
-```{r}
-# get the effect size for ANOVA
-R2 <- summary(lm_lobster_r)$r.squared
 
 # calculate Cohen's f2
 R2 / (1 - R2)
@@ -954,7 +503,7 @@ R2 = lm_lobsters_py.rsquared
 
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 There’s one more thing that we need for the power calculation for a linear model; the degrees of freedom.
 
@@ -964,52 +513,6 @@ The degrees of freedom are mentioned at the bottom of the model summary:
 
 ```{r}
 summary(lm_lobster)
-```
-
-So, we now want to run a power analysis for this linear model, using the following information:
-
-* power = 0.8
-* significance = 0.05
-* effect size = 0.219
-* numerator DF = 2
-
-We can feed this into the `pwr.f2.test()` function, where we use
-
-* `u` to represent the numerator DF value
-* `f2` to represent Cohen’s $f^2$ effect size value
-
-```{r}
-pwr.f2.test(u = 2, f2 = 0.219,
-            sig.level = 0.05, power = 0.8)
-```
-
-As before most of these numbers are just what you’ve put into the function yourself. The new number is `v`. This is the denominator degrees of freedom required for the analysis to have sufficient power. Thankfully this number is related to the number of observations that we should use in a straightforward manner:
-
-$number\:of\:observations = u + v + 1$
-
-So in our case we would ideally have 48 observations (45 + 2 + 1, remembering to round up) in our experiment.
-
-The most challenging part for using power analyses for linear models is working out what the numerator degrees of freedom should be. The easiest way of thinking about it is to say that it’s the number of parameters in your model, excluding the intercept. If you look back at how we wrote out the linear model equations, then you should be able to see how many non-zero parameters would be expected. For some of the simple cases the table below will help you, but for complex linear models you will need to write out the linear model equation and count parameters (sorry!).
-
-| Test| u|
-|:- |:- |
-|one-way ANOVA| no. of groups - 1 |
-|simple linear regression| 1 |
-|two-way ANOVA with interaction| no. of groups (`v1`) x no. of groups (`v2`) - 1 |
-|two-way ANOVA without interaction| no. of groups (`v1`) + no. of groups (`v2`) - 2 |
-|ANCOVA with interaction| 2 x no. of groups – 1 |
-|ANCOVA without interaction| no. of groups |
-
-## R (base)
-
-There’s one more thing that we need for the power calculation for a linear model; the degrees of freedom.
-
-We have two different degrees of freedom: the **numerator degrees of freedom** and the **denominator degrees of freedom**. Here the numerator degrees of freedom is 2. This is the number that we want. It is simply the number of parameters in the model minus 1. In this model there are three parameters for the three groups, so 3 - 1 = 2 (see the math isn’t too bad). The other number is called the denominator degrees of freedom, which in this case is 15. This is actually the number we want the power analysis to calculate as it’s a proxy for the number of observations used in the model, and we’ll see how in a minute.
-
-The degrees of freedom are mentioned at the bottom of the model summary:
-
-```{r}
-summary(lm_lobster_r)
 ```
 
 So, we now want to run a power analysis for this linear model, using the following information:
@@ -1070,25 +573,280 @@ There are two questions you might now ask (if you’re still following all of th
     * ideally they should be equally distributed (so in this case 16 per group).
 2. why is this so complicated, why isn’t there just a single function that just does this, and just tells me how many observations I need?
     * Very good question – I have no answer to that sorry – sometimes life is just hard.
-    
-### Exercises
 
-::: {.callout-note icon=false}
-## Mussel muscles
 
-**Level:** {{< fa solid star >}} {{< fa solid star >}} {{< fa regular star >}}
+::: .{callout-note}
+## R-squared and eta-squared
+
+Like we've seen before in the previous sessions, the $R^2$ value can give us an indication of how much of the variance is explained by our model.
+
+Sometimes you also come across $\eta^2$. What that does is that it partitions $R^2$ across the predictors. This means that $\eta^2$ represents how much variance is explained by each of the predictors. If you have multiple predictors, then you would get multiple values.
+
+In the case where there is *one* predictor, $R^2 = \eta^2$.
+:::
+
+## Exercises
+
+### Power: one-sample {#sec-exr_pwronesample}
+
+:::{.callout-exercise}
+
+{{< level 2 >}}
+
+Performing a power analysis on a one-sample data set
+
+Load in `data/CS1-onesample.csv` (this is the same data we looked at in the earlier practical containing information on fish lengths from the Guanapo river).
+
+a. Assume this was a pilot study and analyse the data using a one-sample t-test to see if there is any evidence that the mean length of fish differs from 20 mm.
+b. Use the results of this analysis to estimate the effect size.
+c. Work out how big a sample size would be required to detect an effect this big with power 0.8 and significance 0.05.
+d. How would the sample size change if we wanted 0.9 power and significance 0.01?
+
+::: {.callout-answer collapse="true"}
+## Answer
+::: {.panel-tabset group="language"}
+## R
+
+First, read in the data:
+
+```{r}
+#| message: false
+fish_data <- read_csv("data/CS1-onesample.csv")
+```
+
+Let's run the one-sample t-test as we did before:
+
+```{r}
+t.test(length ~ 1,
+       mu = 20,
+       alternative = "two.sided",
+       data = fish_data)
+```
+
+## Python
+
+First, read in the data:
+
+```{python}
+fish_data_py = pd.read_csv("data/CS1-onesample.csv")
+```
+
+Let's run the one-sample t-test as we did before:
+
+```{python}
+pg.ttest(x = fish_data_py.length,
+         y = 20,
+         alternative = "two-sided").transpose()
+```
+
+:::
+
+There does appear to be a statistically significant result here; the mean length of the fish appears to be different from 20 mm.
+
+Let's calculate the effect size using these data. This gives us the following output for the effect size in terms of the Cohen's d metric.
+
+::: {.panel-tabset group="language"}
+## R
+
+```{r}
+cohens_d(length ~ 1,
+         mu = 20,
+         data = fish_data)
+```
+
+## Python
+
+```{python}
+pg.compute_effsize(x = fish_data_py.length,
+                   y = 20,
+                   paired = False,
+                   eftype = "cohen")
+```
+:::
+
+Our effect size is `r round(fish_data %>% cohens_d(length ~ 1, mu = 20) %>% pull(effsize), digits = 2)` which is a moderate effect size. This is pretty good and it means we might have been able to detect this effect with fewer samples.
+
+::: {.callout-important}
+Although the effect size here is negative, it does not matter in terms of the power calculations whether it's negative or positive.
+:::
+
+So, let's do the power analysis to actually calculate the minimum sample size required:
+
+::: {.panel-tabset group="language"}
+## R
+
+```{r}
+pwr.t.test(d = -0.6590669, sig.level = 0.05, power = 0.8,
+           type = "one.sample")
+```
+
+## Python
+
+```{python}
+pg.power_ttest(d = -0.6590669,
+               alpha = 0.05,
+               power = 0.80,
+               contrast = "one-sample",
+               alternative = "two-sided")
+```
+:::
+
+We would need 21 (you round up the n value) observations in our experimental protocol in order to be able to detect an effect size this big (small?) at a 5% significance level and 80% power. Let's see what would happen if we wanted to be even more stringent and calculate this at a significance level of 1%:
+
+::: {.panel-tabset group="language"}
+## R
+
+```{r}
+pwr.t.test(d = -0.6590669, sig.level = 0.01, power = 0.9,
+           type = "one.sample")
+```
+
+## Python
+
+```{python}
+pg.power_ttest(d = -0.6590669,
+               alpha = 0.01,
+               power = 0.80,
+               contrast = "one-sample",
+               alternative = "two-sided")
+```
+:::
+
+Then we'd need quite a few more observations! We would need to do a bit more work if we wanted to work to this level of significance and power. Are such small differences in fish length biologically meaningful?
+:::
+:::
+
+### Power: two-sample paired {#sec-exr_pwrtwosamplepaired}
+
+:::{.callout-exercise}
+
+{{< level 2 >}}
+
+Power analysis on a paired two-sample data set
+
+Load in `data/CS1-twopaired.csv` (again this is the same data that we used in an earlier practical and relates to cortisol levels measured on 20 participants in the morning and evening).
+
+a. first carry out a power analysis to work out how big of an effect size this experiment should be able to detect at a power of 0.8 and significance level of 0.05. Don’t look at the data just yet!
+b. Now calculate the actual observed effect size from the study.
+c. If you were to repeat the study in the future, how many observations would be necessary to detect the observed effect with 80% power and significance level 0.01?
+
+::: {.callout-answer collapse="true"}
+## Answer
+::: {.panel-tabset group="language"}
+## R
+
+First, read in the data:
+
+```{r}
+#| message: false
+cortisol <- read_csv("data/CS1-twopaired.csv")
+```
+
+## Python
+
+```{python}
+cortisol_py = pd.read_csv("data/CS1-twopaired.csv")
+```
+:::
+
+We have a paired data set with 20 pairs of observations, what sort of effect size could we detect at a significance level of 0.05 and power of 0.8?
+
+::: {.panel-tabset group="language"}
+## R
+
+```{r}
+pwr.t.test(n = 20, sig.level = 0.05, power = 0.8,
+           type = "paired")
+```
+
+## Python
+
+```{python}
+pg.power_ttest(n = 20,
+               alpha = 0.05,
+               power = 0.80,
+               contrast = "paired",
+               alternative = "two-sided")
+```
+:::
+
+Remember that we get effect size measured in Cohen's d metric. So here this experimental design would be able to detect a d value of 0.66, which is a medium to large effect size.
+
+Now let's look at the actual data and work out what the effect size actually is.
+
+::: {.panel-tabset group="language"}
+## R
+
+```{r}
+cohens_d(cortisol ~ time,
+         paired = TRUE,
+         data = cortisol)
+```
+
+## Python
+
+To do this, we need reformat our data a bit:
+
+```{python}
+cortisol_wide_py = pd.pivot(cortisol_py, index = "patient_id", columns = "time", values = "cortisol")
+
+cortisol_wide_py.head()
+```
+
+```{python}
+pg.compute_effsize(x = cortisol_wide_py.evening,
+                   y = cortisol_wide_py.morning,
+                   paired = False,
+                   eftype = "cohen")
+```
+
+:::
+
+This value is a massive effect size. It's quite likely that we actually have more participants in this study than we actually need given such a large effect. Let calculate how many individuals we would actually need:
+
+::: {.panel-tabset group="language"}
+## R
+
+```{r}
+pwr.t.test(d = -1.159019, sig.level = 0.01, power = 0.8,
+           type = "paired")
+```
+
+So we would have only needed 13 pairs of participants in this study given the size of effect we were trying to detect.
+
+## Python
+
+```{python}
+pg.power_ttest(d = -1.434359,
+               alpha = 0.01,
+               power = 0.80,
+               contrast = "paired",
+               alternative = "two-sided")
+```
+
+So we would have only needed 10 pairs of participants in this study given the size of effect we were trying to detect.
+
+:::
+:::
+:::
+
+### Mussel muscles {#sec-exr_musslemuscles}
+
+:::{.callout-exercise}
+
+{{< level 2 >}}
 
 In this exercise we're going to determine a required sample size, dependent on a calculated effect size. The file `data/CS6-shelllength.csv` contains information from a pilot study looking at whether the standardised length of the anterior adductor muscle scar in the mussel _Mytilus trossulus_ differs across five locations around the world (well it might be of interest to someone...).
 
 Find the effect size from this study and perform a power calculation (at 0.8 and 0.05 significance level) to determine how many mussel muscles need to be recorded in order to be confident that an effect really exists.
 
-::: {.callout-tip collapse="true"}
+::: {.callout-answer collapse="true"}
 ## Answer
 
 Let's first load in the data and have a look at them.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
@@ -1096,20 +854,10 @@ mussels <- read_csv("data/CS6-shelllength.csv")
 ```
 
 ```{r}
-ggplot(mussels, aes(x = location,
-                    y = length)) +
+ggplot(mussels,
+       aes(x = location,
+           y = length)) +
     geom_boxplot()
-```
-
-## R (base)
-
-```{r}
-mussels_r <- read.csv("data/CS6-shelllength.csv")
-```
-
-```{r}
-boxplot(length ~ location,
-        data = mussels_r)
 ```
 
 ## Python
@@ -1120,8 +868,9 @@ mussels_py = pd.read_csv("data/CS6-shelllength.csv")
 
 ```{python}
 #| results: hide
-(ggplot(mussels_py, aes(x = "location",
-                        y = "length")) +
+(ggplot(mussels_py,
+        aes(x = "location",
+            y = "length")) +
     geom_boxplot())
 ```
 
@@ -1132,44 +881,7 @@ So we are effectively looking at a one-way ANOVA with five groups. This will be 
 Now we fit a linear model, and perform our calculations:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r}
-# define the model
-lm_mussels <- lm(length ~ location,
-                data = mussels)
-
-# summarise the model
-summary(lm_mussels)
-```
-
-From this we can see that the R-squared value is `r round(summary(lm_mussels) %>% glance() %>% pull(r.squared), digits = 4)`. We can extract that as follows and then use it to calculate Cohen's $f^2$:
-
-```{r}
-# get the effect size for ANOVA
-R2 <- summary(lm_mussels) %>%
-    glance() %>% 
-    pull(r.squared)
-
-# calculate Cohen's f2
-f2 <- R2 / (1 - R2)
-```
-
-```{r}
-f2
-```
-
-Now, our model has 5 parameters (because we have 5 groups) and so the numerator degrees of freedom will be 4 $(5 - 1 = 4)$. This means that we can now carry our our power analysis:
-
-```{r}
-pwr.f2.test(u = 4, f2 = 0.837767,
-            sig.level = 0.05 , power = 0.8)
-```
-
-This tells us that the denominator degrees of freedom should be `r round(pwr.f2.test(u = 4, f2 = 0.837767, sig.level = 0.05 , power = 0.8)[[2]])` (`r round(pwr.f2.test(u = 4, f2 = 0.837767, sig.level = 0.05 , power = 0.8)[[2]], digits = 2)` rounded up), and this means that we would only need 20 observations in total across all five groups to detect this effect size (Remember: number of observations = numerator d.f. + denominator d.f. + 1)
-
-## R (base)
-
+## R
 
 ```{r}
 # define the model
@@ -1250,10 +962,11 @@ This means we need 4 samples per group, so 20 in total ($4 \times 5$).
 :::
 :::
 
-::: {.callout-note icon=false}
-## Power and effect
+### Power and effect {#sec-exr_pwreffect}
 
-**Level:** {{< fa solid star >}} {{< fa solid star >}} {{< fa regular star >}}
+:::{.callout-exercise}
+
+{{< level 2 >}}
 
 The file `/data/CS6-epilepsy1.csv` contains information on the ages and rates of seizures of 236 patients undertaking a clinical trial.
 
@@ -1261,13 +974,13 @@ a. Analyse the data using a linear model and calculate the effect size.
 b. If there would be a relationship that large between age and seizure rate how big a study would be needed to observe the effect with a 90% power?
 
 
-::: {.callout-tip collapse="true"}
+::: {.callout-answer collapse="true"}
 ## Answer
 
 Let's first load in the data and have a look at them.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 Let's load in the data:
 
@@ -1282,20 +995,6 @@ ggplot(data = epilepsy,
        mapping = aes(x = age,
                      y = seizure)) +
   geom_point()
-```
-
-## R (base)
-
-Let's load in the data:
-
-```{r}
-epilepsy_r <- read.csv("data/CS6-epilepsy1.csv")
-```
-
-Let's just have a quick look at the data to see what we're dealing with:
-
-```{r}
-plot(seizure ~ age, data = epilepsy_r)
 ```
 
 ## Python
@@ -1322,7 +1021,7 @@ So we are effectively looking at a simple linear regression here.
 Now we fit a linear model and determine the number of samples for the observed effect size at 90% power:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 # define the model
@@ -1337,39 +1036,6 @@ From this we get that the $R^2$ value is `r round(lm_epilepsy %>% glance() %>% p
 
 ```{r}
 R2 <- lm_epilepsy %>% 
-    glance() %>% 
-    pull(r.squared)
-
-f2 <- R2 / (1 - R2)
-f2
-```
-
-This effect size is absolutely tiny. If we really wanted to design an experiment to pick up an effect size this small then we would expect that we'll need 1000s of participants.
-
-Now, our model has 2 parameters (an intercept and a slope) and so the numerator degrees of freedom (`u`) will be 1 (2 - 1 = 1!). This means that we can now carry our our power analysis:
-
-```{r}
-pwr.f2.test(u = 1, f2 = f2,
-            sig.level = 0.05 , power = 0.9)
-```
-
-This tells us that the denominator degrees of freedom (`v`) should be `r ceiling(pwr.f2.test(u = 1, f2 = f2, sig.level = 0.05, power = 0.9)[[2]])` (rounded up to the nearest number), and this means that we would need 11496 participants to detect this effect size (Remember: number of observations = numerator d.f. (`u`) + denominator d.f. (`v`) + 1). 
-
-## R (base)
-
-```{r}
-# define the model
-lm_epilepsy_r <- lm(seizure ~ age,
-                    data = epilepsy_r)
-
-# summarise the model
-summary(lm_epilepsy_r)
-```
-
-From this we get that the $R^2$ value is `r round(lm_epilepsy %>% glance() %>% pull(r.squared), digits = 7)` (which is tiny!) and we can use this to calculate Cohen's $f^2$ value using the formula in the notes:
-
-```{r}
-R2 <- lm_epilepsy_r %>% 
     glance() %>% 
     pull(r.squared)
 
@@ -1450,20 +1116,23 @@ So we see that the number of observations we need is 11495!
 :::
 :::
 
-::: {.callout-note icon=false}
-## Study size with multiple regression
+### Study size with multiple regression {#sec-exr_pwrmultreg}
 
-**Level:** {{< fa solid star >}} {{< fa solid star >}} {{< fa solid star >}}
+:::{.callout-exercise}
+
+{{< level 2 >}}
 
 We wish to test the effectiveness of a new drug against a placebo. It is thought that the sex and age of the patients may have an effect on their response.
 
 a. Write down a linear model equation that might describe the relationship between these variables including all possible two-way interactions.
 b. How big a study would we need to detect a medium effect size (according to Cohen, this is 0.15) at a power of 90%, with significance level 0.05?
 
-::: {.callout-tip collapse="true"}
+::: {.callout-answer collapse="true"}
 ## Answer
 
-Here we have a system with a single response variable, and three categorical predictor variables. One of them is `gender`, with two possible levels (M, F). One of them is `treatment`, again with two possible levels (Drug, placebo) and one of them is continuous (`age`). A linear model with all possible two-way interactions would look something like this:
+Here we have a system with a single response variable, and three predictor variables. One of them is `gender`, a categorical predictor with two possible levels (M, F). One of them is `treatment`, again a categorical predictor with two possible levels (Drug, placebo) and one of them is continuous (`age`). The last one could even be viewed as a categorical predictor, where each year is a category. If we would like to model `age` as such, then we'd have to define it as a factor. We're not doing this here.
+
+A linear model with all possible two-way interactions would look something like this:
 
 `response ~ treatment + gender + age + treatment:gender + treatment:age + age:gender`
 
@@ -1496,14 +1165,7 @@ Rather boring that all of them were 1 to be honest. Anyway, given that the denom
 We now have all of the information to carry out the power analysis.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r}
-pwr.f2.test(u = 6, f2 = 0.15,
-            sig.level = 0.05, power = 0.9)
-```
-
-## R (base)
+## R
 
 ```{r}
 pwr.f2.test(u = 6, f2 = 0.15,

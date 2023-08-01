@@ -76,7 +76,7 @@ def dgplotsknitr(results: Type[sm.regression.linear_model.RegressionResultsWrapp
         p4 = pw.load_ggplot(p4, figsize=(3,2))
 
         dgplots = (p1 | p2) / (p3 | p4)
-        date = datetime.now().strftime("%Y_%m_%d-%I:%M:%S_%p")
+        date = datetime.now().strftime("%Y_%m_%d-%I-%M-%S_%p")
         dgplots.savefig(fname=(f"images/dgplots/{date}_dgplots" ".png"))
         # get list of images created by dgplots
         list_of_files = glob.glob('images/dgplots/*dgplots.png')

@@ -42,7 +42,7 @@ The Kruskal-Wallis one-way analysis of variance test is an analogue of ANOVA tha
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ### Libraries
 
@@ -56,29 +56,6 @@ library(rstatix)
 
 # Creates diagnostic plots using ggplot2
 library(ggResidpanel)
-```
-
-### Functions
-
-```{r}
-#| eval: false
-#| warning: false
-# Performs a Kruskal-Wallis test
-rstatix::kruskal_test()
-
-# Performs Dunn's test for pairwise multiple comparisons of the ranked data
-rstatix::dunn_test()
-```
-
-## R (base)
-
-### Libraries
-
-```{r}
-#| eval: false
-#| warning: false
-# Additional statistics functionality in a tidyverse-friendly format
-library(rstatix)
 ```
 
 ### Functions
@@ -144,7 +121,7 @@ pingouin.homoscedasticity()
 pingouin.kruskal
 
 # Performs the Shapiro-Wilk test for normality
-#pingouin.normality()
+pingouin.normality()
 
 # Creates a model from a formula and data frame
 statsmodels.formula.api.ols
@@ -158,7 +135,7 @@ statsmodels.stats.anova.anova_lm
 
 ## Data and hypotheses
 
-For example, suppose a behavioural ecologist records the rate at which [spider monkeys](https://en.wikipedia.org/wiki/Spider_monkey) behaved aggressively towards one another as a function of closely related the two monkeys are. The familiarity of the two monkeys involved in each interaction is classified as `high`, `low` or `none.` We want to test if the data support the hypothesis that aggression rates differ according to strength of relatedness. We form the following null and alternative hypotheses:
+For example, suppose a behavioural ecologist records the rate at which [spider monkeys](https://en.wikipedia.org/wiki/Spider_monkey) behaved aggressively towards one another, as a function of how closely related the monkeys are. The familiarity of the two monkeys involved in each interaction is classified as `high`, `low` or `none.` We want to test if the data support the hypothesis that aggression rates differ according to strength of relatedness. We form the following null and alternative hypotheses:
 
 -   $H_0$: The median aggression rates for all types of familiarity are the same
 -   $H_1$: The median aggression rates are not all equal
@@ -170,7 +147,7 @@ The data are stored in the file `data/CS2-spidermonkey.csv`.
 ## Summarise and visualise
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 First we read the data in:
 
@@ -191,30 +168,9 @@ spidermonkey %>%
   get_summary_stats(type = "common")
 
 # create boxplot
-spidermonkey %>% 
-  ggplot(aes(x = familiarity, y = aggression)) +
+ggplot(spidermonkey,
+       aes(x = familiarity, y = aggression)) +
   geom_boxplot()
-```
-
-## R (base)
-
-First we read the data in:
-
-```{r}
-spidermonkey_r <- read.csv("data/CS2-spidermonkey.csv")
-```
-
-```{r}
-# look at the data format
-head(spidermonkey_r)
-
-# summarise the data
-aggregate(aggression ~ familiarity,
-          FUN = summary,
-          data = spidermonkey_r)
-
-# create boxplot
-boxplot(aggression ~ familiarity, data = spidermonkey_r)
 ```
 
 ## Python
@@ -261,32 +217,17 @@ Independence we'll ignore as usual. Similar shape is best assessed from the earl
 We test for equality of variance using Levene's test (since we can't assume normal parent distributions which rules out Bartlett's test).
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 # perform Levene's test
-spidermonkey %>% 
-  levene_test(aggression ~ familiarity)
+levene_test(aggression ~ familiarity,
+            data = spidermonkey)
 ```
 
 The relevant p-value is given in the `p` column (0.893). As it is quite large we see that each group do appear to have the same variance.
 
 There is also a warning about `group coerced to factor`. There is no need to worry about this - Levene's test needs to compare different groups and because `familiarity` is encoded as a character value, it converts it to a categorical one before running the test.
-
-## R (base)
-
-Levene's test is not included in the default R packages. Instead, we're using the additional functionality from the `rstatix` package.
-
-Perform Levene's test on the data:
-
-```{r}
-levene_test(aggression ~ familiarity,
-            data = spidermonkey_r)
-```
-
-The relevant p-value is given in the `p` column. As it is quite large (much larger than 0.05) we see that each group do appear to have the same variance.
-
-There is also a warning about `group coerced to factor`. There is no need to worry about this - Levene's test needs to compare different groups and because `aggression` is encoded as a numeric value, it converts it to a categorical one before running the test.
 
 ## Python
 We can run Levene's test with the `pg.homoscedasticity()` function. We previously used this for Bartlett's test, but it allows us to define Levene's instead.
@@ -304,24 +245,12 @@ pg.homoscedasticity(dv = "aggression",
 Perform a Kruskal-Wallis test on the data:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 # implement Kruskal-Wallis test
 kruskal.test(aggression ~ familiarity,
              data = spidermonkey)
-```
-
--   The first argument must be in the formula format: `variable ~ category`
--   The second argument must be the name of the data frame
-
-The p-value is given in the 3rd line. This shows us the probability of getting samples such as ours if the null hypothesis were actually true.
-
-## R (base)
-
-```{r}
-kruskal.test(aggression ~ familiarity,
-             data = spidermonkey_r)
 ```
 
 -   The first argument must be in the formula format: `variable ~ category`
@@ -342,7 +271,7 @@ pg.kruskal(dv = "aggression",
 
 Since the p-value is very small (much smaller than the standard significance level of 0.05) we can say "that it is very unlikely that these three samples came from the same parent distribution and as such we can reject our null hypothesis" and state that:
 
-> A one-way Kruskal-Wallis rank sum test showed that aggression rates between spidermonkeys depends upon the degree of familiarity between them (p = 0.0011).
+> A Kruskal-Wallis test showed that aggression rates between spidermonkeys depends upon the degree of familiarity between them (p = 0.0011).
 
 ## Post-hoc testing (Dunn's test)
 
@@ -351,37 +280,14 @@ The equivalent of Tukey's range test for non-normal data is **Dunn's test**.
 Dunn's test is used to check for significant differences in group medians:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
-```{r}
-# perform Dunn's test
-spidermonkey %>% 
-  dunn_test(aggression ~ familiarity)
-```
-
-The `dunn_test()` function performs a Kruskal-Wallis test on the data, followed by a post-hoc pairwise multiple comparison.
-
-The comparison between the pairs of groups is reported in the table at the bottom. Each row contains a single comparison. We are interested in the `p` and `p.adj` columns, which contain the the p-values that we want. This table shows that there isn't a significant difference between the high and low groups, as the p-value (0.1598) is too high. The other two comparisons between the high familiarity and no familiarity groups and between the low and no groups are significant though.
-
-The `dunn_test()` function has several arguments, of which the `p.adjust.method` is likely to be of interest. Here you can define which method needs to be used to account for multiple comparisons. The default is `"none"`. We'll cover more about this in the chapter on [Power analysis](#cs6-intro).
-
-## R (base)
-
-Dunn's test is also not included in the default R packages and requires the `dunn_test()` function from the `rstatix` package.
-
-If you still need to install the `rstatix` package, run the following command in your console:
-
-```{r}
-#| eval: false
-install.packages("rstatix")
-```
-
-Remember to load the library with `library(rstatix)`.
+The `dunn_test()` function comes from the `rstatix` package, so make sure you have that loaded.
 
 ```{r}
 # perform Dunn's test
 dunn_test(aggression ~ familiarity,
-          data = spidermonkey_r)
+          data = spidermonkey)
 ```
 
 The `dunn_test()` function performs a Kruskal-Wallis test on the data, followed by a post-hoc pairwise multiple comparison.
@@ -417,19 +323,25 @@ The p-values of the pairwise comparisons are reported in the table. This table s
 The `sp.posthoc_dunn()` function has several arguments, of which the `p_adjust` is likely to be of interest. Here you can define which method needs to be used to account for multiple comparisons. We'll cover more about this in the chapter on [Power analysis](#cs6-intro).
 :::
 
-## Exercise: Lobster weight (revisited)
+## Exercises
+
+### Lobster weight (revisited) {#sec-exr_lobstersrevisited}
+
+:::{.callout-exercise}
+
+{{< level 2 >}}
 
 Perform a Kruskal-Wallis test and do a post-hoc test on the `lobster` data set.
 
-::: {.callout-tip collapse="true"}
+::: {.callout-answer collapse=true}
 ## Answer
 
-### Hypothesis
+#### Hypothesis
 
 -   $H_0$ : all medians are equal
 -   $H_1$ : not all medians are equal
 
-### Import data, summarise and visualise
+#### Import data, summarise and visualise
 All done previously.
 
 ```{r}
@@ -438,7 +350,6 @@ All done previously.
 #| warning: false
 # load the data in the background
 lobsters <- read_csv("data/CS2-lobsters.csv")
-lobsters_r <- read.csv("data/CS2-lobsters.csv")
 ```
 
 ```{python}
@@ -448,25 +359,17 @@ lobsters_r <- read.csv("data/CS2-lobsters.csv")
 lobsters_py = pd.read_csv("data/CS2-lobsters.csv")
 ```
 
-### Assumptions
+#### Assumptions
 
 From before, since the data are normal enough they are definitely similar enough for a Kruskal-Wallis test and they do all have equality of variance from out assessment of the diagnostic plots. For completeness though we will look at Levene's test.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r}
-#| warning: false
-lobsters %>% 
-  levene_test(weight ~ diet)
-```
-
-## R (base)
+## R
 
 ```{r}
 #| warning: false
 levene_test(weight ~ diet,
-            data = lobsters_r)
+            data = lobsters)
 ```
 
 ## Python
@@ -481,24 +384,17 @@ pg.homoscedasticity(dv = "weight",
 
 Given that the p-value is so high, this again agrees with our previous assessment that the equality of variance assumption is well met. Rock on.
 
-### Kruskal-Wallis test
+#### Kruskal-Wallis test
 
 So, we perform the Kruskall-Wallis test.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 # implement Kruskal-Wallis test
-lobsters %>% 
-  kruskal_test(weight ~ diet)
-```
-
-## R (base)
-
-```{r}
 kruskal.test(weight ~ diet,
-             data = lobsters_r)
+             data = lobsters)
 ```
 
 ## Python
@@ -512,9 +408,10 @@ pg.kruskal(dv = "weight",
 
 > A Kruskal-Wallis test indicated that the median weight of juvenile lobsters did not differ significantly between diets (p = 0.20).
 
-### Post-hoc testing
+#### Post-hoc testing
 
-In this case we should not be doing any post-hoc testing, because we did not detect any statistically significant differences. Doing so anyway and then reporting any incidental groups that *would* differ, would be p-hacking.
+In this case we should not be doing any post-hoc testing, because we did not detect any statistically significant differences. Doing so anyway and then reporting any incidental groups that *would* differ, would be p-hacking. And naughty.
+:::
 :::
 
 ## Key points

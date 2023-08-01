@@ -1,30 +1,27 @@
 # This is the chapter configuration
 book:
   chapters:
-    - part: "(CS1) Hypothesis testing"
+    - part: "CS1: Statistical inference"
       chapters:
-        - "materials/cs1_practical_one-sample-t-test.qmd"
-        - "materials/cs1_practical_two-sample-t-test.qmd"
-        - "materials/cs1_practical_two-sample-paired-t-test.qmd"
-        - "materials/cs1_practical_one-sample-wilcoxon.qmd"
-        - "materials/cs1_practical_two-sample-mann-whitney.qmd"
-        - "materials/cs1_practical_two-sample-paired-wilcoxon.qmd"
-    - part: "(CS2) Categorical predictors"
+        - materials/cs1_practical_one-sample.qmd
+        - materials/cs1_practical_two-samples.qmd
+        - materials/cs1_practical_two-samples-paired.qmd
+    - part: "CS2: Categorical predictors"
       chapters:
-        - "materials/cs2_practical_anova.qmd"
-        - "materials/cs2_practical_kruskal-wallis.qmd"
-    - part: "(CS3) Continuous predictors"
+        - materials/cs2_practical_anova.qmd
+        - materials/cs2_practical_kruskal-wallis.qmd
+    - part: "CS3: Continuous predictors"
       chapters:
-        - "materials/cs3_practical_linear-regression.qmd"
-        - "materials/cs3_practical_correlations.qmd"
-    - part: "(CS4) Two predictors"
+        - materials/cs3_practical_linear-regression.qmd
+        - materials/cs3_practical_correlations.qmd
+    - part: "CS4: Two predictors"
       chapters:
-        - "materials/cs4_practical_two-way-anova.qmd"
-        - "materials/cs4_practical_linear-regression-grouped-data.qmd"
-    - part: "(CS5) Multiple predictors"
+        - materials/cs4_practical_two-way-anova.qmd
+        - materials/cs4_practical_linear-regression-grouped-data.qmd
+    - part: "CS5: Multiple predictors"
       chapters:
-            - "materials/cs5_practical_multiple-linear-regression.qmd"
-            - "materials/cs5_practical_model-comparisons.qmd"
-    - part: "(CS6) Power analysis"
+        - materials/cs5_practical_multiple-linear-regression.qmd
+        - materials/cs5_practical_model-comparisons.qmd
+    - part: "CS6: Statistical power"
       chapters:
-        - "materials/cs6_practical_power-analysis.qmd"
+        - materials/cs6_practical_power-analysis.qmd

@@ -37,12 +37,7 @@ exec(open('setup_files/setup.py').read())
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-### Libraries
-### Functions
-
-## R (base)
+## R
 
 ### Libraries
 ### Functions
@@ -62,18 +57,18 @@ Here we will use the **Akaike Information Criterion** in order to compare differ
 
 ## Data and hypotheses
 
-This section uses the `data/CS5-Ladybird.csv` data set. This data set comprises of 20 observations of three variables (one dependent and two predictor). This records the clutch size (`eggs`) in a species of ladybird, alongside two potential predictor variables; the mass of the female (`weight`), and the colour of the male (`male`) which is a categorical variable.
+This section uses the `data/CS5-ladybird.csv` data set. This data set comprises of 20 observations of three variables (one dependent and two predictor). This records the clutch size (`eggs`) in a species of ladybird, alongside two potential predictor variables; the mass of the female (`weight`), and the colour of the male (`male`) which is a categorical variable.
 
 ## Backwards Stepwise Elimination
 
 First, we load the data and visualise it:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
-ladybird <- read_csv("data/CS5-Ladybird.csv")
+ladybird <- read_csv("data/CS5-ladybird.csv")
 
 head(ladybird)
 ```
@@ -81,7 +76,8 @@ head(ladybird)
 We can visualise the data by `male`, so we can see if the eggs clutch size differs a lot between the two groups:
 
 ```{r}
-ggplot(ladybird, aes(x = male, y = eggs)) +
+ggplot(ladybird,
+       aes(x = male, y = eggs)) +
     geom_boxplot() +
     geom_jitter(width = 0.05)
 ```
@@ -90,49 +86,17 @@ We can also plot the egg clutch size against the weight, again for each male col
 
 ```{r}
 # visualise the data
-ggplot(ladybird, aes(x = weight, y = eggs,
-                     colour = male)) +
+ggplot(ladybird,
+       aes(x = weight, y = eggs,
+           colour = male)) +
     geom_point() +
     scale_color_brewer(palette = "Dark2")
-```
-
-## R (base)
-
-```{r}
-#| message: false
-ladybird_r <- read.csv("data/CS5-Ladybird.csv")
-
-head(ladybird_r)
-```
-
-We can visualise the data by `male`, so we can see if the eggs clutch size differs a lot between the two groups:
-
-```{r}
-boxplot(eggs ~ male,
-        col = "white",
-        data = ladybird_r)
-
-stripchart(eggs ~ male,
-           data = ladybird_r,
-           method = "jitter",
-           pch = 19,
-           col = "black",
-           vertical = TRUE,
-           add = TRUE)
-```
-
-We can also plot the egg clutch size against the weight, again for each male colour group:
-
-```{r}
-plot(eggs ~ weight,
-     col = factor(male),
-     data = ladybird_r)
 ```
 
 ## Python
 
 ```{python}
-ladybird_py = pd.read_csv("data/CS5-Ladybird.csv")
+ladybird_py = pd.read_csv("data/CS5-ladybird.csv")
 ```
 
 We can visualise the data by `male`, so we can see if the eggs clutch size differs a lot between the two groups:
@@ -173,7 +137,7 @@ We start with the complete or _full_ model, that takes into account any possible
 Next, we define the reduced model. This is the next, most simple model. In this case we're removing the interaction and constructing an additive model.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 # define the full model
@@ -194,26 +158,6 @@ AIC(lm_full)
 AIC(lm_add)
 ```
 
-## R (base)
-
-```{r}
-# define the full model
-lm_full_r <- lm(eggs ~ weight * male,
-                data = ladybird_r)
-```
-
-```{r}
-# define the additive model
-lm_add_r <- lm(eggs ~ weight + male,
-               data = ladybird_r)
-```
-
-We then extract the AIC values for each of the models:
-
-```{r}
-AIC(lm_full_r)
-AIC(lm_add_r)
-```
 ## Python
 
 ```{python}
@@ -250,7 +194,7 @@ This choice of language (supported vs significant) is deliberate and there are a
 Next, we see which of the remaining terms can be dropped. We will look at the models where we have dropped both `male` and `weight` (i.e. `eggs ~ weight` and `eggs ~ male`) and compare their AIC values with the AIC of our current minimal model (`eggs ~ weight + male`). If the AIC values of at least one of our new reduced models is lower (or at least no more than 2 greater) than the AIC of our current minimal model, then we can drop the relevant term and get ourselves a new minimal model. If we find ourselves in a situation where we can drop more than one term we will drop the term that gives us the model with the lowest AIC.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 Drop the variable `weight` and examine the AIC:
 
@@ -272,29 +216,6 @@ lm_weight <- lm(eggs ~ weight,
 
 # extract the AIC
 AIC(lm_weight)
-```
-## R (base)
-
-Drop the variable `weight` and examine the AIC:
-
-```{r}
-# define the model
-lm_male_r <- lm(eggs ~ male,
-                 data = ladybird_r)
-
-# extract the AIC
-AIC(lm_male_r)
-```
-
-Drop the variable `male` and examine the AIC:
-
-```{r}
-# define the model
-lm_weight_r <- lm(eggs ~ weight,
-                  data = ladybird_r)
-
-# extract the AIC
-AIC(lm_weight_r)
 ```
 
 ## Python
@@ -335,7 +256,7 @@ Our final comparison is to drop the variable `weight` and compare this simple mo
 Drop the variable `weight` and see if that has an effect:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 # define the model
@@ -344,17 +265,6 @@ lm_null <- lm(eggs ~ 1,
 
 # extract the AIC
 AIC(lm_null)
-```
-
-## R (base)
-
-```{r}
-# define the model
-lm_null_r <- lm(eggs ~ 1,
-                data = ladybird_r)
-
-# extract the AIC
-AIC(lm_null_r)
 ```
 
 ## Python
@@ -408,7 +318,7 @@ When doing this in Python, you are a bit stuck. There does not seem to be an equ
 
 :::
 
-## Exercise
+## Exercises
 
 We are going to practice the backwards stepwise elimination technique on some of the data sets we analysed previously.
 
@@ -423,33 +333,30 @@ NB: if an interaction term is significant then any main factor that is part of t
 
 Perform a BSE on the following data sets:
 
-* `data/CS5-Trees.csv`
+* `data/CS5-trees.csv`
 * `data/CS5-pm2_5.csv`
 
-::: {.callout-tip collapse="true"}
-## Answer
+### BSE: Trees {#sec-exr_bsetrees}
 
-### BSE on Trees
+:::{.callout-exercise}
+
+{{< level 2 >}}
+
+BSE on `trees`:
+
+::: {.callout-answer collapse="true"}
+## Answer
 
 Let's start by reading in the data and checking which variables are in the data set.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
-trees <- read_csv("data/CS5-Trees.csv")
+trees <- read_csv("data/CS5-trees.csv")
 
 head(trees)
-```
-
-## R (base)
-
-```{r}
-#| message: false
-trees_r <- read.csv("data/CS5-Trees.csv")
-
-head(trees_r)
 ```
 
 ## Python
@@ -458,47 +365,34 @@ First, we read in the data (if needed) and have a look at the variables:
 
 ```{python}
 #| message: false
-trees_py = pd.read_csv("data/CS5-Trees.csv")
+trees_py = pd.read_csv("data/CS5-trees.csv")
 
 trees_py.head()
 ```
 
 :::
 
-1. The response variable is `Volume`
-2. The predictor variables are `Girth` and `Height`
-3. The only possible interaction term is `Girth:Height`
+1. The response variable is `volume`
+2. The predictor variables are `girth` and `height`
+3. The only possible interaction term is `girth:height`
 4. We perform a BSE on the model using the `step()` function
 
-The full model is `Volume ~ Girth * Height`.
+The full model is `volume ~ girth * height`.
 
 We perform the BSE as follows:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 Define the model and use the `step()` function:
 
 ```{r}
 # define the full model
-lm_trees <- lm(Volume ~ Girth * Height,
+lm_trees <- lm(volume ~ girth * height,
                data = trees)
 
 # perform BSE
 step(lm_trees)
-```
-
-## R (base)
-
-Define the model and use the `step()` function:
-
-```{r}
-# define the full model
-lm_trees_r <- lm(Volume ~ Girth * Height,
-                 data = trees_r)
-
-# perform BSE
-step(lm_trees_r)
 ```
 
 ## Python
@@ -509,10 +403,10 @@ We extract the AICs for both models. Because we do not have an automated way of 
 
 ```{python}
 # define the models
-model_full = smf.ols(formula= "Volume ~ Girth * Height",
+model_full = smf.ols(formula= "volume ~ girth * height",
                      data = trees_py)
 
-model_1 = smf.ols(formula= "Volume ~ Girth + Height",
+model_1 = smf.ols(formula= "volume ~ girth + height",
                   data = trees_py)
 
 # get the AIC of the model
@@ -523,28 +417,27 @@ model_1.fit().aic
 :::
 
 This BSE approach only gets as far as the first step (trying to drop the interaction term). We see immediately that dropping the interaction term makes the model worse. This means that the best model is still the full model.
+:::
+:::
 
-### BSE on PM2.5
+### BSE: Air pollution {#sec-exr_bsepollution}
 
-Let's start by reading in the data and checking which variables are in the data set.
+:::{.callout-exercise}
 
+{{< level 2 >}}
+
+Perform a BSE on `pm2_5`. Let's start by reading in the data and checking which variables are in the data set.
+
+::: {.callout-answer collapse="true"}
+## Answer
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
 pm2_5 <- read_csv("data/CS5-pm2_5.csv")
 
 head(pm2_5)
-```
-
-## R (base)
-
-```{r}
-#| message: false
-pm2_5_r <- read_csv("data/CS5-pm2_5.csv")
-
-head(pm2_5_r)
 ```
 
 ## Python
@@ -564,7 +457,7 @@ pm2_5_py.head()
 `pm2_5 ~ avg_temp + rain_mm + wind_m_s * location`
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 # define the model
@@ -573,17 +466,6 @@ lm_pm2_5 <- lm(pm2_5 ~ avg_temp + rain_mm + wind_m_s * location,
 
 # perform BSE
 step(lm_pm2_5)
-```
-
-## R (base)
-
-```{r}
-# define the model
-lm_pm2_5_r <- lm(pm2_5 ~ avg_temp + rain_mm + wind_m_s * location,
-                 data = pm2_5_r)
-
-# perform BSE
-step(lm_pm2_5_r)
 ```
 
 ## Python
@@ -677,6 +559,7 @@ Our minimal model is thus:
 
 `pm2_5 ~ wind_m_s + location + wind_m_s:location`
 
+:::
 :::
 
 ## Key points

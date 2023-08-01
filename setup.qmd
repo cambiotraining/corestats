@@ -5,24 +5,7 @@ title: "Setup"
 ## Installation
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-#### Required software
-
-- [Download R](https://cran.r-project.org/) and install it using default options. (Note: choose the "base" version for Windows)
-- [Download RStudio](https://www.rstudio.com/products/rstudio/download/#download) and install it using default options. 
-
-#### Setting up RStudio
-
-After installing RStudio, change some of its default options (you only need to 
-do this once): 
-
-- From the upper menu go to <kbd>Tools</kbd> > <kbd>Global Options...</kbd> 
-- _Untick_ the option "Restore .RData to workspace on startup."
-- Change "Save workspace to .RData on exit" option to "Never"
-- Press <kbd>OK</kbd>
-
-## R (base)
+## R
 
 #### Required software
 
@@ -60,7 +43,7 @@ A brief sequence of events:
 We will be using the following packages throughout this course:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 Install the required packages. Run the following code in the console:
 
@@ -96,15 +79,6 @@ Error in library(tidyverse) : there is no package called ‘tidyverse’
 ```
  
 then your package installation did not work. Please ask the instructors for assistance before the course. 
-
-## R (base)
-
-Install the required packages. Run the following code in the console:
-
-```{r}
-#| eval: false
-install.packages("rstatix")
-```
 
 ## Python
 

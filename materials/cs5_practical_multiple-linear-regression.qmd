@@ -36,12 +36,7 @@ exec(open('setup_files/setup.py').read())
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-### Libraries
-### Functions
-
-## R (base)
+## R
 
 ### Libraries
 ### Functions
@@ -76,7 +71,7 @@ It contains the following variables:
 ## Summarise and visualise
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 Let's first load the data:
 
@@ -89,12 +84,13 @@ head(pm2_5)
 It's the `pm2_5` response variable we're interested in here. Let's start by checking if there might be a difference between PM2.5 level in inner and outer London:
 
 ```{r}
-ggplot(pm2_5, aes(x = location, y = pm2_5)) +
+ggplot(pm2_5,
+       aes(x = location, y = pm2_5)) +
     geom_boxplot() +
-    geom_jitter(width = 0.1, alpha = 0.7)
+    geom_jitter(width = 0.1, alpha = 0.3)
 ```
 
-I've added the (jittered) data to the plot, with some transparency (`alpha = 0.7`). It's always good to look at the actual data and not just summary statistics (which is what the box plot is).
+I've added the (jittered) data to the plot, with some transparency (`alpha = 0.3`). It's always good to look at the actual data and not just summary statistics (which is what the box plot is).
 
 There seems to be quite a difference between the PM2.5 levels in the two London areas, with the levels in inner London being markedly higher. I'm not surprised by this! So when we do our statistical testing, I would expect to find a clear difference between the locations.
 
@@ -113,8 +109,9 @@ Other notable things include that rainfall seems completely independent of wind 
 We can visualise the relationship between `pm2_5` and `wind_m_s` in a bit more detail, by plotting the data against each other and colouring by `location`:
 
 ```{r}
-ggplot(pm2_5, aes(x = wind_m_s, y = pm2_5,
-                  colour = location)) +
+ggplot(pm2_5,
+       aes(x = wind_m_s, y = pm2_5,
+           colour = location)) +
     geom_point()
 ```
 
@@ -126,66 +123,6 @@ Another way of looking at this would be to create a correlation matrix, like we 
 pm2_5 %>% 
     select_if(is.numeric) %>% 
     cor()
-```
-
-This confirms what we saw in the plots, there aren't any very strong correlations between the different (numerical) variables, apart from a negative correlation between `pm2_5` and `wind_m_s`, which has a Pearson's r of $r$ = `r pm2_5 %>% select_if(is.numeric) %>% cor_test() %>% filter(cor != 1) %>% arrange(desc(abs(cor))) %>% slice(1) %>% pull(cor)`.
-
-## R (base)
-
-Let's first load the data:
-
-```{r}
-pm2_5_r <- read.csv("data/CS5-pm2_5.csv")
-
-head(pm2_5_r)
-```
-
-It's the `pm2_5` response variable we're interested in here. Let's start by checking if there might be a difference between PM2.5 level in inner and outer London:
-
-```{r}
-boxplot(pm2_5 ~ location, col = "white", data = pm2_5_r)
-
-stripchart(pm2_5 ~ location,
-           data = pm2_5_r,
-           method = "jitter",
-           pch = 19,
-           col = alpha("black", 0.4),
-           vertical = TRUE,
-           add = TRUE)
-```
-
-I've added the (jittered) data to the plot. To do this I've used the `stripchart()` function and added some transparency (`col = alpha("black", 0.4)`). It's always good to look at the actual data and not just summary statistics (which is what the box plot is).
-
-There seems to be quite a difference between the PM2.5 levels in the two London areas, with the levels in inner London being markedly higher. I'm not surprised by this! So when we do our statistical testing, I would expect to find a clear difference between the locations.
-
-Apart from the location, there are quite a few numerical descriptor variables. We could plot them one-by-one, but that's a bit tedious. So instead we use the `pairs()` function again. This only works on numerical data, so we select all the columns that are numeric with the base R `Filter()` function (not to be confused with the `dplyr::filter()` function). Note that there are many different ways to select numeric-only columns and a quick Google search will lead you to [Stackoverflow](https://stackoverflow.com/questions/5863097/selecting-only-numeric-columns-from-a-data-frame).
-
-We could save the output of the `Filter()` operation into a new variable and use that with the `pairs()` function. However, since version 4.1 R has had a native pipe, using the `|>` symbol. There are some  [differences](https://towardsdatascience.com/understanding-the-native-r-pipe-98dea6d8b61b) between tidyverse's `%>%` and base R's `|>`, but we won't delve into this here.
-
-Suffice to say, we can do the following:
-
-```{r}
-Filter(is.numeric, pm2_5_r) |> pairs(lower.panel = NULL)
-```
-
-We can see that there is not much of a correlation between `pm2_5` and `avg_temp` or `rain_mm`, whereas there might be something going on in relation to `wind_m_s`.
-
-Other notable things include that rainfall seems completely independent of wind speed (rain fall seems pretty constant). Nor does the average temperature seem in any way related to wind speed (it looks like a random collection of data points!).
-
-We can visualise the relationship between `pm2_5` and `wind_m_s` in a bit more detail, by plotting the data against each other and colouring by `location`:
-
-```{r}
-plot(pm2_5 ~ wind_m_s,
-     col = factor(location),
-     data = pm2_5_r)
-```
-
-This seems to show that there might be some linear relationship between PM2.5 levels and wind speed.
-
-Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](#correlation-coefficients). Again, this only works on numerical values, so we get all the numerical columns and send this to the `cor()` function:
-
-```{r}
-Filter(is.numeric, pm2_5_r) |> cor()
 ```
 
 This confirms what we saw in the plots, there aren't any very strong correlations between the different (numerical) variables, apart from a negative correlation between `pm2_5` and `wind_m_s`, which has a Pearson's r of $r$ = `r pm2_5 %>% select_if(is.numeric) %>% cor_test() %>% filter(cor != 1) %>% arrange(desc(abs(cor))) %>% slice(1) %>% pull(cor)`.
@@ -221,9 +158,10 @@ I'll just tell you that there is not much of a correlation between `pm2_5` and `
 
 ```{python}
 #| results: hide
-(ggplot(pm2_5_py, aes(x = "wind_m_s",
-                      y = "pm2_5",
-                      colour = "location")) +
+(ggplot(pm2_5_py,
+        aes(x = "wind_m_s",
+            y = "pm2_5",
+            colour = "location")) +
      geom_point())
 
 ```
@@ -251,12 +189,12 @@ So in this case we create a model that takes into account all of the main effect
 
 Our model is then as follows:
 
-`pm2_5 ~ avg_temp, location + rain_mm + wind_m_s + wind_m_s:location`
+`pm2_5 ~ avg_temp + location + rain_mm + wind_m_s + wind_m_s:location`
 
 So let's define and explore it!
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 We write the model as follows:
 
@@ -267,6 +205,16 @@ lm_pm2_5_full <- lm(pm2_5 ~ avg_temp + location +
                     data = pm2_5)
 ```
 
+Let's look at the coefficients:
+
+```{r}
+lm_pm2_5_full
+```
+
+:::{.callout-tip collapse=true}
+
+## Extracting coefficients with `tidy()`
+
 This will give us quite a few coefficients, so instead of just calling the `lm` object, I'm restructuring the output using the `tidy()` function from the `broom` package. It's installed with `tidyverse` but you have to load it separately using `library(broom)`.
 
 ```{r}
@@ -274,6 +222,7 @@ lm_pm2_5_full %>%
     tidy() %>% 
     select(term, estimate)
 ```
+:::
 
 The question is, are all of these terms statistically significant? To find out we perform an ANOVA:
 
@@ -283,20 +232,18 @@ anova(lm_pm2_5_full)
 
 From this we can see that the interaction between `location` and `wind_m_s` is statistically significant. Which means that we can't just talk about the effect of `location` or `wind_m_s` on PM2.5 levels, without taking the other variable into account!
 
-The p-values for the `avg_temp` and `rain_mm` main effects are not significant. This means that they're not contributing much to model's ability to explain our data. This matches what we already saw when we visualised the data.
+The p-value for the `avg_temp` is significant, whereas the `rain_mm` main effect is not. This means that rain fall is not contributing much to model's ability to explain our data. This matches what we already saw when we visualised the data.
 
-What to do? We'll explore this in more detail in the chapter on model comparisons, but for now the most sensible option would be to redefine the model, but exclude those two variables. Here I have rewritten the model, using the shorthand `*` notation (`pm2_5 ~ location * wind_m_s` is equal to `pm2_5 ~ location + wind_m_s + wind_m_s:location`). I've named it `lm_pm2_5_red` to indicate it is a reduced model (with fewer variables than our original full model):
+What to do? We'll explore this in more detail in the chapter on model comparisons, but for now the most sensible option would be to redefine the model, but exclude the `rain_mm` variable. Here I have rewritten the model and named it `lm_pm2_5_red` to indicate it is a reduced model (with fewer variables than our original full model):
 
 ```{r}
-lm_pm2_5_red <- lm(pm2_5 ~ location * wind_m_s, data = pm2_5)
+lm_pm2_5_red <- lm(pm2_5 ~ avg_temp + location + wind_m_s + location:wind_m_s, data = pm2_5)
 ```
 
 Let's look at the new model coefficients:
 
 ```{r}
-lm_pm2_5_red %>%
-    tidy() %>% 
-    select(term, estimate)
+lm_pm2_5_red
 ```
 
 As we did in the linear regression on grouped data, we end up with two linear equations, one for `inner` London and one for `outer` London.
@@ -305,21 +252,21 @@ Our reference group is `inner` (remember, it takes a reference group in alphabet
 
 So we end up with:
 
-$PM2.5_{inner} = 18.24 - 0.29 \times wind\_m\_s$
+$PM2.5_{inner} = 18.14 + 0.01 \times avg\_temp - 0.29 \times wind\_m\_s$
 
-$PM2.5_{outer} = (18.24 - 2.06) + (-0.29 - 0.43) \times wind\_m\_s$
+$PM2.5_{outer} = (18.14 - 2.07) + 0.01 \times avg\_temp + (-0.29 - 0.43) \times wind\_m\_s$
 
 which gives
 
-$PM2.5_{outer} = 16.18 - 0.72 \times wind\_m\_s$
+$PM2.5_{outer} = 16.07 + 0.01 \times avg\_temp - 0.72 \times wind\_m\_s$
 
 
 We still need to check the assumptions of the model:
 
 ```{r}
-lm_pm2_5_red %>% 
-    resid_panel(plots = c("resid", "qq", "ls", "cookd"),
-              smoother = TRUE)
+resid_panel(lm_pm2_5_red,
+            plots = c("resid", "qq", "ls", "cookd"),
+            smoother = TRUE)
 ```
 
 They all look pretty good, with the only weird thing being a small empty zone of predicted values just under 16. Nothing that is getting me worried though.
@@ -328,101 +275,11 @@ It'd be useful to visualise the model. We can take the model and use the `augmen
 
 ```{r}
 lm_pm2_5_red %>% 
-    augment() %>% 
-    ggplot(aes(x = wind_m_s, y = .fitted, colour = location)) +
-    geom_line(size = 1) +
-    # add the original data
-    geom_point(data = pm2_5, aes(wind_m_s, pm2_5, colour = location))
-```
-
-Note: in this case we're actually visualising the model with both the main effects and the interaction between them. This is also the default behaviour for the `lm` method of `geom_smooth()`, so we could have also plotted it with:
-
-```{r}
-#| eval: false
-ggplot(data = pm2_5, aes(x = wind_m_s, y = pm2_5,
-                         colour = location)) +
-    geom_smooth(method = "lm", se = FALSE)
-
-```
-
-## R (base)
-
-```{r}
-lm_pm2_5_full_r <- lm(pm2_5 ~ avg_temp + location +
-                              rain_mm + wind_m_s +
-                              wind_m_s:location,
-                      data = pm2_5_r)
-```
-
-Let's look at the model:
-
-```{r}
-lm_pm2_5_full_r
-```
-
-Quite a few coefficients! The question is, are all of these terms statistically significant? To find out we perform an ANOVA:
-
-```{r}
-anova(lm_pm2_5_full_r)
-```
-
-From this we can see that the interaction between `location` and `wind_m_s` is statistically significant. Which means that we can't just talk about the effect of `location` or `wind_m_s` on PM2.5 levels, without taking the other variable into account!
-
-The p-values for the `avg_temp` and `rain_mm` main effects are not significant. This means that they're not contributing much to model's ability to explain our data. This matches what we already saw when we visualised the data.
-
-What to do? We'll explore this in more detail in the chapter on model comparisons, but for now the most sensible option would be to redefine the model, but exclude those two variables. Here I have rewritten the model, using the shorthand `*` notation (`pm2_5 ~ location * wind_m_s` is equal to `pm2_5 ~ location + wind_m_s + wind_m_s:location`). I've named it `lm_pm2_5_red` to indicate it is a reduced model (with fewer variables than our original full model):
-
-```{r}
-lm_pm2_5_red_r <- lm(pm2_5 ~ location * wind_m_s, data = pm2_5_r)
-```
-
-Let's look at the new model coefficients:
-
-```{r}
-lm_pm2_5_red_r
-```
-
-As we did in the linear regression on grouped data, we end up with two linear equations, one for `inner` London and one for `outer` London.
-
-Our reference group is `inner` (remember, it takes a reference group in alphabetical order and we can see `outer` in the output).
-
-So we end up with:
-
-$PM2.5_{inner} = 18.24 - 0.29 \times wind\_m\_s$
-
-$PM2.5_{outer} = (18.24 - 2.06) + (-0.29 - 0.43) \times wind\_m\_s$
-
-which gives
-
-$PM2.5_{outer} = 16.18 - 0.72 \times wind\_m\_s$
-
-
-We still need to check the assumptions of the model:
-
-```{r}
-par(mfrow = c(2,2))
-plot(lm_pm2_5_red_r)
-```
-
-They all look pretty good, with the only weird thing being a small empty zone of predicted values just under 16. Nothing that is getting me worried though.
-
-It'd be useful to visualise the model. To do this, we need to split the data by `location`, create a linear model for each subset and then plot this with the original data.
-
-```{r}
-inner_r <- subset(pm2_5_r, location == "inner")
-outer_r <- subset(pm2_5_r, location == "outer")
-
-lm_inner_red <- lm(pm2_5 ~ wind_m_s, data = inner_r)
-lm_outer_red <- lm(pm2_5 ~ wind_m_s, data = outer_r)
-```
-
-```{r}
-plot(pm2_5 ~ wind_m_s,
-     col = factor(location),
-     data = pm2_5_r)
-
-abline(lm_inner_red, col = 1)
-abline(lm_outer_red, col = 2)
+  augment() %>% 
+  ggplot(aes(x = wind_m_s,
+             y = pm2_5, colour = location)) +
+  geom_point() +
+  geom_smooth(aes(y = .fitted))
 ```
 
 ## Python
@@ -450,14 +307,14 @@ sm.stats.anova_lm(lm_pm2_5_full_py, typ = 2)
 
 From this we can see that the interaction between `location` and `wind_m_s` is statistically significant. Which means that we can't just talk about the effect of `location` or `wind_m_s` on PM2.5 levels, without taking the other variable into account!
 
-The p-values for the `avg_temp` and `rain_mm` main effects are not significant. This means that they're not contributing much to model's ability to explain our data. This matches what we already saw when we visualised the data.
+The p-value for the `avg_temp` is significant, whereas the `rain_mm` main effect is not. This means that rain fall is not contributing much to model's ability to explain our data. This matches what we already saw when we visualised the data.
 
-What to do? We'll explore this in more detail in the chapter on model comparisons, but for now the most sensible option would be to redefine the model, but exclude those two variables. Here I have rewritten the model, using the shorthand `*` notation (`pm2_5 ~ location * wind_m_s` is equal to `pm2_5 ~ location + wind_m_s + wind_m_s:location`). I've named it `lm_pm2_5_red` to indicate it is a reduced model (with fewer variables than our original full model):
+What to do? We'll explore this in more detail in the chapter on model comparisons, but for now the most sensible option would be to redefine the model, but exclude the `rain_mm` variable. Here I have rewritten the model and named it `lm_pm2_5_red` to indicate it is a reduced model (with fewer variables than our original full model):
 
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "pm2_5 ~ C(location) * wind_m_s", data = pm2_5_py)
+model = smf.ols(formula= "pm2_5 ~ avg_temp + C(location) * wind_m_s", data = pm2_5_py)
 # and get the fitted parameters of the model
 lm_pm2_5_red_py = model.fit()
 ```
@@ -474,13 +331,13 @@ Our reference group is `inner` (remember, it takes a reference group in alphabet
 
 So we end up with:
 
-$PM2.5_{inner} = 18.24 - 0.29 \times wind\_m\_s$
+$PM2.5_{inner} = 18.14 + 0.01 \times avg\_temp - 0.29 \times wind\_m\_s$
 
-$PM2.5_{outer} = (18.24 - 2.06) + (-0.29 - 0.43) \times wind\_m\_s$
+$PM2.5_{outer} = (18.14 - 2.07) + 0.01 \times avg\_temp + (-0.29 - 0.43) \times wind\_m\_s$
 
 which gives
 
-$PM2.5_{outer} = 16.18 - 0.72 \times wind\_m\_s$
+$PM2.5_{outer} = 16.07 + 0.01 \times avg\_temp - 0.72 \times wind\_m\_s$
 
 
 We still need to check the assumptions of the model:
@@ -508,30 +365,16 @@ knitr::include_graphics(py$dgplot)
 
 They all look pretty good, with the only weird thing being a small empty zone of predicted values just under 16. Nothing that is getting me worried though.
 
-It'd be useful to visualise the model. We can take the model and extract the fitted values (`.fittedvalues`). These are the values for `pm2_5` that the model is predicting. We can then plot these against the `wind_m_s` measurements, colouring by `location`. We're also adding the original values to the plot with `geom_point(aes(y = "pm2_5"))`:
+It'd be useful to visualise the model. We can take the model and extract the fitted values (`.fittedvalues`). These are the `pm2_5` that the model is predicting. We can then plot these against the `wind_m_s` measurements, colouring by `location`. We're also adding the original values to the plot with `geom_point()`:
 
 ```{python}
 #| results: hide
 (ggplot(pm2_5_py, aes(x = "wind_m_s",
-                     y = lm_pm2_5_red_py.fittedvalues,
+                     y = "pm2_5",
                      colour = "location")) +
-    geom_line(size = 1) +
-    geom_point(aes(y = "pm2_5")))
+    geom_point() +
+    geom_smooth(aes(y = lm_pm2_5_red_py.fittedvalues)))
 ```
-
-Note: in this case we're actually visualising the model with both the main effects and the interaction between them. This is also the default behaviour for the `lm` method of `geom_smooth()`, so we could have also plotted it with:
-
-```{python}
-#| eval: false
-#| results: hide
-(ggplot(pm2_5_py, aes(x = "wind_m_s",
-                      y = "pm2_5",
-                      colour = "location")) +
-     geom_smooth(method = "lm", se = False) +
-     geom_point())
-
-```
-
 
 :::
 
@@ -551,11 +394,11 @@ Rather than stop here however, we will use the concept of the linear model to it
 To create the additive model, we drop the interaction term (keep in mind, this is to demonstrate the process - we would normally not do this because the interaction term is significant!).
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 First, we define the model:
 ```{r}
-lm_pm2_5_add <- lm(pm2_5 ~ location + wind_m_s,
+lm_pm2_5_add <- lm(pm2_5 ~ avg_temp + location + wind_m_s,
                    data = pm2_5)
 ```
 
@@ -564,68 +407,16 @@ We can visualise this as follows:
 ```{r}
 lm_pm2_5_add %>% 
     augment() %>% 
-    ggplot(aes(x = wind_m_s, y = .fitted,
+    ggplot(aes(x = wind_m_s, y = pm2_5,
                colour = location)) +
-    geom_line(size = 1) +
-    geom_point(data = pm2_5,
-               aes(x = wind_m_s, y = pm2_5))
+    geom_point() +
+    geom_smooth(aes(y = .fitted))
 ```
 
 Next, we extract the coefficient estimates:
 
 ```{r}
-lm_pm2_5_add %>%
-    tidy() %>% 
-    select(term, estimate)
-```
-
-## R (base)
-
-First, we define the model:
-
-```{r}
-lm_pm2_5_add_r <- lm(pm2_5 ~ location + wind_m_s,
-                   data = pm2_5_r)
-```
-
-Visualising this is not exactly trivial. There is no easy way to extract the fitted/predicted values by `location`.
-
-So we'll have to do it manually. We can get the coefficients of the model as follows:
-
-```{r}
-# get the coefficients
-lm_pm2_5_add_r$coefficients
-```
-
-We can, for example, get the first coefficient with:
-
-```{r}
-#| eval: false
-lm_pm2_5_add_r$coefficients[1]
-```
-
-The linear model will be in the format of:
-
-$predicted\_value = \beta_0 + \beta_1 \times wind\_m\_s$
-
-with the $\beta_0$ for the `outer` location needing correcting, since it is relative to the `inner` location (this correction is given as the second coefficient).
-
-Thankfully we can create the linear model using the `abline()` function. This has a `coef =` argument that takes model coefficients. This then gives us:
-
-```{r}
-# plot the original data
-plot(pm2_5 ~ wind_m_s,
-     col = factor(location),
-     data = pm2_5_r)
-
-# add the regression line for the first (inner) location
-abline(coef = c(lm_pm2_5_add_r$coefficients[1],
-                lm_pm2_5_add_r$coefficients[3]), col = 1)
-
-# add the regression line for the second (outer) location
-abline(coef = c((lm_pm2_5_add_r$coefficients[1] +
-                 lm_pm2_5_add_r$coefficients[2]),
-                 lm_pm2_5_add_r$coefficients[3]), col = 2)
+lm_pm2_5_add
 ```
 
 ## Python
@@ -634,7 +425,7 @@ First, we define the model
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "pm2_5 ~ C(location) + wind_m_s",
+model = smf.ols(formula= "pm2_5 ~ avg_temp + C(location) + wind_m_s",
                 data = pm2_5_py)
                 
 # and get the fitted parameters of the model
@@ -646,10 +437,10 @@ We can visualise this as follows:
 ```{python}
 #| results: hide
 (ggplot(pm2_5_py, aes(x = "wind_m_s",
-                     y = lm_pm2_5_add_py.fittedvalues,
-                     colour = "location")) +
-    geom_line(size = 1) +
-    geom_point(aes(y = "pm2_5")))
+                      y = "pm2_5",
+                      colour = "location")) +
+    geom_point() +
+    geom_smooth(aes(y = lm_pm2_5_add_py.fittedvalues)))
 ```
 
 Next, we extract the coefficient estimates:
@@ -662,18 +453,18 @@ lm_pm2_5_add_py.params
 
 So our two equations would be as follows:
 
-$PM2.5_{inner} = 19.22 - 0.50 \times wind\_m\_s$
+$PM2.5_{inner} = 19.04 + 0.016 \times avg\_temp - 0.50 \times wind\_m\_s$
 
-$PM2.5_{outer} = (19.22 - 4.05) - 0.50 \times wind\_m\_s$
+$PM2.5_{outer} = (19.22 - 4.05) + 0.016 \times avg\_temp - 0.50 \times wind\_m\_s$
 
 gives
 
-$PM2.5_{outer} = 15.17 - 0.50 \times wind\_m\_s$
+$PM2.5_{outer} = 15.17 + 0.016 \times avg\_temp - 0.50 \times wind\_m\_s$
 
 ### Revisiting linear regression
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 First, we define the model:
 
@@ -687,10 +478,9 @@ We can visualise this as follows:
 ```{r}
 lm_pm2_5_wind %>% 
     augment() %>% 
-    ggplot(aes(x = wind_m_s, y = .fitted)) +
-    geom_line(colour = "blue", size = 1) +
-    geom_point(data = pm2_5,
-               aes(x = wind_m_s, y = pm2_5))
+    ggplot(aes(x = wind_m_s, y = pm2_5)) +
+    geom_point() +
+    geom_smooth(aes(y = .fitted))
 ```
 
 ::: {.callout-tip collapse="true"}
@@ -706,37 +496,7 @@ ggplot(pm2_5, aes(x = wind_m_s, y = pm2_5)) +
 Next, we extract the coefficient estimates:
 
 ```{r}
-lm_pm2_5_wind %>%
-    tidy() %>% 
-    select(term, estimate)
-```
-
-## R (base)
-
-First, we define the model:
-
-```{r}
-lm_pm2_5_wind_r <- lm(pm2_5 ~ wind_m_s,
-                   data = pm2_5_r)
-```
-
-Extract the model coefficients:
-
-```{r}
-lm_pm2_5_wind_r$coefficients
-```
-
-We can visualise this as follows:
-
-```{r}
-# plot the original data
-plot(pm2_5 ~ wind_m_s,
-     col = factor(location),
-     data = pm2_5_r)
-
-# add the regression line for the first (inner) location
-abline(coef = c(lm_pm2_5_wind_r$coefficients[1],
-                lm_pm2_5_wind_r$coefficients[2]), col = "blue")
+lm_pm2_5_wind
 ```
 
 ## Python
@@ -757,9 +517,9 @@ We can visualise this as follows:
 ```{python}
 #| results: hide
 (ggplot(pm2_5_py, aes(x = "wind_m_s",
-                      y = lm_pm2_5_wind_py.fittedvalues)) +
-    geom_line(colour = "blue", size = 1) +
-    geom_point(aes(y = "pm2_5")))
+                      y = "pm2_5")) +
+    geom_point() +
+    geom_smooth(aes(y = lm_pm2_5_wind_py.fittedvalues), colour = "blue"))
 ```
 
 ::: {.callout-tip collapse="true"}
@@ -790,7 +550,7 @@ $PM2.5 = 17.33 - 0.53 \times wind\_m\_s$
 If we're just looking at the effect of `location`, then we're essentially doing a one-way ANOVA.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 First, we define the model:
 ```{r}
@@ -803,12 +563,9 @@ We can visualise this as follows:
 ```{r}
 lm_pm2_5_loc %>% 
     augment() %>% 
-    ggplot(aes(x = location, y = .fitted)) +
-    geom_point(colour = "blue", size = 3) +
-    geom_jitter(data = pm2_5,
-                aes(x = location, y = pm2_5),
-                width = 0.1,
-                alpha = 0.2)
+    ggplot(aes(x = location, y = pm2_5)) +
+    geom_jitter(alpha = 0.3, width = 0.1) +
+    geom_point(aes(y = .fitted), colour = "blue", size = 3)
 ```
 
 OK, what's going on here? I've plotted the `.fitted` values (the values predicted by the model) in blue and overlaid the original (with a little bit of jitter to avoid overplotting). However, there are only two predicted values!
@@ -834,77 +591,7 @@ pm2_5 %>%
 So, that matches. We move on and extract the coefficient estimates:
 
 ```{r}
-lm_pm2_5_loc %>%
-    tidy() %>% 
-    select(term, estimate)
-```
-
-These values match up exactly with the predicted values for each individual location.
-
-## R (base)
-
-First, we define the model:
-```{r}
-lm_pm2_5_loc_r <- lm(pm2_5 ~ location,
-                   data = pm2_5_r)
-```
-
-Extract the model coefficients:
-
-```{r}
-lm_pm2_5_loc_r$coefficients
-```
-
-We can visualise this as follows:
-
-```{r}
-# get the location data (inner/outer)
-location <- pm2_5_r$location
-
-# get the PM2.5 levels
-pm2_5_levels <- pm2_5_r$pm2_5
-
-# and get the PM2.5 levels predicted by the model
-fitted.values <- lm_pm2_5_loc_r$fitted.values
-
-# plot the (jittered) data by location
-stripchart(pm2_5_levels ~ location,
-           method = "jitter",
-           pch = 19,
-           col = alpha("black", 0.4),
-           vertical = TRUE)
-
-# add the fitted values
-points(fitted.values, col = "blue", pch = 19)
-```
-
-OK, what's going on here? I've plotted the `fitted.values` (the values predicted by the model) in blue and overlaid the original (with a little bit of jitter to avoid overplotting). However, there are only two predicted values!
-
-We can check this and see that each unique fitted value occurs multiple times:
-
-```{r}
-table(lm_pm2_5_loc_r$fitted.values)
-```
-
-The `table()` function gives us an overview of each unique value in the data and counts the number of occurrences.
-
-If you look closely you'll see that each value actually occurs 365 times, with a tiny, tiny rounding difference on the last digit between 364 values and the one remaining one.
-
-Altogether, there are two values: one for the `inner` location (`r round(lm_pm2_5_loc %>% augment %>% count(.fitted) %>% slice(2) %>% pull(.fitted), digits = 2)`) and one for the `outer` location (`r round(lm_pm2_5_loc %>% augment %>% count(.fitted) %>% slice(1) %>% pull(.fitted), digits = 2)`).
-
-This makes sense if we think back to our original ANOVA exploration. There we established that an ANOVA is just a special case of a linear model, where the fitted values are equal to the mean of each group.
-
-We could even check this, since we stored the data per location in the `inner_r` and `outer_r` objects previously:
-
-```{r}
-mean(inner_r$pm2_5)
-mean(outer_r$pm2_5)
-```
-
-So, that matches. We move on and extract the coefficient estimates:
-
-```{r}
-lm_pm2_5_loc_r$coefficients
+lm_pm2_5_loc
 ```
 
 These values match up exactly with the predicted values for each individual location.
@@ -925,11 +612,9 @@ We can visualise this as follows:
 ```{python}
 #| results: hide
 (ggplot(pm2_5_py, aes(x = "location",
-                     y = lm_pm2_5_loc_py.fittedvalues)) +
-    geom_point(colour = "blue", size = 3) +
-    geom_jitter(pm2_5_py, aes(x = "location", y = "pm2_5"),
-                       width = 0.1,
-                       alpha = 0.2))
+                     y = "pm2_5")) +
+    geom_jitter(alpha = 0.3, width = 0.1) +
+    geom_point(aes(y = lm_pm2_5_loc_py.fittedvalues), colour = "blue", size = 3))
 ```
 
 OK, what's going on here? I've plotted the `fittedvalues` (the values predicted by the model) in blue and overlaid the original (with a little bit of jitter to avoid overplotting). However, there are only two predicted values!
@@ -969,7 +654,7 @@ $\bar{PM2.5_{outer}} = 16.94 - 4.11 = 12.83$
 The null model by itself is rarely analysed for its own sake but is instead used a reference point for more sophisticated model selection techniques. It represents your data as an overal average value.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 We define the null model as follows:
 
@@ -981,22 +666,6 @@ We can just view the model:
 
 ```{r}
 lm_pm2_5_null
-```
-
-
-## R (base)
-
-We define the null model as follows:
-
-```{r}
-lm_pm2_5_null_r <- lm(pm2_5 ~ 1,
-                      data = pm2_5_r)
-```
-
-We can just view the model:
-
-```{r}
-lm_pm2_5_null_r
 ```
 
 ## Python
@@ -1024,24 +693,30 @@ Here we'd predict the PM2.5 values as follows:
 
 $PM2.5 = `r round(lm_pm2_5_null %>% tidy() %>% pull(estimate), digits = 2)`$ 
 
-## Exercise
+## Exercises
+
+### Trees {#sec-exr_trees}
+
+:::{.callout-exercise}
+
+{{< level 2 >}}
 
 Trees: an example with only continuous variables
 
-Use the `data/CS5-Trees.csv` data set. This is a data frame with 31 observations of 3 continuous variables. The variables are the height `Height`, diameter `Girth` and timber volume `Volume` of 31 felled black cherry trees.
+Use the `data/CS5-trees.csv` data set. This is a data frame with 31 observations of 3 continuous variables. The variables are the height `height`, diameter `girth` and timber volume `volume` of 31 felled black cherry trees.
 
-Investigate the relationship between `Volume` (as a dependent variable) and `Height` and `Girth` (as predictor variables).
+Investigate the relationship between `volume` (as a dependent variable) and `height` and `girth` (as predictor variables).
 
 * Here all variables are continuous and so there isn’t a way of producing a 2D plot of all three variables for visualisation purposes using R’s standard plotting functions.
 * construct four linear models
-    * Assume volume depends on `Height`, `Girth` and an interaction between `Girth` and `Height`
-    * Assume `Volume` depends on `Height` and `Girth` but that there isn’t any interaction between them.
-    * Assume `Volume` only depends on `Girth` (plot the result, with the regression line).
-    * Assume `Volume` only depends on `Height` (plot the result, with the regression line).
+    * Assume volume depends on `height`, `girth` and an interaction between `girth` and `height`
+    * Assume `volume` depends on `height` and `girth` but that there isn’t any interaction between them.
+    * Assume `volume` only depends on `girth` (plot the result, with the regression line).
+    * Assume `volume` only depends on `height` (plot the result, with the regression line).
 * For each linear model write down the algebraic equation that the linear model produces that relates volume to the two continuous predictor variables.
 * Check the assumptions of each model. Do you have any concerns?
 
-NB: For two continuous predictors, the interaction term is simply the two values multiplied together (so `Girth:Height` means `Girth x Height`)
+NB: For two continuous predictors, the interaction term is simply the two values multiplied together (so `girth:height` means `girth x height`)
 
 * Use the equations to calculate the predicted volume of a tree that has a diameter of 20 inches and a height of 67 feet in each case.
 
@@ -1050,42 +725,25 @@ NB: For two continuous predictors, the interaction term is simply the two values
 
 Let's construct the four linear models in turn.
 
-### Full model
+#### Full model
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 First, we read in the data:
 
 ```{r}
 #| message: false
-trees <- read_csv("data/CS5-Trees.csv")
+trees <- read_csv("data/CS5-trees.csv")
 ```
 
 ```{r}
 # define the model
-lm_trees_full <- lm(Volume ~ Height * Girth,
+lm_trees_full <- lm(volume ~ height * girth,
                    data = trees)
 
 # view the model
 lm_trees_full
-```
-
-## R (base)
-
-First, we read in the data:
-
-```{r}
-trees_r <- read.csv("data/CS5-Trees.csv")
-```
-
-```{r}
-# define the model
-lm_trees_full_r <- lm(Volume ~ Height * Girth,
-                     data = trees_r)
-
-# view the model
-lm_trees_full_r
 ```
 
 ## Python
@@ -1093,12 +751,12 @@ lm_trees_full_r
 First, we read in the data:
 
 ```{python}
-trees_py = pd.read_csv("data/CS5-Trees.csv")
+trees_py = pd.read_csv("data/CS5-trees.csv")
 ```
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "Volume ~ Height * Girth",
+model = smf.ols(formula= "volume ~ height * girth",
                 data = trees_py)
 # and get the fitted parameters of the model
 lm_trees_full_py = model.fit()
@@ -1115,34 +773,26 @@ lm_trees_full_py.params
 
 We can use this output to get the following equation:
 
-Volume = 69.40 + -1.30 $\times$ Height + -5.86 $\times$ Girth + 0.13 $\times$ Height $\times$ Girth
+volume = 69.40 + -1.30 $\times$ height + -5.86 $\times$ girth + 0.13 $\times$ height $\times$ girth
 
-If we stick the numbers in (`Girth = 20` and `Height = 67`) we get the following equation:
+If we stick the numbers in (`girth = 20` and `height = 67`) we get the following equation:
 
-Volume = 69.40 + -1.30 $\times$ 67 + -5.86 $\times$ 20 + 0.13 $\times$ 67 $\times$ 20
+volume = 69.40 + -1.30 $\times$ 67 + -5.86 $\times$ 20 + 0.13 $\times$ 67 $\times$ 20
 
-Volume =  45.81
+volume =  45.81
 
 Here we note that the interaction term just requires us to multiple the three numbers together (we haven't looked at continuous predictors before in the examples and this exercise was included as a check to see if this whole process was making sense).
 
 If we look at the diagnostic plots for the model using the following commands we get:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
-lm_trees_full %>% 
-  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
-              smoother = TRUE)
-```
-
-## R (base)
-
-```{r}
-par(mfrow = c(2, 2))
-
-plot(lm_trees_full_r)
+resid_panel(lm_trees_full,
+            plots = c("resid", "qq", "ls", "cookd"),
+            smoother = TRUE)
 ```
 
 ## Python
@@ -1171,40 +821,29 @@ knitr::include_graphics(py$dgplot)
 
 All assumptions are OK.
 
-* There is some suggestion of heterogeneity of variance (with the variance being lower for small and large fitted (i.e. predicted `Volume`) values), but that can be attributed to there only being a small number of data points at the edges, so I'm not overly concerned.
+* There is some suggestion of heterogeneity of variance (with the variance being lower for small and large fitted (i.e. predicted `volume`) values), but that can be attributed to there only being a small number of data points at the edges, so I'm not overly concerned.
 * Similarly, there is a suggestion of snaking in the Q-Q plot (suggesting some lack of normality) but this is mainly due to the inclusion of one data point and overall the plot looks acceptable.
 * There are no highly influential points
 
-### Additive model
+#### Additive model
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 # define the model
-lm_trees_add <- lm(Volume ~ Height + Girth,
-                  data = trees)
+lm_trees_add <- lm(volume ~ height + girth,
+                   data = trees)
 
 # view the model
 lm_trees_add
-```
-
-## R (base)
-
-```{r}
-# define the model
-lm_trees_add_r <- lm(Volume ~ Height + Girth,
-                     data = trees_r)
-
-# view the model
-lm_trees_add_r
 ```
 
 ## Python
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "Volume ~ Height + Girth",
+model = smf.ols(formula= "volume ~ height + girth",
                 data = trees_py)
 # and get the fitted parameters of the model
 lm_trees_add_py = model.fit()
@@ -1221,32 +860,26 @@ lm_trees_add_py.params
 
 We can use this output to get the following equation:
 
-Volume = -57.99 + 0.34 $\times$ Height + 4.71 $\times$ Girth
+volume = -57.99 + 0.34 $\times$ height + 4.71 $\times$ girth
 
-If we stick the numbers in (`Girth = 20` and `Height = 67`) we get the following equation:
+If we stick the numbers in (`girth = 20` and `height = 67`) we get the following equation:
 
-Volume = -57.99 + 0.34 $\times$ 67 + 4.71 $\times$ 20
+volume = -57.99 + 0.34 $\times$ 67 + 4.71 $\times$ 20
 
-Volume =  58.91
+volume =  58.91
 
 If we look at the diagnostic plots for the model using the following commands we get the following:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r, message=FALSE}
-lm_trees_add %>% 
-  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
-              smoother = TRUE)
-```
-
-## R (base)
+## R
 
 ```{r}
-par(mfrow = c(2, 2))
-
-plot(lm_trees_add_r)
+#| message: false
+resid_panel(lm_trees_add,
+            plots = c("resid", "qq", "ls", "cookd"),
+            smoother = TRUE)
 ```
+
 ## Python
 
 ```{python}
@@ -1279,36 +912,25 @@ This model isn't great.
 * Equality of variance is harder to interpret. Given the lack of linearity in the data it isn't really sensible to interpret the Location-Scale plot as it stands (since the plot is generated assuming that we've fitted a straight line through the data), but for the sake of practising interpretation we'll have a go. There is definitely suggestions of heterogeneity of variance here with a cluster of points with fitted values of around 20 having noticeably lower variance than the rest of the dataset.
 * One point is influential and if there weren't issues with the linearity of the model I would remove this point and repeat the analysis. As it stands there isn't much point.
 
-### Height-only model
+#### Height-only model
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 # define the model
-lm_height <- lm(Volume ~ Height,
+lm_height <- lm(volume ~ height,
               data = trees)
 
 # view the model
 lm_height
 ```
 
-## R (base)
-
-```{r}
-# define the model
-lm_height_r <- lm(Volume ~ Height,
-                  data = trees_r)
-
-# view the model
-lm_height_r
-```
-
 ## Python
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "Volume ~ Height",
+model = smf.ols(formula= "volume ~ height",
                 data = trees_py)
 # and get the fitted parameters of the model
 lm_height_py = model.fit()
@@ -1325,31 +947,24 @@ lm_height_py.params
 
 We can use this output to get the following equation:
 
-Volume = -87.12 + 1.54 $\times$ Height
+volume = -87.12 + 1.54 $\times$ height
 
-If we stick the numbers in (`Girth = 20` and `Height = 67`) we get the following equation:
+If we stick the numbers in (`girth = 20` and `height = 67`) we get the following equation:
 
-Volume = -87.12 + 1.54 $\times$ 67
+volume = -87.12 + 1.54 $\times$ 67
 
-Volume =  16.28
+volume =  16.28
 
 If we look at the diagnostic plots for the model using the following commands we get the following:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r, message=FALSE}
-lm_height %>% 
-  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
-              smoother = TRUE)
-```
-
-## R (base)
+## R
 
 ```{r}
-par(mfrow = c(2, 2))
-
-plot(lm_height_r)
+#| message: false
+resid_panel(lm_height,
+            plots = c("resid", "qq", "ls", "cookd"),
+            smoother = TRUE)
 ```
 
 ## Python
@@ -1383,36 +998,25 @@ This model also isn't great.
 * Apart from that, the assumption of Normality seems OK
 * And there aren't any hugely influential points in this model
 
-### Girth-only model
+#### Girth-only model
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 # define the model
-lm_girth <- lm(Volume ~ Girth,
+lm_girth <- lm(volume ~ girth,
                data = trees)
 
 # view the model
 lm_girth
 ```
 
-## R (base)
-
-```{r}
-# define the model
-lm_girth_r <- lm(Volume ~ Girth,
-                 data = trees_r)
-
-# view the model
-lm_girth_r
-```
-
 ## Python
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "Volume ~ Girth",
+model = smf.ols(formula= "volume ~ girth",
                 data = trees_py)
 # and get the fitted parameters of the model
 lm_girth_py = model.fit()
@@ -1428,31 +1032,24 @@ lm_girth_py.params
 
 We can use this output to get the following equation:
 
-Volume = -36.94 + 5.07 $\times$ Girth
+volume = -36.94 + 5.07 $\times$ girth
 
-If we stick the numbers in (`Girth = 20` and `Height = 67`) we get the following equation:
+If we stick the numbers in (`girth = 20` and `height = 67`) we get the following equation:
 
-Volume = -36.94 + 5.07 $\times$ 20
+volume = -36.94 + 5.07 $\times$ 20
 
-Volume =  64.37
+volume =  64.37
 
 If we look at the diagnostic plots for the model using the following commands we get the following:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r, message=FALSE}
-lm_girth %>% 
-  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
-              smoother = TRUE)
-```
-
-## R (base)
+## R
 
 ```{r}
-par(mfrow = c(2, 2))
-
-plot(lm_girth_r)
+#| message: false
+resid_panel(lm_girth,
+            plots = c("resid", "qq", "ls", "cookd"),
+            smoother = TRUE)
 ```
 
 ## Python
@@ -1482,6 +1079,7 @@ knitr::include_graphics(py$dgplot)
 
 The diagnostic plots here look rather similar to the ones we generated for the additive model and we have the same issue with a lack of linearity, heterogeneity of variance and one of the data points being influential.
 
+:::
 :::
 
 ## Key points

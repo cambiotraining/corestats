@@ -38,7 +38,7 @@ exec(open('setup_files/setup.py').read())
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ### Libraries
 
@@ -61,24 +61,13 @@ library(ggResidpanel)
 #| warning: false
 # Creates diagnostic plots
 ggResidpanel::resid_panel()
-```
 
-## R (base)
-
-### Libraries
-None.
-
-### Functions
-
-```{r}
-#| eval: false
 # Creates a linear model
 stats::lm()
 
 # Creates an ANOVA table for a linear model
 stats::anova()
 ```
-
 
 ## Python
 
@@ -130,24 +119,26 @@ statsmodels.stats.anova.anova_lm()
 
 ## Purpose and aim
 
-Regression analysis not only tests for an association between two or more variables, but also allows one to investigate quantitatively the nature of any relationship which is present, and thus determine whether one variable may be used to predict values of another. Simple linear regression essentially models the dependence of a scalar dependent variable (y) on an independent (or explanatory) variable (x) according to the relationship:
+Regression analysis not only tests for an association between two or more variables, but also allows you to investigate quantitatively the nature of any relationship which is present. This can help you determine if one variable may be used to predict values of another. Simple linear regression essentially models the dependence of a scalar dependent variable ($y$) on an independent (or explanatory) variable ($x$) according to the relationship:
 
 ```{=tex}
 \begin{equation*} 
 y = \beta_0 + \beta_1 x
 \end{equation*}
 ```
-where $\beta_0$ is the value of the intercept and $\beta_1$ is the slope of the fitted line. The aim of simple linear regression analysis to assess whether the coefficient of the slope, $\beta_1$, is actually different from zero. If it is different from zero then we can say that $x$ has a significant effect on $y$ (since changing $x$ leads to a predicted change in $y$), whereas if it isn't significantly different from zero, then we say that there isn't sufficient evidence of a relationship. Of course, in order to assess whether the slope is significantly different from zero we first need to calculate the values of $\beta_0$ and $\beta_1$.
+
+where $\beta_0$ is the value of the intercept and $\beta_1$ is the slope of the fitted line. A linear regression analysis assesses if the coefficient of the slope, $\beta_1$, is actually different from zero. If it is different from zero then we can say that $x$ has a significant effect on $y$ (since changing $x$ leads to a predicted change in $y$). If it isn't significantly different from zero, then we say that there isn't sufficient evidence of such a relationship. To assess whether the slope is significantly different from zero we first need to calculate the values of $\beta_0$ and $\beta_1$.
 
 ## Data and hypotheses
 
-We will perform a simple linear regression analysis on the two variables `murder` and `assault` from the `USArrests` data set. This rather bleak data set contains statistics in arrests per 100,000 residents for assault, murder and robbery in each of the 50 US states in 1973, alongside the proportion of the population who lived in urban areas at that time. We wish to determine whether the `assault` variable is a significant predictor of the `murder` variable. This means that we will need to find the coefficients $\beta_0$ and $\beta_1$ that best fit the following macabre equation:
+We will perform a simple linear regression analysis on the two variables `murder` and `assault` from the `USArrests` data set. This rather bleak data set contains statistics on arrests per 100,000 residents for assault, murder and robbery in each of the 50 US states in 1973, alongside the proportion of the population who lived in urban areas at that time. We wish to determine whether the `assault` variable is a significant predictor of the `murder` variable. This means that we will need to find the coefficients $\beta_0$ and $\beta_1$ that best fit the following macabre equation:
 
 ```{=tex}
 \begin{equation*}
 Murder  = \beta_0 + \beta_1 \times Assault
 \end{equation*}
 ```
+
 And then will be testing the following null and alternative hypotheses:
 
 -   $H_0$: `assault` is not a significant predictor of `murder`, $\beta_1 = 0$
@@ -156,7 +147,7 @@ And then will be testing the following null and alternative hypotheses:
 ## Summarise and visualise
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 First, we read in the data:
 
 ```{r}
@@ -168,23 +159,9 @@ You can visualise the data with:
 
 ```{r}
 # create scatterplot of the data
-USArrests %>% 
-  ggplot(aes(x = assault, y = murder)) +
+ggplot(USArrests,
+       aes(x = assault, y = murder)) +
   geom_point()
-```
-
-## R (base)
-First, we read in the data:
-
-```{r}
-#| message: false
-USArrests_r <- read.csv("data/CS3-usarrests.csv")
-```
-
-You can visualise the data with:
-
-```{r}
-plot(murder ~ assault, data = USArrests_r)
 ```
 
 ## Python
@@ -215,14 +192,14 @@ In order for a linear regression analysis to be valid 4 key assumptions need to 
 ::: callout-important
 1.  The data must be linear (it is entirely possible to calculate a straight line through data that is not straight - it doesn't mean that you should!)
 2.  The residuals must be normally distributed
-3.  The residuals must not be correlated with their fitted values
+3.  The residuals must not be correlated with their fitted values (*i.e.* they should be independent)
 4.  The fit should not depend overly much on a single point (no point should have high leverage).
 :::
 
 Whether these assumptions are met can easily be checked visually by producing four key diagnostic plots.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 First we need to define the linear model:
 
@@ -232,48 +209,21 @@ lm_1 <- lm(murder ~ assault,
 ```
 
 -   The first argument to `lm` is a formula saying that `murder` depends on `assault`. As we have seen before, the syntax is generally `dependent variable` \~ `independent variable`.
--   The second argument specifies which dataset to use
+-   The second argument specifies which data to use.
 
 Next, we can create diagnostic plots for the model:
 
 ```{r}
 #| message: false
-lm_1 %>% 
-  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
-              smoother = TRUE)
+resid_panel(lm_1,
+            plots = c("resid", "qq", "ls", "cookd"),
+            smoother = TRUE)
 ```
 
 -   The top left graph plots the **Residuals plot**. If the data are best explained by a straight line then there should be a uniform distribution of points above and below the horizontal blue line (and if there are sufficient points then the red line, which is a smoother line, should be on top of the blue line). This plot is pretty good.
 -   The top right graph shows the **Q-Q plot** which allows a visual inspection of normality. If the residuals are normally distributed, then the points should lie on the diagonal dotted line. This isn't too bad but there is some slight snaking towards the upper end and there appears to be an outlier.
 -   The bottom left **Location-scale** graph allows us to investigate whether there is any correlation between the residuals and the predicted values and whether the variance of the residuals changes significantly. If not, then the red line should be horizontal. If there is any correlation or change in variance then the red line will not be horizontal. This plot is fine.
 -   The last graph shows the **Cook's distance** and tests if any one point has an unnecessarily large effect on the fit. The important aspect here is to see if any points are larger than 0.5 (meaning you'd have to be careful) or 1.0 (meaning you'd definitely have to check if that point has an large effect on the model). If not, then no point has undue influence. This plot is good.
-
-## R (base)
-
-First we need to define the linear model:
-
-```{r}
-lm_1 <- lm(murder ~ assault,
-           data = USArrests_r)
-```
-
--   The first argument to `lm` is a formula saying that `Murder` depends on `Assaults`. As we have seen before, the syntax is generally `dependent variable` \~ `independent variable`.
--   The second argument specifies which dataset to use
-
-Next, we can create the diagnostic plots for the model:
-
-```{r}
-# create a 2 x 2 output window
-par(mfrow = c(2,2))
-
-# and create the diagnostic plots for our model
-plot(lm_1)
-```
-
--   The top left graph plots the **residuals against the fitted values**. If the data are best explained by a straight line then there should be a uniform distribution of points above and below the horizontal grey dotted line (and if there are sufficient points then the red line, which is a moving average, should be on top of the grey dotted line). This plot is pretty good.
--   The top right graph shows the **Q-Q plot** which allows a visual inspection of normality. If the residuals are normally distributed, then the points should lie on the diagonal dotted line. This isn't too bad but there is some slight snaking towards the upper end and Georgia appears to be an outlier here.
--   The bottom left **scale-location** graph allows us to investigate whether there is any correlation between the residuals and the fitted values and whether the variance of the residuals changes significantly. If not, then the red line should be horizontal. If there is any correlation or change in variance then the red line will not be horizontal. This plot is fine.
--   The last graph shows the **Cook's distance** and tests if any one point has an unnecessarily large effect on the fit. The important aspect here is to see if any points lie beyond the red dashed contour line in the top right corner of this plot. If not, then no point has undue influence. This plot is good.
 
 ## Python
 If you haven't loaded `statsmodels` yet, run the following:
@@ -318,7 +268,7 @@ knitr::include_graphics(py$dgplot)
 :::
 
 ::: callout-note
-Formally, if there is any concern after looking at the diagnostic plots, then a linear regression is not valid. However, disappointingly, very few people ever check whether the linear regression assumptions have been met before quoting the results.
+Formally, if there is any concern after looking at the diagnostic plots then a linear regression is not valid. However, disappointingly, very few people ever check whether the linear regression assumptions have been met before quoting the results.
 
 Let's change this through leading by example!
 :::
@@ -328,7 +278,7 @@ Let's change this through leading by example!
 We have already defined the linear model, so we can have a closer look at it:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 # show the linear model
@@ -337,14 +287,24 @@ lm_1
 
 The `lm()` function returns a linear model object which is essentially a list containing everything necessary to understand and analyse a linear model. However, if we just type the model name (as we have above) then it just prints to the screen the actual coefficients of the model i.e. the intercept and the slope of the line.
 
-## R (base)
+::: {.callout-note collapse="true"}
+
+## The linear model object: would you like to know more?
+
+If you wanted to know more about the `lm` object we created, then type in:
 
 ```{r}
-# show the linear model
-lm_1
+#| eval: false
+View(lm_1)
 ```
 
-The `lm()` function returns a linear model object which is essentially a list containing everything necessary to understand and analyse a linear model. However, if we just type the model name (as we have above) then it just prints to the screen the actual coefficients of the model i.e. the intercept and the slope of the line.
+This shows a *list* (a type of object in R), containing all of the information associated with the linear model. The most relevant ones at the moment are:
+
+* `coefficients` contains the values of the coefficients we found earlier.
+* `residuals` contains the residual associated for each individual data point.
+* `fitted.values` contains the values that the linear model predicts for each individual data point.
+
+:::
 
 ## Python
 
@@ -359,31 +319,13 @@ So here we have found that the line of best fit is given by:
 
 ```{=tex}
 \begin{equation*}
-Murder = 0.63 + 0.042 Assault
+Murder = 0.63 + 0.042 \times Assault
 \end{equation*}
 ```
 Next we can assess whether the slope is significantly different from zero:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r}
-anova(lm_1)
-```
-
-Here, we again use the `anova()` command to assess significance. This shouldn't be too surprising at this stage if the introductory lectures made any sense. From a mathematical perspective, one-way ANOVA and simple linear regression are exactly the same as each other and it makes sense that we should use the same command to analyse them in R.
-
-This is exactly the same format as the table we saw for one-way ANOVA:
-
--   The 1st line just tells you the that this is an ANOVA test
--   The 2nd line tells you what the response variable is (in this case `Murder`)
--   The 3rd, 4th and 5th lines are an ANOVA table which contain some useful values:
-    -   The `Df` column contains the degrees of freedom values on each row, 1 and 48
-    -   The `F` value column contains the F statistic, 86.454
-    -   The p-value is 2.596e-12 and is the number directly under the `Pr(>F)` on the 4th line.
-    -   The other values in the table (in the `Sum Sq` and `Mean Sq`) column are used to calculate the F statistic itself and we don't need to know these.
-
-## R (base)
+## R
 
 ```{r}
 anova(lm_1)
@@ -418,33 +360,19 @@ Again, the p-value is what we're most interested in here and shows us the probab
 It can be very helpful to plot the regression line with the original data to see how far the data are from the predicted linear values. We can do this as follows:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
 # plot the data
-USArrests %>% 
-  ggplot(aes(x = assault, y = murder)) +
+ggplot(USArrests,
+       aes(x = assault, y = murder)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)
 ```
 
 -   We plot all the data using `geom_point()`
 -   Next, we add the linear model using `geom_smooth(method = "lm")`, hiding the confidence intervals (`se = FALSE`)
-
-## R (base)
-
-```{r}
-# plot the data
-plot(murder ~ assault,
-     data = USArrests_r)
-
-# add the regression line
-abline(lm_1, col = "blue")
-```
-
--   The first command creates a scatter plot of the data
--   The second command uses the results of the linear model fitting (the object `lm_1`) to add the line of best fit to the plot (and colour it blue).
 
 ## Python
 
@@ -459,25 +387,30 @@ abline(lm_1, col = "blue")
 ```
 :::
 
-## Exercise: State data
+## Exercises
+
+### State data: Life expectancy and murder {#sec-exr_statemurder}
+
+:::{.callout-exercise}
+
+{{< level 2 >}}
+
 We will use the data from the file `data/CS3-statedata.csv` data set for this exercise. This rather more benign data set contains information on more general properties of each US state, such as population (1975), per capita income (1974), illiteracy proportion (1970), life expectancy (1969), murder rate per 100,000 people (there's no getting away from it), percentage of the population who are high-school graduates, average number of days where the minimum temperature is below freezing between 1931 and 1960, and the state area in square miles. The data set contains 50 rows and 8 columns, with column names: `population`, `income`, `illiteracy`, `life_exp`, `murder`, `hs_grad`, `frost` and `area`.
 
-Calculate two simple linear regressions, first for the variable `life_exp` on the variable `murder` and then for the variable `hs_grad` on `frost`.
-
-Do the following in both cases:
+Perform a linear regression on the variables `life_exp` and `murder` and do the following:
 
 1.  Find the value of the slope and intercept coefficients for both regressions
 2.  Determine if the slope is significantly different from zero (i.e. is there a relationship between the two variables)
 3.  Produce a scatter plot of the data with the line of best fit superimposed on top.
 4.  Produce diagnostic plots and discuss with your (virtual) neighbour if you should have carried out a simple linear regression in each case
 
-::: {.callout-tip collapse="true"}
+::: {.callout-answer collapse="true"}
 ## Answer
 
-### Load and visualise the data
+#### Load and visualise the data
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 First, we read in the data:
 
@@ -491,33 +424,10 @@ Next, we visualise the `murder` variable against the `life_exp` variable. We als
 ```{r}
 #| message: false
 # plot the data and add the regression line
-USAstate %>% 
-  ggplot(aes(x = murder, y = life_exp)) +
+ggplot(USAstate,
+       aes(x = murder, y = life_exp)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)
-```
-
-## R (base)
-
-First, we read in the data:
-
-```{r}
-USAstate_r <- read.csv("data/CS3-statedata.csv")
-```
-
-Next, we visualise the `murder` variable against the `life_exp` variable. We also add a regression line.
-
-```{r}
-# plot the data
-plot(life_exp ~ murder,
-     data = USAstate_r)
-
-# create a linear model
-lm1 <- lm(life_exp ~ murder,
-          data = USAstate_r)
-
-# and add a regression line
-abline(lm1, col = "blue")
 ```
 
 ## Python
@@ -548,12 +458,12 @@ We visualise for the same reasons as before:
 2.  We check to see what we would expect from the statistical analysis. Here there does appear to be a reasonable downward trend to the data. I would be surprised if we didn't get a significant result given the amount of data and the spread of the data about the line
 3.  We check the assumptions (only roughly though as we'll be doing this properly in a minute). Nothing immediately gives me cause for concern; the data appear linear, the spread of the data around the line appears homogeneous and symmetrical. No outliers either.
 
-### Check assumptions
+#### Check assumptions
 
 Now, let's check the assumptions with the diagnostic plots.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
@@ -562,21 +472,12 @@ lm_murder <- lm(life_exp ~ murder,
            data = USAstate)
 
 # create the diagnostic plots
-lm_murder %>% 
-  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
-              smoother = TRUE)
+resid_panel(lm_murder,
+            plots = c("resid", "qq", "ls", "cookd"),
+            smoother = TRUE)
 ```
 
 The **Residuals** plot appears symmetric enough (similar distribution of points above and below the horizontal blue line) for me to happy with linearity. Similarly the red line in the **Location-Scale** plot looks horizontal enough for me to be happy with homogeneity of variance. There aren't any influential points in the **Cook's distance** plot. The only plot that does give me a bit of concern is the **Q-Q** plot. Here we see clear evidence of snaking, although the degree of snaking isn't actually that bad. This just means that we can be pretty certain that the distribution of residuals isn't normal, but also that it isn't *very* non-normal.
-
-## R (base)
-
-```{r}
-par(mfrow = c(2,2))
-plot(lm1)
-```
-
-The **Residuals vs Fitted** plot appears symmetric enough (similar distribution of points above and below the horizontal grey dotted line) for me to happy with linearity. Similarly the red line in the **Scale-Location** plot looks horizontal enough for me to be happy with homogeneity of variance. There aren't any influential points in the residuals vs leverage. The only plot that does give me a bit of concern is the **Normal Q-Q** graph. Here we see clear evidence of snaking, although the degree of snaking isn't actually that bad. This just means that we can be pretty certain that the distribution of residuals isn't normal, but also that it isn't *very* non-normal.
 
 ## Python
 First, we create a linear model:
@@ -621,18 +522,12 @@ What do we do in this situation? Well, there are three possible options:
 
 So in this case, because we have a large enough sample size and our deviation from normality isn't too bad, we can just crack on with the standard analysis.
 
-### Implement and interpret test
+#### Implement and interpret test
 
 So, let's actually do the analysis:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
-
-```{r}
-anova(lm_murder)
-```
-
-## R (base)
+## R
 
 ```{r}
 anova(lm_murder)
@@ -646,38 +541,32 @@ sm.stats.anova_lm(lm_USAstate_py, typ = 2)
 :::
 
 And after all of that we find that the murder rate is a statistically significant predictor of life expectancy in US states. Woohoo!
+:::
+:::
 
-## High School Graduation and Frosty Days
+### State data: Graduation and frost days {#sec-exr_stategrad}
+
+:::{.callout-exercise}
+
+{{< level 2 >}}
 
 Now let's investigate the relationship between the proportion of High School Graduates a state has (`hs_grad`) and the mean number of days below freezing (`frost`) within each state.
+
+::: {.callout-answer collapse="true"}
+## Answer
 
 We'll run through this a bit quicker:
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
 # plot the data
-USAstate %>% 
-  ggplot(aes(x = frost, y = hs_grad)) +
+ggplot(USAstate,
+       aes(x = frost, y = hs_grad)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)
-```
-
-## R (base)
-
-```{r}
-# plot the data
-plot(hs_grad ~ frost,
-     data = USAstate_r)
-
-# create a linear model
-lm2 <- lm(hs_grad ~ frost,
-          data = USAstate_r)
-
-# and add a regression line
-abline(lm2, col = "blue")
 ```
 
 ## Python
@@ -704,7 +593,7 @@ Let's check these out properly
 Now, let's check the assumptions with the diagnostic plots.
 
 ::: {.panel-tabset group="language"}
-## R (tidyverse)
+## R
 
 ```{r}
 #| message: false
@@ -713,16 +602,9 @@ lm_frost <- lm(hs_grad ~ frost,
                data = USAstate)
 
 # create the diagnostic plots
-lm_frost %>% 
-  resid_panel(plots = c("resid", "qq", "ls", "cookd"),
-              smoother = TRUE)
-```
-
-## R (base)
-
-```{r}
-par(mfrow = c(2, 2))
-plot(lm2)
+resid_panel(lm_frost,
+            plots = c("resid", "qq", "ls", "cookd"),
+            smoother = TRUE)
 ```
 
 ## Python
@@ -776,6 +658,7 @@ Well actually, this is a bit tricky as there aren't any easy fixes here. There a
 2.  The other potential solution is to say that high school graduation can in fact be predicted only by the number of frost days but that the relationship between them isn't linear. We would then need to specify a relationship (a curve basically) and then try to fit the data to the new, non-linear, curve. This process is called, unsurprisingly, non-linear regression and we don't cover that in this course. This process is best used when there is already a strong theoretical reason for a non-linear relationship between two variables (such as sigmoidal dose-response curves in pharmacology or exponential relationships in cell growth). In this case we don't have any such preconceived notions and so it wouldn't really be appropriate in this case.
 
 Neither of these solutions can be tackled with the knowledge that we have so far in the course but we can definitely say that based upon this data set, there isn't a linear relationship (significant or otherwise) between frosty days and high school graduation rates.
+:::
 :::
 
 ## Key points
