@@ -16,8 +16,8 @@ import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
-::: callout-tip
-## Learning outcomes
+::: {.callout-tip}
+#### Learning outcomes
 
 **Questions**
 
@@ -1012,9 +1012,11 @@ Then we should probably have just skipped the one-way ANOVA test entirely and ju
 :::
 :::
 
-## Key points
+## Summary
 
-::: callout-note
+::: {.callout-tip}
+#### Key points
+
 -   We use an ANOVA to test if there is a difference in means between multiple continuous response variables
 -   We check assumptions with diagnostic plots and check if the residuals are normally distributed
 -   We use post-hoc testing to check for significant differences between the group means, for example using Tukey's range test

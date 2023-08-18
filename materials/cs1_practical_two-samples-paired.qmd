@@ -16,8 +16,8 @@ import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
-::: callout-tip
-## Learning outcomes
+::: {.callout-tip}
+#### Learning outcomes
 
 **Questions**
 
@@ -704,9 +704,11 @@ As Jeremy Clarkson [would put it](https://www.quotes.net/mquote/941330):
 :::
 :::
 
-## Key points
+## Summary
 
-::: {.callout-note}
+::: {.callout-tip}
+#### Key points
+
 -   Paired t-tests are used when you have two paired samples of continuous data, which are normally distributed and have equal variance
 -   A good way of assessing the assumption of normality is by checking the data against a Q-Q plot
 - We can check equality of variance (homoscedasticity) with Bartlett's (normal data) or Levene's (non-normal data) test

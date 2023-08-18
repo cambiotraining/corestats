@@ -21,7 +21,7 @@ np.seterr(all='ignore')
 ```
 
 ::: {.callout-tip}
-## Learning outcomes
+#### Learning outcomes
 
 **Questions**
 
@@ -1185,9 +1185,11 @@ We get a denominator df of 116, which means that we would need at least 123 part
 :::
 :::
 
-## Key points
+## Summary
 
-::: {.callout-note}
+::: {.callout-tip}
+#### Key points
+
 - Power is the capacity of a test to detect significant results and is affected by
     1. the effect size
     2. sample size

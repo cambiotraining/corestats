@@ -16,8 +16,8 @@ import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
-::: callout-tip
-## Learning outcomes
+::: {.callout-tip}
+#### Learning outcomes
 
 **Questions**
 
@@ -562,9 +562,11 @@ Our minimal model is thus:
 :::
 :::
 
-## Key points
+## Summary
 
-::: {.callout-note}
+::: {.callout-tip}
+#### Key points
+
 - We can use Backwards Stepwise Elimination (BSE) on a full model to see if certain terms add to the predictive power of the model or not
 - The AIC allows us to compare different models - if there is a difference in AIC of more than 2 between two models, then the smallest AIC score is more supported
 :::

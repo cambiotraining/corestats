@@ -16,8 +16,8 @@ import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
-::: callout-tip
-## Learning outcomes
+::: {.callout-tip}
+#### Learning outcomes
 
 **Questions**
 
@@ -626,9 +626,11 @@ Well done, [Mr. Spearman](https://en.wikipedia.org/wiki/Charles_Spearman).
 :::
 :::
 
-## Key points
+## Summary
 
-::: callout-note
+::: {.callout-tip}
+#### Key points
+
 -   Correlation is the degree to which two variables are linearly related
 -   Correlation does not imply causation
 -   We can visualise correlations by plotting variables against each other or creating heatmap-type plots of the correlation coefficients

@@ -16,8 +16,8 @@ import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
-::: callout-tip
-## Learning outcomes
+::: {.callout-tip}
+#### Learning outcomes
 
 **Questions**
 
@@ -1082,9 +1082,11 @@ The diagnostic plots here look rather similar to the ones we generated for the a
 :::
 :::
 
-## Key points
+## Summary
 
-::: {.callout-note}
+::: {.callout-tip}
+#### Key points
+
 
 - We can define a linear model with any combination of categorical and continuous predictor variables
 - Using the coefficients of the model we can construct the linear model equation

@@ -16,8 +16,8 @@ import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
-::: callout-tip
-## Learning outcomes
+::: {.callout-tip}
+#### Learning outcomes
 
 **Questions**
 
@@ -414,9 +414,11 @@ In this case we should not be doing any post-hoc testing, because we did not det
 :::
 :::
 
-## Key points
+## Summary
 
-::: callout-note
+::: {.callout-tip}
+#### Key points
+
 -   We use a Kruskal-Wallis test to see if there is a difference in medians between multiple continuous response variables
 -   We assume parent distributions have the same shape; each data point is independent and the parent distributions have the same variance
 -   We test for equality of variance using Levene's test

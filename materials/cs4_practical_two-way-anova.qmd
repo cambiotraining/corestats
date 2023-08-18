@@ -16,8 +16,8 @@ import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
-::: callout-tip
-## Learning outcomes
+::: {.callout-tip}
+#### Learning outcomes
 
 **Questions**
 
@@ -921,9 +921,11 @@ So we do appear to have a significant interaction between `water` and `shade` as
 :::
 :::
 
-## Key points
+## Summary
 
-::: callout-note
+::: {.callout-tip}
+#### Key points
+
 - A two-way ANOVA is used when there are two categorical variables and a single continuous variable
 - We can visually check for interactions between the categorical variables by using interaction plots
 - The two-way ANOVA is a type of linear model and assumes the following:

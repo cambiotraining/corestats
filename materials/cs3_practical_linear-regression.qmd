@@ -16,8 +16,8 @@ import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
-::: callout-tip
-## Learning outcomes
+::: {.callout-tip}
+#### Learning outcomes
 
 **Questions**
 
@@ -661,9 +661,11 @@ Neither of these solutions can be tackled with the knowledge that we have so far
 :::
 :::
 
-## Key points
+## Summary
 
-::: callout-note
+::: {.callout-tip}
+#### Key points
+
 -   Linear regression tests if a linear relationship exists between two or more variables
 -   If so, we can use one variable to predict another
 -   A linear model has an intercept and slope and we test if the slope differs from zero

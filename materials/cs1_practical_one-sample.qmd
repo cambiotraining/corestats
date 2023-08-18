@@ -16,8 +16,8 @@ import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
-::: callout-tip
-## Learning outcomes
+::: {.callout-tip}
+#### Learning outcomes
 
 **Questions**
 
@@ -909,9 +909,11 @@ In terms of choosing between the two test we can see that both meet their respec
 :::
 :::
 
-## Key points
+## Summary
 
-::: callout-note
+::: {.callout-tip}
+#### Key points
+
 -   One-sample tests are used when you have a single sample of continuous data
 -   The t-test assumes that the data are normally distributed and independent of each other
 -   A good way of assessing the assumption of normality is by checking the data against a Q-Q plot

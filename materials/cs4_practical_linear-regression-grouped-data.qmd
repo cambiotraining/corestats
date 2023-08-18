@@ -16,8 +16,8 @@ import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
-::: callout-tip
-## Learning outcomes
+::: {.callout-tip}
+#### Learning outcomes
 
 **Questions**
 
@@ -983,9 +983,11 @@ So now we know that `yarrow` is a significant predictor of `yield` and we're hap
 :::
 :::
 
-## Key points
+## Summary
 
-::: callout-note
+::: {.callout-tip}
+#### Key points
+
 - A linear regression analysis with grouped data is used when we have one categorical and one continuous predictor variable, together with one continuous response variable
 - We can visualise the data by plotting a regression line together with the original data
 - When performing an ANOVA, we need to check for interaction terms
