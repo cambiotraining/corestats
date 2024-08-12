@@ -399,7 +399,7 @@ We will use the data from the file `data/CS3-statedata.csv` data set for this ex
 
 Perform a linear regression on the variables `life_exp` and `murder` and do the following:
 
-1.  Find the value of the slope and intercept coefficients for both regressions
+1.  Find the value of the slope and intercept coefficients.
 2.  Determine if the slope is significantly different from zero (i.e. is there a relationship between the two variables)
 3.  Produce a scatter plot of the data with the line of best fit superimposed on top.
 4.  Produce diagnostic plots and discuss with your (virtual) neighbour if you should have carried out a simple linear regression in each case

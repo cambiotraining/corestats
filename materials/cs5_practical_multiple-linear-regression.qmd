@@ -39,12 +39,76 @@ exec(open('setup_files/setup.py').read())
 ## R
 
 ### Libraries
+
+```{r}
+#| eval: false
+# A collection of R packages designed for data science
+library(tidyverse)
+
+# Converts stats functions to a tidyverse-friendly format
+library(rstatix)
+
+# Creates diagnostic plots using ggplot2
+library(ggResidpanel)
+
+# Helper functions for tidying data
+library(broom)
+```
+
 ### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+# Gets underlying data out of model object
+broom::augment()
+
+# Creates diagnostic plots
+ggResidpanel::resid_panel()
+
+# Performs an analysis of variance
+stats::anova()
+
+# Creates a linear model
+stats::lm()
+```
 
 ## Python
 
 ### Libraries
+
+```{python}
+#| eval: false
+# A fundamental package for scientific computing in Python
+import numpy as np
+
+# A Python data analysis and manipulation tool
+import pandas as pd
+
+# Simple yet exhaustive stats functions.
+import pingouin as pg
+
+# Python equivalent of `ggplot2`
+from plotnine import *
+
+# Statistical models, conducting tests and statistical data exploration
+import statsmodels.api as sm
+
+# Convenience interface for specifying models using formula strings and DataFrames
+import statsmodels.formula.api as smf
+```
+
 ### Functions
+
+```{python}
+#| eval: false
+# Reads in a .csv file
+pandas.read_csv()
+
+# Creates a model from a formula and data frame
+statsmodels.formula.api.ols()
+```
+
 :::
 :::
 
@@ -288,7 +352,7 @@ We write the model as follows:
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "pm2_5 ~ avg_temp + C(location) + rain_mm + wind_m_s + wind_m_s:location", data = pm2_5_py)
+model = smf.ols(formula = "pm2_5 ~ avg_temp + C(location) + rain_mm + wind_m_s + wind_m_s:location", data = pm2_5_py)
 # and get the fitted parameters of the model
 lm_pm2_5_full_py = model.fit()
 ```
@@ -314,7 +378,7 @@ What to do? We'll explore this in more detail in the chapter on model comparison
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "pm2_5 ~ avg_temp + C(location) * wind_m_s", data = pm2_5_py)
+model = smf.ols(formula = "pm2_5 ~ avg_temp + C(location) * wind_m_s", data = pm2_5_py)
 # and get the fitted parameters of the model
 lm_pm2_5_red_py = model.fit()
 ```
@@ -425,7 +489,7 @@ First, we define the model
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "pm2_5 ~ avg_temp + C(location) + wind_m_s",
+model = smf.ols(formula = "pm2_5 ~ avg_temp + C(location) + wind_m_s",
                 data = pm2_5_py)
                 
 # and get the fitted parameters of the model
@@ -455,11 +519,11 @@ So our two equations would be as follows:
 
 $PM2.5_{inner} = 19.04 + 0.016 \times avg\_temp - 0.50 \times wind\_m\_s$
 
-$PM2.5_{outer} = (19.22 - 4.05) + 0.016 \times avg\_temp - 0.50 \times wind\_m\_s$
+$PM2.5_{outer} = (19.04 - 4.05) + 0.016 \times avg\_temp - 0.50 \times wind\_m\_s$
 
 gives
 
-$PM2.5_{outer} = 15.17 + 0.016 \times avg\_temp - 0.50 \times wind\_m\_s$
+$PM2.5_{outer} = 14.99 + 0.016 \times avg\_temp - 0.50 \times wind\_m\_s$
 
 ### Revisiting linear regression
 
@@ -505,7 +569,7 @@ First, we define the model
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "pm2_5 ~ wind_m_s",
+model = smf.ols(formula = "pm2_5 ~ wind_m_s",
                 data = pm2_5_py)
                 
 # and get the fitted parameters of the model
@@ -602,7 +666,7 @@ First, we define the model:
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "pm2_5 ~ C(location)", data = pm2_5_py)
+model = smf.ols(formula = "pm2_5 ~ C(location)", data = pm2_5_py)
 # and get the fitted parameters of the model
 lm_pm2_5_loc_py = model.fit()
 ```
@@ -674,7 +738,7 @@ We define the null model as follows:
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "pm2_5 ~ 1", data = pm2_5_py)
+model = smf.ols(formula = "pm2_5 ~ 1", data = pm2_5_py)
 # and get the fitted parameters of the model
 lm_pm2_5_null_py = model.fit()
 ```
@@ -756,7 +820,7 @@ trees_py = pd.read_csv("data/CS5-trees.csv")
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "volume ~ height * girth",
+model = smf.ols(formula = "volume ~ height * girth",
                 data = trees_py)
 # and get the fitted parameters of the model
 lm_trees_full_py = model.fit()
@@ -843,7 +907,7 @@ lm_trees_add
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "volume ~ height + girth",
+model = smf.ols(formula = "volume ~ height + girth",
                 data = trees_py)
 # and get the fitted parameters of the model
 lm_trees_add_py = model.fit()
@@ -930,7 +994,7 @@ lm_height
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "volume ~ height",
+model = smf.ols(formula = "volume ~ height",
                 data = trees_py)
 # and get the fitted parameters of the model
 lm_height_py = model.fit()
@@ -1016,7 +1080,7 @@ lm_girth
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "volume ~ girth",
+model = smf.ols(formula = "volume ~ girth",
                 data = trees_py)
 # and get the fitted parameters of the model
 lm_girth_py = model.fit()
