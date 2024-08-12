@@ -1,7 +1,6 @@
 ---
 title: "core-stats-slides-plots"
 format: html
-editor: visual
 ---
 
 ```{r}
@@ -94,7 +93,6 @@ quarter.ggsave(plot = global_height, filename = "plots/cs1-global-height-quarter
 set.seed(2404)
 height_sample <- tibble(r_sample = rnorm(10, 169, 10))
 ```
-
 
 ```{r, quarter size height sample plot}
 human_height <-
@@ -689,8 +687,6 @@ posthoc <- ggplot(anova_example, aes(x = group, y = response, colour = group)) +
 square.ggsave(plot = posthoc, filename = "plots/CS2-posthoc.png")
 ```
 
-
-
 ## CS3
 
 ### Intro
@@ -876,7 +872,6 @@ sum_of_squares <- animate_data %>%
 square.ggsave(plot = sum_of_squares, filename = "plots/cs3-sum-of-squares.png")
 ```
 
-
 ##### Animations
 
 ```{r, animation1 - line rotate}
@@ -994,7 +989,6 @@ ap_ss_render <- animate(ap_ss, height = 5, width = 5, units = "in", res = 150 )
 
 anim_save("plots/animation-ss.gif", animation = ap_ss_render)
 ```
-
 
 ### Regression
 
@@ -2139,7 +2133,7 @@ survey_models <- survey_full2 + survey_additive + survey_single
 ggsave(plot = survey_models, filename = "plots/cs5-survey-models.png", height=4, width=10)
 ```
 
-## CS6 
+## CS6
 
 ### Type I error
 
@@ -2546,7 +2540,6 @@ r2medium_other <- ggplot(data2, aes(x_var, y_var)) +
 square.ggsave(plot = r2medium_other, filename = "plots/cs6-r2-medium-other.png")
 ```
 
-
 ```{r, R2 patchwork for testing}
 r2small + r2medium + r2big
 ```
@@ -2680,8 +2673,6 @@ nonmeaning <- ggplot(smalldrug, aes(x=group, y=response, colour=group)) +
 square.ggsave(plot = nonmeaning, filename = "plots/cs6-nonmeaningful-effect.png")
 ```
 
-
-
 ### Corrections
 
 #### Multiple samples from null distribution
@@ -2752,15 +2743,3 @@ onehundredsig <- normSamp %>%
 
 wide.ggsave(plot = onehundredsig, filename = "plots/cs6-onehundred-sig.png")
 ```
-
-
-
-
-
-
-
-
-
-
-
-
