@@ -107,7 +107,6 @@ statsmodels.formula.api.ols()
 
 :::
 :::
-:::
 
 ## Purpose and aim
 
