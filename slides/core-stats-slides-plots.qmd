@@ -76,7 +76,7 @@ ggsave(filename = filename, height = height, width = width, ...)
 ```{r, quarter size global height dist plot}
 global_height <- data.frame(dist = dist_normal(169, 10)) %>%
     ggplot(aes(xdist = dist)) +
-    stat_slab(fill = "gray85", colour = "#EA7125", alpha =0.7) +
+    stat_slab(fill = "gray85", colour = "#EA7125", alpha = 0.7) +
     scale_x_continuous(breaks = seq(140, 200, by = 10), limits = c(140, 200)) +
     #geom_vline(xintercept = 169, linetype = "dashed", size = 1) +
     labs(title = "Global height distribution", x = "height (cm)", y = "probability density") +
@@ -2677,69 +2677,48 @@ square.ggsave(plot = nonmeaning, filename = "plots/cs6-nonmeaningful-effect.png"
 
 #### Multiple samples from null distribution
 
-```{r, alternative depreciated method}
-# Set the parameters for the normal distribution
-set.seed(123)  # For reproducibility
-mean <- 0
-sd <- 1
-n_samples <- 25
-n_repeats <- 100
+```{r}
+# add seed for reproducibility
+set.seed(123)
 
-# Draw samples and store in a data frame
-samples <- replicate(n_repeats, {
-  data.frame(value = rnorm(n_samples, mean = mean, sd = sd))
-}, simplify = FALSE) %>%
-  bind_rows(.id = "iteration") %>%
-  mutate(iteration = as.integer(iteration))
+# draw 25 samples from a normal distribution, repeat this 100 times
+samples <- data.frame(
+  iteration = rep(1:100, each = 25),
+  value = rnorm(2500)
+)
 
-# Display the data
-head(samples)
+# perform one-sample t-test for each group
+samples_test <- samples |> 
+  group_by(iteration) |> 
+  summarise(t_test = list(tidy(t.test(value, mu = 0))))  |> 
+  unnest(t_test)
+
+# add the p-value to the original data
+samples <- samples |> 
+  left_join(samples_test |>  select(iteration, p.value), by = "iteration")
 ```
 
-```{r, take 100 samples from normal distribution}
-set.seed(126)
+```{r, 100 samples norm dist boxplot}
+# boxplot of simulated data
 
-ngroups <- 100
-nres <- 10
-
-normSamp <- data.frame(matrix(rnorm(ngroups*nres, 0, 0.5), nres, ngroups))
-
-normSamp_long <- normSamp %>%
-  pivot_longer(X1:X100, names_to="iteration", values_to="value") %>%
-  mutate(across(c("iteration"), substr, 2, nchar(iteration))) %>%
-  mutate(iteration = factor(iteration, levels=unique(iteration)))
-
-onehundred <- normSamp %>%
-  pivot_longer(X1:X100, names_to="iteration", values_to="value") %>%
-  mutate(across(c("iteration"), substr, 2, nchar(iteration))) %>%   
-  ggplot(aes(x = factor(iteration, levels=unique(iteration)), y = value)) +
-    geom_boxplot() +
-    labs(x="Sample number", y="log2 fold change", title="Testing one hundred samples") +
-    geom_hline(yintercept=0, colour="black", size=0.25, alpha=0.8, linetype=2) + 
-    theme_classic(base_size=15) +
-    scale_x_discrete(breaks=c("10","20","30","40","50","60","70","80","90","100"))
+onehundred <- ggplot(samples, aes(x = iteration, y = value, group = iteration)) +
+  geom_boxplot() +
+  labs(x = "Sample number", y = "log2 fold change", title = "Testing one hundred samples") +
+  geom_hline(yintercept = 0, colour = "black", size = 0.25, alpha = 0.8, linetype = "dashed") + 
+  theme_classic(base_size = 15)
 
 wide.ggsave(plot = onehundred, filename = "plots/cs6-onehundred.png")
 ```
 
-```{r}
-pvals<-numeric(ngroups)
-
-for(i in 1:ngroups){
-  pvals[i]<-t.test(normSamp[,i],mu=0)$p.value
-}
-
-onehundredsig <- normSamp %>%
-  pivot_longer(X1:X100, names_to="iteration", values_to="value") %>%
-  mutate(across(c("iteration"), substr, 2, nchar(iteration))) %>% 
-  mutate(sigp = if_else(iteration %in% which(pvals<0.05), TRUE, FALSE)) %>%
-  ggplot(aes(x = factor(iteration, levels=unique(iteration)), y = value, fill = sigp)) +
-    geom_boxplot(show.legend=FALSE) +
-    labs(x="Sample number", y="log2 fold change", title="Testing one hundred samples") +
-    theme_classic(base_size=15) +
-    geom_hline(yintercept=0, colour="black", size=0.25, alpha=0.8, linetype=2) +   
-    scale_fill_manual(values = c("white","#EA7125")) +
-    scale_x_discrete(breaks=c("10","20","30","40","50","60","70","80","90","100"))
+```{r, 100 samples norm dist boxplot significant}
+onehundredsig <- ggplot(samples, aes(x = iteration, y = value, group = iteration, fill = p.value < 0.05)) +
+  geom_boxplot() +
+  labs(x = "Sample number", y = "log2 fold change", title = "Testing one hundred samples") +
+  geom_hline(yintercept = 0, colour = "black", size = 0.25, alpha = 0.8, linetype = "dashed") + 
+  theme_classic(base_size = 15) +
+  scale_fill_manual(values = c("white","#EA7125")) +
+  theme(legend.position = "none")
 
 wide.ggsave(plot = onehundredsig, filename = "plots/cs6-onehundred-sig.png")
 ```
+
