@@ -25,6 +25,14 @@ download_link(
 )
 ```
 
+::: {.callout-warning}
+The data we use throughout the course is varied, covering many different topics.
+In some cases the data on medical or socioeconomic topics may be uncomfortable
+to some, since they can touch on diseases or death.
+
+All the data are chosen for their pedagogical effectiveness.
+:::
+
 ## Tidy data
 For two samples the data can be stored in one of three formats:
 
