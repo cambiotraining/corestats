@@ -40,12 +40,72 @@ exec(open('setup_files/setup.py').read())
 ## R
 
 ### Libraries
+
+```{r}
+#| eval: false
+# A collection of R packages designed for data science
+library(tidyverse)
+
+# Converts stats functions to a tidyverse-friendly format
+library(rstatix)
+
+# Creates diagnostic plots using ggplot2
+library(ggResidpanel)
+
+# Helper functions for tidying data
+library(broom)
+```
+
 ### Functions
+
+```{r}
+#| eval: false
+#| warning: false
+
+# Calculates the Akaike Information Criterion
+stats::AIC()
+
+# Performs a backwards step-wise elimination process
+stats::step()
+```
 
 ## Python
 
 ### Libraries
+
+```{python}
+#| eval: false
+# A fundamental package for scientific computing in Python
+import numpy as np
+
+# A Python data analysis and manipulation tool
+import pandas as pd
+
+# Simple yet exhaustive stats functions.
+import pingouin as pg
+
+# Python equivalent of `ggplot2`
+from plotnine import *
+
+# Statistical models, conducting tests and statistical data exploration
+import statsmodels.api as sm
+
+# Convenience interface for specifying models using formula strings and DataFrames
+import statsmodels.formula.api as smf
+```
+
 ### Functions
+
+```{python}
+#| eval: false
+# Reads in a .csv file
+pandas.read_csv()
+
+# Creates a model from a formula and data frame
+statsmodels.formula.api.ols()
+```
+
+:::
 :::
 :::
 
