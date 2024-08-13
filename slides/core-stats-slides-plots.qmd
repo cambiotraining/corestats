@@ -2707,7 +2707,7 @@ onehundred <- ggplot(samples, aes(x = iteration, y = value, group = iteration)) 
   geom_hline(yintercept = 0, colour = "black", size = 0.25, alpha = 0.8, linetype = "dashed") + 
   theme_classic(base_size = 15)
 
-wide.ggsave(plot = onehundred, filename = "plots/cs6-onehundred.png")
+wide.ggsave(plot = onehundred, filename = "plots/cs6/cs6-onehundred.png")
 ```
 
 ```{r, 100 samples norm dist boxplot significant}
@@ -2719,6 +2719,322 @@ onehundredsig <- ggplot(samples, aes(x = iteration, y = value, group = iteration
   scale_fill_manual(values = c("white","#EA7125")) +
   theme(legend.position = "none")
 
-wide.ggsave(plot = onehundredsig, filename = "plots/cs6-onehundred-sig.png")
+wide.ggsave(plot = onehundredsig, filename = "plots/cs6/cs6-onehundred-sig.png")
 ```
 
+#### Probability of at least one false positive
+
+```{r}
+false_positives <- tibble(n_comparisons = 1:100,
+       prob = 1- (1 - 0.05) ^ n_comparisons)
+
+breakeven <- log(0.5) / log(0.95)
+```
+
+```{r, probability at least 1 false positive}
+probfalsepositive <- ggplot(false_positives, aes(x = n_comparisons,
+                            y = prob)) +
+  geom_point(size = 3, colour = "#999999") +
+  labs(x = "Number of comparisons",
+       y = "Probability of > 0 false positives")
+
+landscape.ggsave(plot = probfalsepositive, filename = "plots/cs6/cs6-probfalsepositive.png")
+```
+
+```{r, probability at least 1 false positive breakeven}
+probfalsepositive_breakeven <- probfalsepositive +
+  geom_segment(x = breakeven, xend = breakeven, y = 0, yend = 0.5,
+               linewidth = 1, linetype = "dashed", colour = "#EA7125") +
+  geom_segment(x = -Inf, xend = breakeven, y = 0.5, yend = 0.5,
+               linewidth = 1, linetype = "dashed", colour = "#EA7125")
+
+landscape.ggsave(plot = probfalsepositive_breakeven, filename = "plots/cs6/cs6-probfalsepositive_breakeven.png")
+```
+
+#### Reality
+
+```{r, reality dist base}
+realitybase <- ggplot(NULL, aes(c(-2,2))) +
+  geom_hline(yintercept = 0, colour = "black", size = 0.25) +
+  labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
+  theme_classic(base_size = 15)
+```
+
+```{r, reality null dist}
+realitypopulationnull <- realitybase +
+  geom_area(stat = "function", fun = dnorm, args = list(mean = 0, sd = 0.5),
+            fill = "grey95", colour = "#0072CF", size = 1, xlim = c(-2, 4)) +
+  geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "#0072CF")
+
+landscape.ggsave(plot = realitypopulationnull, filename = "plots/cs6/cs6-realitypopulationnull.png")
+
+```
+
+```{r, reality population distribution large}
+realitypopulationlarge <- realitybase +
+  geom_area(stat = "function", fun = dnorm, args = list(mean = 0, sd = 0.5),
+            fill = "grey95", colour = "gray85", size = 1, xlim = c(-2, 4)) +
+  geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "gray85") +
+  geom_area(stat = "function", fun = dnorm, args = list(mean = 2, sd = 0.5),
+            fill = "#E5E5E5", colour = "#0072CF", size = 1, xlim = c(-2, 4), alpha = 0.5) +
+  geom_vline(xintercept = 2, linetype = "dashed", size = 0.5, colour = "#0072CF")
+
+landscape.ggsave(plot = realitypopulationlarge, filename = "plots/cs6/cs6-realitypopulationlarge.png")
+```
+
+```{r, reality population distribution small}
+realitypopulationsmall <- realitybase +
+  geom_area(stat = "function", fun = dnorm, args = list(mean = 0, sd = 0.5),
+            fill = "grey95", colour = "gray85", size = 1, xlim = c(-2, 4)) +
+  geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "gray85") +
+  geom_area(stat = "function", fun = dnorm, args = list(mean = 2, sd = 0.5),
+            fill = "grey95", colour = "gray85", size = 1, xlim = c(-2, 4)) +
+  geom_vline(xintercept = 2, linetype = "dashed", size = 0.5, colour = "gray85") +
+  geom_area(stat = "function", fun = dnorm, args = list(mean = -0.5, sd = 0.5),
+            fill = "#E5E5E5", colour = "#0072CF", size = 1, xlim = c(-2, 4), alpha = 0.5) +
+  geom_vline(xintercept = -0.5, linetype = "dashed", size = 0.5, colour = "#0072CF")
+
+landscape.ggsave(plot = realitypopulationsmall, filename = "plots/cs6/cs6-realitypopulationsmall.png")
+```
+
+#### FWER
+
+```{r, FWER unadjusted p-values}
+#All the same
+set.seed(1)
+n_group_same <- 1000
+n_group_diff <- 0
+n_groups <- n_group_same + n_group_diff
+n_res <- 10
+sample_same <- matrix(rnorm(n_group_same * n_res , 170 , 6.5), n_res, n_group_same)
+sample_diff <- matrix(rnorm(n_group_diff * n_res , 175 , 6.5), n_res, n_group_diff)
+sample_all <- cbind(sample_same,sample_diff)
+
+
+pval_all <- numeric(n_groups)
+
+for(i in 1:n_groups){
+  pval_all[i] <- t.test(sample_all[,i], mu = 170)$p.value
+}
+
+unadjusted_pvalues <- tibble(test_index = 1:n_groups,
+       pval_all = pval_all,
+       p_adj = pmin(pval_all * n_groups, 1))
+
+unadjusted_pvalues |>
+  filter(pval_all < 0.05) |> 
+  count()
+```
+
+```{r, FWER unadjusted p-values plot}
+fwer_randomtests <- ggplot(unadjusted_pvalues, aes(x = test_index, y = pval_all)) +
+  geom_point(size = 3, colour = "#999999", alpha = 0.5) +
+  labs(title = "Unadjusted p-values",
+       x = "Test index",
+       y = "p-value")
+
+landscape.ggsave(plot = fwer_randomtests, filename = "plots/cs6/cs6-fwer_randomtests.png")
+```
+
+```{r, FWER random tests significant ones}
+fwer_randomtests_sig <- ggplot(unadjusted_pvalues, aes(x = test_index, y = pval_all, colour = pval_all < 0.05)) +
+  geom_point(size = 3, alpha = 0.5) +
+  geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
+  labs(title = "Unadjusted p-values",
+       x = "Test index",
+       y = "p-value") +
+  scale_colour_manual(values = c("#999999","#EA7125")) +
+  theme(legend.position = "none")
+
+landscape.ggsave(plot = fwer_randomtests_sig, filename = "plots/cs6/cs6-fwer_randomtests_sig.png")
+```
+
+```{r, FWER random tests, Bonferroni correction}
+fwer_bonferroni <- ggplot(unadjusted_pvalues, aes(x = test_index, y = pval_all, colour = pval_all < (0.05 / n_groups))) +
+  geom_point(size = 3, alpha = 0.5) +
+  geom_hline(yintercept = (0.05 / n_groups), size = 0.25, linetype = "dashed") +
+  labs(title = "Bonferroni correction",
+       x = "Test index",
+       y = "p-value") +
+  scale_colour_manual(values = c("#999999","#EA7125")) +
+  theme(legend.position = "none")
+
+landscape.ggsave(plot = fwer_bonferroni, filename = "plots/cs6/cs6-fwer_bonferroni.png")
+```
+
+```{r, FWER random tests, Bonferroni correction}
+fwer_bonferroni_mult <- ggplot(unadjusted_pvalues, aes(x = test_index, y = p_adj, colour = p_adj < (0.05 / n_groups))) +
+  geom_point(size = 3, alpha = 0.5) +
+  geom_hline(yintercept = (0.05 / n_groups), size = 0.25, linetype = "dashed") +
+  labs(title = "Bonferroni correction",
+       x = "Test index",
+       y = "p-value") +
+  scale_colour_manual(values = c("#999999","#EA7125")) +
+  theme(legend.position = "none")
+
+landscape.ggsave(plot = fwer_bonferroni_mult, filename = "plots/cs6/cs6-fwer_bonferroni_mult.png")
+```
+
+#### FWER interesting vs boring
+
+```{r, FWER comparing interest vs boring}
+#All the same
+set.seed(1)
+n_group_same <- 500
+n_group_diff <- 500
+n_groups <- n_group_same + n_group_diff
+n_res <- 10
+sample_same <- matrix(rnorm(n_group_same * n_res , 170 , 6.5), n_res, n_group_same)
+sample_diff <- matrix(rnorm(n_group_diff * n_res , 178 , 6.5), n_res, n_group_diff)
+sample_all <- cbind(sample_same,sample_diff)
+
+
+pval_all <- numeric(n_groups)
+
+for(i in 1:n_groups){
+  pval_all[i] <- t.test(sample_all[,i], mu = 170)$p.value
+}
+
+fwer_comparison <- tibble(test_index = 1:n_groups,
+       group = if_else(test_index <= 500, "boring", "interesting"),
+       group_index = if_else(test_index <= 500, test_index, test_index - 500),
+       pval_all = pval_all,
+       p_adj = pmin(pval_all * n_groups, 1))
+
+fwer_comparison |>
+  filter(pval_all < 0.05) |> 
+  count(group)
+```
+
+```{r}
+fwer_compare_base <- ggplot(fwer_comparison, aes(x = group_index, y = pval_all)) +
+  geom_point(colour = "#999999", size = 2, alpha = 0.7) +
+  facet_grid(~ group) +
+  labs(title = "Comparing two new sets of results",
+       x = "Test index",
+       y = "p-value") +
+  theme(legend.position = "none",
+         strip.background = element_blank())
+
+landscape.ggsave(plot = fwer_compare_base, filename = "plots/cs6/cs6-fwer_compare_base.png")
+```
+
+```{r, FWER comparing boring vs interesting}
+fwer_compare_base_threshold <- ggplot(fwer_comparison, aes(x = group_index, y = pval_all, colour = pval_all < 0.05)) +
+  geom_point(colour = "#999999", size = 2, alpha = 0.7) +
+  facet_grid(~ group) +
+  geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
+  labs(title = "Comparing two new sets of results",
+       x = "Test index",
+       y = "p-value") +
+  theme(legend.position = "none",
+         strip.background = element_blank())
+
+landscape.ggsave(plot = fwer_compare_base_threshold, filename = "plots/cs6/cs6-fwer_compare_base_threshold.png")
+```
+
+
+```{r, FWER true negatives}
+fwer_compare_true_negatives <- ggplot(fwer_comparison, aes(x = group_index, y = pval_all, colour = pval_all >= 0.05 & group == "boring")) +
+  geom_point(size = 2, alpha = 0.7) +
+  facet_grid(~ group) +
+  geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
+  labs(title = "Comparing two new sets of results",
+       x = "Test index",
+       y = "p-value") +
+  scale_colour_manual(values = c("#999999","#55A51C")) +
+  theme(legend.position = "none",
+         strip.background = element_blank())
+
+landscape.ggsave(plot = fwer_compare_true_negatives, filename = "plots/cs6/cs6-fwer_compare_true_negatives.png")
+```
+
+```{r, FWER false positives}
+fwer_compare_false_positives <- ggplot(fwer_comparison, aes(x = group_index, y = pval_all, colour = pval_all <= 0.05 & group == "boring")) +
+  geom_point(size = 2, alpha = 0.7) +
+  facet_grid(~ group) +
+  geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
+  labs(title = "Comparing two new sets of results",
+       x = "Test index",
+       y = "p-value") +
+  scale_colour_manual(values = c("#999999","#55A51C")) +
+  theme(legend.position = "none",
+         strip.background = element_blank())
+
+landscape.ggsave(plot = fwer_compare_false_positives, filename = "plots/cs6/cs6-fwer_compare_false_positives.png")
+```
+
+```{r, FWER true positives}
+fwer_compare_true_positives <- ggplot(fwer_comparison, aes(x = group_index, y = pval_all, colour = pval_all < 0.05 & group == "interesting")) +
+  geom_point(size = 2, alpha = 0.7) +
+  facet_grid(~ group) +
+  geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
+  labs(title = "Comparing two new sets of results",
+       x = "Test index",
+       y = "p-value") +
+  scale_colour_manual(values = c("#999999","#55A51C")) +
+  theme(legend.position = "none",
+         strip.background = element_blank())
+
+landscape.ggsave(plot = fwer_compare_true_positives, filename = "plots/cs6/cs6-fwer_compare_true_positives.png")
+```
+
+```{r, FWER false negatives}
+fwer_compare_false_negatives <- ggplot(fwer_comparison, aes(x = group_index, y = pval_all, colour = pval_all >= 0.05 & group == "interesting")) +
+  geom_point(size = 2, alpha = 0.7) +
+  facet_grid(~ group) +
+  geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
+  labs(title = "Comparing two new sets of results",
+       x = "Test index",
+       y = "p-value") +
+  scale_colour_manual(values = c("#999999","#55A51C")) +
+  theme(legend.position = "none",
+         strip.background = element_blank())
+
+landscape.ggsave(plot = fwer_compare_false_negatives, filename = "plots/cs6/cs6-fwer_compare_false_negatives.png")
+```
+
+```{r, FWER what we see}
+fwer_compare_whatwesee <- ggplot(fwer_comparison, aes(x = group_index, y = pval_all, colour = pval_all < 0.05)) +
+  geom_point(size = 2, alpha = 0.7) +
+  facet_grid(~ group) +
+  geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
+  labs(title = "Comparing two new sets of results",
+       x = "Test index",
+       y = "p-value") +
+  scale_colour_manual(values = c("#999999","#EA7125")) +
+  theme(legend.position = "none",
+         strip.background = element_blank())
+
+landscape.ggsave(plot = fwer_compare_whatwesee, filename = "plots/cs6/cs6-fwer_compare_whatwesee.png")
+```
+
+```{r, FWER compare boring vs interesting Bonferroni}
+fwer_compare_bonferroni <- ggplot(fwer_comparison, aes(x = group_index, y = p_adj, colour = p_adj < 0.05)) +
+  geom_point(size = 2, alpha = 0.7) +
+  facet_grid(~ group) +
+  geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
+  labs(title = "Comparing two new sets of results",
+       x = "Test index",
+       y = "p-value") +
+  scale_colour_manual(values = c("#999999","#EA7125")) +
+  theme(legend.position = "none",
+         strip.background = element_blank())
+
+landscape.ggsave(plot = fwer_compare_bonferroni, filename = "plots/cs6/cs6-fwer_compare_bonferroni.png")
+```
+
+```{r, FWER compare boring vs interesting Bonferroni}
+fwer_compare_bonferroni <- ggplot(fwer_comparison, aes(x = group_index, y = p_adj, colour = p_adj < 0.05)) +
+  geom_point(size = 2, alpha = 0.7) +
+  facet_grid(~ group) +
+  geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
+  labs(title = "Comparing two new sets of results",
+       x = "Test index",
+       y = "p-value") +
+  scale_colour_manual(values = c("#999999","#EA7125")) +
+  theme(legend.position = "none",
+         strip.background = element_blank())
+
+landscape.ggsave(plot = fwer_compare_bonferroni, filename = "plots/cs6/cs6-fwer_compare_bonferroni.png")
+```
