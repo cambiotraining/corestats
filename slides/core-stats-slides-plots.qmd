@@ -2899,7 +2899,10 @@ fwer_comparison <- tibble(test_index = 1:n_groups,
        group = if_else(test_index <= 500, "boring", "interesting"),
        group_index = if_else(test_index <= 500, test_index, test_index - 500),
        pval_all = pval_all,
-       p_adj = pmin(pval_all * n_groups, 1))
+       p_adj = pmin(pval_all * n_groups, 1),
+       p_adj_sidak = pmin(1 - (1 - pval_all) ^ (n_group_same + n_group_diff), 1),
+       p_adj_holm = pmin(p.adjust(pval_all, method = "holm"), 1),
+       p_adj_bh = pmin(p.adjust(pval_all, method = "BH")))
 
 fwer_comparison |>
   filter(pval_all < 0.05) |> 
@@ -2939,7 +2942,7 @@ fwer_compare_true_negatives <- ggplot(fwer_comparison, aes(x = group_index, y = 
   geom_point(size = 2, alpha = 0.7) +
   facet_grid(~ group) +
   geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
-  labs(title = "Comparing two new sets of results",
+  labs(title = "True negatives",
        x = "Test index",
        y = "p-value") +
   scale_colour_manual(values = c("#999999","#55A51C")) +
@@ -2954,7 +2957,7 @@ fwer_compare_false_positives <- ggplot(fwer_comparison, aes(x = group_index, y =
   geom_point(size = 2, alpha = 0.7) +
   facet_grid(~ group) +
   geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
-  labs(title = "Comparing two new sets of results",
+  labs(title = "False positives",
        x = "Test index",
        y = "p-value") +
   scale_colour_manual(values = c("#999999","#55A51C")) +
@@ -2969,7 +2972,7 @@ fwer_compare_true_positives <- ggplot(fwer_comparison, aes(x = group_index, y = 
   geom_point(size = 2, alpha = 0.7) +
   facet_grid(~ group) +
   geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
-  labs(title = "Comparing two new sets of results",
+  labs(title = "True positives",
        x = "Test index",
        y = "p-value") +
   scale_colour_manual(values = c("#999999","#55A51C")) +
@@ -2984,7 +2987,7 @@ fwer_compare_false_negatives <- ggplot(fwer_comparison, aes(x = group_index, y =
   geom_point(size = 2, alpha = 0.7) +
   facet_grid(~ group) +
   geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
-  labs(title = "Comparing two new sets of results",
+  labs(title = "False negatives",
        x = "Test index",
        y = "p-value") +
   scale_colour_manual(values = c("#999999","#55A51C")) +
@@ -2994,12 +2997,12 @@ fwer_compare_false_negatives <- ggplot(fwer_comparison, aes(x = group_index, y =
 landscape.ggsave(plot = fwer_compare_false_negatives, filename = "plots/cs6/cs6-fwer_compare_false_negatives.png")
 ```
 
-```{r, FWER what we see}
+```{r, FWER unadjusted p-values: what we see}
 fwer_compare_whatwesee <- ggplot(fwer_comparison, aes(x = group_index, y = pval_all, colour = pval_all < 0.05)) +
   geom_point(size = 2, alpha = 0.7) +
   facet_grid(~ group) +
   geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
-  labs(title = "Comparing two new sets of results",
+  labs(title = "What we see: unadjusted p-values",
        x = "Test index",
        y = "p-value") +
   scale_colour_manual(values = c("#999999","#EA7125")) +
@@ -3014,9 +3017,9 @@ fwer_compare_bonferroni <- ggplot(fwer_comparison, aes(x = group_index, y = p_ad
   geom_point(size = 2, alpha = 0.7) +
   facet_grid(~ group) +
   geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
-  labs(title = "Comparing two new sets of results",
+  labs(title = "Bonferroni correction (FWER)",
        x = "Test index",
-       y = "p-value") +
+       y = "Adjusted p-value") +
   scale_colour_manual(values = c("#999999","#EA7125")) +
   theme(legend.position = "none",
          strip.background = element_blank())
@@ -3024,17 +3027,47 @@ fwer_compare_bonferroni <- ggplot(fwer_comparison, aes(x = group_index, y = p_ad
 landscape.ggsave(plot = fwer_compare_bonferroni, filename = "plots/cs6/cs6-fwer_compare_bonferroni.png")
 ```
 
-```{r, FWER compare boring vs interesting Bonferroni}
-fwer_compare_bonferroni <- ggplot(fwer_comparison, aes(x = group_index, y = p_adj, colour = p_adj < 0.05)) +
+```{r, FWER compare boring vs interesting Sidak}
+fwer_compare_sidak <- ggplot(fwer_comparison, aes(x = group_index, y = p_adj_sidak, colour = p_adj < 0.05)) +
   geom_point(size = 2, alpha = 0.7) +
   facet_grid(~ group) +
   geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
-  labs(title = "Comparing two new sets of results",
+  labs(title = "Sidak correction (FWER)",
        x = "Test index",
-       y = "p-value") +
+       y = "Adjusted p-value") +
   scale_colour_manual(values = c("#999999","#EA7125")) +
   theme(legend.position = "none",
          strip.background = element_blank())
 
-landscape.ggsave(plot = fwer_compare_bonferroni, filename = "plots/cs6/cs6-fwer_compare_bonferroni.png")
+landscape.ggsave(plot = fwer_compare_sidak, filename = "plots/cs6/cs6-fwer_compare_sidak.png")
+```
+
+```{r, FWER compare boring vs interesting Holm}
+fwer_compare_holm <- ggplot(fwer_comparison, aes(x = group_index, y = p_adj_holm, colour = p_adj < 0.05)) +
+  geom_point(size = 2, alpha = 0.7) +
+  facet_grid(~ group) +
+  geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
+  labs(title = "Holm correction (FWER)",
+       x = "Test index",
+       y = "Adjusted p-value") +
+  scale_colour_manual(values = c("#999999","#EA7125")) +
+  theme(legend.position = "none",
+         strip.background = element_blank())
+
+landscape.ggsave(plot = fwer_compare_holm, filename = "plots/cs6/cs6-fwer_compare_holm.png")
+```
+
+```{r, FWER compare boring vs interesting FDR Benjamin-Hochberg}
+fwer_compare_FDR <- ggplot(fwer_comparison, aes(x = group_index, y = p_adj_bh, colour = p_adj_bh < 0.05)) +
+  geom_point(size = 2, alpha = 0.7) +
+  facet_grid(~ group) +
+  geom_hline(yintercept = 0.05, size = 0.25, linetype = "dashed") +
+  labs(title = "Benjamin-Hochberg correction (FDR)",
+       x = "Test index",
+       y = "Adjusted p-value") +
+  scale_colour_manual(values = c("#999999","#EA7125")) +
+  theme(legend.position = "none",
+         strip.background = element_blank())
+
+landscape.ggsave(plot = fwer_compare_FDR, filename = "plots/cs6/cs6-fwer_compare_FDR.png")
 ```
