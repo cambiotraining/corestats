@@ -50,6 +50,9 @@ exec(open('setup_files/setup.py').read())
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
+
+# Converts stats functions to a tidyverse-friendly format
+library(rstatix)
 ```
 
 ### Functions
@@ -58,13 +61,13 @@ library(tidyverse)
 #| eval: false
 #| warning: false
 # Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
-stats::t.test()
+rstatix::t_test()
 
 # Performs a Shapiro-Wilk test for normality
 stats::shapiro.test()
 
 # Performs one and two sample Wilcoxon tests
-stats::wilcox.test()
+rstatix::wilcox_test()
 
 # Plots a Q-Q plot for comparison with a normal distribution
 ggplot2::stat_qq()
@@ -473,24 +476,23 @@ Perform a one-sample, two-tailed t-test:
 ## R
 
 ```{r}
-t.test(fishlengthDF$length,
-       mu = 20, alternative = "two.sided")
+t_test(length ~ 1,
+       mu = 20, alternative = "two.sided",
+       data = fishlengthDF)
 ```
 
--   The first argument must be a numerical vector of data values. In our case it's the `length` values.
--   The second argument must be a number and is the mean to be tested under the null hypothesis.
--   The third argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`. We have no prior assumptions on whether the alternative fish length would be greater or less than 20, so we choose `two.sided`.
+-   The first argument must be a numerical column of data values. In our case it's the `length` values. We add `~ 1` to indicate that we're going to compare these to a "null model". More on this later, but for now it's just a quirky syntax thing in R.
+-   The `mu` argument must be a number and is the mean to be tested under the null hypothesis.
+-   The `alternative` argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`. We have no prior assumptions on whether the alternative fish length would be greater or less than 20, so we choose `two.sided`.
 
 In the output:
 
--   The 1st line gives the name of the test and the 2nd line reminds you what the dataset was called
--   The 3rd line contains the three key outputs from the test:
-    -   The calculated t-value is -3.5492 (we'll need this for reporting)
-    -   There are 28 degrees of freedom (again we'll need this for reporting)
-    -   The p-value is 0.001387.
--   The 4th line simply states the alternative hypothesis
--   The 5th and 6th lines give the 95th confidence interval (we don't need to know this)
--   The 7th, 8th and 9th lines give the sample mean again (18.29655).
+- `.y.` is the variable of interest
+- `n` is the number of observations
+- ignore the `group` columns for now
+- `statistic` is the calculated t-value (`r t_test(length ~ 1, mu = 20, alternative = "two.sided", data = fishlengthDF) |> pull(statistic)`)
+- `df` gives us the number of degrees of freedom (`r t_test(length ~ 1, mu = 20, alternative = "two.sided", data = fishlengthDF) |> pull(df)`). Again, more on this later.
+- `p` gives us the p-value of `r t_test(length ~ 1, mu = 20, alternative = "two.sided", data = fishlengthDF) |> pull(p)`
 
 ## Python
 
@@ -626,28 +628,16 @@ Perform a one-sample, two-tailed Wilcoxon signed rank test:
 ## R
 
 ```{r}
-wilcox.test(fishlengthDF$length,
-            mu = 20, alternative = "two.sided")
+wilcox_test(length ~ 1,
+            mu = 20, alternative = "two.sided",
+            data = fishlengthDF)
 ```
 
 The syntax is identical to the one-sample t-test we carried out earlier.
 
--   The first argument must be a numerical vector of data values.
-
--   The second argument must be a number and is the median to be tested under the null hypothesis.
-
--   The third argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less.`
-
--   The first line gives a warning (not an error) message regarding the implementation of this test. This can be safely ignored in this case as the p-value is so small, but essentially, it's letting you know that some of the data values are identical to each other. This is not supposed to happen as we should be dealing with continuous data for this test, but in practice it's not something that we need to worry ourselves with.
-
--   It then gives you the name of the test and `data:` reminds you what the data set was called (here it's the numerical `length` values coming from the pipe)
-
--   Next are the two key outputs from the test:
-
-    -   The calculated V statistic is 67.5
-    -   The p-value is 0.001222.
-
--   The last line simply states the alternative hypothesis
+-   The first argument contains the column with data values.
+-   The `mu` argument must be a number and is the median to be tested under the null hypothesis.
+-   The `alternative` argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less.`
 
 ## Python
 
@@ -825,8 +815,10 @@ In reality, if I found myself in this situation I would also try doing a non-par
 
 ```{r}
 # perform one-sample t-test
-t.test(dissolving$dissolving_time,
-       mu = 45, alternative = "two.sided")
+dissolving
+t_test(dissolving_time ~ 1,
+       mu = 45, alternative = "two.sided",
+       data = dissolving)
 ```
 
 ## Python
@@ -881,8 +873,9 @@ median(dissolving$dissolving_time)
 ```
 
 ```{r}
-wilcox.test(dissolving$dissolving_time,
-            mu = 45, alternative = "two.sided")
+wilcox_test(dissolving_time ~ 1,
+            mu = 45, alternative = "two.sided",
+            data = dissolving)
 ```
 
 ## Python

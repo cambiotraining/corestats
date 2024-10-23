@@ -78,7 +78,7 @@ stats::shapiro.test()
 
 # Performs one- and two-sample Wilcoxon tests
 # the latter is also known as 'Mann-Whitney U' test
-stats::wilcox.test()
+rstatix::wilcox_test()
 
 # Plots a Q-Q plot for comparison with a normal distribution
 ggplot2::stat_qq()
@@ -375,7 +375,7 @@ Perform a two-sample, two-tailed, t-test:
 
 ```{r}
 # two-sample, two-tailed t-test
-t.test(length ~ river,
+t_test(length ~ river,
        alternative = "two.sided",
        var.equal = TRUE,
        data = rivers)
@@ -383,20 +383,18 @@ t.test(length ~ river,
 
 Here we do the following:
 
--   The first argument must be in the formula format: `variables ~ category`
--   The second argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
--   The third argument says whether the variance of the two samples can be assumed to be equal (Student's t-test) or unequal (Welch's t-test)
+-   The first argument must be in the formula format: `response ~ predictor`
+-   The `alternative` argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
+-   The `var.equal` argument says whether the variance of the two samples can be assumed to be equal (Student's t-test) or unequal (Welch's t-test)
 
 So, how do we interpret these results?
 
--   The 1st line gives the name of the test and the 2nd line reminds you what the data set was called, and what variables were used.
--   The 3rd line contains the three key outputs from the test:
-    -   The calculated t-value is 3.8433
-    -   There are 66 degrees of freedom
-    -   The p-value is 0.0002754.
--   The 4th line simply states the alternative hypothesis in terms of the difference between the two sample means (testing if the two sample means are different is equivalent to testing whether the difference in the means is equal to zero).
--   The 5th and 6th lines give the 95th confidence interval (we don't need to know this here).
--   The 7th, 8th and 9th lines give the sample means for each group (20.33077 in Aripo and 18.29655 in Guanapo) which we found earlier.
+- `.y.` gives you the name of the response variable, or variable of interest (`length` in our case)
+- `group1` and `group2` gives you the names of the groups being compared
+- `n1` and `n2` gives you the number of observations in each group
+- `statistic` gives you the value of the statistic (t = `r t_test(length ~ river, alternative = "two.sided", var.equal = TRUE, data = rivers) |> pull(statistic)`)
+- `df` gives you the number of degrees of freedom (`r t_test(length ~ river, alternative = "two.sided", var.equal = TRUE, data = rivers) |> pull(df)`)
+- `p` gives you the p-value (`r t_test(length ~ river, alternative = "two.sided", var.equal = TRUE, data = rivers) |> pull(p)`)
 
 ## Python
 
@@ -464,23 +462,21 @@ Perform the Mann-Whitney U test:
 
 ```{r}
 #| warning: false
-wilcox.test(length ~ river,
+wilcox_test(length ~ river,
             alternative = "two.sided",
             data = rivers)
 ```
 
--   The first argument must be in the formula format: `variable ~ category`
--   The second argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
+-   The first argument must be in the formula format: `response ~ predictor`
+-   The `alternative` argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
 
-You *may* get a warning message in the console stating `cannot compute exact p-value with ties`. This just means that some of the data points have exactly the same value which affects the internal mathematics slightly. However, given that the p-value is so very small, this is not something that we need to worry about.
+The output:
 
-After the warning message:
-
--   The 1st line gives the name of the test and the 2nd line reminds you what the dataset was called, and what variables were used
--   The 3rd line contains the two key outputs from the test:
-    -   The calculated W-value is 841 (we'll use this in reporting)
-    -   The p-value is 0.0006464.
--   The 4th line simply states the alternative hypothesis in terms of the difference between the two sample medians in that if there were a difference then one distribution would be shifted relative to the other.
+- `.y.` gives you the name of the response variable, or variable of interest (`length` in our case)
+- `group1` and `group2` gives you the names of the groups being compared
+- `n1` and `n2` gives you the number of observations in each group
+- `statistic` gives you the value of the statistic (t = `r wilcox_test(length ~ river, alternative = "two.sided", data = rivers) |> pull(statistic)`)
+- `p` gives you the p-value (`r wilcox_test(length ~ river, alternative = "two.sided", data = rivers) |> pull(p)`)
 
 ## Python
 
@@ -782,12 +778,12 @@ Because of the result of the Bartlett test I know that I can carry out a two-sam
 ## R
 
 ::: {.callout-note}
-In the `t.test()` function the default option for dealing with equality of variance is to assume there there isn't any. If you look at the help page with `?t.test()` then you'll see that the default for `var.equal = FALSE`. Here we *do* assume equality of variance, so we set it to `var.equal = TRUE`.
+In the `t_test()` function the default option for dealing with equality of variance is to assume there there isn't any. If you look at the help page with `?t_test()` then you'll see that the default for `var.equal = FALSE`. Here we *do* assume equality of variance, so we set it to `var.equal = TRUE`.
 :::
 
 ```{r}
 # perform two-sample t-test
-t.test(serum ~ sex,
+t_test(serum ~ sex,
        alternative = "two.sided",
        var.equal = TRUE,
        data = turtle)
@@ -856,7 +852,7 @@ We've already checked that the variances of the two groups are similar, so we're
 ## R
 
 ```{r}
-wilcox.test(serum ~ sex,
+wilcox_test(serum ~ sex,
             alternative = "two.sided",
             data = turtle)
 ```

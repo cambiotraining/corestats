@@ -53,6 +53,9 @@ A paired t-test is used when we have two samples of continuous data that can be 
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
+
+# Converts stats functions to a tidyverse-friendly format
+library(rstatix)
 ```
 
 ### Functions
@@ -62,13 +65,13 @@ library(tidyverse)
 #| warning: false
 # Performs a one-sample t-test, Student's t-test
 # and Welch's t-test in later sections
-stats::t.test()
+rstatix::t_test()
 
 # Performs a Shapiro-Wilk test for normality
 stats::shapiro.test()
 
 # Performs one and two sample Wilcoxon tests
-stats::wilcox.test()
+rstatix::wilcox_test()
 
 # Plots a Q-Q plot for comparison with a normal distribution
 ggplot2::stat_qq()
@@ -295,17 +298,17 @@ Perform a two-sample, two-tailed, paired t-test:
 ```{r}
 #| results: hide
 # perform the test
-t.test(cortisol ~ time,
+t_test(cortisol ~ time,
        alternative = "two.sided",
        paired = TRUE,
        data = cortisol)
 ```
 
--   The first two arguments define the formula
--   The third argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
--   The fourth argument says that the data are paired
+-   The first argument must be in the formula format: `response ~ predictor`
+-   The `alternative` argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
+-   The `paired = TRUE` argument indicates that the data are paired
 
-From our perspective the value of interest is the `p-value`.
+From our perspective the value of interest in the output is the `p` (`r t_test(cortisol ~ time, alternative = "two.sided", paired = TRUE, data = cortisol) |> pull(p)`).
 
 ## Python
 
@@ -358,16 +361,15 @@ Perform a two-tailed, Wilcoxon signed rank test:
 ## R
 
 ```{r}
-wilcox.test(cortisol ~ time,
+wilcox_test(cortisol ~ time,
             alternative = "two.sided",
             paired = TRUE,
             data = cortisol)
 ```
 
--   The first argument gives the formula
--   The second argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
--   The third argument indicates that the test is paired
--   The last argument is the data set
+-   The first argument must be in the formula format: `response ~ predictor`
+-   The `alternative` argument gives the type of alternative hypothesis and must be one of `two.sided`, `greater` or `less`
+- The `paired = TRUE` argument indicates that the data are paired
 
 ## Python
 

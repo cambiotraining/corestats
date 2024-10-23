@@ -29,6 +29,7 @@ knitr:
 book:
   favicon: "_extensions/cambiotraining/courseformat/img/university-of-cambridge-favicon.ico"
   page-navigation: true
+  bread-crumbs: false
   page-footer:
     center: |
       Licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
