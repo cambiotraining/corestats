@@ -466,7 +466,7 @@ In terms of assessing the assumptions of a test it is always worth considering s
 
 In the `fishlength` example, the graphical Q-Q plot analysis was not especially conclusive as there was some suggestion of snaking in the plots, but the Shapiro-Wilk test gave a non-significant p-value (0.1764). Putting these two together, along with the original histogram and the recognition that there were only 30 data points in the data set I personally would be happy that the assumptions of the t-test were met well enough to trust the result of the t-test, but you may not be...
 
-In which case we would consider an alternative test that has less stringent assumptions (but is less powerful): the [one-sample Wilcoxon signed-rank test](#cs1-onesample-wilcoxon-signed-rank).
+In which case we would consider an alternative test that has less stringent assumptions (but is less powerful): the [one-sample Wilcoxon signed-rank test](#cs1-one-sample-non-normal).
 
 ## Implement and interpret the test
 
@@ -539,7 +539,7 @@ The above sentence is an adequate concluding statement for this test and is what
 Additional information, such as the test statistic and degrees of freedom, are sometimes also reported. This is more of a legacy from the time where people did the calculations by hand and used tables. I personally find it much more useful to report as above and supply the data and analysis, so other people can see what I've done and why!
 :::
 
-## Dealing with non-normal data
+## Dealing with non-normal data {#cs1-one-sample-non-normal}
 
 Your data might not always be normally distributed. That's not a huge issue and there are statistical tests that can deal with this. For a one-sample data set there is the Wilcoxon signed rank test. This test, in contrast to the one-sample t-test does not assume that the parent distribution is normally distributed. We do still need the parent distribution (and consequently the sample) to be the same shape and scale.
 
