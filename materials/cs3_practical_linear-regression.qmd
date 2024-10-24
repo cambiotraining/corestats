@@ -220,7 +220,7 @@ resid_panel(lm_1,
             smoother = TRUE)
 ```
 
--   The top left graph plots the **Residuals plot**. If the data are best explained by a straight line then there should be a uniform distribution of points above and below the horizontal blue line (and if there are sufficient points then the red line, which is a smoother line, should be on top of the blue line). This plot is pretty good.
+-   The top left graph plots the **Residuals plot**. If the data are best explained by a linear line then the points should be uniformly distributed above and below the horizontal blue line. If that's the case then the red line (a smoother line) should overlay the blue line. This plot is pretty good.
 -   The top right graph shows the **Q-Q plot** which allows a visual inspection of normality. If the residuals are normally distributed, then the points should lie on the diagonal dotted line. This isn't too bad but there is some slight snaking towards the upper end and there appears to be an outlier.
 -   The bottom left **Location-scale** graph allows us to investigate whether there is any correlation between the residuals and the predicted values and whether the variance of the residuals changes significantly. If not, then the red line should be horizontal. If there is any correlation or change in variance then the red line will not be horizontal. This plot is fine.
 -   The last graph shows the **Cook's distance** and tests if any one point has an unnecessarily large effect on the fit. The important aspect here is to see if any points are larger than 0.5 (meaning you'd have to be careful) or 1.0 (meaning you'd definitely have to check if that point has an large effect on the model). If not, then no point has undue influence. This plot is good.
