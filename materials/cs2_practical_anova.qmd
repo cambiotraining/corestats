@@ -682,10 +682,8 @@ Tukey's range test, when we decide to use it, requires the same three assumption
 
 ## Exercises
 
-### Lobster weight {#sec-exr_lobsters}
-
-:::{.callout-exercise}
-
+::: {.callout-exercise}
+#### Lobster weight {#sec-exr_lobsters}
 {{< level 2 >}}
 
 Juvenile lobsters in aquaculture were grown on three different diets (fresh mussels, semi-dry pellets and dry flakes). After nine weeks, their wet weight was:
@@ -709,8 +707,7 @@ Is there any evidence that diet affects the growth rate of lobsters?
 6.  Write down a sentence that summarises the results that you have found
 7.  Perform a post-hoc test and report the findings
 
-::: {.callout-answer collapse="true"}
-## Answer
+::: {.callout-answer}
 
 #### Hypotheses
 

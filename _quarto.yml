@@ -8,16 +8,18 @@ project:
   output-dir: _site
   render:
     - index.md
-    - setup.qmd
-    - materials.qmd
+    - setup.md
+    - materials.md
     - materials/*
-    - "!materials/*/_no-render"
+    - "!materials/*/no_render"
 
 format: courseformat-html
+exercises:
+  number: true
+  hide-answers: false
 
-metadata-files:
-  - "materials/_chapters.yml"
-  # - "materials/_sidebar.yml"
+filters:
+  - courseformat
 
 execute:
   freeze: auto
@@ -26,10 +28,16 @@ knitr:
   opts_knit:
     cache.path: .knitr_cache
 
+metadata-files:
+  - "materials/_chapters.yml"
+  # - "materials/_sidebar.yml"
+
 book:
-  favicon: "_extensions/cambiotraining/courseformat/img/university-of-cambridge-favicon.ico"
-  page-navigation: true
+  search:
+    location: sidebar
+  favicon: "_extensions/courseformat/img/university-of-cambridge-favicon.ico"
   bread-crumbs: false
+  page-navigation: true
   page-footer:
     center: |
       Licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
@@ -37,7 +45,7 @@ book:
       Bioinformatics Training Facility
   navbar:
     pinned: true
-    logo: "_extensions/cambiotraining/courseformat/img/university_crest_reversed.png"
+    logo: "_extensions/courseformat/img/university_crest_reversed.png"
     right:
       - icon: github
         href: https://github.com/cambiotraining/corestats/
@@ -45,6 +53,9 @@ book:
       - icon: twitter
         href: https://twitter.com/bioinfocambs
         aria-label: Bioinformatics Training Facility Twitter
+      - icon: mastodon
+        href: https://genomic.social/@BioInfoCambs
+        aria-label: Bioinformatics Training Facility Mastodon
     title: "Core statistics"
   chapters:
     - part: "Welcome"
