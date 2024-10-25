@@ -134,7 +134,12 @@ statsmodels.formula.api.ols
 
 # Creates an ANOVA table for one or more fitted linear models
 statsmodels.stats.anova.anova_lm
+
+# Custom function to create diagnostic plots
+dgplots()
 ```
+
+Note: you can download the `dgplots` script [here](scripts/dgplots.py).
 
 :::
 :::
@@ -431,6 +436,8 @@ resid_panel(lm_oystercatcher,
 Unfortunately Python doesn't provide a convenient way of displaying the same diagnostic plots as R does.
 
 I created a function `dgplots()` (which stands for Diagnostic Plots - very original I know...) that does this for you. All you need to do is create a linear model, get the fit and feed that to the `dgplots()` function.
+
+You can find the script for this [here](scripts/dgplots.py).
 
 You can of course plot the model values yourself by extracting them from the linear model fit, but this should provide a convenient way to avoid that kind of stuff.
 

@@ -112,7 +112,12 @@ statsmodels.formula.api.ols()
 
 # Creates an ANOVA table for one or more fitted linear models
 statsmodels.stats.anova.anova_lm()
+
+# Custom function to create diagnostic plots
+dgplots()
 ```
+
+Note: you can download the `dgplots` script [here](scripts/dgplots.py).
 
 :::
 :::

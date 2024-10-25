@@ -107,7 +107,12 @@ pandas.read_csv()
 
 # Creates a model from a formula and data frame
 statsmodels.formula.api.ols()
+
+# Custom function to create diagnostic plots
+dgplots()
 ```
+
+Note: you can download the `dgplots` script [here](scripts/dgplots.py).
 
 :::
 :::
