@@ -63,7 +63,17 @@ library(rstatix)
 ## Python
 
 ### Libraries
+
 ### Functions
+
+```{python}
+#| eval: false
+
+# Custom function to perform power calculations
+pwr_f2_test()
+```
+
+Note: you can download the `pwr_f2_test` script [here](scripts/pwr_f2_test.py). 
 :::
 :::
 
