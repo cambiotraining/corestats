@@ -405,7 +405,7 @@ We will use the data from the file `data/CS3-statedata.csv` data set for this ex
 Perform a linear regression on the variables `life_exp` and `murder` and do the following:
 
 1.  Find the value of the slope and intercept coefficients.
-2.  Determine if the slope is significantly different from zero (i.e. is there a relationship between the two variables)
+2.  Determine if the slope is significantly different from zero. In other words, is there a relationship between the two variables? (hint: think about which variable is your response and predictor)
 3.  Produce a scatter plot of the data with the line of best fit superimposed on top.
 4.  Produce diagnostic plots and discuss with your (virtual) neighbour if you should have carried out a simple linear regression in each case
 
@@ -556,6 +556,8 @@ And after all of that we find that the murder rate is a statistically significan
 {{< level 2 >}}
 
 Now let's investigate the relationship between the proportion of High School Graduates a state has (`hs_grad`) and the mean number of days below freezing (`frost`) within each state.
+
+Again, think about which variable is your response and predictor.
 
 ::: {.callout-answer collapse="true"}
 ## Answer
