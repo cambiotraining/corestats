@@ -350,7 +350,7 @@ import statsmodels.formula.api as smf
 
 ```{python}
 # create a linear model
-model = smf.ols(formula= "feeding ~ C(site)", data = oystercatcher_py)
+model = smf.ols(formula = "feeding ~ C(site)", data = oystercatcher_py)
 # and get the fitted parameters of the model
 lm_oystercatcher_py = model.fit()
 ```
@@ -442,24 +442,7 @@ You can find the script for this [here](scripts/dgplots.py).
 You can of course plot the model values yourself by extracting them from the linear model fit, but this should provide a convenient way to avoid that kind of stuff.
 
 ```{python}
-#| eval: false
 dgplots(lm_oystercatcher_py)
-```
-
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_oystercatcher_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
 ```
 
 -   The top left graph plots the **Residuals plot**. If the data are best explained by a linear line then the points should be uniformly distributed above and below the horizontal blue line. If that's the case then the red line (a smoother line) should overlay the blue line. This plot looks pretty good.
@@ -937,24 +920,7 @@ pg.homoscedasticity(dv = "weight",
 ```
 
 ```{python}
-#| eval: false
 dgplots(lm_lobsters_py)
-```
-
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_lobsters_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
 ```
 
 We'll just focus on the following:

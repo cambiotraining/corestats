@@ -404,24 +404,7 @@ anova(lm(weight ~ sex * exercise,
 ## Python
 
 ```{python}
-#| eval: false
 dgplots(lm_exercise_py)
-```
-
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_exercise_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
 ```
 :::
 
@@ -649,25 +632,9 @@ lm_auxin_py = model.fit()
 Next, we check the assumptions:
 
 ```{python}
-#| eval: false
 dgplots(lm_auxin_py)
 ```
 
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_auxin_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
-```
 So, these actually all look pretty good, with the data looking normally distributed (**Q-Q plot**), linearity OK (**Residual plot**), homogeneity of variance looking sharp (**Location-scale plot**) and no clear influential points (**Influential points plot**).
 
 #### Implement the test
@@ -886,24 +853,7 @@ lm_tulip_py = model.fit()
 Next, we check the assumptions:
 
 ```{python}
-#| eval: false
 dgplots(lm_tulip_py)
-```
-
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_tulip_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
 ```
 
 These are actually all OK. A two-way ANOVA analysis is on the cards.

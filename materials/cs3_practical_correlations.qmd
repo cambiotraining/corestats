@@ -287,9 +287,10 @@ USArrests %>%
 
 ## Python
 
-We can do this using the `pandas.DataFrame.corr()` function. This function takes the default `method = "pearson"` and ignores any non-numerical columns (such as the `state` column in our data set).
+We can do this using the `pandas.DataFrame.corr()` function. This function takes the default `method = "pearson"`. It should ignore the `state` column, so we drop it.
 
 ```{python}
+USArrests_py = USArrests_py.drop(columns=["state"])
 USArrests_py.corr()
 ```
 This gives us a numerical overview of the Pearson's r correlation coefficients between each variable pair. Note that across the diagonal the correlation coefficients are `1` - this should make sense since, for example, `murder` is perfectly correlated with itself.
@@ -417,8 +418,12 @@ USAstate_py.head()
 ```
 
 ```{python}
+# drop the state column
+USAstate_py = USAstate_py.drop(columns=["state"])
+
 # create correlation matrix
 USAstate_cor_py = USAstate_py.corr()
+
 # put the row names into a column
 USAstate_cor_py = USAstate_cor_py.rename_axis("var1").reset_index()
 

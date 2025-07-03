@@ -242,7 +242,9 @@ If I would plot all the other variables against each other, then I would spot th
 Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](#correlation-coefficients):
 
 ```{python}
-pm2_5_py.corr()
+# instead of dropping all the non-numeric columns, we
+# specifically select only numeric columns
+pm2_5_py.select_dtypes(include = "number").corr()
 ```
 
 This confirms what we saw in the plots, there aren't any very strong correlations between the different (numerical) variables, apart from a negative correlation between `pm2_5` and `wind_m_s`, which has a Pearson's r of $r$ = `r pm2_5 %>% select_if(is.numeric) %>% cor_test() %>% filter(cor != 1) %>% arrange(desc(abs(cor))) %>% slice(1) %>% pull(cor)`.
@@ -371,7 +373,7 @@ lm_pm2_5_full_py.params
 The question is, are all of these terms statistically significant? To find out we perform an ANOVA:
 
 ```{python}
-sm.stats.anova_lm(lm_pm2_5_full_py, typ = 2)
+sm.stats.anova_lm(lm_pm2_5_full_py)
 ```
 
 From this we can see that the interaction between `location` and `wind_m_s` is statistically significant. Which means that we can't just talk about the effect of `location` or `wind_m_s` on PM2.5 levels, without taking the other variable into account!

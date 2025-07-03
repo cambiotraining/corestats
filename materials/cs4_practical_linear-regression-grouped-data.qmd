@@ -575,24 +575,7 @@ resid_panel(lm_additive,
 ## Python
 
 ```{python}
-#| eval: false
 dgplots(lm_treelight_add_py)
-```
-
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_treelight_add_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
 ```
 
 * The **Residuals plot** looks OK, no systematic pattern.
@@ -834,24 +817,7 @@ This confirms our suspicions from looking at the plot. There isn't any interacti
 Let's check the assumptions:
 
 ```{python}
-#| eval: false
 dgplots(lm_clover_py)
-```
-
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_clover_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
 ```
 
 This is a borderline case.
@@ -961,24 +927,7 @@ sm.stats.anova_lm(lm_clover_py, typ = 2)
 Woop. All good so far. We have the same conclusions as before in terms of what is significant and what isn't. Now we just need to check the assumptions:
 
 ```{python}
-#| eval: false
 dgplots(lm_clover_py)
-```
-
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_log_clover_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
 ```
 :::
 

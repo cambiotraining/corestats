@@ -251,24 +251,7 @@ lm_USArrests_py = model.fit()
 Then we use `dgplots()` to create the diagnostic plots:
 
 ```{python}
-#| eval: false
 dgplots(lm_USArrests_py)
-```
-
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_USArrests_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
 ```
 :::
 
@@ -496,24 +479,7 @@ lm_USAstate_py = model.fit()
 
 Next, we can create the diagnostic plots:
 ```{python}
-#| eval: false
 dgplots(lm_USAstate_py)
-```
-
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_USAstate_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
 ```
 
 The **Residuals** plot appears symmetric enough (similar distribution of points above and below the horizontal blue line) for me to happy with linearity. Similarly the red line in the **Location-Scale** plot looks horizontal enough for me to be happy with homogeneity of variance. There aren't any influential points in the **Influential points** plot. The only plot that does give me a bit of concern is the **Q-Q** plot. Here we see clear evidence of snaking, although the degree of snaking isn't actually that bad. This just means that we can be pretty certain that the distribution of residuals isn't normal, but also that it isn't *very* non-normal.
@@ -626,24 +592,7 @@ lm_frost_py = model.fit()
 
 Next, we can create the diagnostic plots:
 ```{python}
-#| eval: false
 dgplots(lm_frost_py)
-```
-
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_frost_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
 ```
 :::
 
