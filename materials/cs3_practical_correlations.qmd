@@ -287,11 +287,10 @@ USArrests %>%
 
 ## Python
 
-We can do this using the `pandas.DataFrame.corr()` function. This function takes the default `method = "pearson"`. It should ignore the `state` column, so we drop it.
+We can do this using the `pandas.DataFrame.corr()` function. This function takes the default `method = "pearson"`. It should ignore the `state` column, so we tell it to.
 
 ```{python}
-USArrests_py = USArrests_py.drop(columns=["state"])
-USArrests_py.corr()
+USArrests_py.corr(numeric_only = True)
 ```
 This gives us a numerical overview of the Pearson's r correlation coefficients between each variable pair. Note that across the diagonal the correlation coefficients are `1` - this should make sense since, for example, `murder` is perfectly correlated with itself.
 
@@ -303,7 +302,7 @@ Just staring at a matrix of numbers might not be very useful. It would be good t
 
 ```{python}
 # create correlation matrix
-USArrests_cor_py = USArrests_py.corr()
+USArrests_cor_py = USArrests_py.corr(numeric_only = True)
 # put the row names into a column
 USArrests_cor_py = USArrests_cor_py.rename_axis("var1").reset_index()
 
@@ -354,7 +353,7 @@ USArrests %>%
 ## Python
 
 ```{python}
-USArrests_py.corr(method = "spearman")
+USArrests_py.corr(method = "spearman", numeric_only = True)
 ```
 :::
 
@@ -418,11 +417,8 @@ USAstate_py.head()
 ```
 
 ```{python}
-# drop the state column
-USAstate_py = USAstate_py.drop(columns=["state"])
-
 # create correlation matrix
-USAstate_cor_py = USAstate_py.corr()
+USAstate_cor_py = USAstate_py.corr(numeric_only = True)
 
 # put the row names into a column
 USAstate_cor_py = USAstate_cor_py.rename_axis("var1").reset_index()
@@ -578,8 +574,8 @@ The `abs()` function calculates the absolute value (i.e. just the magnitude) of 
 First, calculate the Pearson and Spearman correlation matrices (technically, we've done the Pearson one already, but we're doing it again for clarity here).
 
 ```{python}
-cor_pear_py = USAstate_py.corr(method = "pearson")
-cor_spea_py = USAstate_py.corr(method = "spearman")
+cor_pear_py = USAstate_py.corr(method = "pearson", numeric_only = True)
+cor_spea_py = USAstate_py.corr(method = "spearman", numeric_only = True)
 ```
 
 We can calculate the difference between two matrices by subtracting them.
