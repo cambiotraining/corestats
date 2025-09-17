@@ -208,15 +208,16 @@ ggplot(treelight,
 ```{python}
 #| results: hide
 # plot the data
-(ggplot(treelight_py,
+p = (ggplot(treelight_py,
         aes(x = "depth",
             y = "light",
             colour = "species")) +
      geom_point() +
      scale_color_brewer(type = "qual", palette = "Dark2") +
      labs(x = "Depth (m)",
-         y = "Light intensity (lux)")
-)
+         y = "Light intensity (lux)"))
+
+p.show()
 ```
 
 :::
@@ -244,7 +245,7 @@ ggplot(treelight,
 ```{python}
 #| results: hide
 # plot the data
-(ggplot(treelight_py,
+p = (ggplot(treelight_py,
         aes(x = "depth",
             y = "light",
             colour = "species")) +
@@ -254,6 +255,8 @@ ggplot(treelight,
      scale_color_brewer(type = "qual", palette = "Dark2") +
      labs(x = "Depth (m)",
           y = "Light intensity (lux)"))
+
+p.show()
 ```
 :::
 
@@ -536,7 +539,7 @@ Now we can simply plot the data:
 ```{python}
 #| results: hide
 # plot the data
-(ggplot(treelight_py,
+p = (ggplot(treelight_py,
         aes(x = "depth",
             y = "light",
             colour = "species")) +
@@ -548,6 +551,8 @@ Now we can simply plot the data:
      scale_color_brewer(type = "qual", palette = "Dark2") +
      labs(x = "Depth (m)",
           y = "Light intensity (lux)"))
+
+p.show()
 ```
 :::
 
@@ -770,11 +775,13 @@ This data set has three variables; `yield` (which is the response variable), `ya
 ```{python}
 #| results: hide
 # plot the data
-(ggplot(clover_py,
+p = (ggplot(clover_py,
         aes(x = "yarrow",
             y = "yield", colour = "farm")) +
      geom_point() +
      scale_color_brewer(type = "qual", palette = "Dark2"))
+
+p.show()
 ```
 
 Looking at this plot as it stands, it's pretty clear that yarrow density has a significant effect on yield, but it's pretty hard to see from the plot whether there is any effect of `farm`, or whether there is any interaction. In order to work that out we'll want to add the regression lines for each `farm` separately.
@@ -782,12 +789,14 @@ Looking at this plot as it stands, it's pretty clear that yarrow density has a s
 ```{python}
 #| results: hide
 # plot the data
-(ggplot(clover_py,
+p = (ggplot(clover_py,
         aes(x = "yarrow",
             y = "yield", colour = "farm")) +
      geom_point() +
      geom_smooth(method = "lm", se = False) +
      scale_color_brewer(type = "qual", palette = "Dark2"))
+
+p.show()
 ```
 
 The regression lines are very close together. Although the line for `Farm C` crosses the other two, it doesn't look like we're going to see a very strong interaction - if there is one. There doesn't seem to be an effect of `farm` in general, since the lines are not separate from each other. 
@@ -872,12 +881,14 @@ Then we can plot them:
 ```{python}
 #| results: hide
 # plot log-transformed data
-(ggplot(clover_py,
+p = (ggplot(clover_py,
          aes(x = "yarrow",
              y = "log_yield", colour = "farm")) +
      geom_point() +
      geom_smooth(method = "lm", se = False) +
      scale_color_brewer(type = "qual", palette = "Dark2"))
+
+p.show()
 ```
 
 :::

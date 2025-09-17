@@ -323,8 +323,10 @@ t.test(length ~ river,
 fishlength_py = pd.read_csv("data/CS1-twosample.csv")
 
 # visualise the data
-(ggplot(fishlength_py, aes(x = "river", y = "length")) +
+p = (ggplot(fishlength_py, aes(x = "river", y = "length")) +
      geom_boxplot())
+
+p.show()
 ```
 
 From the plot we can see that the groups appear to have different means. This difference is significant, as per a two-sample t-test.
@@ -442,9 +444,11 @@ lobsters_py = pd.read_csv("data/CS2-lobsters.csv")
 ```{python}
 #| results: hide
 # visualise the data
-(ggplot(lobsters_py, aes(x = "diet",
+p = (ggplot(lobsters_py, aes(x = "diet",
                          y = "weight")) +
      geom_boxplot())
+
+p.show()
 ```
 
 ```{python}
@@ -878,10 +882,12 @@ mussels_py = pd.read_csv("data/CS6-shelllength.csv")
 
 ```{python}
 #| results: hide
-(ggplot(mussels_py,
+p = (ggplot(mussels_py,
         aes(x = "location",
             y = "length")) +
     geom_boxplot())
+
+p.show()
 ```
 
 :::
@@ -1019,9 +1025,11 @@ Let's just have a quick look at the data to see what we're dealing with:
 
 ```{python}
 #| results: hide
-(ggplot(epilepsy_py, aes(x = "age",
+p = (ggplot(epilepsy_py, aes(x = "age",
                          y = "seizure")) +
   geom_point())
+
+p.show()
 ```
 
 :::

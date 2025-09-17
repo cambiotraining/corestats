@@ -162,22 +162,26 @@ We can visualise the data by `male`, so we can see if the eggs clutch size diffe
 
 ```{python}
 #| results: hide
-(ggplot(ladybird_py,
+p = (ggplot(ladybird_py,
         aes(x = "male", y = "eggs")) +
         geom_boxplot() +
         geom_jitter(width = 0.05))
+
+p.show()
 ```
 
 We can also plot the egg clutch size against the weight, again for each male colour group:
 
 ```{python}
 #| results: hide
-(ggplot(ladybird_py,
+p = (ggplot(ladybird_py,
         aes(x = "weight", y = "eggs",
             colour = "male")) +
         geom_point() +
         scale_color_brewer(type = "qual",
                            palette = "Dark2"))
+
+p.show()
 ```
 
 :::

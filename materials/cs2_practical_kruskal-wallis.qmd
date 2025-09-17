@@ -191,10 +191,12 @@ spidermonkey_py.describe()["aggression"]
 ```{python}
 #| results: hide
 # create boxplot
-(ggplot(spidermonkey_py,
+p = (ggplot(spidermonkey_py,
         aes(x = "familiarity",
             y = "aggression")) +
      geom_boxplot())
+
+p.show()
 ```
 
 

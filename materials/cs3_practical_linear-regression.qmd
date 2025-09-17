@@ -181,10 +181,12 @@ You can visualise the data with:
 ```{python}
 #| results: hide
 # create scatterplot of the data
-(ggplot(USArrests_py,
+p = (ggplot(USArrests_py,
          aes(x = "assault",
              y = "murder")) +
      geom_point())
+
+p.show()
 ```
 :::
 
@@ -366,12 +368,14 @@ ggplot(USArrests,
 
 ```{python}
 #| results: hide
-(ggplot(USArrests_py,
+p = (ggplot(USArrests_py,
         aes(x = "assault", y = "murder")) +
      geom_point() +
      geom_smooth(method = "lm",
                  se = False,
                  colour = "blue"))
+
+p.show()
 ```
 :::
 
@@ -430,12 +434,14 @@ Next, we visualise the `murder` variable against the `life_exp` variable. We als
 
 ```{python}
 #| results: hide
-(ggplot(USAstate_py,
+p = (ggplot(USAstate_py,
         aes(x = "life_exp", y = "murder")) +
      geom_point() +
      geom_smooth(method = "lm",
                  se = False,
                  colour = "blue"))
+
+p.show()
 ```
 
 :::
@@ -546,7 +552,7 @@ ggplot(USAstate,
 
 ```{python}
 #| results: hide
-(ggplot(USAstate_py,
+p = (ggplot(USAstate_py,
         aes(x = "hs_grad", y = "frost")) +
      geom_point() +
      geom_smooth(method = "lm",

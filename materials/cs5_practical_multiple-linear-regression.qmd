@@ -210,9 +210,11 @@ It's the `pm2_5` response variable we're interested in here. Let's start by chec
 
 ```{python}
 #| results: hide
-(ggplot(pm2_5_py, aes(x = "location", y = "pm2_5")) +
+p = (ggplot(pm2_5_py, aes(x = "location", y = "pm2_5")) +
     geom_boxplot() +
     geom_jitter(width = 0.1, alpha = 0.7))
+
+p.show()
 ```
 
 I've added the (jittered) data to the plot, with some transparency (`alpha = 0.7`). It's always good to look at the actual data and not just summary statistics (which is what the box plot is).
@@ -227,12 +229,13 @@ I'll just tell you that there is not much of a correlation between `pm2_5` and `
 
 ```{python}
 #| results: hide
-(ggplot(pm2_5_py,
+p = (ggplot(pm2_5_py,
         aes(x = "wind_m_s",
             y = "pm2_5",
             colour = "location")) +
      geom_point())
 
+p.show()
 ```
 
 This seems to show that there might be some linear relationship between PM2.5 levels and wind speed.
@@ -438,11 +441,13 @@ It'd be useful to visualise the model. We can take the model and extract the fit
 
 ```{python}
 #| results: hide
-(ggplot(pm2_5_py, aes(x = "wind_m_s",
+p = (ggplot(pm2_5_py, aes(x = "wind_m_s",
                      y = "pm2_5",
                      colour = "location")) +
     geom_point() +
     geom_smooth(aes(y = lm_pm2_5_red_py.fittedvalues)))
+
+p.show()
 ```
 
 :::
@@ -505,11 +510,13 @@ We can visualise this as follows:
 
 ```{python}
 #| results: hide
-(ggplot(pm2_5_py, aes(x = "wind_m_s",
+p = (ggplot(pm2_5_py, aes(x = "wind_m_s",
                       y = "pm2_5",
                       colour = "location")) +
     geom_point() +
     geom_smooth(aes(y = lm_pm2_5_add_py.fittedvalues)))
+
+p.show()
 ```
 
 Next, we extract the coefficient estimates:
@@ -585,10 +592,12 @@ We can visualise this as follows:
 
 ```{python}
 #| results: hide
-(ggplot(pm2_5_py, aes(x = "wind_m_s",
+p = (ggplot(pm2_5_py, aes(x = "wind_m_s",
                       y = "pm2_5")) +
     geom_point() +
     geom_smooth(aes(y = lm_pm2_5_wind_py.fittedvalues), colour = "blue"))
+
+p.show()
 ```
 
 ::: {.callout-tip collapse="true"}
@@ -596,9 +605,11 @@ We can visualise this as follows:
 
 ```{python}
 #| results: hide
-(ggplot(pm2_5_py, aes(x = "wind_m_s", y = "pm2_5")) +
+p = (ggplot(pm2_5_py, aes(x = "wind_m_s", y = "pm2_5")) +
     geom_point() +
     geom_smooth(method = "lm", se = False, colour = "blue"))
+
+p.show()
 ```
 :::
 
@@ -680,10 +691,12 @@ We can visualise this as follows:
 
 ```{python}
 #| results: hide
-(ggplot(pm2_5_py, aes(x = "location",
+p = (ggplot(pm2_5_py, aes(x = "location",
                      y = "pm2_5")) +
     geom_jitter(alpha = 0.3, width = 0.1) +
     geom_point(aes(y = lm_pm2_5_loc_py.fittedvalues), colour = "blue", size = 3))
+
+p.show()
 ```
 
 OK, what's going on here? I've plotted the `fittedvalues` (the values predicted by the model) in blue and overlaid the original (with a little bit of jitter to avoid overplotting). However, there are only two predicted values!
