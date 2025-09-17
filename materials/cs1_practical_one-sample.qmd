@@ -219,10 +219,12 @@ From the `describe()` output we can see that the mean and median of the `length`
 
 ```{python}
 #| results: hide
-(ggplot(fishlength_py,
-        aes(x = 'river',
-            y = 'length')) +
+p = (ggplot(fishlength_py,
+        aes(x = "river",
+            y = "length")) +
      geom_boxplot())
+
+p.show()
 ```
 :::
 
@@ -270,9 +272,11 @@ ggplot(fishlengthDF,
 
 ```{python}
 #| results: hide
-(ggplot(fishlength_py,
+p = (ggplot(fishlength_py,
         aes(x = "length")) +
      geom_histogram(bins = 15))
+
+p.show()
 ```
 :::
 
@@ -300,10 +304,12 @@ ggplot(fishlengthDF,
 
 ```{python}
 #| results: hide
-(ggplot(fishlength_py,
+p = (ggplot(fishlength_py,
         aes(sample = "length")) +
      stat_qq() +
      stat_qq_line(colour = "blue"))
+
+p.show()
 ```
 :::
 
@@ -604,17 +610,21 @@ median_fishlength = fishlength_py.length.median()
 ```{python}
 #| results: hide
 # create a histogram
-(ggplot(fishlength_py,
+p = (ggplot(fishlength_py,
         aes(x = "length")) +
      geom_histogram(bins = 10) +
      geom_vline(xintercept = median_fishlength,
                 colour = "red"))
 
+p.show()
+
 # create box plot
-(ggplot(fishlength_py,
+p = (ggplot(fishlength_py,
         aes(x = 1,
             y = "length")) +
      geom_boxplot())
+
+p.show()
 ```
 :::
 
@@ -742,18 +752,22 @@ We can look at the histogram and box plot of the data:
 ```{python}
 #| results: hide
 # create a histogram
-(ggplot(dissolving_py,
+p = (ggplot(dissolving_py,
         aes(x = "dissolving_time")) +
      geom_histogram(bins = 4))
+
+p.show()
 ```
 
 ```{python}
 #| results: hide
 # create a box plot
-(ggplot(dissolving_py,
+p = (ggplot(dissolving_py,
         aes(x = 1,
             y = "dissolving_time")) +
      geom_boxplot())
+
+p.show()
 ```
 
 Python (or `plotnine` in particular) gets a bit cranky if you try to create a `geom_boxplot` but do not define the `x` aesthetic. Hence us putting it as `1`. The value has no numerical meaning, however.
@@ -794,10 +808,12 @@ pg.normality(dissolving_py.dissolving_time)
 
 ```{python, results='hide'}
 # Create a Q-Q plot
-(ggplot(dissolving_py,
+p = (ggplot(dissolving_py,
         aes(sample = "dissolving_time")) +
      stat_qq() +
      stat_qq_line(colour = "blue"))
+
+p.show()
 ```
 :::
 

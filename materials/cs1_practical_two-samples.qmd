@@ -212,9 +212,11 @@ Numbers might not always give you the best insight into your data, so we also vi
 
 ```{python}
 #| results: hide
-(ggplot(rivers_py,
+p = (ggplot(rivers_py,
         aes(x = "river", y = "length")) + 
      geom_boxplot())
+
+p.show()
 ```
 :::
 
@@ -552,11 +554,13 @@ ggplot(rivers,
 
 ```{python}
 #| results: hide
-(ggplot(rivers_py,
+p = (ggplot(rivers_py,
         aes(sample = "length")) +
      stat_qq() +
      stat_qq_line(colour = "red") +
      facet_wrap("river"))
+
+p.show()
 ```
 :::
 :::
@@ -638,9 +642,11 @@ and visualise the data:
 
 ```{python}
 #| results: hide
-(ggplot(turtle_py,
+p = (ggplot(turtle_py,
         aes(x = "sex", y = "serum")) +
      geom_boxplot())
+
+p.show()
 ```
 :::
 
@@ -709,11 +715,13 @@ ggplot(turtle,
 ```{python}
 #| results: hide
 # create Q-Q plots for both groups
-(ggplot(turtle_py,
+p = (ggplot(turtle_py,
         aes(sample = "serum")) +
      stat_qq() +
      stat_qq_line(colour = "red") +
      facet_wrap("sex"))
+
+p.show()
 ```
 :::
 

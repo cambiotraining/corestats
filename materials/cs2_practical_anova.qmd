@@ -226,10 +226,12 @@ Finally, we plot the data:
 ```{python}
 #| results: hide
 # plot the data
-(ggplot(oystercatcher_py,
+p = (ggplot(oystercatcher_py,
         aes(x = "site",
             y = "feeding")) +
      geom_boxplot())
+
+p.show()
 ```
 :::
 
@@ -586,10 +588,12 @@ tukey_py.head()
 ```{python}
 #| results: hide
 # plot the data
-(ggplot(tukey_py,
+p = (ggplot(tukey_py,
         aes(x = "group",
             y = "response")) +
      geom_boxplot())
+
+p.show()
 ```
 
 :::
@@ -748,10 +752,12 @@ Next, we visualise the data:
 
 ```{python}
 #| results: hide
-(ggplot(lobsters_py,
+p = (ggplot(lobsters_py,
         aes(x = "diet",
             y = "weight")) +
      geom_boxplot())
+
+p.show()
 ```
 
 :::
@@ -898,10 +904,12 @@ This on the other hand says that everything is fine. Let's look at Q-Q plot.
 ```{python}
 #| results: hide
 # Q-Q plots
-(ggplot(lobsters_py,
+p = (ggplot(lobsters_py,
         aes(sample = "weight")) +
      stat_qq() +
      stat_qq_line(colour = "red"))
+
+p.show()
 ```
 
 The Q-Q plot looks OK, not perfect, but more than good enough for us to have confidence in the normality of the data.

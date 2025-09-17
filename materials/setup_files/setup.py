@@ -6,5 +6,6 @@ from scipy import stats
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 import scikit_posthocs as sp
+#from dgplots import *
 exec(open('setup_files/dgplots.py').read())
 theme_set(theme_bw())
