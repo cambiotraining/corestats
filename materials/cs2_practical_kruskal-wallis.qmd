@@ -296,7 +296,7 @@ The `dunn_test()` function performs a Kruskal-Wallis test on the data, followed 
 
 The comparison between the pairs of groups is reported in the table at the bottom. Each row contains a single comparison. We are interested in the `p` and `p.adj` columns, which contain the the p-values that we want. This table shows that there isn't a significant difference between the high and low groups, as the p-value (0.1598) is too high. The other two comparisons between the high familiarity and no familiarity groups and between the low and no groups are significant though.
 
-The `dunn_test()` function has several arguments, of which the `p.adjust.method` is likely to be of interest. Here you can define which method needs to be used to account for multiple comparisons. The default is `"none"`. We'll cover more about this in the chapter on [Power analysis](#cs6-intro).
+The `dunn_test()` function has several arguments, of which the `p.adjust.method` is likely to be of interest. Here you can define which method needs to be used to account for multiple comparisons. The default is `"holm"`. We'll cover more about this in the chapter on [Power analysis](#cs6-intro).
 
 ## Python
 Unfortunately `pingouin` does not seem to have function that can perform Dunn's test, so we need to import this from elsewhere.
