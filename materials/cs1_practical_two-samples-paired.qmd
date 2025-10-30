@@ -39,6 +39,8 @@ exec(open('setup_files/setup.py').read())
 
 A paired t-test is used when we have two samples of continuous data that can be paired (examples of these sort of data would be weights of individuals before and after a diet). This test is applicable if the number of paired points within the samples is large (\>30) or, if the number of points is small, then this test also works when the parent distributions are normally distributed.
 
+There is the assumption that each pair within the data is independent of each other.
+
 ## Libraries and functions
 
 ::: {.callout-note collapse="true"}
@@ -121,7 +123,7 @@ We use a two-sample, two-tailed paired t-test to see if we can reject the null h
 -   We use a **two-sample** test because we now have two samples
 -   We use a **two-tailed** t-test because we want to know if our data suggest that the true (population) means are different from one another rather than that one mean is specifically bigger or smaller than the other
 -   We use a **paired** test because each data point in the first sample can be linked to another data point in the second sample by a connecting factor
--   We're using a **t-test** because we're assuming that the parent populations are normal and have equal variance (We'll check this in a bit)
+-   We're using a **t-test** because we assume that the underlying population is normally distributed (We'll check this in a bit)
 
 The data are stored in a tidy format in the file `data/CS1-twopaired.csv`.
 
@@ -340,8 +342,6 @@ Since the p-value = 5.29 $\times$ 10<sup>-5</sup>) and thus substantially less t
 
 The example above assumes that the paired data come from parent distributions that are normal. As we've seen before, we may have data where we can't rely on that assumption. Fortunately, there is very little that we need to change in our approach if we want to analyse paired data that violate the assumption of normality.
 
-As with the non-normal two-sample data, there is the underlying assumption that the parent distributions of the samples are comparable in shape and variance.
-
 ### Data and hypotheses
 
 Using the `cortisol` data from before we form the following null and alternative hypotheses:
@@ -482,7 +482,7 @@ Do these results provide any evidence to suggest that fore- and hind-leg length 
 1.  Write down the null and alternative hypotheses
 2.  Import the data from `data/CS1-deer.csv`
 3.  Summarise and visualise the data
-4.  Check your assumptions (normality and variance) using appropriate tests
+4.  Check normality
 5.  Discuss with your (virtual) neighbour which test is most appropriate?
 6.  Perform the test
 7.  Write down a sentence that summarises the results that you have found
@@ -725,9 +725,8 @@ As Jeremy Clarkson [would put it](https://www.quotes.net/mquote/941330):
 ::: {.callout-tip}
 #### Key points
 
--   Paired t-tests are used when you have two paired samples of continuous data, which are normally distributed and have equal variance
+-   Paired t-tests are used when you have two paired samples of continuous data, which are normally distributed
 -   A good way of assessing the assumption of normality is by checking the data against a Q-Q plot
-- We can check equality of variance (homoscedasticity) with Bartlett's (normal data) or Levene's (non-normal data) test
--   The Wilcoxon signed rank test is used when you have two paired samples of continuous data, which are not normally distributed (but have comparable distributional shapes), and have equal variance.
+-   The Wilcoxon signed rank test is used when you have two paired samples of continuous data, which are not normally distributed.
 :::
 
