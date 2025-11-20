@@ -1,7 +1,7 @@
 ---
 title: "Two-way ANOVA"
 ---
-
+ 
 ```{r}
 #| echo: false
 #| message: false
@@ -85,6 +85,9 @@ import statsmodels.api as sm
 
 # Convenience interface for specifying models using formula strings and DataFrames
 import statsmodels.formula.api as smf
+
+# Custom Python script for diagnostic plots, load from base working directory
+import dgplots
 ```
 
 ### Functions
@@ -98,7 +101,7 @@ pandas.DataFrame.describe()
 pandas.DataFrame.head()
 
 # Reads in a .csv file
-pandas.read_csv()
+pandas.DataFrame.read_csv()
 
 # Creates a model from a formula and data frame
 statsmodels.formula.api.ols()
@@ -380,6 +383,7 @@ Again, we will check these assumptions visually by producing four key diagnostic
 
 ```{r}
 #| message: false
+#| warning: false
 resid_panel(lm_exercise,
             plots = c("resid", "qq", "ls", "cookd"),
             smoother = TRUE)
@@ -549,6 +553,7 @@ Next, we check the assumptions:
 
 ```{r}
 #| message: false
+#| warning: false
 resid_panel(lm_auxin,
             plots = c("resid", "qq", "ls", "cookd"),
             smoother = TRUE)
@@ -771,7 +776,9 @@ lm_tulip <- lm(blooms ~ water * shade,
 
 Next, we check the assumptions:
 
-```{r, message=FALSE}
+```{r}
+#| message: false
+#| warning: false
 resid_panel(lm_tulip,
             plots = c("resid", "qq", "ls", "cookd"),
             smoother = TRUE)

@@ -1,7 +1,7 @@
 ---
 title: "Kruskal-Wallis"
 ---
-
+ 
 ```{r}
 #| echo: false
 #| message: false
@@ -105,11 +105,8 @@ pandas.DataFrame.describe()
 # Plots the first few rows of a DataFrame
 pandas.DataFrame.head()
 
-# Query the columns of a DataFrame with a boolean expression
-#pandas.DataFrame.query()
-
 # Reads in a .csv file
-pandas.read_csv
+pandas.DataFrame.read_csv()
 
 # Performs an analysis of variance
 #pingouin.anova()

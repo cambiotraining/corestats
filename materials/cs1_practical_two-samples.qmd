@@ -1,7 +1,7 @@
 ---
 title: "Two-sample data"
 ---
-
+ 
 ```{r}
 #| echo: false
 #| message: false
@@ -89,26 +89,58 @@ ggplot2::stat_qq_line()
 
 ## Python
 
-| Libraries  | Description                                                              |
-|:---------------------|:-------------------------------------------------|
-| `plotnine` | The Python equivalent of `ggplot2`.                                      |
-| `pandas`   | A Python data analysis and manipulation tool.                            |
-| `pingouin` | A Python module developed to have simple yet exhaustive stats functions. |
+### Libraries
 
-| Functions                                                                                                                      | Description                                                 |
-|:-----------------------------------|:-----------------------------------|
-| `pandas.DataFrame.read_csv`                                                                                                    | Reads in a `.csv` file                                      |
-| `pandas.DataFrame.head()`                                                                                                      | Plots the first few rows                                    |
-| `pandas.DataFrame.describe()`                                                                                                  | Gives summary statistics                                    |
-| `pandas.DataFrame.groupby()`                                                                                                   | Group DataFrame using a mapper or by a Series of columns    |
-| `pandas.DataFrame.pivot()`                                                              | Return reshaped DataFrame organised by given index / column values. |
-| `pandas.DataFrame.query()`                                                                                                     | Query the columns of a DataFrame with a boolean expression  |
-| [`pingouin.normality()`](https://pingouin-stats.org/generated/pingouin.normality.html)                                         | Performs the Shapiro-Wilk test for normality.               |
-| [`pingouin.homoscedasticity()`](https://pingouin-stats.org/generated/pingouin.homoscedasticity.html#pingouin.homoscedasticity) | Checks for equality of variance.                            |
-| [`pingouin.ttest()`](https://pingouin-stats.org/generated/pingouin.ttest.html#pingouin.ttest)                                  | Performs a t-test                                           |
-| [`pingouin.mwu()`](https://pingouin-stats.org/generated/pingouin.mwu.html#pingouin.mwu) | Performs the Mann-Whitney U test.                                   |
-| `plotnine.stats.stat_qq()`                                                                                                     | Plots a Q-Q plot for comparison with a normal distribution. |
-| `plotnine.stats.stat_qq_line()`                                                                                                | Adds a comparison line to the Q-Q plot.                     |
+```{python}
+#| eval: false
+# A Python data analysis and manipulation tool
+import pandas as pd
+
+# Simple yet exhaustive stats functions.
+import pingouin as pg
+
+# Python equivalent of `ggplot2`
+from plotnine import *
+```
+
+### Functions
+
+```{python}
+#| eval: false
+# Summary statistics
+pandas.DataFrame.describe()
+
+# Plots the first few rows of a DataFrame
+pandas.DataFrame.head()
+
+# Query the columns of a DataFrame with a boolean expression
+pandas.DataFrame.query()
+
+# Reads in a .csv file
+pandas.DataFrame.read_csv()
+
+# Performs an analysis of variance
+pingouin.anova()
+
+# Tests for equality of variance
+pingouin.homoscedasticity()
+
+# Performs a Mann-Whitney U test
+pingouin.mwu()
+
+# Performs the Shapiro-Wilk test for normality
+pingouin.normality()
+
+# Performs a t-test
+pingouin.ttest()
+
+# Plots a Q-Q plot for comparison with a normal distribution
+plotnine.stats.stat_qq()
+
+# Adds a comparison line to the Q-Q plot
+plotnine.stats.stat_qq_line()
+```
+
 :::
 :::
 

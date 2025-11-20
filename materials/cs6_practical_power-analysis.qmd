@@ -1,7 +1,7 @@
 ---
 title: "Power analysis"
 ---
-
+ 
 ```{r}
 #| echo: false
 #| message: false
@@ -64,16 +64,45 @@ library(rstatix)
 
 ### Libraries
 
+```{python}
+#| eval: false
+# A fundamental package for scientific computing in Python
+import numpy as np
+
+# A Python data analysis and manipulation tool
+import pandas as pd
+
+# Simple yet exhaustive stats functions.
+import pingouin as pg
+
+# Python equivalent of `ggplot2`
+from plotnine import *
+
+# Statistical models, conducting tests and statistical data exploration
+import statsmodels.api as sm
+
+# Convenience interface for specifying models using formula strings and DataFrames
+import statsmodels.formula.api as smf
+
+# Custom Python script for diagnostic plots, load from base working directory
+import dgplots
+
+# Custom Python script for power calculations, load from base working directory
+import pwr_f2_test
+```
+
 ### Functions
 
 ```{python}
 #| eval: false
+# Custom function to create diagnostic plots
+dgplots()
 
 # Custom function to perform power calculations
 pwr_f2_test()
 ```
 
-Note: you can download the `pwr_f2_test` script [here](scripts/pwr_f2_test.py). 
+Note: you can download the `pwr_f2_test` script [here](scripts/pwr_f2_test.py) and the `dgplots` script [here](scripts/dgplots.py).
 :::
 :::
 
@@ -231,23 +260,23 @@ The other four arguments are what is used in the power analysis:
 
 ## Python
 
-We do this with the `power_ttest()` function from `pingouin`:
+We do this with the `TTestIndPower()` function from `statsmodels.stats.power`:
 
 ```{python}
-pg.power_ttest(d = 0.5,
-               alpha = 0.05,
-               power = 0.80)
+from statsmodels.stats.power import TTestIndPower
+
+pwr = TTestIndPower()
+
+pwr.solve_power(effect_size = 0.5,
+                            alpha = 0.05,
+                            power = 0.8)
 ```
 
 The output `n = 63.76` tells that we need 64 (rounding up) students in each group (so 128 in total) in order to carry out this study with sufficient power.
 
-The `power_ttest()` function has six arguments. Two of them specify what sort of t-test you’ll be carrying out
-* `contrast`; which describes the type of t-test you will eventually be carrying out (one of `one-sample`, `two-samples` or `paired`), and
-* `alternative`; which describes the type of alternative hypothesis you want to test. These can be `"two-sided"` (default), `"greater"` or `"less"`
+The `TTestIndPower()` function uses the four arguments that are are used in the power analysis:
 
-The other four arguments are what is used in the power analysis:
-
-* `d`; this is the effect size, a single number calculated using Cohen’s d statistic.
+* `effect_size`; this is the effect size, a single number calculated using Cohen’s d statistic.
 * `alpha`; this is the significance level (default is `0.05`)
 * `power`; is the power
 * `n`; this is the number of observations per sample.
@@ -274,16 +303,21 @@ pwr.t.test(n = 30, sig.level = 0.05, power = 0.8,
 ## Python
 
 ```{python}
-pg.power_ttest(n = 30,
-               alpha = 0.05,
-               power = 0.80,
-               contrast = "two-samples",
-               alternative = "two-sided")
+pwr = TTestIndPower()
+
+pwr.solve_power(
+    effect_size = None, # solving for d
+    nobs1 = 30,         # sample size per group
+    alpha = 0.05,
+    power = 0.80,
+    alternative = "two-sided"
+)
+
 ```
 
 :::
 
-This time we want to see what the effect size is so we look at the second line and we can see that an experiment with this many people would only be expected to detect a difference in means of `d = 0.74` standard deviations. Is this good or bad? Well, it depends on the natural variation of your data; if your data is really noisy then it will have a large variation and a large standard deviation which will mean that 0.74 standard deviations might actually be quite a big difference between your groups. If on the other hand your data doesn’t vary very much, then 0.74 standard deviations might actually be a really small number and this test could pick up even quite small differences in mean.
+We get the effect size and we can see that an experiment with this many people would only be expected to detect a difference in means of `d = 0.74` standard deviations. Is this good or bad? Well, it depends on the natural variation of your data; if your data is really noisy then it will have a large variation and a large standard deviation which will mean that 0.74 standard deviations might actually be quite a big difference between your groups. If on the other hand your data doesn’t vary very much, then 0.74 standard deviations might actually be a really small number and this test could pick up even quite small differences in mean.
 
 ## Power analysis on data
 
@@ -388,13 +422,15 @@ So, the Cohen's d value for these data are d = `r round(fishlength %>% cohens_d(
 We can now actually answer our question and see how many fish we really need to catch in the future:
 
 ```{python}
-pg.power_ttest(d = 0.94,
-               alpha = 0.05,
-               power = 0.80,
-               contrast = "two-samples",
-               alternative = "two-sided")
-```
+pwr = TTestIndPower()
 
+pwr.solve_power(
+    effect_size = 0.94,
+    alpha = 0.05,
+    power = 0.80,
+    alternative = "two-sided"
+)
+```
 :::
 
 From this we can see that any future experiments would really only need to use 19 fish for each group (we always round this number up, so no fish will be harmed during the experiment...) if we wanted to be confident of detecting the difference we observed in the previous study.
@@ -494,7 +530,9 @@ R2 <- summary(lm_lobster) %>%
     pull(r.squared)
 
 # calculate Cohen's f2
-R2 / (1 - R2)
+f2 <- R2 / (1 - R2)
+
+f2
 ```
 
 So now we've got Cohen's $f^2$. 
@@ -531,10 +569,11 @@ summary(lm_lobster)
 
 So, we now want to run a power analysis for this linear model, using the following information:
 
-* power = 0.8
-* significance = 0.05
-* effect size = 0.219
-* numerator DF = 2
+* power = `0.8`
+* significance = `0.05`
+* effect size = `r round(f2, 3)`
+* numerator DF = `r round(summary(lm_lobster)$fstatistic[2])`
+
 
 We can feed this into the `pwr.f2.test()` function, where we use
 
@@ -616,6 +655,10 @@ b. Use the results of this analysis to estimate the effect size.
 c. Work out how big a sample size would be required to detect an effect this big with power 0.8 and significance 0.05.
 d. How would the sample size change if we wanted 0.9 power and significance 0.01?
 
+:::{.callout-hint}
+In Python `statsmodels` uses `TTestPower` for one-sample and paired tests.
+:::
+
 ::: {.callout-answer collapse="true"}
 ## Answer
 ::: {.panel-tabset group="language"}
@@ -696,12 +739,19 @@ pwr.t.test(d = -0.6590669, sig.level = 0.05, power = 0.8,
 
 ## Python
 
+In Python `statsmodels` uses `TTestPower` for one-sample and paired tests.
+
 ```{python}
-pg.power_ttest(d = -0.6590669,
-               alpha = 0.05,
-               power = 0.80,
-               contrast = "one-sample",
-               alternative = "two-sided")
+from statsmodels.stats.power import TTestPower
+
+pwr = TTestPower()
+
+pwr.solve_power(
+    effect_size = abs(-0.6590669),  # use magnitude of d
+    alpha = 0.05,
+    power = 0.80,
+    alternative = "two-sided"
+)
 ```
 :::
 
@@ -718,11 +768,15 @@ pwr.t.test(d = -0.6590669, sig.level = 0.01, power = 0.9,
 ## Python
 
 ```{python}
-pg.power_ttest(d = -0.6590669,
-               alpha = 0.01,
-               power = 0.80,
-               contrast = "one-sample",
-               alternative = "two-sided")
+pwr = TTestPower()
+
+pwr.solve_power(
+    effect_size = abs(-0.6590669),  # magnitude of d; sign is irrelevant
+    alpha = 0.01,
+    power = 0.80,
+    alternative = "two-sided"
+)
+
 ```
 :::
 
@@ -776,11 +830,17 @@ pwr.t.test(n = 20, sig.level = 0.05, power = 0.8,
 ## Python
 
 ```{python}
-pg.power_ttest(n = 20,
-               alpha = 0.05,
-               power = 0.80,
-               contrast = "paired",
-               alternative = "two-sided")
+from statsmodels.stats.power import TTestPower
+
+pwr = TTestPower()
+
+pwr.solve_power(
+    effect_size = None,     # solve for d
+    nobs = 20,              # paired → one-sample → nobs = number of pairs
+    alpha = 0.05,
+    power = 0.80,
+    alternative = "two-sided"
+)
 ```
 :::
 
@@ -810,9 +870,30 @@ cortisol_wide_py.head()
 ```{python}
 pg.compute_effsize(x = cortisol_wide_py.evening,
                    y = cortisol_wide_py.morning,
-                   paired = False,
+                   paired = True,
                    eftype = "cohen")
 ```
+
+Annoyingly, this gives us a different effect size than we would have gotten in R. This is because `pingouin.compute_effsize()` does not use the standard deviation of the difference scores (between evening and morning), but instead uses the standard deviation of the pooled measurements - even when the option `paired = True` is set.
+
+However, we're not interested in the overall difference, we're interested in the differences on a patient-by-patient basis.
+
+So, we need to calculate these differences and then calculate the effect size by hand:
+
+
+```{python}
+diff = cortisol_wide_py["evening"] - cortisol_wide_py["morning"]
+
+dz = diff.mean() / diff.std(ddof = 1)
+
+dz
+```
+
+Here we have the following:
+
+* `diff` is the vector of within-person differences (e.g., evening − morning for each participant).
+* `diff.mean()` gives the average change across individuals.
+* `diff.std(ddof = 1)` gives the standard deviation of those changes, i.e., how much individuals vary in their change.
 
 :::
 
@@ -826,21 +907,25 @@ pwr.t.test(d = -1.159019, sig.level = 0.01, power = 0.8,
            type = "paired")
 ```
 
-So we would have only needed 13 pairs of participants in this study given the size of effect we were trying to detect.
-
 ## Python
 
 ```{python}
-pg.power_ttest(d = -1.434359,
-               alpha = 0.01,
-               power = 0.80,
-               contrast = "paired",
-               alternative = "two-sided")
+from statsmodels.stats.power import TTestPower
+
+pwr = TTestPower()
+
+pwr.solve_power(
+    effect_size = abs(-1.159019),   # magnitude of dz
+    alpha = 0.01,
+    power = 0.80,
+    alternative="two-sided"
+)
 ```
 
-So we would have only needed 10 pairs of participants in this study given the size of effect we were trying to detect.
-
 :::
+
+So we would have only needed 13 pairs of participants in this study given the size of effect we were trying to detect.
+
 :::
 :::
 
@@ -1113,9 +1198,16 @@ from scipy.stats import f
 from scipy.special import ncfdtr
 ```
 
-Next, we load the `pwr_f2_test()` function (here I've saved it in `scripts/pwr_f2_test.py`):
+Next, we load the `pwr_f2_test()` function:
 
 ```{python}
+#| eval: false
+import pwr_f2_test
+```
+
+
+```{python}
+#| echo: false
 exec(open('scripts/pwr_f2_test.py').read())
 ```
 
@@ -1129,7 +1221,7 @@ f2 = R2 / (1 - R2)
 pwr_f2_test(u = 1, f2 = f2, sig_level = 0.05 , power = 0.9)
 ```
 
-So we see that the number of observations we need is 11495!
+So we see that the number of observations we need is 11496!
 :::
 :::
 :::

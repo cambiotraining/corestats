@@ -1,7 +1,7 @@
 ---
 title: "Linear regression"
 ---
-
+ 
 ```{r}
 #| echo: false
 #| message: false
@@ -89,6 +89,9 @@ import statsmodels.api as sm
 
 # Convenience interface for specifying models using formula strings and DataFrames
 import statsmodels.formula.api as smf
+
+# Custom Python script for diagnostic plots, load from base working directory
+import dgplots
 ```
 
 ### Functions
@@ -105,7 +108,7 @@ pandas.DataFrame.head()
 pandas.DataFrame.query()
 
 # Reads in a .csv file
-pandas.read_csv()
+pandas.DataFrame.read_csv()
 
 # Creates a model from a formula and data frame
 statsmodels.formula.api.ols()
@@ -222,6 +225,7 @@ Next, we can create diagnostic plots for the model:
 
 ```{r}
 #| message: false
+#| warning: false
 resid_panel(lm_1,
             plots = c("resid", "qq", "ls", "cookd"),
             smoother = TRUE)
@@ -461,6 +465,7 @@ Now, let's check the assumptions with the diagnostic plots.
 
 ```{r}
 #| message: false
+#| warning: false
 # create a linear model
 lm_murder <- lm(life_exp ~ murder,
            data = USAstate)
@@ -576,6 +581,7 @@ Now, let's check the assumptions with the diagnostic plots.
 
 ```{r}
 #| message: false
+#| warning: false
 # create a linear model
 lm_frost <- lm(hs_grad ~ frost,
                data = USAstate)

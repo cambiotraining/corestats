@@ -1,7 +1,7 @@
 ---
 title: "ANOVA"
 ---
-
+ 
 ```{r}
 #| echo: false
 #| message: false
@@ -102,6 +102,9 @@ import statsmodels.api as sm
 
 # Convenience interface for specifying models using formula strings and DataFrames
 import statsmodels.formula.api as smf
+
+# Custom Python script for diagnostic plots, load from base working directory
+import dgplots
 ```
 
 ### Functions
@@ -423,6 +426,7 @@ Let's create the diagnostic plots we're interested in using `ggResidPanel`. It t
 
 ```{r}
 #| message: false
+#| warning: false
 resid_panel(lm_oystercatcher,
             plots = c("resid", "qq", "ls", "cookd"),
             smoother = TRUE)
@@ -827,6 +831,8 @@ resid_lobsters %>%
 This on the other hand says that everything is fine. Let's look at Q-Q plot.
 
 ```{r}
+#| message: false
+#| warning: false
 # Q-Q plots
 resid_panel(lm_lobsters,
             plots = "qq")
@@ -844,6 +850,7 @@ We'll consider the Bartlett test and we'll look at some diagnostic plots too.
 
 ```{r}
 #| message: false
+#| warning: false
 # perform Bartlett's test
 bartlett.test(weight ~ diet,
               data = lobsters)

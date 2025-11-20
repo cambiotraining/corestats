@@ -1,7 +1,7 @@
 ---
 title: "Multiple linear regression"
 ---
-
+ 
 ```{r}
 #| echo: false
 #| message: false
@@ -12,27 +12,27 @@ source(file = "setup_files/setup.R")
 ```{python}
 #| echo: false
 #| message: false
-import shutup;shutup.please()
+import shutup;shutup.please() 
 exec(open('setup_files/setup.py').read())
 ```
 
-::: {.callout-tip}
+::: callout-tip
 #### Learning outcomes
 
 **Questions**
 
-- How do I use the linear model framework with three predictor variables?
+-   How do I use the linear model framework with three predictor variables?
 
 **Objectives**
 
-- Be able to expand the linear model framework with three predictor variables
-- Define the equation for the line of best fit for each categorical variable
-- Be able to construct and analyse any possible combination of predictor variables in the data
+-   Be able to expand the linear model framework with three predictor variables
+-   Define the equation for the line of best fit for each categorical variable
+-   Be able to construct and analyse any possible combination of predictor variables in the data
 :::
 
 ## Libraries and functions
 
-::: {.callout-note collapse="true"}
+:::: {.callout-note collapse="true"}
 ## Click to expand
 
 ::: {.panel-tabset group="language"}
@@ -96,6 +96,9 @@ import statsmodels.api as sm
 
 # Convenience interface for specifying models using formula strings and DataFrames
 import statsmodels.formula.api as smf
+
+# Custom Python script for diagnostic plots, load from base working directory
+import dgplots
 ```
 
 ### Functions
@@ -103,7 +106,7 @@ import statsmodels.formula.api as smf
 ```{python}
 #| eval: false
 # Reads in a .csv file
-pandas.read_csv()
+pandas.DataFrame.read_csv()
 
 # Creates a model from a formula and data frame
 statsmodels.formula.api.ols()
@@ -113,11 +116,11 @@ dgplots()
 ```
 
 Note: you can download the `dgplots` script [here](scripts/dgplots.py).
-
 :::
-:::
+::::
 
 ## Purpose and aim
+
 Revisiting the linear model framework and expanding to systems with three predictor variables.
 
 ## Data and hypotheses
@@ -128,14 +131,14 @@ Note: some of the variables are based on simulations.
 
 It contains the following variables:
 
-| variable | explanation |
-|:--|:--|
-| `avg_temp`| average daily temperature ($^\circ C$)|
-| `date`| date of record|
-| `location`| location in London (`inner` or `outer`) |
-| `pm2_5`| concentration of PM2.5 ($\mu g / m^3$)|
-| `rain_mm`| daily rainfall in mm (same across both locations)|
-| `wind_m_s`| wind speed in $m/s$|
+| variable   | explanation                                       |
+|:-----------|:--------------------------------------------------|
+| `avg_temp` | average daily temperature ($^\circ C$)            |
+| `date`     | date of record                                    |
+| `location` | location in London (`inner` or `outer`)           |
+| `pm2_5`    | concentration of PM2.5 ($\mu g / m^3$)            |
+| `rain_mm`  | daily rainfall in mm (same across both locations) |
+| `wind_m_s` | wind speed in $m/s$                               |
 
 ## Summarise and visualise
 
@@ -255,7 +258,7 @@ This confirms what we saw in the plots, there aren't any very strong correlation
 
 From our initial observations we derived that there might be some relationship between PM2.5 levels and wind speed. We also noticed that this is likely to be different between inner and outer London.
 
-If we would want to test for _every_ variable and interaction, then we would end up with a rather huge model, which would even include 3-way and a 4-way interaction! To illustrate the point that the process of model testing applies to as many variables as you like, we're adding the `avg_temp` and `rain_mm` variables to our model.
+If we would want to test for *every* variable and interaction, then we would end up with a rather huge model, which would even include 3-way and a 4-way interaction! To illustrate the point that the process of model testing applies to as many variables as you like, we're adding the `avg_temp` and `rain_mm` variables to our model.
 
 So in this case we create a model that takes into account all of the main effects (`avg_temp`, `location`, `rain_mm`, `wind_m_s`). We also include a potential two-way interaction (`location:wind_m_s`). The two-way interaction may be of interest since the PM2.5 levels in response to wind speed seem to differ between the two locations.
 
@@ -265,7 +268,7 @@ Our model is then as follows:
 
 So let's define and explore it!
 
-::: {.panel-tabset group="language"}
+:::: {.panel-tabset group="language"}
 ## R
 
 We write the model as follows:
@@ -283,8 +286,7 @@ Let's look at the coefficients:
 lm_pm2_5_full
 ```
 
-:::{.callout-tip collapse=true}
-
+::: {.callout-tip collapse="true"}
 ## Extracting coefficients with `tidy()`
 
 This will give us quite a few coefficients, so instead of just calling the `lm` object, I'm restructuring the output using the `tidy()` function from the `broom` package. It's installed with `tidyverse` but you have to load it separately using `library(broom)`.
@@ -332,10 +334,10 @@ which gives
 
 $PM2.5_{outer} = 16.07 + 0.01 \times avg\_temp - 0.72 \times wind\_m\_s$
 
-
 We still need to check the assumptions of the model:
 
 ```{r}
+#| warning: false
 resid_panel(lm_pm2_5_red,
             plots = c("resid", "qq", "ls", "cookd"),
             smoother = TRUE)
@@ -383,7 +385,6 @@ The p-value for the `avg_temp` is significant, whereas the `rain_mm` main effect
 
 What to do? We'll explore this in more detail in the chapter on model comparisons, but for now the most sensible option would be to redefine the model, but exclude the `rain_mm` variable. Here I have rewritten the model and named it `lm_pm2_5_red` to indicate it is a reduced model (with fewer variables than our original full model):
 
-
 ```{python}
 # create a linear model
 model = smf.ols(formula = "pm2_5 ~ avg_temp + C(location) * wind_m_s", data = pm2_5_py)
@@ -411,28 +412,10 @@ which gives
 
 $PM2.5_{outer} = 16.07 + 0.01 \times avg\_temp - 0.72 \times wind\_m\_s$
 
-
 We still need to check the assumptions of the model:
 
 ```{python}
-#| eval: false
 dgplots(lm_pm2_5_red_py)
-```
-
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_pm2_5_red_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
 ```
 
 They all look pretty good, with the only weird thing being a small empty zone of predicted values just under 16. Nothing that is getting me worried though.
@@ -449,19 +432,18 @@ p = (ggplot(pm2_5_py, aes(x = "wind_m_s",
 
 p.show()
 ```
-
-:::
+::::
 
 ## Exploring models
 
 Rather than stop here however, we will use the concept of the linear model to its full potential and show that we can construct and analyse any possible combination of predictor variables for this data set. Namely we will consider the following four extra models, where reduce the complexity to the model, step-by-step:
 
-| Model| Description|
-|:- |:- |
-|1. `pm2_5 ~ wind_m_s + location`| An additive model |
-|2. `pm2_5 ~ wind_m_s` | Equivalent to a simple linear regression |
-|3. `pm2_5 ~ location` | Equivalent to a one-way ANOVA |
-|4. `pm2_5 ~ 1` | The null model, where we have no predictors |
+| Model | Description |
+|:---|:---|
+| 1\. `pm2_5 ~ wind_m_s + location` | An additive model |
+| 2\. `pm2_5 ~ wind_m_s` | Equivalent to a simple linear regression |
+| 3\. `pm2_5 ~ location` | Equivalent to a one-way ANOVA |
+| 4\. `pm2_5 ~ 1` | The null model, where we have no predictors |
 
 ### Additive model
 
@@ -471,6 +453,7 @@ To create the additive model, we drop the interaction term (keep in mind, this i
 ## R
 
 First, we define the model:
+
 ```{r}
 lm_pm2_5_add <- lm(pm2_5 ~ avg_temp + location + wind_m_s,
                    data = pm2_5)
@@ -524,7 +507,6 @@ Next, we extract the coefficient estimates:
 ```{python}
 lm_pm2_5_add_py.params
 ```
-
 :::
 
 So our two equations would be as follows:
@@ -539,7 +521,7 @@ $PM2.5_{outer} = 14.99 + 0.016 \times avg\_temp - 0.50 \times wind\_m\_s$
 
 ### Revisiting linear regression
 
-::: {.panel-tabset group="language"}
+::::: {.panel-tabset group="language"}
 ## R
 
 First, we define the model:
@@ -618,8 +600,7 @@ Next, we extract the coefficient estimates:
 ```{python}
 lm_pm2_5_wind_py.params
 ```
-
-:::
+:::::
 
 This gives us the following equation:
 
@@ -633,6 +614,7 @@ If we're just looking at the effect of `location`, then we're essentially doing 
 ## R
 
 First, we define the model:
+
 ```{r}
 lm_pm2_5_loc <- lm(pm2_5 ~ location,
                    data = pm2_5)
@@ -722,7 +704,6 @@ lm_pm2_5_loc_py.params
 ```
 
 These values match up exactly with the predicted values for each individual location.
-
 :::
 
 This gives us the following equation:
@@ -766,21 +747,19 @@ We can just view the model parameters:
 ```{python}
 lm_pm2_5_null_py.params
 ```
-
 :::
 
 This shows us that there is just one value: `r round(lm_pm2_5_null %>% tidy() %>% pull(estimate), digits = 2)`. This is the average across all the PM2.5 values in the data set.
 
 Here we'd predict the PM2.5 values as follows:
 
-$PM2.5 = `r round(lm_pm2_5_null %>% tidy() %>% pull(estimate), digits = 2)`$ 
+$PM2.5 = `r round(lm_pm2_5_null %>% tidy() %>% pull(estimate), digits = 2)`$
 
 ## Exercises
 
 ### Trees {#sec-exr_trees}
 
-:::{.callout-exercise}
-
+::::::::::::: callout-exercise
 {{< level 2 >}}
 
 Trees: an example with only continuous variables
@@ -789,20 +768,20 @@ Use the `data/CS5-trees.csv` data set. This is a data frame with 31 observations
 
 Investigate the relationship between `volume` (as a dependent variable) and `height` and `girth` (as predictor variables).
 
-* Here all variables are continuous and so there isn’t a way of producing a 2D plot of all three variables for visualisation purposes using R’s standard plotting functions.
-* construct four linear models
-    * Assume volume depends on `height`, `girth` and an interaction between `girth` and `height`
-    * Assume `volume` depends on `height` and `girth` but that there isn’t any interaction between them.
-    * Assume `volume` only depends on `girth` (plot the result, with the regression line).
-    * Assume `volume` only depends on `height` (plot the result, with the regression line).
-* For each linear model write down the algebraic equation that the linear model produces that relates volume to the two continuous predictor variables.
-* Check the assumptions of each model. Do you have any concerns?
+-   Here all variables are continuous and so there isn’t a way of producing a 2D plot of all three variables for visualisation purposes using R’s standard plotting functions.
+-   construct four linear models
+    -   Assume volume depends on `height`, `girth` and an interaction between `girth` and `height`
+    -   Assume `volume` depends on `height` and `girth` but that there isn’t any interaction between them.
+    -   Assume `volume` only depends on `girth` (plot the result, with the regression line).
+    -   Assume `volume` only depends on `height` (plot the result, with the regression line).
+-   For each linear model write down the algebraic equation that the linear model produces that relates volume to the two continuous predictor variables.
+-   Check the assumptions of each model. Do you have any concerns?
 
 NB: For two continuous predictors, the interaction term is simply the two values multiplied together (so `girth:height` means `girth x height`)
 
-* Use the equations to calculate the predicted volume of a tree that has a diameter of 20 inches and a height of 67 feet in each case.
+-   Use the equations to calculate the predicted volume of a tree that has a diameter of 20 inches and a height of 67 feet in each case.
 
-::: {.callout-tip collapse="true"}
+::::::::::: {.callout-tip collapse="true"}
 ## Answer
 
 Let's construct the four linear models in turn.
@@ -850,7 +829,6 @@ Extract the parameters:
 ```{python}
 lm_trees_full_py.params
 ```
-
 :::
 
 We can use this output to get the following equation:
@@ -861,17 +839,18 @@ If we stick the numbers in (`girth = 20` and `height = 67`) we get the following
 
 volume = 69.40 + -1.30 $\times$ 67 + -5.86 $\times$ 20 + 0.13 $\times$ 67 $\times$ 20
 
-volume =  45.81
+volume = 45.81
 
 Here we note that the interaction term just requires us to multiple the three numbers together (we haven't looked at continuous predictors before in the examples and this exercise was included as a check to see if this whole process was making sense).
 
 If we look at the diagnostic plots for the model using the following commands we get:
 
-::: {.panel-tabset group="language"}
+::::::::: {.panel-tabset group="language"}
 ## R
 
 ```{r}
 #| message: false
+#| warning: false
 resid_panel(lm_trees_full,
             plots = c("resid", "qq", "ls", "cookd"),
             smoother = TRUE)
@@ -880,32 +859,14 @@ resid_panel(lm_trees_full,
 ## Python
 
 ```{python}
-#| eval: false
 dgplots(lm_trees_full_py)
 ```
 
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_trees_full_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
-```
-:::
-
 All assumptions are OK.
 
-* There is some suggestion of heterogeneity of variance (with the variance being lower for small and large fitted (i.e. predicted `volume`) values), but that can be attributed to there only being a small number of data points at the edges, so I'm not overly concerned.
-* Similarly, there is a suggestion of snaking in the Q-Q plot (suggesting some lack of normality) but this is mainly due to the inclusion of one data point and overall the plot looks acceptable.
-* There are no highly influential points
+-   There is some suggestion of heterogeneity of variance (with the variance being lower for small and large fitted (i.e. predicted `volume`) values), but that can be attributed to there only being a small number of data points at the edges, so I'm not overly concerned.
+-   Similarly, there is a suggestion of snaking in the Q-Q plot (suggesting some lack of normality) but this is mainly due to the inclusion of one data point and overall the plot looks acceptable.
+-   There are no highly influential points
 
 #### Additive model
 
@@ -937,7 +898,6 @@ Extract the parameters:
 ```{python}
 lm_trees_add_py.params
 ```
-
 :::
 
 We can use this output to get the following equation:
@@ -948,7 +908,7 @@ If we stick the numbers in (`girth = 20` and `height = 67`) we get the following
 
 volume = -57.99 + 0.34 $\times$ 67 + 4.71 $\times$ 20
 
-volume =  58.91
+volume = 58.91
 
 If we look at the diagnostic plots for the model using the following commands we get the following:
 
@@ -957,6 +917,7 @@ If we look at the diagnostic plots for the model using the following commands we
 
 ```{r}
 #| message: false
+#| warning: false
 resid_panel(lm_trees_add,
             plots = c("resid", "qq", "ls", "cookd"),
             smoother = TRUE)
@@ -965,34 +926,16 @@ resid_panel(lm_trees_add,
 ## Python
 
 ```{python}
-#| eval: false
 dgplots(lm_trees_add_py)
 ```
-
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_trees_add_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
-```
-
 :::
 
 This model isn't great.
 
-* There is a worrying lack of linearity exhibited in the Residuals plot suggesting that this linear model isn't appropriate.
-* Assumptions of Normality seem OK
-* Equality of variance is harder to interpret. Given the lack of linearity in the data it isn't really sensible to interpret the Location-Scale plot as it stands (since the plot is generated assuming that we've fitted a straight line through the data), but for the sake of practising interpretation we'll have a go. There is definitely suggestions of heterogeneity of variance here with a cluster of points with fitted values of around 20 having noticeably lower variance than the rest of the dataset.
-* One point is influential and if there weren't issues with the linearity of the model I would remove this point and repeat the analysis. As it stands there isn't much point.
+-   There is a worrying lack of linearity exhibited in the Residuals plot suggesting that this linear model isn't appropriate.
+-   Assumptions of Normality seem OK
+-   Equality of variance is harder to interpret. Given the lack of linearity in the data it isn't really sensible to interpret the Location-Scale plot as it stands (since the plot is generated assuming that we've fitted a straight line through the data), but for the sake of practicing interpretation we'll have a go. There is definitely suggestions of heterogeneity of variance here with a cluster of points with fitted values of around 20 having noticeably lower variance than the rest of the dataset.
+-   One point is influential and if there weren't issues with the linearity of the model I would remove this point and repeat the analysis. As it stands there isn't much point.
 
 #### Height-only model
 
@@ -1024,7 +967,6 @@ Extract the parameters:
 ```{python}
 lm_height_py.params
 ```
-
 :::
 
 We can use this output to get the following equation:
@@ -1035,7 +977,7 @@ If we stick the numbers in (`girth = 20` and `height = 67`) we get the following
 
 volume = -87.12 + 1.54 $\times$ 67
 
-volume =  16.28
+volume = 16.28
 
 If we look at the diagnostic plots for the model using the following commands we get the following:
 
@@ -1044,6 +986,7 @@ If we look at the diagnostic plots for the model using the following commands we
 
 ```{r}
 #| message: false
+#| warning: false
 resid_panel(lm_height,
             plots = c("resid", "qq", "ls", "cookd"),
             smoother = TRUE)
@@ -1052,33 +995,15 @@ resid_panel(lm_height,
 ## Python
 
 ```{python}
-#| eval: false
 dgplots(lm_height_py)
 ```
-
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_height_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
-```
-
 :::
 
 This model also isn't great.
 
-* The main issue here is the clear heterogeneity of variance. For trees with bigger volumes the data are much more spread out than for trees with smaller volumes (as can be seen clearly from the Location-Scale plot).
-* Apart from that, the assumption of Normality seems OK
-* And there aren't any hugely influential points in this model
+-   The main issue here is the clear heterogeneity of variance. For trees with bigger volumes the data are much more spread out than for trees with smaller volumes (as can be seen clearly from the Location-Scale plot).
+-   Apart from that, the assumption of Normality seems OK
+-   And there aren't any hugely influential points in this model
 
 #### Girth-only model
 
@@ -1120,7 +1045,7 @@ If we stick the numbers in (`girth = 20` and `height = 67`) we get the following
 
 volume = -36.94 + 5.07 $\times$ 20
 
-volume =  64.37
+volume = 64.37
 
 If we look at the diagnostic plots for the model using the following commands we get the following:
 
@@ -1129,6 +1054,7 @@ If we look at the diagnostic plots for the model using the following commands we
 
 ```{r}
 #| message: false
+#| warning: false
 resid_panel(lm_girth,
             plots = c("resid", "qq", "ls", "cookd"),
             smoother = TRUE)
@@ -1137,41 +1063,20 @@ resid_panel(lm_girth,
 ## Python
 
 ```{python}
-#| eval: false
 dgplots(lm_girth_py)
 ```
-
-```{python}
-#| echo: false
-# load dgplots function for knitr
-exec(open('setup_files/dgplots_knitr.py').read())
-# create rendered diagnostic plots image
-# and save the file link
-dgplot = dgplotsknitr(lm_girth_py)
-```
-
-```{r}
-#| echo: false
-library(reticulate)
-# display image
-knitr::include_graphics(py$dgplot)
-```
-
 :::
 
 The diagnostic plots here look rather similar to the ones we generated for the additive model and we have the same issue with a lack of linearity, heterogeneity of variance and one of the data points being influential.
-
-:::
-:::
+:::::::::
+:::::::::::
 
 ## Summary
 
 ::: {.callout-tip}
 #### Key points
 
-
-- We can define a linear model with any combination of categorical and continuous predictor variables
-- Using the coefficients of the model we can construct the linear model equation
-- The underlying assumptions of a linear model with three (or more) predictor variables are the same as those of a two-way ANOVA
-
+-   We can define a linear model with any combination of categorical and continuous predictor variables
+-   Using the coefficients of the model we can construct the linear model equation
+-   The underlying assumptions of a linear model with three (or more) predictor variables are the same as those of a two-way ANOVA
 :::

@@ -1,7 +1,7 @@
 ---
 title: "Model comparisons"
 ---
-
+ 
 ```{r}
 #| echo: false
 #| message: false
@@ -99,7 +99,7 @@ import statsmodels.formula.api as smf
 ```{python}
 #| eval: false
 # Reads in a .csv file
-pandas.read_csv()
+pandas.DataFrame.read_csv()
 
 # Creates a model from a formula and data frame
 statsmodels.formula.api.ols()

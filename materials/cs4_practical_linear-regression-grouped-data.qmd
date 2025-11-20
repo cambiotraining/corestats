@@ -1,7 +1,7 @@
 ---
 title: "Linear regression with grouped data"
 ---
-
+ 
 ```{r}
 #| echo: false
 #| message: false
@@ -97,6 +97,9 @@ import statsmodels.api as sm
 
 # Convenience interface for specifying models using formula strings and DataFrames
 import statsmodels.formula.api as smf
+
+# Custom Python script for diagnostic plots, load from base working directory
+import dgplots
 ```
 
 ### Functions
@@ -110,7 +113,7 @@ numpy.log()
 pandas.DataFrame.head()
 
 # Reads in a .csv file
-pandas.read_csv()
+pandas.DataFrame.read_csv()
 
 # Creates a model from a formula and data frame
 statsmodels.formula.api.ols()
@@ -567,6 +570,7 @@ Anyway, hopefully you’ve got the gist of checking assumptions for linear model
 
 ```{r}
 #| message: false
+#| warning: false
 resid_panel(lm_additive,
             plots = c("resid", "qq", "ls", "cookd"),
             smoother = TRUE)
@@ -751,6 +755,7 @@ Let's check the assumptions:
 
 ```{r}
 #| message: false
+#| warning: false
 resid_panel(lm_clover,
             plots = c("resid", "qq", "ls", "cookd"),
             smoother = TRUE)
@@ -912,6 +917,7 @@ Woop. All good so far. We have the same conclusions as before in terms of what i
 
 ```{r}
 #| message: false
+#| warning: false
 resid_panel(lm_log_clover,
             plots = c("resid", "qq", "ls", "cookd"),
             smoother = TRUE)
