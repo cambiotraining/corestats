@@ -1,50 +1,49 @@
+# dgplots (rewritten with stable LOWESS smoothing)
 """
 Diagnostic plotting utilities for statsmodels linear models.
 
-This module provides a robust implementation of regression diagnostic
-plots using plotnine and a Matplotlib composite. LOESS smoothing is
-used when possible, but if plotnine's LOESS fails due to singularities
-(very common with categorical predictors or few unique fitted values),
-the affected plot is automatically rebuilt using method='lm'. Titles,
-themes, axis labels, and all styling are preserved because each plot is
-regenerated from scratch rather than mutated.
+This version replaces plotnine's LOESS smoothing with a robust LOWESS
+implementation from statsmodels, eliminating failures caused by
+plotnine's geom_smooth(stat_smooth) layer.
 
-The composite figure is encoded as base64 PNG and returned as an HTML
-object, ensuring correct rendering in Jupyter, Quarto, RStudio via
-reticulate, VSCode, and terminal-based `quarto render`, without
-requiring GUI backends or file I/O.
+Plots:
+  1. Residuals vs fitted (+ LOWESS)
+  2. Normal Q–Q
+  3. Scale–location (+ LOWESS)
+  4. Cook’s distance
+
+Output:
+  Composite 2×2 PNG returned as base64 HTML for universal display.
 """
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
+
+import pandas as pd
+import numpy as np
+import base64
+from io import BytesIO
+import matplotlib.pyplot as plt
+from IPython.display import HTML
+import statsmodels.api as sm
+from statsmodels.nonparametric.smoothers_lowess import lowess
+
+from plotnine import (
+    ggplot, aes, geom_point, geom_line, stat_qq, stat_qq_line,
+    geom_segment, geom_hline, labs, theme_bw, theme, element_text
+)
 
 
 # ======================================================================
-# Rendering with LOESS → LM fallback (clean rebuild architecture)
+# Utility: render a plotnine plot safely to a numpy array
 # ======================================================================
-
-def _render_plotnine(p, build_func):
+def _render_plotnine(p):
     """
-    Render a plotnine plot safely into a numpy array.
+    Draw a plotnine plot into a numpy array (PNG) safely.
 
-    Parameters
-    ----------
-    p : plotnine.ggplot
-        The initial LOESS-based plot to attempt rendering.
-
-    build_func : callable
-        A function that rebuilds the same plot with method="lm" when
-        LOESS fails. Signature must be build_func(method="loess"|"lm").
-
-    Returns
-    -------
-    numpy.ndarray
-        Image of the rendered plot.
+    This function does NOT try to catch LOESS failures anymore because
+    LOWESS is computed externally, not inside plotnine.
     """
-    import matplotlib.pyplot as plt
-    from io import BytesIO
-
-    def try_draw(plot):
-        """Internal helper that draws a plotnine plot to a PNG array."""
+    def _draw(plot):
         fig = plot.draw()
         buf = BytesIO()
         fig.savefig(buf, format="png", dpi=150, bbox_inches="tight")
@@ -54,63 +53,46 @@ def _render_plotnine(p, build_func):
         plt.close(fig)
         return img
 
-    # Attempt LOESS version
-    try:
-        return try_draw(p)
+    return _draw(p)
 
-    except Exception:
-        print("⚠ LOESS failed — rebuilding plot with linear smoothing (method='lm').")
-        p_lm = build_func(method="lm")
-        return try_draw(p_lm)
+
+# ======================================================================
+# Utility: LOWESS smoother using statsmodels
+# ======================================================================
+def _lowess_df(df, x, y, frac=0.75):
+    """
+    Compute LOWESS smoothing with parameters comparable to
+    plotnine/ggplot2's LOESS defaults (span = 0.75).
+    """
+    smoothed = lowess(
+        endog=df[y],
+        exog=df[x],
+        frac=frac,   # match ggplot2 default span
+        it=0,        # no robustness iterations (ggplot also uses none)
+        return_sorted=True
+    )
+
+    return pd.DataFrame({
+        x: smoothed[:, 0],
+        f"{y}_smooth": smoothed[:, 1],
+    })
 
 
 
 # ======================================================================
-# Main dgplots() function
+# Main function
 # ======================================================================
-
 def dgplots(results):
     """
-    Generate a 2×2 panel of diagnostic plots for a statsmodels regression fit.
-
-    Plots produced:
-      1. Residuals vs fitted values (+ smoother)
-      2. Normal Q–Q plot
-      3. Scale–location plot (+ smoother)
-      4. Cook’s distance
-
-    Smoothing:
-      - LOESS used by default.
-      - If LOESS fails (singularities), affected plots are fully rebuilt
-        using method='lm' to preserve titles and themes.
+    Generate a 2×2 diagnostic panel for a statsmodels regression object.
+    LOWESS smoothing is provided by statsmodels.lowess and is extremely
+    stable (no LOESS failures).
 
     Returns
     -------
     IPython.display.HTML
-        HTML object containing a responsive composite PNG.
-
-    Examples
-    --------
-    >>> import statsmodels.formula.api as smf
-    >>> from dgplots import dgplots
-    >>> model = smf.ols("y ~ x1 + x2", data=df).fit()
-    >>> dgplots(model)
     """
-    import pandas as pd
-    import numpy as np
-    import matplotlib.pyplot as plt
-    from io import BytesIO
-    import base64
-    from IPython.display import HTML
-    import statsmodels.api as sm
-    from plotnine import (
-        ggplot, aes, geom_point, geom_smooth, stat_qq, stat_qq_line,
-        geom_segment, geom_hline, labs, theme_bw, theme, element_text
-    )
 
-    # ------------------------------------------------------------------
-    # Validate input
-    # ------------------------------------------------------------------
     if not isinstance(results, sm.regression.linear_model.RegressionResultsWrapper):
         raise TypeError("Please provide a statsmodels regression fit.")
 
@@ -127,9 +109,7 @@ def dgplots(results):
 
     n_obs = len(df)
 
-    # ------------------------------------------------------------------
-    # Common formatting theme
-    # ------------------------------------------------------------------
+    # Common theme
     diag_theme = (
         theme_bw()
         + theme(
@@ -140,84 +120,105 @@ def dgplots(results):
     )
 
     # ==================================================================
-    # Plot builder functions
+    # P1: Residuals vs Fitted with LOWESS
     # ==================================================================
+    def build_p1():
+        df_lo = _lowess_df(df, "predicted_values", "residuals")
 
-    def build_p1(method="loess"):
-        smoother = geom_smooth(method=method, se=False, colour="red", size=1.2)
         return (
             ggplot(df, aes("predicted_values", "residuals"))
             + geom_point(size=3)
-            + smoother
-            + labs(title="Residuals plot", x="Predicted values", y="Residuals")
+            + geom_hline(yintercept=0, size=0.8, colour="blue")
+            + geom_line(
+                df_lo,
+                aes("predicted_values", "residuals_smooth"),
+                color="red",
+                size=1.2
+            )
+            + labs(title="Residuals plot",
+                   x="Predicted values",
+                   y="Residuals")
             + diag_theme
         )
 
-    def build_p2(method="loess"):
-        # Q-Q plot does not use smoothing
+    # ==================================================================
+    # P2: Normal Q–Q (no smoothing)
+    # ==================================================================
+    def build_p2():
         return (
             ggplot(df, aes(sample="residuals"))
             + stat_qq(size=3)
-            + stat_qq_line(colour="blue", size=1.2)
-            + labs(title="Q–Q plot", x="Theoretical quantiles", y="Sample quantiles")
+            + stat_qq_line(color="blue", size=1.2)
+            + labs(title="Q–Q plot",
+                   x="Theoretical quantiles",
+                   y="Sample quantiles")
             + diag_theme
         )
 
-    def build_p3(method="loess"):
-        smoother = geom_smooth(method=method, se=False, colour="red", size=1.2)
+    # ==================================================================
+    # P3: Scale–Location with LOWESS
+    # ==================================================================
+    def build_p3():
+        df_lo = _lowess_df(df, "predicted_values", "std_resid")
+
         return (
             ggplot(df, aes("predicted_values", "std_resid"))
             + geom_point(size=3)
-            + smoother
-            + labs(
-                title="Location–Scale plot",
-                x="Predicted values",
-                y=u"\u221A" + "|standardised residuals|"
+            + geom_line(
+                df_lo,
+                aes("predicted_values", "std_resid_smooth"),
+                color="red",
+                size=1.2
             )
+            + labs(title="Location–Scale plot",
+                   x="Predicted values",
+                   y=u"\u221A|standardised residuals|")
             + diag_theme
         )
 
-    def build_p4(method="loess"):
-        # Cook's D plot has no smoothing
+    # ==================================================================
+    # P4: Cook’s distance
+    # ==================================================================
+    def build_p4():
         return (
             ggplot(df, aes("obs", "cooks_d"))
             + geom_point(size=3)
-            + geom_segment(aes(xend="obs", yend=0), colour="blue", size=0.8)
+            + geom_segment(aes(xend="obs", yend=0),
+                           color="blue", size=0.8)
             + geom_hline(yintercept=0, size=0.8)
-            + geom_hline(yintercept=4 / n_obs, colour="blue",
-                          linetype="dashed", size=0.8)
-            + labs(title="Influential points", x="Observation", y="Cook's D")
+            + geom_hline(yintercept=4 / n_obs,
+                         color="blue", linetype="dashed", size=0.8)
+            + labs(title="Influential points",
+                   x="Observation",
+                   y="Cook's D")
             + diag_theme
         )
 
     # ==================================================================
-    # Render each panel with LOESS→LM fallback
+    # Render all plots
     # ==================================================================
-
     imgs = [
-        _render_plotnine(build_p1(), build_p1),
-        _render_plotnine(build_p2(), build_p2),
-        _render_plotnine(build_p3(), build_p3),
-        _render_plotnine(build_p4(), build_p4)
+        _render_plotnine(build_p1()),
+        _render_plotnine(build_p2()),
+        _render_plotnine(build_p3()),
+        _render_plotnine(build_p4())
     ]
 
-    # ==================================================================
     # Composite 2×2 figure
-    # ==================================================================
     fig, axes = plt.subplots(2, 2, figsize=(12, 10))
     for ax, img in zip(axes.flatten(), imgs):
         ax.imshow(img)
         ax.axis("off")
     plt.tight_layout()
 
-    # Convert to base64
+    # Convert composite to base64 HTML
     buf = BytesIO()
     fig.savefig(buf, format="png", dpi=150, bbox_inches="tight")
     buf.seek(0)
     b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
     buf.close()
+    
     plt.close(fig)
 
-    # Return responsive HTML
     return HTML(f'<img style="max-width:100%; height:auto;" '
                 f'src="data:image/png;base64,{b64}"/>')

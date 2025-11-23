@@ -1,7 +1,7 @@
 ---
 title: "Multiple linear regression"
 ---
- 
+
 ```{r}
 #| echo: false
 #| message: false
@@ -98,7 +98,7 @@ import statsmodels.api as sm
 import statsmodels.formula.api as smf
 
 # Custom Python script for diagnostic plots, load from base working directory
-import dgplots
+from dgplots import dgplots
 ```
 
 ### Functions
@@ -861,6 +861,8 @@ resid_panel(lm_trees_full,
 ```{python}
 dgplots(lm_trees_full_py)
 ```
+
+:::
 
 All assumptions are OK.
 
