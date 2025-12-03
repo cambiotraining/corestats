@@ -88,7 +88,7 @@ import statsmodels.formula.api as smf
 from dgplots import dgplots
 
 # Custom Python script for power calculations, load from base working directory
-import pwr_f2_test
+from pwr_f2_test import *
 ```
 
 ### Functions
@@ -1189,20 +1189,11 @@ This takes the following arguments:
 * `sig_level`, significance level
 * `power`, desired power of the test
 
-It has the following dependencies, so you'll need to load these:
-
-```{python}
-from numpy import sqrt, ceil, abs
-from scipy.optimize import brenth
-from scipy.stats import f
-from scipy.special import ncfdtr
-```
-
-Next, we load the `pwr_f2_test()` function:
+First, we load the `pwr_f2_test()` function:
 
 ```{python}
 #| eval: false
-import pwr_f2_test
+from pwr_f2_test import *
 ```
 
 
