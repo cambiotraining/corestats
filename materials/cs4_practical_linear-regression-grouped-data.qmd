@@ -938,7 +938,7 @@ lm_log_clover_py = model.fit()
 Perform an ANOVA on the model:
 
 ```{python}
-sm.stats.anova_lm(lm_clover_py, typ = 2)
+sm.stats.anova_lm(lm_log_clover_py, typ = 2)
 ```
 
 Woop. All good so far. We have the same conclusions as before in terms of what is significant and what isn't. Now we just need to check the assumptions:
