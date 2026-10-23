@@ -6,16 +6,19 @@ jupyter: python3
 info
 
 ```{python}
+#| label: py-setup
 #| echo: false
 #| message: false
 from setup import *
 ```
 
 ```{python}
+#| label: py-read-data
 oystercatcher_py = pd.read_csv("data/CS2-oystercatcher-feeding.csv")
 ```
 
 ```{python}
+#| label: py-fit-linear-model
 # define the model
 model = smf.ols(formula= "feeding ~ C(site)", data = oystercatcher_py)
 # fit the model
@@ -23,15 +26,18 @@ lm_oystercatcher_py = model.fit()
 ```
 
 ```{python}
+#| label: py-fit-the-model
 #| eval: true
 dgplots(lm_oystercatcher_py)
 ```
 
 ```{python}
+#| label: py-read-data-2
 state_py = pd.read_csv("data/CS3-statedata.csv")
 ```
 
 ```{python}
+#| label: py-fit-linear-model-2
 # define the model
 model = smf.ols(formula= "population ~ area + murder", data = state_py)
 # fit the model
@@ -39,6 +45,7 @@ lm_state = model.fit()
 ```
 
 ```{python}
+#| label: py-fit-the-model-2
 #| eval: true
 dgplots(lm_state)
 ```

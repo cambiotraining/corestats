@@ -5,6 +5,7 @@ editor: visual
 ---
 
 ```{r}
+#| label: r-load-libraries
 #| message: false
 library(tidyverse)
 library(broom)
@@ -22,12 +23,14 @@ library(effsize)
 ### ggplot settings
 
 ```{r}
+#| label: r-ggplot-settings
 theme_set(theme_classic(base_size = 15))
 ```
 
 ### ggsave settings
 
 ```{r}
+#| label: r-define-function
 base_height = 5
 quarter_height = 2.5
 base_width = 5
@@ -74,7 +77,8 @@ ggsave(filename = filename, height = height, width = width, ...)
 
 #### Global height example
 
-```{r, quarter size global height dist plot}
+```{r}
+#| label: quarter-size-global-height-dist-plot
 global_height <- data.frame(dist = dist_normal(169, 10)) |>
     ggplot(aes(xdist = dist)) +
     stat_slab(fill = "gray85", colour = "#EA7125", alpha =0.7) +
@@ -86,17 +90,20 @@ global_height <- data.frame(dist = dist_normal(169, 10)) |>
 global_height
 ```
 
-```{r, save quarter human height dist plot}
+```{r}
+#| label: save-quarter-human-height-dist-plot
 quarter.ggsave(plot = global_height, filename = "plots/cs1-global-height-quarter.png")
 ```
 
-```{r, generate data for }
+```{r}
+#| label: generate-data-for
 set.seed(2404)
 height_sample <- tibble(r_sample = rnorm(10, 169, 10))
 ```
 
 
-```{r, quarter size height sample plot}
+```{r}
+#| label: quarter-size-height-sample-plot
 human_height <-
     ggplot(height_sample, aes(x = r_sample, y = 1)) +
     geom_point(size = 4) +
@@ -107,17 +114,20 @@ human_height <-
 human_height
 ```
 
-```{r, save quarter human height sample plot}
+```{r}
+#| label: save-quarter-human-height-sample-plot
 quarter.ggsave(plot = human_height, filename = "plots/cs1-sample-height-quarter.png")
 ```
 
-```{r, save full human height dist plot}
+```{r}
+#| label: save-full-human-height-dist-plot
 landscape.ggsave(plot = global_height, filename = "plots/cs1-global-height.png")
 ```
 
 ### Distributions
 
-```{r, global height with mean/var}
+```{r}
+#| label: global-height-with-mean-var
 global_height_meanvar <- data.frame(dist = dist_normal(169, 10)) |>
     ggplot(aes(xdist = dist)) +
     stat_slab(fill = "gray85", colour = "#EA7125", alpha =0.7) +
@@ -129,7 +139,8 @@ global_height_meanvar <- data.frame(dist = dist_normal(169, 10)) |>
 landscape.ggsave(plot = global_height_meanvar, filename = "plots/cs1-global-height-meanvar.png")
 ```
 
-```{r, sample height with mean}
+```{r}
+#| label: sample-height-with-mean
 ggplot(height_sample, aes(x = r_sample, y = 1)) +
   geom_point(size = 4) +
   geom_vline(xintercept = mean(height_sample$r_sample), colour = "#EA7125", linetype = "dashed",  linewidth = 1) +
@@ -142,7 +153,8 @@ ggplot(height_sample, aes(x = r_sample, y = 1)) +
 
 ### Hypothesis testing
 
-```{r, other distributions}
+```{r}
+#| label: other-distributions
 df <- data.frame(
   name = c("Uniform", "Gamma", "F", "Normal", "Student's t", "Binomial", "Poisson", "Chi-square", "Poisson inverse gaussian"),
   dist = c(dist_uniform(-2, 8),
@@ -165,7 +177,8 @@ other_distributions <- ggplot(df, aes(xdist = dist)) +
 landscape.ggsave(plot = other_distributions, filename = "plots/cs1-other-distributions.png")
 ```
 
-```{r, two distributions}
+```{r}
+#| label: two-distributions
 set.seed(2404)
 height_sample1 <- tibble(r_sample = rnorm(10, 169, 10))
 
@@ -191,7 +204,8 @@ two_groups <- global_height / (human_height1 + human_height2)
 square.ggsave(plot = two_groups, filename = "plots/cs1-two-groups.png")
 ```
 
-```{r, classical hypothesis testing}
+```{r}
+#| label: classical-hypothesis-testing
 quarter.ggsave(plot = global_height, filename = "plots/cs1-global-height-quarter.png")
 
 f_dist <- data.frame(dist = dist_f(8, 15)) |>
@@ -207,7 +221,8 @@ quarter.ggsave(plot = f_dist, filename = "plots/cs1-f-distribution.png")
 
 ### Intro
 
-```{r, three groups boxplot}
+```{r}
+#| label: three-groups-boxplot
 set.seed(15)
 
 boxplot_groups <- tibble(A = rnorm(20, 6, 1),
@@ -230,7 +245,8 @@ square.ggsave(plot = boxplot_groups, filename = "plots/cs2-boxplot-groups.png")
 
 ### Intuitive ANOVA example
 
-```{r, set seed and colours}
+```{r}
+#| label: set-seed-and-colours
 seed <- 41
 
 cols <- c("A" = "#EA7125", "B" = "#0072CF", "C" = "#55A51C")
@@ -239,6 +255,7 @@ cols <- c("A" = "#EA7125", "B" = "#0072CF", "C" = "#55A51C")
 #### Original example data
 
 ```{r}
+#| label: r-plot-data
 set.seed(seed)
 
 anova_example <-
@@ -267,6 +284,7 @@ square.ggsave(plot = intuitive_original, filename = "plots/cs2-intuitive-origina
 #### Large difference
 
 ```{r}
+#| label: r-plot-data-2
 set.seed(seed)
 
 anova_large_diff <-
@@ -295,6 +313,7 @@ square.ggsave(plot = intuitive_large_diff, filename = "plots/cs2-intuitive-large
 #### Small difference
 
 ```{r}
+#| label: r-plot-data-3
 set.seed(seed)
 
 anova_small_diff <-
@@ -323,6 +342,7 @@ square.ggsave(plot = intuitive_small_diff, filename = "plots/cs2-intuitive-small
 #### Small spread
 
 ```{r}
+#| label: r-plot-data-4
 set.seed(seed)
 
 anova_small_spread <-
@@ -351,6 +371,7 @@ square.ggsave(plot = intuitive_small_spread, filename = "plots/cs2-intuitive-sma
 #### Large spread
 
 ```{r}
+#| label: r-plot-data-5
 set.seed(seed)
 
 anova_large_spread <-
@@ -378,7 +399,8 @@ square.ggsave(plot = intuitive_large_spread, filename = "plots/cs2-intuitive-lar
 
 ### Between-group variance
 
-```{r, calculate global mean}
+```{r}
+#| label: calculate-global-mean
 global_mean <- anova_example |>
   group_by(group) |>
   slice(1) |>
@@ -387,7 +409,8 @@ global_mean <- anova_example |>
   pull()
 ```
 
-```{r, between group variance means}
+```{r}
+#| label: between-group-variance-means
 between_group <- ggplot(anova_example, aes(x = as.factor(group), y = response)) +
   stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y.., colour = group), linewidth = 0.75) +
   geom_hline(yintercept = 6, linetype = "dashed") +
@@ -402,7 +425,8 @@ square.ggsave(plot = between_group, filename = "plots/cs2-between-group.png")
 between_group
 ```
 
-```{r, between group means with arrows}
+```{r}
+#| label: between-group-means-with-arrows
 between_group_var <- between_group +
   geom_segment(aes(xend = group, y = 6, yend = group_mean, colour = group),
                arrow = arrow(ends = "both", length = unit(0.05, "inches"),
@@ -414,6 +438,7 @@ square.ggsave(plot = between_group_var, filename = "plots/cs2-between-group-var.
 #### Grouped
 
 ```{r}
+#| label: r-plot-data-6
 anova_example_means <- anova_example |>
   select(-response) |>
   distinct()
@@ -439,7 +464,8 @@ square.ggsave(plot = between_group_var2, filename = "plots/cs2-between-group-var
 
 ### Within-group variance
 
-```{r, within group with arrows and grey means}
+```{r}
+#| label: within-group-with-arrows-and-grey-means
 ggplot(anova_example, aes(x = group, y = response)) +
   stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                colour = "lightgrey", linewidth = 0.75) +
@@ -473,14 +499,16 @@ square.ggsave(plot = within_group, filename = "plots/cs2-within-group.png")
 
 #### Plotting residuals
 
-```{r, generate linear model for plotting residuals}
+```{r}
+#| label: generate-linear-model-for-plotting-residuals
 lm_anova <- lm(response ~ group, data = anova_example)
 anova_example_aug <- lm_anova |> augment()
 
 anova(lm_anova)
 ```
 
-```{r, show residuals as within group variance}
+```{r}
+#| label: show-residuals-as-within-group-variance
 anova_residuals <- ggplot(anova_example_aug, aes(x = group, y = .resid, colour = group)) +
   geom_hline(yintercept = 0, linewidth = 0.75, linetype = "dashed") +
   stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..), colour = "lightgrey", linewidth = 0.75) +
@@ -497,6 +525,7 @@ square.ggsave(plot = anova_residuals, filename = "plots/cs2-anova-residuals.png"
 #### Grouped
 
 ```{r}
+#| label: r-plot-data-7
 anova_residuals_grouped <- ggplot(anova_example_aug, aes(x = "", y = .resid, colour = group)) +
   geom_point(size = 3, alpha = 0.8) +
   geom_hline(yintercept = 0, linewidth = 0.75, linetype = "dashed") +
@@ -513,7 +542,8 @@ square.ggsave(plot = anova_residuals_grouped, filename = "plots/cs2-anova-residu
 
 Update the augmented data set first to normalise the between-group variances.
 
-```{r, create augmented model object}
+```{r}
+#| label: create-augmented-model-object
 anova_example_aug <- anova_example_aug |>
   group_by(group) |>
   mutate(mean_response = mean(response),
@@ -521,7 +551,8 @@ anova_example_aug <- anova_example_aug |>
          id = 1:n())
 ```
 
-```{r, combine three means and collapsed group points}
+```{r}
+#| label: combine-three-means-and-collapsed-group-points
 comparing_variances <- anova_example_aug |>
   mutate(number = case_when(group == "A" ~ 1,
                             group == "B" ~ 2,
@@ -544,7 +575,8 @@ square.ggsave(plot = comparing_variances, filename = "plots/cs2-comparing-varian
 
 #### Corrected variances
 
-```{r, comparing variances corrected for multiple points per group}
+```{r}
+#| label: comparing-variances-corrected-for-multiple-points-per-group
 comparing_variances_corrected <- anova_example_aug |>
   mutate(number = case_when(group == "A" ~ 1,
                             group == "B" ~ 2,
@@ -566,6 +598,7 @@ square.ggsave(plot = comparing_variances_corrected, filename = "plots/cs2-compar
 #### Corrected variances with SD arrows
 
 ```{r}
+#| label: r-corrected-variances-with-sd-arrows
 comparing_variances_arrows <- comparing_variances_corrected +
   geom_segment(x=2.1, xend=2.1, y=1, yend=-1,
                arrow = arrow(ends = "both", length = unit(0.05, "inches"), type = "closed"), colour = "black") +
@@ -579,7 +612,8 @@ square.ggsave(plot = comparing_variances_arrows, filename = "plots/cs2-comparing
 
 #### Between group variance
 
-```{r, calculate global mean for dataset3}
+```{r}
+#| label: calculate-global-mean-for-dataset3
 global_mean_small_diff <- anova_small_diff |>
   group_by(group) |>
   slice(1) |>
@@ -588,7 +622,8 @@ global_mean_small_diff <- anova_small_diff |>
   pull()
 ```
 
-```{r, between group variance means with arrows for dataset 3}
+```{r}
+#| label: between-group-variance-means-with-arrows-for-dataset-3
 between_group_small_diff <- ggplot(anova_small_diff, aes(x = as.factor(group), y = response)) +
   stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y.., colour = group), linewidth = 0.75) +
   geom_hline(yintercept = 6, linetype = "dashed") +
@@ -606,7 +641,8 @@ square.ggsave(plot = between_group_small_diff, filename = "plots/cs2-between-gro
 
 #### Within group variance
 
-```{r, within group variance with arrows for dataset3}
+```{r}
+#| label: within-group-variance-with-arrows-for-dataset3
 within_group_small_diff <- ggplot(anova_small_diff, aes(x = group, y = response)) +
   stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..), colour = "lightgrey", linewidth = 0.75) +
   geom_point(aes(colour = group), size = 3, alpha = 0.8) +
@@ -625,14 +661,16 @@ square.ggsave(plot = within_group_small_diff, filename = "plots/cs2-within-group
 
 #### Comparing variances
 
-```{r, generate linear model for plotting residuals}
+```{r}
+#| label: generate-linear-model-for-plotting-residuals-2
 lm_anova_small <- lm(response ~ group, data = anova_small_diff)
 anova_small_aug <- lm_anova_small |> augment()
 
 anova(lm_anova_small)
 ```
 
-```{r, create augmented model object}
+```{r}
+#| label: create-augmented-model-object-2
 anova_small_aug2 <- anova_small_aug |>
   group_by(group) |>
   mutate(mean_response = mean(response),
@@ -640,7 +678,8 @@ anova_small_aug2 <- anova_small_aug |>
          id = 1:n())
 ```
 
-```{r, comparing variances corrected for multiple points per group for dataset3}
+```{r}
+#| label: comparing-variances-corrected-for-multiple-points-per-group-for-dataset3
 comparing_variances_small_diff <- anova_small_aug2 |>
   mutate(number = case_when(group == "A" ~ 1,
                             group == "B" ~ 2,
@@ -659,7 +698,8 @@ ggplot(aes(x = "Between-group", y = std_response, colour = group)) +
 square.ggsave(plot = comparing_variances_small_diff, filename = "plots/cs2-comparing-variances-small-diff.png")
 ```
 
-```{r, comparing variances with arrows dataset3}
+```{r}
+#| label: comparing-variances-with-arrows-dataset3
 comparing_variances_small_arrows <- comparing_variances_small_diff +
   geom_segment(x=2.1, xend=2.1, y=1, yend=-1,
                arrow = arrow(ends = "both", length = unit(0.05, "inches"), type = "closed"), colour = "black") +
@@ -672,12 +712,14 @@ square.ggsave(plot = comparing_variances_small_arrows, filename = "plots/cs2-com
 ### Post hoc tests
 
 ```{r}
+#| label: r-run-anova
 TukeyHSD(aov(lm_anova))
 
 TukeyHSD(aov(lm_anova_small))
 ```
 
 ```{r}
+#| label: r-plot-data-8
 posthoc <- ggplot(anova_example, aes(x = group, y = response, colour = group)) +
   geom_boxplot() +
   scale_y_continuous(limits = c(0, 12), breaks = seq(0, 12, by = 2)) +
@@ -698,6 +740,7 @@ square.ggsave(plot = posthoc, filename = "plots/CS2-posthoc.png")
 Matt created the original data without `set.seed()`, so I'm using the output CSV. For reference, the data were synthesised using:
 
 ```{r}
+#| label: r-write-data
 #| eval: false
 # Matt's code
 x <- seq(1, 10, 0.75)
@@ -707,17 +750,20 @@ dat <- data.frame(x = x,
 write_csv(dat, "data/xy_example.csv")
 ```
 
-```{r, read in data}
+```{r}
+#| label: read-in-data
 # Read in the data
 xydat <- read_csv("../data/xy_example.csv")
 ```
 
-```{r, create linear model}
+```{r}
+#| label: create-linear-model
 # Create linear model ----
 lm_xy <- lm(y ~ x, data = xydat)
 ```
 
-```{r, get parameters of linear model}
+```{r}
+#| label: get-parameters-of-linear-model
 # Get intercept
 inter <- lm_xy$coefficients[1]
 
@@ -729,7 +775,8 @@ xbar <- mean(xydat$x)
 ybar <- mean(xydat$y)
 ```
 
-```{r, meerkat data scatter}
+```{r}
+#| label: meerkat-data-scatter
 scatterplot <- ggplot(xydat, aes(x = x, y = y)) +
   geom_point(colour = "#999999", size = 4) +
   xlim(0, 11) +
@@ -740,19 +787,22 @@ scatterplot <- ggplot(xydat, aes(x = x, y = y)) +
 square.ggsave(plot = scatterplot, filename = "plots/cs3-scatterplot.png")
 ```
 
-```{r, meerkat scatter line}
+```{r}
+#| label: meerkat-scatter-line
 scatterplot_line <- scatterplot + geom_smooth(method = "lm", se = FALSE, colour = "#0072CF", fullrange = TRUE)
 
 square.ggsave(plot = scatterplot_line, filename = "plots/cs3-scatterplot-line.png")
 ```
 
-```{r, meerkat scatter line with null}
+```{r}
+#| label: meerkat-scatter-line-with-null
 scatterplot_null <- scatterplot_line + geom_hline(yintercept = mean(xydat$y), colour = "black", linetype = "dashed",  linewidth = 1)
 
 square.ggsave(plot = scatterplot_null, filename = "plots/cs3-scatterplot-null.png")
 ```
 
-```{r, meerkat scatter line with correlation}
+```{r}
+#| label: meerkat-scatter-line-with-correlation
 scatterplot_corr <- scatterplot_line +
   geom_abline(intercept = inter+1, slope = slope, colour = "black", linetype = "dashed",  linewidth = 1) +
   geom_abline(intercept = inter-1, slope = slope, colour = "black", linetype = "dashed",  linewidth = 1)
@@ -762,7 +812,8 @@ square.ggsave(plot = scatterplot_corr, filename = "plots/cs3-scatterplot-corr.pn
 
 ### Line of best fit
 
-```{r, meerkat data scatter2}
+```{r}
+#| label: meerkat-data-scatter2
 scatterplot2 <- ggplot(xydat, aes(x = x, y = y)) +
   geom_point(colour = "#999999", size = 4) +
   xlim(0, 11) +
@@ -774,7 +825,8 @@ scatterplot2 <- ggplot(xydat, aes(x = x, y = y)) +
 square.ggsave(plot = scatterplot2, filename = "plots/cs3-scatterplot2.png")
 ```
 
-```{r, scatter with equation and betas}
+```{r}
+#| label: scatter-with-equation-and-betas
 
 scatterplot_betas <- scatterplot2 +
   geom_segment(x = 1, xend = 0, y = 5.5, yend = 5, arrow = arrow(length = unit(0.03, "npc")), colour="#EA7125") +
@@ -791,14 +843,16 @@ scatterplot_betas <- scatterplot2 +
 square.ggsave(plot = scatterplot_betas, filename = "plots/cs3-scatterplot-betas.png")
 ```
 
-```{r, show errors above line of best fit}
+```{r}
+#| label: show-errors-above-line-of-best-fit
 scatterplot_errors <- scatterplot2 +
   geom_segment(aes(xend = x, yend = lm_xy |> augment() |> pull(.fitted)))
 
 square.ggsave(plot = scatterplot_errors, filename = "plots/cs3-scatterplot-errors.png")
 ```
 
-```{r, show deltas above line of best fit}
+```{r}
+#| label: show-deltas-above-line-of-best-fit
 lm_xy_aug <- lm_xy |>
   augment() |>
   mutate(n_row = 1:n(),
@@ -818,7 +872,8 @@ square.ggsave(plot = scatterplot_deltas, filename = "plots/cs3-scatterplot-delta
 
 #### Sum of squares
 
-```{r, residuals separated out}
+```{r}
+#| label: residuals-separated-out
 
 residuals <- ggplot(lm_xy_aug, aes(x = x, y = .resid)) +
   geom_point(colour = "#999999", size = 4) +
@@ -842,14 +897,16 @@ residuals_ss <- residuals +
 square.ggsave(plot = residuals_ss, filename = "plots/cs3-residuals-ss.png")
 ```
 
-```{r, line with final equation}
+```{r}
+#| label: line-with-final-equation
 scatterplot_model <- scatterplot2 +
   geom_text(aes(label = "y = 5 - 0.3x"), x = 1, y = 1, size = 10, hjust = 0)
 
 square.ggsave(plot = scatterplot_model, filename = "plots/cs3-scatterplot-model.png")
 ```
 
-```{r, static SS plot}
+```{r}
+#| label: static-ss-plot
 
 min_ss <- animate_data |>
   filter(ss == min(ss)) |>
@@ -879,7 +936,8 @@ square.ggsave(plot = sum_of_squares, filename = "plots/cs3-sum-of-squares.png")
 
 ##### Animations
 
-```{r, animation1 - line rotate}
+```{r}
+#| label: animation1-line-rotate
 # create data set
 slope_range <-
   tibble(slope_value = seq(-1,0.5,0.01)) |>
@@ -912,7 +970,8 @@ ap_lobf_render <- animate(ap_lobf, height = 5, width = 5, units = "in",
 anim_save("plots/animation-lobf.gif", animation = ap_lobf_render)
 ```
 
-```{r, animation2}
+```{r}
+#| label: animation2
 
 animate_data_lad <- lm_xy_aug |>
   select(x, y, .fitted) |>
@@ -941,7 +1000,8 @@ ap_lobf_lad_render <- animate(ap_lobf_lad, height = 5, width = 5, units = "in",
 anim_save("plots/animation-lobf_lad.gif", animation = ap_lobf_lad_render)
 ```
 
-```{r, animation3}
+```{r}
+#| label: animation3
 
 ap_lad <- animate_data_lad |>
   arrange(slope_value) |>
@@ -968,7 +1028,8 @@ ap_lad_render <- animate(ap_lad, height = 5, width = 5, units = "in", res = 150 
 anim_save("plots/animation-lad.gif", animation = ap_lad_render)
 ```
 
-```{r, animation4 - U}
+```{r}
+#| label: animation4-u
 
 ap_ss <- animate_data |>
   arrange(slope_value) |>
@@ -998,7 +1059,8 @@ anim_save("plots/animation-ss.gif", animation = ap_ss_render)
 
 ### Regression
 
-```{r, significant example with same equation}
+```{r}
+#| label: significant-example-with-same-equation
 
 #x_vs <- seq(1, 10, 0.75)
 #y_vs <- 5 - (0.3 * x_vs) + rnorm(length(x_vs), 0, 0.7)
@@ -1031,7 +1093,8 @@ sig_regression_p <- sig_regression_null +
 square.ggsave(plot = sig_regression_p, filename = "plots/cs3-sig-regression-p.png")
 ```
 
-```{r, insignificant dataset with same equation}
+```{r}
+#| label: insignificant-dataset-with-same-equation
 
 # generate data
 #set.seed(23381)
@@ -1073,7 +1136,8 @@ insig_regression_p <- insig_regression_null +
 square.ggsave(plot = insig_regression_p, filename = "plots/cs3-insig-regression-p.png")
 ```
 
-```{r, meerkat scatter null with residuals}
+```{r}
+#| label: meerkat-scatter-null-with-residuals
 scatterplot_null2 <- ggplot(xydat, aes(x = x, y = y)) +
   geom_hline(yintercept = mean(xydat$y), colour = "black", linetype = "dashed",  linewidth = 1) +
   geom_point(colour = "#999999", size = 4) +
@@ -1087,7 +1151,8 @@ scatterplot_null2 <- ggplot(xydat, aes(x = x, y = y)) +
 square.ggsave(plot = scatterplot_null2, filename = "plots/cs3-scatterplot-null2.png")
 ```
 
-```{r, predicted values separated out}
+```{r}
+#| label: predicted-values-separated-out
 predicted_values <- lm_xy |>
   augment() |>
   ggplot(aes(x, .fitted)) +
@@ -1102,7 +1167,8 @@ predicted_values <- lm_xy |>
 square.ggsave(plot = predicted_values, filename = "plots/cs3-predicted-values.png")
 ```
 
-```{r, measured vs predicted values}
+```{r}
+#| label: measured-vs-predicted-values
 measured_predicted <- ggplot(augment(lm_xy), aes(x, .fitted)) +
   geom_hline(yintercept = mean(xydat$y), colour = "black", linetype = "dashed",  linewidth = 1) +
   geom_point(aes(x = x, y = y), colour = "#999999", size = 4) +
@@ -1116,7 +1182,8 @@ measured_predicted <- ggplot(augment(lm_xy), aes(x, .fitted)) +
 square.ggsave(plot = measured_predicted, filename = "plots/cs3-measured-predicted.png")
 ```
 
-```{r, signal to noise in regression}
+```{r}
+#| label: signal-to-noise-in-regression
 signal_noise <- lm_xy |>
   augment() |>
   mutate(.fitted = .fitted - mean(y)) |>
@@ -1131,7 +1198,8 @@ signal_noise <- lm_xy |>
 square.ggsave(plot = signal_noise, filename = "plots/cs3-signal-noise.png")
 ```
 
-```{r, add variance lines to signal to noise}
+```{r}
+#| label: add-variance-lines-to-signal-to-noise
 
 signal_noise_var <- signal_noise +
   geom_segment(x=1.1, xend=1.1, y=1.2, yend=-1.2,
@@ -1142,7 +1210,8 @@ signal_noise_var <- signal_noise +
 square.ggsave(plot = signal_noise_var, filename = "plots/cs3-signal-noise-var.png")
 ```
 
-```{r, add pvalue to signal to noise}
+```{r}
+#| label: add-pvalue-to-signal-to-noise
 
 signal_noise_p <- signal_noise_var +
   geom_text(aes(label = "p = 0.0002633"), x = 1.5, y = -2, size = 7, hjust = 0, colour = "#EA7125")
@@ -1150,7 +1219,8 @@ signal_noise_p <- signal_noise_var +
 square.ggsave(plot = signal_noise_p, filename = "plots/cs3-signal-noise-p.png")
 ```
 
-```{r, meerkat data scatter}
+```{r}
+#| label: meerkat-data-scatter-2
 scatterplot_final <- ggplot(xydat, aes(x = x, y = y)) +
   geom_point(colour = "#999999", size = 4) +
   xlim(0, 11) +
@@ -1166,7 +1236,8 @@ square.ggsave(plot = scatterplot_final, filename = "plots/cs3-scatterplot-final.
 
 ### Assumptions/diagnostic plots
 
-```{r, good diagnostic plots}
+```{r}
+#| label: good-diagnostic-plots
 set.seed(0)
 dg_good <- tibble(x = seq(0,1, 0.02),
                   y = 2 * x + rnorm(length(x), 0, 0.1))
@@ -1180,7 +1251,8 @@ plot_dg_good <- resid_panel(lm_dg_good,
 square.ggsave(plot = plot_dg_good, filename = "plots/cs3-plot-diag-good.png")
 ```
 
-```{r, bad diagnostic plots}
+```{r}
+#| label: bad-diagnostic-plots
 set.seed(2)
 dg_bad <- tibble(x = seq(0,1,0.02),
                   y = 1*x+runif(length(x),-0.1,0.1)*exp(2*x))
@@ -1196,14 +1268,16 @@ square.ggsave(plot = plot_dg_bad, filename = "plots/cs3-plot-diag-bad.png")
 
 #### Linearity
 
-```{r, linearity plot good}
+```{r}
+#| label: linearity-plot-good
 
 linearity_good <- resid_panel(lm_dg_good, plots = "resid", smoother = TRUE, axis.text.size = 15, title.text.size = 18)
 
 square.ggsave(plot = linearity_good, filename = "plots/cs3-plot-linearity-good.png")
 ```
 
-```{r, linearity plot bad}
+```{r}
+#| label: linearity-plot-bad
 
 set.seed(3)
 lin_bad <- tibble(x = seq(0,1,0.02),
@@ -1217,7 +1291,8 @@ square.ggsave(plot = linearity_bad, filename = "plots/cs3-plot-linearity-bad.png
 
 #### Normality
 
-```{r, qq plot good}
+```{r}
+#| label: qq-plot-good
 
 set.seed(21)
 qq_good <- tibble(x = seq(0,1,0.02),
@@ -1229,7 +1304,8 @@ qq_good <- resid_panel(lm_qq_good, plots = "qq", smoother = TRUE, axis.text.size
 square.ggsave(plot = qq_good, filename = "plots/cs3-plot-qq-good.png")
 ```
 
-```{r, qq plot bad}
+```{r}
+#| label: qq-plot-bad
 
 set.seed(4)
 qq_bad <- tibble(x = seq(0,1,0.02),
@@ -1243,7 +1319,8 @@ square.ggsave(plot = qq_bad, filename = "plots/cs3-plot-qq-bad.png")
 
 #### Variance
 
-```{r, variance plot good}
+```{r}
+#| label: variance-plot-good
 set.seed(30)
 var_good <- tibble(x = seq(0,1,0.02),
                   y = x^2 + rnorm(length(x), 0, 0.1))
@@ -1254,7 +1331,8 @@ variance_good <- resid_panel(lm_var_good, plots = "ls", smoother = TRUE, axis.te
 square.ggsave(plot = variance_good, filename = "plots/cs3-plot-variance-good.png")
 ```
 
-```{r, linearity plot bad}
+```{r}
+#| label: linearity-plot-bad-2
 
 set.seed(4)
 var_bad <- tibble(x = seq(0,1,0.02),
@@ -1268,7 +1346,8 @@ square.ggsave(plot = variance_bad, filename = "plots/cs3-plot-variance-bad.png")
 
 #### Leverage
 
-```{r, leverage plot good}
+```{r}
+#| label: leverage-plot-good
 set.seed(27)
 lev_good <- tibble(x = seq(0,1,0.02),
                   y = x + rnorm(length(x), 0, 0.1))
@@ -1279,7 +1358,8 @@ leverage_good <- resid_panel(lm_lev_good, plots = "cookd", smoother = TRUE, axis
 square.ggsave(plot = leverage_good, filename = "plots/cs3-plot-leverage-good.png")
 ```
 
-```{r, leverage plot bad}
+```{r}
+#| label: leverage-plot-bad
 set.seed(2)
 lev_bad <- tibble(x = seq(0,1,0.02),
                   y = x + rnorm(length(x), 0, 0.1))
@@ -1294,7 +1374,8 @@ square.ggsave(plot = leverage_bad, filename = "plots/cs3-plot-leverage-bad.png")
 
 ### Correlation
 
-```{r, same slope different corr}
+```{r}
+#| label: same-slope-different-corr
 set.seed(20)
 
 corr1_slope1 <- tibble(X1 = rnorm(100, 0, 1)) |>
@@ -1351,7 +1432,8 @@ corr <- corr1_slope1 + corr08_slope1 + corr04_slope1 + corr0_slope1 + corrn04_sl
 strip.ggsave(plot = corr, filename = "plots/cs3-corr.png")
 ```
 
-```{r, same corr different slope}
+```{r}
+#| label: same-corr-different-slope
 set.seed(20)
 
 X1 <- rnorm(100, 0, 1)
@@ -1417,7 +1499,8 @@ corr_slopes <- p1 + p2 + p3 + p7 + p6 + p5 + p4 + plot_layout(nrow=1)
 strip.ggsave(plot = corr_slopes, filename = "plots/cs3-corr_slopes.png")
 ```
 
-```{r, nonlinear zero corr}
+```{r}
+#| label: nonlinear-zero-corr
 
 nonlin1 <- generateCrescentMoon(n = 70, d = 2, sigma = 0.5) |>
 ggplot(aes(x=X1, y=X2)) +
@@ -1455,7 +1538,8 @@ strip.ggsave(plot = nonlinear_corr, filename = "plots/cs3-nonlinear-corr.png")
 
 ### R-squared
 
-```{r, overall variance in y}
+```{r}
+#| label: overall-variance-in-y
 overall_variance <- ggplot(xydat, aes(x = mean(x), y = y)) +
   geom_point(colour = "#999999", size = 4) +
   xlim(0, 11) +
@@ -1468,7 +1552,8 @@ overall_variance <- ggplot(xydat, aes(x = mean(x), y = y)) +
 square.ggsave(plot = overall_variance, filename = "plots/cs3-overall-variance.png")
 ```
 
-```{r, leftover variance in y}
+```{r}
+#| label: leftover-variance-in-y
 leftover_variance <- ggplot(xydat, aes(x = x, y = y)) +
   geom_point(colour = "#999999", size = 4) +
   xlim(0, 11) +
@@ -1482,7 +1567,8 @@ leftover_variance <- ggplot(xydat, aes(x = x, y = y)) +
 square.ggsave(plot = leftover_variance, filename = "plots/cs3-leftover-variance.png")
 ```
 
-```{r, leftover variance in y}
+```{r}
+#| label: leftover-variance-in-y-2
 diff_variance <- ggplot(xydat, aes(x = x, y = y)) +
   geom_point(colour = "#999999", size = 4) +
   xlim(0, 11) +
@@ -1498,7 +1584,8 @@ diff_variance <- ggplot(xydat, aes(x = x, y = y)) +
 square.ggsave(plot = diff_variance, filename = "plots/cs3-diff-variance.png")
 ```
 
-```{r, difference between arrows}
+```{r}
+#| label: difference-between-arrows
 diff_arrows <- ggplot(xydat, aes(x = x, y = y)) +
   xlim(0, 11) +
   ylim(0, 6) +
@@ -1517,7 +1604,8 @@ square.ggsave(plot = diff_arrows, filename = "plots/cs3-diff-arrows.png")
 
 ### Intro/recap
 
-```{r, recap of cat example}
+```{r}
+#| label: recap-of-cat-example
 one_categorical <- ggplot(anova_example, aes(x = group, y = response, colour = group)) +
   geom_hline(yintercept = global_mean, linetype = "dashed") +
   stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..), linewidth = 0.75) +
@@ -1531,7 +1619,8 @@ one_categorical <- ggplot(anova_example, aes(x = group, y = response, colour = g
 square.ggsave(plot = one_categorical, filename = "plots/cs4-one-categorical.png")
 ```
 
-```{r, recap of cont example}
+```{r}
+#| label: recap-of-cont-example
 one_continuous <- ggplot(xydat, aes(x = x, y = y)) +
   geom_hline(yintercept = mean(xydat$y), colour = "black", linetype = "dashed",  linewidth = 1) +
   geom_point(colour = "#999999", size = 4) +
@@ -1544,7 +1633,8 @@ one_continuous <- ggplot(xydat, aes(x = x, y = y)) +
 square.ggsave(plot = one_continuous, filename = "plots/cs4-one-continuous.png")
 ```
 
-```{r, cat example emphasise model}
+```{r}
+#| label: cat-example-emphasise-model
 one_categorical_model <- ggplot(anova_example, aes(x = group, y = response)) +
   geom_hline(yintercept = global_mean, linetype = "dashed") +
   geom_point(aes(colour = group), size = 3, alpha = 0.8, colour = "#999999") +
@@ -1558,7 +1648,8 @@ one_categorical_model <- ggplot(anova_example, aes(x = group, y = response)) +
 square.ggsave(plot = one_categorical_model, filename = "plots/cs4-one-categorical-model.png")
 ```
 
-```{r, cont example emphasise model}
+```{r}
+#| label: cont-example-emphasise-model
 one_continuous_model <- ggplot(xydat, aes(x = x, y = y)) +
   geom_hline(yintercept = mean(xydat$y), colour = "black", linetype = "dashed",  linewidth = 1) +
   geom_point(colour = "#999999", size = 4) +
@@ -1573,7 +1664,9 @@ square.ggsave(plot = one_continuous_model, filename = "plots/cs4-one-continuous-
 
 ### Two-way ANOVA
 
-```{r, eval = FALSE}
+```{r}
+#| label: r-write-data-2
+#| eval: false
 # dataset simulation
 # advised to read in saved data in next chunk
 
@@ -1608,17 +1701,20 @@ ggplot(racing, aes(x=Career, colour=Drink, y=Reaction)) +
 write_csv(racing, "racing.csv")
 ```
 
-```{r, set cols}
+```{r}
+#| label: set-cols
 cols <- c("Caffeine" = "#EA7125", "Water" = "#0072CF")
 ```
 
-```{r, read in data}
+```{r}
+#| label: read-in-data-2
 racing <- read_csv("data/racing.csv")
 ```
 
 #### Introducing racing example
 
-```{r, boxplots separated driver/career}
+```{r}
+#| label: boxplots-separated-driver-career
 driver_boxplot <- ggplot(racing, aes(x=Career, y=Reaction)) +
   geom_boxplot() +
   theme_classic(base_size=15) +
@@ -1627,7 +1723,8 @@ driver_boxplot <- ggplot(racing, aes(x=Career, y=Reaction)) +
 square.ggsave(plot = driver_boxplot, filename = "plots/cs4-boxplot-career.png")
 ```
 
-```{r, boxplots separated caffeine/drink}
+```{r}
+#| label: boxplots-separated-caffeine-drink
 caffeine_boxplot <- ggplot(racing, aes(x=Drink, y=Reaction)) +
   geom_boxplot() +
   theme_classic(base_size=15) +
@@ -1636,7 +1733,8 @@ caffeine_boxplot <- ggplot(racing, aes(x=Drink, y=Reaction)) +
 square.ggsave(plot = caffeine_boxplot, filename = "plots/cs4-boxplot-drink.png")
 ```
 
-```{r, boxplots four groups}
+```{r}
+#| label: boxplots-four-groups
 drivercaff_boxplot <- ggplot(racing, aes(x=Drink:Career, y=Reaction)) +
   geom_boxplot() +
   theme_classic(base_size=15) +
@@ -1645,7 +1743,8 @@ drivercaff_boxplot <- ggplot(racing, aes(x=Drink:Career, y=Reaction)) +
 landscape.ggsave(plot = drivercaff_boxplot, filename = "plots/cs4-boxplot-careerdrink.png")
 ```
 
-```{r, interaction plot 1}
+```{r}
+#| label: interaction-plot-1
 
 interaction_careerdrink <- ggplot(racing, aes(x=Career, colour=Drink, group=Drink, y=Reaction)) +
   theme_classic(base_size=15) +
@@ -1659,7 +1758,8 @@ interaction_careerdrink <- ggplot(racing, aes(x=Career, colour=Drink, group=Drin
 square.ggsave(plot = interaction_careerdrink, filename = "plots/cs4-interaction-careerdrink.png")
 ```
 
-```{r, interaction plot 2}
+```{r}
+#| label: interaction-plot-2
 colsalt <- c("Driver" = "#55A51C", "Control" = "#8F2BBC")
 
 interaction_careerdrink2 <- ggplot(racing, aes(x=Drink, colour=Career, group=Career, y=Reaction)) +
@@ -1674,7 +1774,8 @@ interaction_careerdrink2 <- ggplot(racing, aes(x=Drink, colour=Career, group=Car
 square.ggsave(plot = interaction_careerdrink2, filename = "plots/cs4-interaction-careerdrink2.png")
 ```
 
-```{r, interaction plot 1 raw}
+```{r}
+#| label: interaction-plot-1-raw
 
 interaction_careerdrink_raw <- ggplot(racing, aes(x=Career, colour=Drink, group=Drink, y=Reaction)) +
   theme_classic(base_size=15) +
@@ -1686,7 +1787,8 @@ interaction_careerdrink_raw <- ggplot(racing, aes(x=Career, colour=Drink, group=
 square.ggsave(plot = interaction_careerdrink_raw, filename = "plots/cs4-interaction-careerdrink-raw.png")
 ```
 
-```{r, interaction plot 2 raw}
+```{r}
+#| label: interaction-plot-2-raw
 colsalt <- c("Driver" = "#55A51C", "Control" = "#8F2BBC")
 
 interaction_careerdrink2_raw <- ggplot(racing, aes(x=Drink, colour=Career, group=Career, y=Reaction)) +
@@ -1699,7 +1801,8 @@ interaction_careerdrink2_raw <- ggplot(racing, aes(x=Drink, colour=Career, group
 square.ggsave(plot = interaction_careerdrink2_raw, filename = "plots/cs4-interaction-careerdrink2-raw.png")
 ```
 
-```{r, interaction plot iso}
+```{r}
+#| label: interaction-plot-iso
 
 interaction_careerdrink_iso <- ggplot(racing, aes(x=Career, colour=Drink, group=Drink, y=Reaction)) +
   theme_classic(base_size=15) +
@@ -1715,7 +1818,8 @@ square.ggsave(plot = interaction_careerdrink_iso, filename = "plots/cs4-interact
 
 #### Visualising interaction
 
-```{r, interaction plot arrows drink}
+```{r}
+#| label: interaction-plot-arrows-drink
 racing |>
   group_by(Career, Drink) |>
   summarise(Reaction, Mean=mean(Reaction)) |>
@@ -1730,7 +1834,8 @@ interaction_arrows_drink <- interaction_careerdrink_iso +
 square.ggsave(plot = interaction_arrows_drink, filename = "plots/cs4-interaction-arrows-drink.png")
 ```
 
-```{r, interaction plot arrows career}
+```{r}
+#| label: interaction-plot-arrows-career
 racing |>
   group_by(Career, Drink) |>
   summarise(Reaction, Mean=mean(Reaction)) |>
@@ -1747,7 +1852,8 @@ square.ggsave(plot = interaction_arrows_career, filename = "plots/cs4-interactio
 
 #### Other situations
 
-```{r, single career effect}
+```{r}
+#| label: single-career-effect
 
 Career <- factor(c("Driver", "Driver", "Driver", "Driver", "Control", "Control", "Control", "Control"), labels=c("Driver","Control"))
 Drink <- c("Caffeine", "Water", "Caffeine", "Water", "Caffeine", "Water", "Caffeine", "Water")
@@ -1770,7 +1876,8 @@ single_effect_career <- ggplot(racing_single_career, aes(x=Career, colour=Drink,
 square.ggsave(plot = single_effect_career, filename = "plots/cs4-single-effect-career.png")
 ```
 
-```{r, single drink effect}
+```{r}
+#| label: single-drink-effect
 
 Career <- factor(c("Driver", "Driver", "Driver", "Driver", "Control", "Control", "Control", "Control"), labels=c("Driver","Control"))
 Drink <- c("Caffeine", "Water", "Caffeine", "Water", "Caffeine", "Water", "Caffeine", "Water")
@@ -1793,7 +1900,8 @@ single_effect_drink <- ggplot(racing_single_drink, aes(x=Career, colour=Drink, g
 square.ggsave(plot = single_effect_drink, filename = "plots/cs4-single-effect-drink.png")
 ```
 
-```{r, zero effects}
+```{r}
+#| label: zero-effects
 
 Career <- factor(c("Driver", "Driver", "Driver", "Driver", "Control", "Control", "Control", "Control"), labels=c("Driver","Control"))
 Drink <- c("Caffeine", "Water", "Caffeine", "Water", "Caffeine", "Water", "Caffeine", "Water")
@@ -1816,7 +1924,8 @@ zero_effects <- ggplot(racing_zero, aes(x=Career, colour=Drink, group=Drink, y=R
 square.ggsave(plot = zero_effects, filename = "plots/cs4-zero-effects.png")
 ```
 
-```{r, independent main effects}
+```{r}
+#| label: independent-main-effects
 
 Career <- factor(c("Driver", "Driver", "Driver", "Driver", "Control", "Control", "Control", "Control"), labels=c("Driver","Control"))
 Drink <- c("Caffeine", "Water", "Caffeine", "Water", "Caffeine", "Water", "Caffeine", "Water")
@@ -1839,7 +1948,8 @@ both_effects <- ggplot(racing_both, aes(x=Career, colour=Drink, group=Drink, y=R
 square.ggsave(plot = both_effects, filename = "plots/cs4-both-effects.png")
 ```
 
-```{r, extreme interaction 1}
+```{r}
+#| label: extreme-interaction-1
 
 Career <- factor(c("Driver", "Driver", "Driver", "Driver", "Control", "Control", "Control", "Control"), labels=c("Driver","Control"))
 Drink <- c("Caffeine", "Water", "Caffeine", "Water", "Caffeine", "Water", "Caffeine", "Water")
@@ -1862,7 +1972,8 @@ extreme_int1 <- ggplot(racing_int1, aes(x=Career, colour=Drink, group=Drink, y=R
 square.ggsave(plot = extreme_int1, filename = "plots/cs4-extreme-int1.png")
 ```
 
-```{r, extreme interaction 2}
+```{r}
+#| label: extreme-interaction-2
 
 Career <- factor(c("Driver", "Driver", "Driver", "Driver", "Control", "Control", "Control", "Control"), labels=c("Driver","Control"))
 Drink <- c("Caffeine", "Water", "Caffeine", "Water", "Caffeine", "Water", "Caffeine", "Water")
@@ -1886,6 +1997,7 @@ square.ggsave(plot = extreme_int2, filename = "plots/cs4-extreme-int2.png")
 ```
 
 ```{r}
+#| label: r-plot-data-9
 set.seed(27)
 
 Career <- factor(c(rep("Driver", times=10), rep("Control", times=10)), labels=c("Driver","Control"))
@@ -1904,7 +2016,8 @@ square.ggsave(plot = consequence_boxplot, filename = "plots/cs4-consequence-boxp
 
 ### Treelight example
 
-```{r, read in treelight}
+```{r}
+#| label: read-in-treelight
 treelight <- read_csv("data/CS4-treelight.csv")
 
 cols <- c("Conifer" = "#EA7125", "Broadleaf" = "#0072CF")
@@ -1914,6 +2027,7 @@ anova(lm_tree)
 ```
 
 ```{r}
+#| label: r-plot-data-10
 treelight_raw <- ggplot(treelight, aes(x=Depth, colour=Species, group=Species, y=Light)) +
   theme_classic(base_size=15) +
   scale_colour_manual(values = cols) +
@@ -1925,6 +2039,7 @@ square.ggsave(plot = treelight_raw, filename = "plots/cs4-treelight-raw.png")
 ```
 
 ```{r}
+#| label: r-treelight-example
 treelight_model <- treelight_raw +
   geom_smooth(se = FALSE, method = "lm")
 
@@ -1935,7 +2050,8 @@ square.ggsave(plot = treelight_model, filename = "plots/cs4-treelight-model.png"
 
 ### Linear models
 
-```{r, revisiting regression}
+```{r}
+#| label: revisiting-regression
 simple_linear_model <- ggplot(xydat, aes(x = x, y = y)) +
   geom_point(colour = "#999999", size = 4) +
   xlim(0, 11) +
@@ -1947,7 +2063,8 @@ simple_linear_model <- ggplot(xydat, aes(x = x, y = y)) +
 square.ggsave(plot = simple_linear_model, filename = "plots/cs5-simple-linear.png")
 ```
 
-```{r, prediction plus error for continuous}
+```{r}
+#| label: prediction-plus-error-for-continuous
 lm_xy_aug
 coefficients(lm_xy)
 
@@ -1959,14 +2076,16 @@ data_plus_error <- simple_linear_model +
 square.ggsave(plot = data_plus_error, filename = "plots/cs5-data-plus-error.png")
 ```
 
-```{r, revisiting oneway anova boxplot}
+```{r}
+#| label: revisiting-oneway-anova-boxplot
 simple_categorical_model <- one_categorical_model +
   labs(title = "One-way ANOVA", x = "Predictor", y = "Response")
 
 square.ggsave(plot = simple_categorical_model, filename = "plots/cs5-simple-categorical.png")
 ```
 
-```{r, prediction plus error for categorical data}
+```{r}
+#| label: prediction-plus-error-for-categorical-data
 coefficients(lm_anova)
 
 data_error_categorical <- simple_categorical_model +
@@ -1977,7 +2096,8 @@ data_error_categorical <- simple_categorical_model +
 square.ggsave(plot = data_error_categorical, filename = "plots/cs5-data-error-categorical.png")
 ```
 
-```{r, generalise any number of groups}
+```{r}
+#| label: generalise-any-number-of-groups
 set.seed(21)
 D <- rnorm(10, 7, 1)
 E <- rnorm(10, 9, 1)
@@ -1988,7 +2108,8 @@ anova_example_gen <- anova_example |>
   add_row(group=rep("E",10), response=E)
 ```
 
-```{r, boxplot 5 group oneway anova}
+```{r}
+#| label: boxplot-5-group-oneway-anova
 oneway_multiple <- ggplot(anova_example_gen, aes(x = group, y = response)) +
   geom_hline(yintercept = global_mean, linetype = "dashed") +
   geom_point(aes(colour = group), size = 3, alpha = 0.8, colour = "#999999") +
@@ -2005,7 +2126,8 @@ coefficients(lm(response~group, anova_example_gen))
 ggsave(plot = oneway_multiple, filename = "plots/cs5-oneway-multiple.png", height = 5, width = 5*1.535)
 ```
 
-```{r, revisiting twoway anova}
+```{r}
+#| label: revisiting-twoway-anova
 twoway_model <- ggplot(racing, aes(x=Career, shape=Drink, group=Drink, y=Reaction)) +
   theme_classic(base_size=15) +
   geom_point(alpha = 0.8, size = 2, colour="#999999") +
@@ -2022,7 +2144,8 @@ square.ggsave(plot = twoway_model, filename = "plots/cs5-twoway-categorical.png"
 ggsave(plot = twoway_model, filename = "plots/cs5-twoway-categorical-quarter.png", width = base_width, height = 4)
 ```
 
-```{r, how to use equation twoway example}
+```{r}
+#| label: how-to-use-equation-twoway-example
 equation_step1 <- twoway_model +
   annotate(geom="point", x=1, y=167.0414, colour="#EA7125", shape=4, size=4, stroke=1.5)
 
@@ -2045,7 +2168,8 @@ ggsave(plot = equation_step3, filename = "plots/cs5-twoway-equation3.png", width
 ggsave(plot = equation_step4, filename = "plots/cs5-twoway-equation4.png", width = base_width, height = 4)
 ```
 
-```{r, revisiting treelight}
+```{r}
+#| label: revisiting-treelight
 twogroup_model <- ggplot(treelight, aes(x=Depth, shape=Species, group=Species, y=Light)) +
   theme_classic(base_size=15) +
   geom_point(size = 3, colour="#999999") +
@@ -2056,11 +2180,13 @@ twogroup_model <- ggplot(treelight, aes(x=Depth, shape=Species, group=Species, y
 ggsave(plot = twogroup_model, filename = "plots/cs5-twogroup-model.png", width = base_width, height = 4)
 ```
 
-```{r, extract info from treelight model}
+```{r}
+#| label: extract-info-from-treelight-model
 lm_tree
 ```
 
-```{r, treelight interaction term visualisation}
+```{r}
+#| label: treelight-interaction-term-visualisation
 twogroup_interaction <- twogroup_model +
   annotate(geom="segment", x=1, xend=10, y=4721.821, yend=2802.69, colour="#EA7125", linetype=2)
 
@@ -2069,7 +2195,8 @@ ggsave(plot = twogroup_interaction, filename = "plots/cs5-twogroup-interaction.p
 
 ### Model comparison
 
-```{r, simulating identity example}
+```{r}
+#| label: simulating-identity-example
 set.seed(21)
 
 n <- 96
@@ -2086,7 +2213,8 @@ survey <- tibble(height, identity, weight)
 cols <- c("Northern" = "#EA7125", "Southern" = "#0072CF", "Other" = "#55A51C")
 ```
 
-```{r, identity example full model}
+```{r}
+#| label: identity-example-full-model
 lm_fullsurvey <- lm(weight ~ height*identity, survey)
 survey_full <- ggplot(augment(lm_fullsurvey), aes(x=height, y=weight, colour=identity)) +
   geom_point(size=3, alpha=0.8) +
@@ -2100,7 +2228,8 @@ survey_full <- ggplot(augment(lm_fullsurvey), aes(x=height, y=weight, colour=ide
 landscape.ggsave(plot = survey_full, filename = "plots/cs5-survey-full.png")
 ```
 
-```{r, identity example full model for patchwork}
+```{r}
+#| label: identity-example-full-model-for-patchwork
 survey_full2 <- ggplot(augment(lm_fullsurvey), aes(x=height, y=weight, colour=identity)) +
   geom_point(size=2, alpha=0.8) +
   ylim(45, 90) +
@@ -2111,7 +2240,8 @@ survey_full2 <- ggplot(augment(lm_fullsurvey), aes(x=height, y=weight, colour=id
   theme(legend.position = c(.25, .8))
 ```
 
-```{r, identity example additive model}
+```{r}
+#| label: identity-example-additive-model
 lm_addsurvey <- lm(weight ~ height+identity, survey)
 survey_additive <- ggplot(augment(lm_addsurvey), aes(x=height, y=weight, colour=identity)) +
   geom_point(size=2, alpha=0.8) +
@@ -2123,7 +2253,8 @@ survey_additive <- ggplot(augment(lm_addsurvey), aes(x=height, y=weight, colour=
   theme(legend.position = c(.25, .8))
 ```
 
-```{r, identity example single predictor}
+```{r}
+#| label: identity-example-single-predictor
 lm_singlesurvey <- lm(weight ~ height, survey)
 survey_single <- ggplot(augment(lm_singlesurvey), aes(x=height, y=weight)) +
   geom_point(colour="#999999", size=2, alpha=0.8) +
@@ -2133,7 +2264,8 @@ survey_single <- ggplot(augment(lm_singlesurvey), aes(x=height, y=weight)) +
   theme_classic(base_size = 13)
 ```
 
-```{r, patchwork identity example together}
+```{r}
+#| label: patchwork-identity-example-together
 survey_models <- survey_full2 + survey_additive + survey_single
 
 ggsave(plot = survey_models, filename = "plots/cs5-survey-models.png", height=4, width=10)
@@ -2143,7 +2275,8 @@ ggsave(plot = survey_models, filename = "plots/cs5-survey-models.png", height=4,
 
 ### Type I error
 
-```{r, null distribution}
+```{r}
+#| label: null-distribution
 null_dist <- ggplot(NULL, aes(c(-2,2))) +
   geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "grey95", colour = "#0072CF", size = 1, xlim = c(-2, 2)) +
@@ -2154,7 +2287,8 @@ null_dist <- ggplot(NULL, aes(c(-2,2))) +
 landscape.ggsave(plot = null_dist, filename = "plots/cs6-null-dist.png")
 ```
 
-```{r, 5percent type 1}
+```{r}
+#| label: r-5percent-type-1
 five_percent <- ggplot(NULL, aes(c(-2,2))) +
   geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "grey95", colour = "#0072CF", size = 1, xlim = c(-2, 1)) +
@@ -2170,7 +2304,8 @@ five_percent <- ggplot(NULL, aes(c(-2,2))) +
 landscape.ggsave(plot = five_percent, filename = "plots/cs6-five-percent.png")
 ```
 
-```{r, 1percent type 1}
+```{r}
+#| label: r-1percent-type-1
 one_percent <- ggplot(NULL, aes(c(-2,2))) +
   geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "grey95", colour = "#0072CF", size = 1, xlim = c(-2, 1.25)) +
@@ -2188,7 +2323,8 @@ landscape.ggsave(plot = one_percent, filename = "plots/cs6-one-percent.png")
 
 ### Type II error
 
-```{r, five percent wide plot}
+```{r}
+#| label: five-percent-wide-plot
 five_percent_wide <- ggplot(NULL, aes(c(-2,6))) +
   geom_hline(yintercept = 0, colour = "grey70", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "grey95", colour = "#0072CF", size = 1, xlim = c(-2, 1)) +
@@ -2202,7 +2338,8 @@ five_percent_wide <- ggplot(NULL, aes(c(-2,6))) +
 wide.ggsave(plot = five_percent_wide, filename = "plots/cs6-five-percent-wide.png")
 ```
 
-```{r, retain null hypothesis distribution}
+```{r}
+#| label: retain-null-hypothesis-distribution
 retain_null <- ggplot(NULL, aes(c(-2,6))) +
   geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "#0072CF", colour = "#0072CF", size = 1, xlim = c(-2, 1)) +
@@ -2216,7 +2353,8 @@ retain_null <- ggplot(NULL, aes(c(-2,6))) +
 wide.ggsave(plot = retain_null, filename = "plots/cs6-retain-null.png")
 ```
 
-```{r, retain null hypothesis grey bar}
+```{r}
+#| label: retain-null-hypothesis-grey-bar
 retain_null_grey <- ggplot(NULL, aes(c(-2,6))) +
   geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "white") +
@@ -2228,7 +2366,8 @@ retain_null_grey <- ggplot(NULL, aes(c(-2,6))) +
 wide.ggsave(plot = retain_null_grey, filename = "plots/cs6-retain-null-grey.png")
 ```
 
-```{r, adding a true/alternative distribution}
+```{r}
+#| label: adding-a-true-alternative-distribution
 true_distribution <- ggplot(NULL, aes(c(-2,6))) +
   geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "white") +
@@ -2242,7 +2381,8 @@ true_distribution <- ggplot(NULL, aes(c(-2,6))) +
 wide.ggsave(plot = true_distribution, filename = "plots/cs6-true-distribution.png")
 ```
 
-```{r, false negative rate overlap}
+```{r}
+#| label: false-negative-rate-overlap
 false_negative <- ggplot(NULL, aes(c(-2,6))) +
   geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "white") +
@@ -2258,7 +2398,8 @@ false_negative <- ggplot(NULL, aes(c(-2,6))) +
 wide.ggsave(plot = false_negative, filename = "plots/cs6-false-negative.png")
 ```
 
-```{r, power}
+```{r}
+#| label: power
 power <- ggplot(NULL, aes(c(-2,6))) +
   geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "white") +
@@ -2273,7 +2414,8 @@ power <- ggplot(NULL, aes(c(-2,6))) +
 wide.ggsave(plot = power, filename = "plots/cs6-power.png")
 ```
 
-```{r, null and alternative/true distribution}
+```{r}
+#| label: null-and-alternative-true-distribution
 overlapping_dist <- ggplot(NULL, aes(c(-2,6))) +
   geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   annotate(xmin = -1, xmax = 1, ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2, colour = "#999999") +
@@ -2289,7 +2431,8 @@ overlapping_dist <- ggplot(NULL, aes(c(-2,6))) +
 wide.ggsave(plot = overlapping_dist, filename = "plots/cs6-overlapping-dist.png")
 ```
 
-```{r, increased effect size}
+```{r}
+#| label: increased-effect-size
 large_effect <- ggplot(NULL, aes(c(-2,6))) +
   geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   annotate(xmin = -1, xmax = 1, ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2, colour = "#999999") +
@@ -2305,7 +2448,8 @@ large_effect <- ggplot(NULL, aes(c(-2,6))) +
 wide.ggsave(plot = large_effect, filename = "plots/cs6-large-effect.png")
 ```
 
-```{r, increased significance threshold liberal alpha}
+```{r}
+#| label: increased-significance-threshold-liberal-alpha
 liberal_alpha <- ggplot(NULL, aes(c(-2,6))) +
   geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   annotate(xmin = -0.75, xmax = 0.75, ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2, colour = "#999999") +
@@ -2321,7 +2465,8 @@ liberal_alpha <- ggplot(NULL, aes(c(-2,6))) +
 wide.ggsave(plot = liberal_alpha, filename = "plots/cs6-liberal-alpha.png")
 ```
 
-```{r, decreased significance conservative alpha}
+```{r}
+#| label: decreased-significance-conservative-alpha
 conservative_alpha <- ggplot(NULL, aes(c(-2,6))) +
   geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   annotate(xmin = -1.25, xmax = 1.25, ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2, colour = "#999999") +
@@ -2337,7 +2482,8 @@ conservative_alpha <- ggplot(NULL, aes(c(-2,6))) +
 wide.ggsave(plot = conservative_alpha, filename = "plots/cs6-conservative-alpha.png")
 ```
 
-```{r, decreased variance}
+```{r}
+#| label: decreased-variance
 decreased_var <- ggplot(NULL, aes(c(-2,6))) +
   geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   annotate(xmin = -0.75, xmax = 0.75, ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2, colour = "#999999") +
@@ -2357,7 +2503,8 @@ wide.ggsave(plot = decreased_var, filename = "plots/cs6-decreased-var.png")
 
 #### R2 effect size visual comparisons
 
-```{r, effect size vs significance}
+```{r}
+#| label: effect-size-vs-significance
 set.seed(20)
 
 n <- 25
@@ -2388,6 +2535,7 @@ largeeff_largeerr <- tibble(x_var, y_var)
 ```
 
 ```{r}
+#| label: r-plot-data-11
 lm_ss <- lm(y_var ~ x_var, smalleff_smallerr)
 lb1 <- paste("R^2 == ", round(summary(lm_ss)$adj.r.squared, 2))
 
@@ -2401,6 +2549,7 @@ r2p1 <- ggplot(smalleff_smallerr, aes(x_var, y_var)) +
 ```
 
 ```{r}
+#| label: r-plot-data-12
 lm_sl <- lm(y_var ~ x_var, smalleff_largeerr)
 lb <- paste("R^2 == ", round(summary(lm_sl)$adj.r.squared, 2))
 
@@ -2414,6 +2563,7 @@ r2p2 <- ggplot(smalleff_largeerr, aes(x_var, y_var)) +
 ```
 
 ```{r}
+#| label: r-plot-data-13
 lm_ls <- lm(y_var ~ x_var, largeeff_smallerr)
 lb <- paste("R^2 == ", round(summary(lm_ls)$adj.r.squared, 2))
 
@@ -2427,6 +2577,7 @@ r2p3 <- ggplot(largeeff_smallerr, aes(x_var, y_var)) +
 ```
 
 ```{r}
+#| label: r-plot-data-14
 lm_ll <- lm(y_var ~ x_var, largeeff_largeerr)
 lb <- paste("R^2 == ", round(summary(lm_ll)$adj.r.squared, 2))
 
@@ -2440,6 +2591,7 @@ r2p4 <- ggplot(largeeff_largeerr, aes(x_var, y_var)) +
 ```
 
 ```{r}
+#| label: r-r2-effect-size-visual-comparisons
 r2effectsize <- (r2p1 + r2p2) / (r2p3 + r2p4)
 
 landscape.ggsave(plot = r2effectsize, filename = "plots/cs6-r2effectsize.png")
@@ -2447,7 +2599,8 @@ landscape.ggsave(plot = r2effectsize, filename = "plots/cs6-r2effectsize.png")
 
 #### R2 effect size take 2
 
-```{r, simulated data}
+```{r}
+#| label: simulated-data
 set.seed(20)
 
 n <- 25
@@ -2472,7 +2625,8 @@ y_var <- rnorm(n, avg, 1.09)
 data4 <- tibble(x_var, y_var)
 ```
 
-```{r, small R2}
+```{r}
+#| label: small-r2
 lm_data1 <- lm(y_var ~ x_var, data1)
 lb1 <- paste("R^2 == ", round(summary(lm_data1)$adj.r.squared, 2))
 
@@ -2487,7 +2641,8 @@ r2small <- ggplot(data1, aes(x_var, y_var)) +
 square.ggsave(plot = r2small, filename = "plots/cs6-r2-small.png")
 ```
 
-```{r, medium R2}
+```{r}
+#| label: medium-r2
 lm_data2 <- lm(y_var ~ x_var, data2)
 lb1 <- paste("R^2 == ", round(summary(lm_data2)$adj.r.squared, 2))
 
@@ -2502,7 +2657,8 @@ r2medium <- ggplot(data2, aes(x_var, y_var)) +
 square.ggsave(plot = r2medium, filename = "plots/cs6-r2-medium.png")
 ```
 
-```{r, large R2}
+```{r}
+#| label: large-r2
 lm_data3 <- lm(y_var ~ x_var, data3)
 lb1 <- paste("R^2 == ", round(summary(lm_data3)$adj.r.squared, 2))
 
@@ -2518,6 +2674,7 @@ square.ggsave(plot = r2big, filename = "plots/cs6-r2-big.png")
 ```
 
 ```{r}
+#| label: r-plot-data-15
 lm_data4 <- lm(y_var ~ x_var, data4)
 lb1 <- paste("R^2 == ", round(summary(lm_data4)$adj.r.squared, 2))
 
@@ -2533,6 +2690,7 @@ square.ggsave(plot = r2other, filename = "plots/cs6-r2-other.png")
 ```
 
 ```{r}
+#| label: r-plot-data-16
 lb1 <- paste("R^2 == ", round(summary(lm_data2)$adj.r.squared, 2))
 
 r2medium_other <- ggplot(data2, aes(x_var, y_var)) +
@@ -2547,13 +2705,15 @@ square.ggsave(plot = r2medium_other, filename = "plots/cs6-r2-medium-other.png")
 ```
 
 
-```{r, R2 patchwork for testing}
+```{r}
+#| label: r2-patchwork-for-testing
 r2small + r2medium + r2big
 ```
 
 #### Cohen's d effect size visual comparisons
 
-```{r, effect size vs significance means}
+```{r}
+#| label: effect-size-vs-significance-means
 set.seed(25)
 
 A <- rnorm(20, 5, 2.5)
@@ -2572,6 +2732,7 @@ othercohen <- tibble(E,G) |> pivot_longer(E:G, names_to="group",values_to="respo
 ```
 
 ```{r}
+#| label: r-plot-data-17
 d <- abs(cohen.d(response~group, tinycohen)[3]$estimate)
 lb <- paste("d ==", round(d, 2))
 
@@ -2586,6 +2747,7 @@ square.ggsave(plot = tiny_cohen, filename = "plots/cs6-tiny-cohen.png")
 ```
 
 ```{r}
+#| label: r-plot-data-18
 d <- abs(cohen.d(response~group, smallcohen)[3]$estimate)
 lb <- paste("d ==", round(d, 2))
 
@@ -2600,6 +2762,7 @@ square.ggsave(plot = small_cohen, filename = "plots/cs6-small-cohen.png")
 ```
 
 ```{r}
+#| label: r-plot-data-19
 d <- abs(cohen.d(response~group, bigcohen)[3]$estimate)
 lb <- paste("d ==", round(d, 2))
 
@@ -2614,6 +2777,7 @@ square.ggsave(plot = big_cohen, filename = "plots/cs6-big-cohen.png")
 ```
 
 ```{r}
+#| label: r-plot-data-20
 d <- abs(cohen.d(response~group, othercohen)[3]$estimate)
 lb <- paste("d ==", round(d, 2))
 
@@ -2630,6 +2794,7 @@ square.ggsave(plot = other_cohen, filename = "plots/cs6-other-cohen.png")
 #### Meaningful effect size
 
 ```{r}
+#| label: r-transform-data
 set.seed(24)
 
 n <- 50
@@ -2643,10 +2808,12 @@ smalldrug <- tibble(Control,A) |> pivot_longer(Control:A, names_to="group",value
 ```
 
 ```{r}
+#| label: r-meaningful-effect-size
 cols <- c("A" = "#EA7125", "Control" = "#0072CF", "B" = "#55A51C")
 ```
 
 ```{r}
+#| label: r-plot-data-21
 d <- abs(cohen.d(response~group, bigdrug)[3]$estimate)
 lbp <- paste("p ==", signif(t.test(response~group, bigdrug)$p.value,3))
 lbd <- paste("d ==", round(d, 2))
@@ -2664,6 +2831,7 @@ square.ggsave(plot = meaning, filename = "plots/cs6-meaningful-effect.png")
 ```
 
 ```{r}
+#| label: r-plot-data-22
 d <- abs(cohen.d(response~group, smalldrug)[3]$estimate)
 lbp <- paste("p ==", signif(t.test(response~group, smalldrug)$p.value, 3))
 lbd <- paste("d ==", round(d, 2))
@@ -2686,7 +2854,8 @@ square.ggsave(plot = nonmeaning, filename = "plots/cs6-nonmeaningful-effect.png"
 
 #### Multiple samples from null distribution
 
-```{r, alternative depreciated method}
+```{r}
+#| label: alternative-depreciated-method
 # Set the parameters for the normal distribution
 set.seed(123)  # For reproducibility
 mean <- 0
@@ -2705,7 +2874,8 @@ samples <- replicate(n_repeats, {
 head(samples)
 ```
 
-```{r, take 100 samples from normal distribution}
+```{r}
+#| label: take-100-samples-from-normal-distribution
 set.seed(126)
 
 ngroups <- 100
@@ -2732,6 +2902,7 @@ wide.ggsave(plot = onehundred, filename = "plots/cs6-onehundred.png")
 ```
 
 ```{r}
+#| label: r-plot-data-23
 pvals<-numeric(ngroups)
 
 for(i in 1:ngroups){

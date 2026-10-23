@@ -3,6 +3,7 @@ title: "ANOVA"
 ---
 
 ```{r}
+#| label: r-setup
 #| echo: false
 #| message: false
 #| results: hide
@@ -10,6 +11,7 @@ source(file = "setup_files/setup.R")
 ```
 
 ```{python}
+#| label: py-setup
 #| echo: false
 #| message: false
 import shutup;shutup.please()
@@ -47,6 +49,7 @@ Analysis of variance or ANOVA is a test than can be used when we have multiple s
 ### Libraries
 
 ```{r}
+#| label: r-load-libraries
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
@@ -61,6 +64,7 @@ library(ggResidpanel)
 ### Functions
 
 ```{r}
+#| label: r-summarize-data
 #| eval: false
 #| warning: false
 # Computes summary statistics
@@ -87,6 +91,7 @@ stats::shapiro.test()
 ### Libraries
 
 ```{python}
+#| label: py-import-libraries
 #| eval: false
 # A Python data analysis and manipulation tool
 import pandas as pd
@@ -110,6 +115,7 @@ from dgplots import dgplots
 ### Functions
 
 ```{python}
+#| label: py-read-data
 #| eval: false
 # Summary statistics
 pandas.DataFrame.describe()
@@ -169,6 +175,7 @@ The data are stored in the file `data/CS2-oystercatcher-feeding.csv`.
 First we read in the data.
 
 ```{r}
+#| label: r-read-data
 #| message: false
 #| warning: false
 # load data
@@ -186,6 +193,7 @@ The `oystercatcher` data set contains two columns:
 Next, we get some basic descriptive statistics:
 
 ```{r}
+#| label: r-get-some-basic-descriptive-statistics
 # get some basic descriptive statistics
 oystercatcher |>
   group_by(site) |>
@@ -195,6 +203,7 @@ oystercatcher |>
 Finally, we plot the data by `site`:
 
 ```{r}
+#| label: r-plot-data
 # plot the data
 ggplot(oystercatcher,
        aes(x = site, y = feeding)) +
@@ -206,6 +215,7 @@ ggplot(oystercatcher,
 First, we read in the data.
 
 ```{python}
+#| label: py-read-data-2
 # load the data
 oystercatcher_py = pd.read_csv("data/CS2-oystercatcher-feeding.csv")
 
@@ -221,12 +231,14 @@ The `oystercatcher_py` data set contains two columns:
 Next, we get some basic descriptive statistics *per group*. Here we use the `pd.groupby()` function to group by `site`. We only want to have summary statistics for the `feeding` variable, so we specify that as well:
 
 ```{python}
+#| label: py-summarize-data
 oystercatcher_py.groupby("site")["feeding"].describe()
 ```
 
 Finally, we plot the data:
 
 ```{python}
+#| label: py-plot-data
 #| results: hide
 # plot the data
 p = (ggplot(oystercatcher_py,
@@ -260,6 +272,7 @@ First we perform a Shapiro-Wilk test on each site separately.
 We take the data, filter for each type of `site`, extract the `feeding` rates and send those data to the `shapiro.test()` function.
 
 ```{r}
+#| label: r-filter-data
 # Shapiro-Wilk test on each site
 oystercatcher |>
     filter(site == "exposed") |>
@@ -286,6 +299,7 @@ We use the `pg.normality()` function to calculate the statistic. This requires:
 -   and some data
 
 ```{python}
+#| label: py-shapiro-wilk-test-on-each-site
 pg.normality(dv = "feeding",
              group = "site",
              data = oystercatcher_py)
@@ -308,6 +322,7 @@ So, we create a linear model, extract the residuals and check their normality:
 We use the `lm()` function to define the linear model that describes the relationship between `feeding` and `site`. The notation is similar to what we used previously when we were dealing with two samples of data.
 
 ```{r}
+#| label: r-fit-linear-model
 # define the model
 lm_oystercatcher <- lm(feeding ~ site,
                        data = oystercatcher)
@@ -348,12 +363,14 @@ If you're familiar with this stuff then you can look at the model itself by runn
 We load the modules, define a linear model, create a `fit()` and we get the residuals from the linear model fit with `.resid`.
 
 ```{python}
+#| label: py-import-libraries-3
 #| eval: false
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 ```
 
 ```{python}
+#| label: py-fit-linear-model
 # create a linear model
 model = smf.ols(formula = "feeding ~ C(site)", data = oystercatcher_py)
 # and get the fitted parameters of the model
@@ -361,6 +378,7 @@ lm_oystercatcher_py = model.fit()
 ```
 
 ```{python}
+#| label: py-test-normality
 # get the residuals from the model fit
 # and perform Shapiro-Wilk test
 pg.normality(lm_oystercatcher_py.resid)
@@ -379,6 +397,7 @@ Perform Bartlett's test on the data:
 ## R
 
 ```{r}
+#| label: r-check-equality-variance
 # check equality of variance
 bartlett.test(feeding ~ site,
               data = oystercatcher)
@@ -391,6 +410,7 @@ Where the relevant p-value is given on the 3rd line. Here we see that each group
 We use the `homoscedasticity()` function from `pingouin` (homoscedasticity is another way of describing equality of variance). The default `method` is `levene`, so we need to specify that we want to use `bartlett`.
 
 ```{python}
+#| label: py-check-equality-of-variance
 pg.homoscedasticity(dv = "feeding",
                     group = "site",
                     method = "bartlett",
@@ -414,6 +434,7 @@ In the first session we already created diagnostic Q-Q plots directly from our d
 If you haven't got `ggResidpanel` installed, please run the following code:
 
 ```{r}
+#| label: r-load-libraries-2
 #| eval: false
 # install package
 install.packages("ggResidpanel")
@@ -425,6 +446,7 @@ library(ggResidpanel)
 Let's create the diagnostic plots we're interested in using `ggResidPanel`. It takes a linear model object as input (`lm_oystercatcher`) and you can define which plots you want to see using the `plots = ` argument. I have also added a smoother line (`smoother = TRUE`) to the plots, which we'll use to compare against.
 
 ```{r}
+#| label: r-calculate-residuals
 #| message: false
 #| warning: false
 resid_panel(lm_oystercatcher,
@@ -448,6 +470,7 @@ You can find the script for this [here](scripts/dgplots.py).
 You can of course plot the model values yourself by extracting them from the linear model fit, but this should provide a convenient way to avoid that kind of stuff.
 
 ```{python}
+#| label: py-load-library
 dgplots(lm_oystercatcher_py)
 ```
 
@@ -477,6 +500,7 @@ As is often the case, performing the actual statistical test is the least of you
 In R we perform the ANOVA on the linear model object, `lm_oystercatcher` in this case. We do this with the `anova()` function:
 
 ```{r}
+#| label: r-run-anova
 anova(lm_oystercatcher)
 ```
 
@@ -505,6 +529,7 @@ It takes the following arguments:
 -   `detailed`: optional `True` or `False`, we're setting it to `True` because we like to know what we're doing!
 
 ```{python}
+#| label: py-run-anova
 pg.anova(dv = "feeding",
          between = "site",
          data = oystercatcher_py,
@@ -528,6 +553,7 @@ Alternatively, and we'll be using this method later on in the course, you can pe
 This uses the `sm.stats.anova_lm()` function from `statsmodels`. As you'll see, the output is very similar:
 
 ```{python}
+#| label: py-run-anova-2
 sm.stats.anova_lm(lm_oystercatcher_py)
 ```
 :::
@@ -543,6 +569,7 @@ Since the p-value is very small (much smaller than the standard significance lev
 One drawback with using an ANOVA test is that it only tests to see if all of the means are the same. If we get a significant result using ANOVA then all we can say is that not all of the means are the same, rather than anything about how the pairs of groups differ. For example, consider the following box plot for three samples.
 
 ```{r}
+#| label: r-read-data-2
 #| echo: false
 #| message: false
 # load the data
@@ -550,6 +577,7 @@ tukey <- read_csv("data/CS2-tukey.csv")
 ```
 
 ```{r}
+#| label: r-plot-data-2
 #| echo: false
 ggplot(tukey,
        aes(x = group, y = response)) +
@@ -566,6 +594,7 @@ How do we find out if there are any differences between these groups and, if so,
 ## R
 
 ```{r}
+#| label: r-read-data-3
 # load the data
 tukey <- read_csv("data/CS2-tukey.csv")
 
@@ -574,6 +603,7 @@ tukey
 ```
 
 ```{r}
+#| label: r-plot-data-3
 # plot the data
 ggplot(tukey,
        aes(x = group, y = response)) +
@@ -582,6 +612,7 @@ ggplot(tukey,
 
 ## Python
 ```{python}
+#| label: py-read-data-3
 # load the data
 tukey_py = pd.read_csv("data/CS2-tukey.csv")
 
@@ -590,6 +621,7 @@ tukey_py.head()
 ```
 
 ```{python}
+#| label: py-plot-data-2
 #| results: hide
 # plot the data
 p = (ggplot(tukey_py,
@@ -608,6 +640,7 @@ p.show()
 ## R
 
 ```{r}
+#| label: r-run-anova-2
 # create a linear model
 lm_tukey <- lm(response ~ group,
                data = tukey)
@@ -619,6 +652,7 @@ anova(lm_tukey)
 ## Python
 
 ```{python}
+#| label: py-run-anova-3
 pg.anova(dv = "response",
          between = "group",
          data = tukey_py,
@@ -640,6 +674,7 @@ This will compare all of the groups in a pairwise fashion and reports on whether
 To perform Tukey's range test we can use the `tukey_hsd()` function from the `rstatix` package. Note, there is a `TukeyHSD()` function in base R as well, but the `tukey_hsd()` function can take a linear model object as input, whereas the `TukeyHSD()` function cannot. This makes the `tukey_hsd()` function a bit easier to work with.
 
 ```{r}
+#| label: r-perform-tukey-s-range-test
 # perform Tukey's range test on linear model
 tukey_hsd(lm_tukey)
 ```
@@ -649,6 +684,7 @@ The `tukey_hsd()` function takes our linear model (`lm_tukey`) as its input. The
 ## Python
 
 ```{python}
+#| label: py-perform-tukey-s-range-test-on-linear-model
 pg.pairwise_tukey(dv = "response",
                   between = "group",
                   data = tukey_py).transpose()
@@ -687,6 +723,7 @@ Tukey's range test, when we decide to use it, requires the same three assumption
 Juvenile lobsters in aquaculture were grown on three different diets (fresh mussels, semi-dry pellets and dry flakes). After nine weeks, their wet weight was:
 
 ```{r}
+#| label: r-read-data-4
 #| echo: false
 #| message: false
 #| warning: false
@@ -719,6 +756,7 @@ $H_1$ : not all means are equal
 ## R
 
 ```{r}
+#| label: r-read-data-5
 #| message: false
 #| warning: false
 # load the data
@@ -731,6 +769,7 @@ lobsters
 The data have a unique `id` column, which we don't need any summary statistics for, so we deselect it:
 
 ```{r}
+#| label: r-summarize-data-2
 # create some summary statistics
 lobsters |>
   select(-id) |>
@@ -741,6 +780,7 @@ lobsters |>
 Next, we visualise the data:
 
 ```{r}
+#| label: r-plot-data-4
 lobsters |>
   ggplot(aes(x = diet, y = weight)) +
   geom_boxplot()
@@ -749,12 +789,14 @@ lobsters |>
 ## Python
 
 ```{python}
+#| label: py-read-data-4
 lobsters_py = pd.read_csv("data/CS2-lobsters.csv")
 ```
 
 Next, we visualise the data:
 
 ```{python}
+#| label: py-plot-data-3
 #| results: hide
 p = (ggplot(lobsters_py,
         aes(x = "diet",
@@ -794,6 +836,7 @@ We'll be really thorough here and consider the normality of each group separatel
 First, we perform the Shapiro-Wilk test on the individual groups:
 
 ```{r}
+#| label: r-filter-data-2
 # Shapiro-Wilk on lobster groups
 lobsters |>
     filter(diet == "Flakes") |>
@@ -816,6 +859,7 @@ lobsters |>
 Let's look at the Shapiro-Wilk test for all of the data together:
 
 ```{r}
+#| label: r-test-normality
 # create a linear model
 lm_lobsters <- lm(weight ~ diet,
                   data = lobsters)
@@ -831,6 +875,7 @@ resid_lobsters |>
 This on the other hand says that everything is fine. Let's look at Q-Q plot.
 
 ```{r}
+#| label: r-calculate-residuals-2
 #| message: false
 #| warning: false
 # Q-Q plots
@@ -849,6 +894,7 @@ Overall, I'd be happy that the assumption of normality has been adequately well 
 We'll consider the Bartlett test and we'll look at some diagnostic plots too.
 
 ```{r}
+#| label: r-calculate-residuals-3
 #| message: false
 #| warning: false
 # perform Bartlett's test
@@ -883,6 +929,7 @@ We'll be really thorough here and consider the normality of each group separatel
 First, we perform the Shapiro-Wilk test on the individual groups:
 
 ```{python}
+#| label: py-test-normality-2
 # Shapiro-Wilk on lobster groups
 pg.normality(dv = "weight",
              group = "diet",
@@ -894,6 +941,7 @@ pg.normality(dv = "weight",
 Let's look at the Shapiro-Wilk test for all of the data together:
 
 ```{python}
+#| label: py-fit-linear-model-2
 # create a linear model
 model = smf.ols(formula = "weight ~ C(diet)", data = lobsters_py)
 # and get the fitted parameters of the model
@@ -901,6 +949,7 @@ lm_lobsters_py = model.fit()
 ```
 
 ```{python}
+#| label: py-test-normality-3
 # get the residuals from the model fit
 # and perform Shapiro-Wilk test
 pg.normality(lm_lobsters_py.resid)
@@ -909,6 +958,7 @@ pg.normality(lm_lobsters_py.resid)
 This on the other hand says that everything is fine. Let's look at Q-Q plot.
 
 ```{python}
+#| label: py-plot-data-4
 #| results: hide
 # Q-Q plots
 p = (ggplot(lobsters_py,
@@ -928,6 +978,7 @@ Overall, I'd be happy that the assumption of normality has been adequately well 
 We'll consider the Bartlett test and we'll look at the diagnostic plots too.
 
 ```{python}
+#| label: py-q-q-plots
 pg.homoscedasticity(dv = "weight",
                     group = "diet",
                     method = "bartlett",
@@ -935,6 +986,7 @@ pg.homoscedasticity(dv = "weight",
 ```
 
 ```{python}
+#| label: py-q-q-plots-2
 dgplots(lm_lobsters_py)
 ```
 
@@ -960,12 +1012,14 @@ With our assumptions of normality and equality of variance met we can be confide
 ## R
 
 ```{r}
+#| label: r-run-anova-3
 anova(lm_lobsters)
 ```
 
 ## Python
 
 ```{python}
+#| label: py-run-anova-4
 pg.anova(dv = "weight",
          between = "diet",
          data = lobsters_py,

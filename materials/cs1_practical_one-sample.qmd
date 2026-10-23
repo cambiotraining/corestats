@@ -3,6 +3,7 @@ title: "One-sample data"
 ---
 
 ```{r}
+#| label: r-setup
 #| echo: false
 #| message: false
 #| results: hide
@@ -10,6 +11,7 @@ source(file = "setup_files/setup.R")
 ```
 
 ```{python}
+#| label: py-setup
 #| echo: false
 #| message: false
 import shutup;shutup.please()
@@ -47,6 +49,7 @@ exec(open('setup_files/setup.py').read())
 ### Libraries
 
 ```{r}
+#| label: r-load-libraries
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
@@ -58,6 +61,7 @@ library(rstatix)
 ### Functions
 
 ```{r}
+#| label: r-plot-data
 #| eval: false
 #| warning: false
 # Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
@@ -81,6 +85,7 @@ ggplot2::stat_qq_line()
 ### Libraries
 
 ```{python}
+#| label: py-import-libraries
 #| eval: false
 # A Python data analysis and manipulation tool
 import pandas as pd
@@ -95,6 +100,7 @@ from plotnine import *
 ### Functions
 
 ```{python}
+#| label: py-read-data
 #| eval: false
 # Reads in a .csv file
 pandas.DataFrame.read_csv()
@@ -123,6 +129,7 @@ plotnine.stats.stat_qq_line()
 One sample tests are used when we have a single sample of continuous data. It is used to find out if the sample came from a parent distribution with a given mean (or median). This essentially boils down to finding out if the sample mean (or median) is "close enough" to our hypothesised parent population mean (or median). So, in the figure below, we could use these tests to see what the probability is that the sample of ten points comes from the distribution plotted above it i.e. a population with a mean of 20 mm.
 
 ```{r}
+#| label: r-plot-data-2
 #| echo: false
 set.seed(726)
 tibble(x = dist_normal(20, 5),
@@ -178,6 +185,7 @@ Make sure you have downloaded the data (see: [Data section](../setup.qmd)) and p
 First we load the relevant libraries:
 
 ```{r}
+#| label: r-load-libraries-2
 #| eval: false
 #| warning: false
 #| message: false
@@ -188,6 +196,7 @@ library(tidyverse)
 We then read in the data and create a table containing the data.
 
 ```{r}
+#| label: r-read-data
 #| warning: false
 #| message: false
 # import the data
@@ -203,6 +212,7 @@ The first line reads the data into R and creates an object called a **tibble**, 
 We then read the data in:
 
 ```{python}
+#| label: py-read-data-2
 # load the data
 fishlength_py = pd.read_csv('data/CS1-onesample.csv')
 
@@ -219,12 +229,14 @@ Summarise the data and visualise it:
 ## R
 
 ```{r}
+#| label: r-summarize-data
 summary(fishlengthDF)
 ```
 
 From the `summary()` output we can see that the mean and median of the `length` variable are quite close together. The `id` column also has minimum, maximum, mean etc. values - these are not useful! The numbers in the `id` column have no numerical value, but are just to ensure each observation can be traced back, if needed.
 
 ```{r}
+#| label: r-plot-data-3
 ggplot(fishlengthDF,
        aes(x = river,
            y = length)) +
@@ -236,12 +248,14 @@ ggplot(fishlengthDF,
 First we have a look at a numerical summary of the data:
 
 ```{python}
+#| label: py-summarize-data
 fishlength_py.describe()
 ```
 
 From the `describe()` output we can see that the mean and median of the `length` variable are quite close together. The `id` column also has minimum, maximum, mean etc. values - these are not useful! The numbers in the `id` column have no numerical value, but are just to ensure each observation can be traced back, if needed.
 
 ```{python}
+#| label: py-plot-data
 #| results: hide
 p = (ggplot(fishlength_py,
         aes(x = "river",
@@ -287,6 +301,7 @@ Plot a histogram of the data, which gives:
 ## R
 
 ```{r}
+#| label: r-plot-data-4
 ggplot(fishlengthDF,
        aes(x = length)) +
   geom_histogram(bins = 15)
@@ -295,6 +310,7 @@ ggplot(fishlengthDF,
 ## Python
 
 ```{python}
+#| label: py-plot-data-2
 #| results: hide
 p = (ggplot(fishlength_py,
         aes(x = "length")) +
@@ -318,6 +334,7 @@ Construct a Q-Q Plot of the quantiles of the data against the quantiles of a nor
 ## R
 
 ```{r}
+#| label: r-plot-data-5
 ggplot(fishlengthDF,
        aes(sample = length)) +
   stat_qq() +
@@ -327,6 +344,7 @@ ggplot(fishlengthDF,
 ## Python
 
 ```{python}
+#| label: py-plot-data-3
 #| results: hide
 p = (ggplot(fishlength_py,
         aes(sample = "length")) +
@@ -348,6 +366,7 @@ It is a very rare situation indeed where the assumptions necessary for a test wi
 Below are four examples of QQ plots for different types of distributions:
 
 ```{r}
+#| label: r-load-libraries-3
 #| echo: false
 # load required libraries
 library(distributional)
@@ -364,6 +383,7 @@ df_dist <- data.frame(norm_dist = rnorm(200,0,1),
 ```
 
 ```{r}
+#| label: r-plot-data-6
 #| echo: false
 norm1 <- ggplot(df_dist, aes(x = norm_dist)) +
     stat_dots() +
@@ -386,6 +406,7 @@ These two graphs relate to 200 data points that have been drawn from a normal di
 ------------------------------------------------------------------------
 
 ```{r}
+#| label: r-plot-data-7
 #| echo: false
 unif1 <- ggplot(df_dist, aes(x = unif_dist)) +
     stat_dots() +
@@ -408,6 +429,7 @@ These two graphs relate to 200 data points that have been drawn from a uniform d
 ------------------------------------------------------------------------
 
 ```{r}
+#| label: r-plot-data-8
 #| echo: false
 tdist1 <- ggplot(df_dist, aes(x = t_dist)) +
     stat_dots() +
@@ -430,6 +452,7 @@ These two graphs relate to 200 data points that have been drawn from a t distrib
 ------------------------------------------------------------------------
 
 ```{r}
+#| label: r-plot-data-9
 #| echo: false
 exp_dist1 <- ggplot(df_dist, aes(x = exp_dist)) +
     stat_dots() +
@@ -463,6 +486,7 @@ Perform a Shapiro-Wilk test on the data:
 The `shapiro.test()` function needs a numerical vector as input. We get this by extracting the `length` column.
 
 ```{r}
+#| label: r-test-normality
 shapiro.test(fishlengthDF$length)
 ```
 
@@ -476,6 +500,7 @@ shapiro.test(fishlengthDF$length)
 We take the `length` values from the `fishlength_py` data frame and pass that to the `normality()` function in `pingouin`:
 
 ```{python}
+#| label: py-shapiro-wilk-test
 pg.normality(fishlength_py.length)
 ```
 
@@ -506,6 +531,7 @@ Perform a one-sample, two-tailed t-test:
 ## R
 
 ```{r}
+#| label: r-implement-and-interpret-the-test
 t_test(length ~ 1,
        mu = 20, alternative = "two.sided",
        data = fishlengthDF)
@@ -527,6 +553,7 @@ In the output:
 ## Python
 
 ```{python}
+#| label: py-implement-and-interpret-the-test
 pg.ttest(x = fishlength_py.length,
          y = 20,
          alternative = "two-sided").round(3)
@@ -605,11 +632,13 @@ Plot a histogram and a box plot of the data:
 Let's first determine the median, so we can use that to compare our data to. We'll also store the value in an object called `median_fishlength`.
 
 ```{r}
+#| label: r-determine-median
 # determine the median
 median_fishlength <- median(fishlengthDF$length)
 ```
 
 ```{r}
+#| label: r-plot-data-10
 # create a histogram
 fishlengthDF |>
   ggplot(aes(x = length)) +
@@ -628,10 +657,12 @@ fishlengthDF |>
 Let's first determine the median, so we can use that to compare our data to.
 
 ```{python}
+#| label: py-create-box-plot
 median_fishlength = fishlength_py.length.median()
 ```
 
 ```{python}
+#| label: py-plot-data-4
 #| results: hide
 # create a histogram
 p = (ggplot(fishlength_py,
@@ -662,6 +693,7 @@ Perform a one-sample, two-tailed Wilcoxon signed rank test:
 ## R
 
 ```{r}
+#| label: r-run-wilcoxon-test
 wilcox_test(length ~ 1,
             mu = 20, alternative = "two.sided",
             data = fishlengthDF)
@@ -676,6 +708,7 @@ The syntax is identical to the one-sample t-test we carried out earlier.
 ## Python
 
 ```{python}
+#| label: py-run-wilcoxon-test
 pg.wilcoxon(fishlength_py.length - 20,
             alternative = "two-sided")
 ```
@@ -732,6 +765,7 @@ We read in the data from `CS1-gastric_juices.csv`. It contains two columns, an `
 ## R
 
 ```{r}
+#| label: r-read-data-2
 #| message: false
 #| warning: false
 # load the data
@@ -747,6 +781,7 @@ summary(dissolving)
 We can look at the histogram and box plot of the data:
 
 ```{r}
+#| label: r-plot-data-11
 # create a histogram
 ggplot(dissolving,
        aes(x = dissolving_time)) +
@@ -761,6 +796,7 @@ ggplot(dissolving,
 ## Python
 
 ```{python}
+#| label: py-read-data-3
 # load the data
 dissolving_py = pd.read_csv("data/CS1-gastric_juices.csv")
 
@@ -774,6 +810,7 @@ dissolving_py.describe()
 We can look at the histogram and box plot of the data:
 
 ```{python}
+#| label: py-plot-data-5
 #| results: hide
 # create a histogram
 p = (ggplot(dissolving_py,
@@ -784,6 +821,7 @@ p.show()
 ```
 
 ```{python}
+#| label: py-plot-data-6
 #| results: hide
 # create a box plot
 p = (ggplot(dissolving_py,
@@ -811,11 +849,13 @@ Normality:
 ## R
 
 ```{r}
+#| label: r-test-normality-2
 # perform Shapiro-Wilk test
 shapiro.test(dissolving$dissolving_time)
 ```
 
 ```{r}
+#| label: r-plot-data-12
 # create a Q-Q plot
 ggplot(dissolving,
        aes(sample = dissolving_time)) +
@@ -826,11 +866,14 @@ ggplot(dissolving,
 ## Python
 
 ```{python}
+#| label: py-test-normality
 # Perform Shapiro-Wilk test to check normality
 pg.normality(dissolving_py.dissolving_time)
 ```
 
-```{python, results='hide'}
+```{python}
+#| label: py-plot-data-7
+#| results: hide
 # Create a Q-Q plot
 p = (ggplot(dissolving_py,
         aes(sample = "dissolving_time")) +
@@ -854,6 +897,7 @@ In reality, if I found myself in this situation I would also try doing a non-par
 ## R
 
 ```{r}
+#| label: r-perform-one-sample-t-test
 # perform one-sample t-test
 dissolving
 t_test(dissolving_time ~ 1,
@@ -864,6 +908,7 @@ t_test(dissolving_time ~ 1,
 ## Python
 
 ```{python}
+#| label: py-perform-one-sample-t-test
 pg.ttest(x = dissolving_py.dissolving_time,
          y = 45,
          alternative = "two-sided").round(3)
@@ -909,10 +954,12 @@ Calculating the median and performing the test:
 ## R
 
 ```{r}
+#| label: r-wilcoxon-signed-rank-test
 median(dissolving$dissolving_time)
 ```
 
 ```{r}
+#| label: r-run-wilcoxon-test-2
 wilcox_test(dissolving_time ~ 1,
             mu = 45, alternative = "two.sided",
             data = dissolving)
@@ -921,10 +968,12 @@ wilcox_test(dissolving_time ~ 1,
 ## Python
 
 ```{python}
+#| label: py-wilcoxon-signed-rank-test
 dissolving_py.dissolving_time.median()
 ```
 
 ```{python}
+#| label: py-run-wilcoxon-test-2
 pg.wilcoxon(dissolving_py.dissolving_time - 45,
             alternative = "two-sided")
 ```

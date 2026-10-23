@@ -3,6 +3,7 @@ title: "Paired data"
 ---
 
 ```{r}
+#| label: r-setup
 #| echo: false
 #| message: false
 #| results: hide
@@ -10,6 +11,7 @@ source(file = "setup_files/setup.R")
 ```
 
 ```{python}
+#| label: py-setup
 #| echo: false
 #| message: false
 import shutup;shutup.please()
@@ -52,6 +54,7 @@ There is the assumption that each pair within the data is independent of each ot
 ### Libraries
 
 ```{r}
+#| label: r-load-libraries
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
@@ -63,6 +66,7 @@ library(rstatix)
 ### Functions
 
 ```{r}
+#| label: r-plot-data
 #| eval: false
 #| warning: false
 # Performs a one-sample t-test, Student's t-test
@@ -97,6 +101,7 @@ tidyr::pivot_wider()
 ### Libraries
 
 ```{python}
+#| label: py-import-libraries
 #| eval: false
 # A Python data analysis and manipulation tool
 import pandas as pd
@@ -111,6 +116,7 @@ from plotnine import *
 ### Functions
 
 ```{python}
+#| label: py-read-data
 #| eval: false
 # Return reshaped DataFrame organised by given index / column values
 pandas.DataFrame.pivot()
@@ -157,6 +163,7 @@ The data are stored in a tidy format in the file `data/CS1-twopaired.csv`.
 ## R
 
 ```{r}
+#| label: r-read-data
 # load the data
 cortisol <- read_csv("data/CS1-twopaired.csv")
 
@@ -167,6 +174,7 @@ cortisol
 ## Python
 
 ```{python}
+#| label: py-read-data-2
 # load the data
 cortisol_py = pd.read_csv('data/CS1-twopaired.csv')
 
@@ -191,6 +199,7 @@ It's always a good idea to visualise your data, so let's do that.
 ## R
 
 ```{r}
+#| label: r-plot-data-2
 # create a boxplot
 ggplot(cortisol,
        aes(x = time, y = cortisol)) +
@@ -204,6 +213,7 @@ Here we use also visualise the actual data points, to get a sense of how these d
 ## Python
 
 ```{python}
+#| label: py-plot-data
 #| results: hide
 p = (ggplot(cortisol_py,
         aes(x = "time",
@@ -226,6 +236,7 @@ To do this, we need to put our data into a wide format, so we can calculate the 
 In `tidyverse` we can use the `pivot_wider()` function.
 
 ```{r}
+#| label: r-transform-data
 # calculate the difference between evening and morning values
 cortisol_diff <- cortisol |>
   pivot_wider(id_cols = patient_id,
@@ -247,6 +258,7 @@ Lastly, we create a new column `cortisol_change` that contains the difference be
 After this we can plot our data:
 
 ```{r}
+#| label: r-plot-data-3
 # plot the data
 ggplot(cortisol_diff,
        aes(y = cortisol_change)) +
@@ -259,6 +271,7 @@ The differences in cortisol levels appear to be very much less than zero, meanin
 An alternative representation would be to plot the data points for both evening and morning and connect them by patient:
 
 ```{r}
+#| label: r-plot-data-4
 # plot cortisol levels by patient
 ggplot(cortisol,
        aes(x = time,
@@ -273,6 +286,7 @@ This gives a similar picture to what the boxplot was telling us, that for most p
 ## Python
 
 ```{python}
+#| label: py-inspect-data
 # reformat the data into a 'wide' format
 cortisol_diff_py = pd.pivot(cortisol_py, index = "patient_id", columns = "time", values = "cortisol")
 
@@ -287,6 +301,7 @@ cortisol_diff_py.head()
 After this we can plot our data:
 
 ```{python}
+#| label: py-plot-data-2
 #| results: hide
 # plot the data
 p = (ggplot(cortisol_diff_py,
@@ -303,6 +318,7 @@ The differences in cortisol levels appear to be very much less than zero, meanin
 An alternative representation would be to plot the data points for both evening and morning and connect them by patient:
 
 ```{python}
+#| label: py-plot-data-3
 #| results: hide
 # plot cortisol levels by patient
 p = (ggplot(cortisol_py,
@@ -330,6 +346,7 @@ Perform a two-sample, two-tailed, paired t-test:
 ## R
 
 ```{r}
+#| label: r-perform-test
 #| results: hide
 # perform the test
 t_test(cortisol ~ time,
@@ -351,6 +368,7 @@ To perform a paired t-test we can use the same `pg.ttest()` as before, but set t
 Annoyingly, the output is not entirely visible because the data frame is too wide. To deal with that, we can simply transpose it with `transpose()`
 
 ```{python}
+#| label: py-perform-the-test
 pg.ttest(cortisol_diff_py["evening"],
          cortisol_diff_py["morning"],
          alternative = "two-sided",
@@ -393,6 +411,7 @@ Perform a two-tailed, Wilcoxon signed rank test:
 ## R
 
 ```{r}
+#| label: r-run-wilcoxon-test
 wilcox_test(cortisol ~ time,
             alternative = "two.sided",
             paired = TRUE,
@@ -408,6 +427,7 @@ wilcox_test(cortisol ~ time,
 We'll use the wide format data set that we created previously:
 
 ```{python}
+#| label: py-run-wilcoxon-test
 pg.wilcoxon(x = cortisol_diff_py["evening"],
             y = cortisol_diff_py["morning"],
             alternative = "two-sided",
@@ -442,6 +462,7 @@ Let's check this with the Shapiro-Wilk test and Q-Q plots, using the wide data f
 Perform Shapiro-Wilk test:
 
 ```{r}
+#| label: r-test-normality
 # perform Shapiro-Wilk test on cortisol differences
 shapiro.test(cortisol_diff$cortisol_change)
 ```
@@ -449,6 +470,7 @@ shapiro.test(cortisol_diff$cortisol_change)
 Create Q-Q plot:
 
 ```{r}
+#| label: r-plot-data-5
 # create the Q-Q plot
 ggplot(cortisol_diff,
        aes(sample = cortisol_change)) +
@@ -461,6 +483,7 @@ ggplot(cortisol_diff,
 Perform Shapiro-Wilk test:
 
 ```{python}
+#| label: py-test-normality
 # perform Shapiro-Wilk test on cortisol differences
 pg.normality(cortisol_diff_py["cortisol_change"])
 ```
@@ -468,6 +491,7 @@ pg.normality(cortisol_diff_py["cortisol_change"])
 Create Q-Q plot:
 
 ```{python}
+#| label: py-plot-data-4
 #| results: hide
 # create the Q-Q plot
 p = (ggplot(cortisol_diff_py,
@@ -494,6 +518,7 @@ So, yep, a paired t-test is appropriate for this data set.
 Using the following data on deer legs (yes, really!), test the null hypothesis that the fore and hind legs of the deer in this data set are the same length.
 
 ```{r}
+#| label: r-read-data-2
 #| echo: false
 #| warning: false
 #| message: false
@@ -530,6 +555,7 @@ First of all, we need to load in the data.
 ## R
 
 ```{r}
+#| label: r-read-data-3
 #| message: false
 #| warning: false
 # load the data
@@ -544,6 +570,7 @@ The ordering of the data is important here; the first hind leg row corresponds t
 Let's look at the data and see what it tells us.
 
 ```{r}
+#| label: r-summarize-data
 # summarise the data
 summary(deer)
 ```
@@ -553,6 +580,7 @@ We can also summarise some of the main summary statistics for each type of `leg`
 To make life easy we use the `get_summary_stats()` function from the `rstatix` package. Have a look at the help function to see what kind of summary statistics it can produce. In this case I'm using the `type = "common"` option to specify that I want to find commonly used statistics (e.g. sample number, min, max, median, mean etc.)
 
 ```{r}
+#| label: r-or-even-summarise-by-leg
 # or even summarise by leg type
 deer |>
   select(-id) |>
@@ -563,6 +591,7 @@ deer |>
 Visualising the data is often more useful:
 
 ```{r}
+#| label: r-plot-data-6
 # we can also visualise the data
 ggplot(deer,
        aes(x = leg, y = length)) +
@@ -572,6 +601,7 @@ ggplot(deer,
 All of this suggests that there might be a difference between the legs, with hind legs being longer than forelegs. However, this representation obscures the fact that we have *paired* data. What we really need to look at is the _difference_ in leg length for each observation:
 
 ```{r}
+#| label: r-transform-data-2
 # create a data set that contains the difference in leg length
 leg_diff <- deer |>
   pivot_wider(id_cols = id,
@@ -581,6 +611,7 @@ leg_diff <- deer |>
 ```
 
 ```{r}
+#| label: r-plot-data-7
 # plot the difference in leg length
 ggplot(leg_diff,
        aes(y = leg_diff)) +
@@ -590,6 +621,7 @@ ggplot(leg_diff,
 Additionally, we can also plot the data by observation:
 
 ```{r}
+#| label: r-plot-data-8
 # plot the data by observation
 ggplot(deer,
        aes(x = leg, y = length, group = id)) +
@@ -600,6 +632,7 @@ ggplot(deer,
 ## Python
 
 ```{python}
+#| label: py-read-data-3
 #| message: false
 #| warning: false
 # load the data
@@ -614,6 +647,7 @@ The ordering of the data is important here; the first hind leg row corresponds t
 Let's look at the data and see what we can see.
 
 ```{python}
+#| label: py-summarize-data
 # summarise the data
 deer_py.describe()
 ```
@@ -621,12 +655,14 @@ deer_py.describe()
 We can also summarise by leg type:
 
 ```{python}
+#| label: py-summarize-data-2
 deer_py.groupby("leg")["length"].describe()
 ```
 
 It might be more helpful to look at the *difference* in leg length. In order to calculate that, we need to reformat our data into a 'wide' format first:
 
 ```{python}
+#| label: py-inspect-data-2
 # reformat the data into a 'wide' format
 leg_diff_py = pd.pivot(deer_py,
                        index = "id",
@@ -640,6 +676,7 @@ leg_diff_py.head()
 Next, we can add a new column `leg_diff` that contains the leg difference:
 
 ```{python}
+#| label: py-add-new-column-difference-between
 # add a new column with difference between
 # hind and fore leg length
 leg_diff_py["leg_diff"] = leg_diff_py["hindleg"].subtract(leg_diff_py["foreleg"])
@@ -649,6 +686,7 @@ leg_diff_py["leg_diff"] = leg_diff_py["hindleg"].subtract(leg_diff_py["foreleg"]
 Finally, we can visualise this:
 
 ```{python}
+#| label: py-plot-data-5
 #| results: hide
 # we can also visualise the data
 p = (ggplot(leg_diff_py,
@@ -662,6 +700,7 @@ p.show()
 All of this suggests that there might be a difference between the legs, with hind legs being longer than forelegs. However, this representation obscures the fact that we have *paired* data. What we really need to look at is the difference in leg length for each observation:
 
 ```{python}
+#| label: py-plot-data-6
 #| results: hide
 # plot paired observations
 p = (ggplot(deer_py,
@@ -687,6 +726,7 @@ We need to consider the distribution of the *difference* in leg lengths rather t
 Shapiro-Wilk test:
 
 ```{r}
+#| label: r-test-normality-2
 # perform Shapiro-Wilk test on leg differences
 shapiro.test(leg_diff$leg_diff)
 ```
@@ -694,6 +734,7 @@ shapiro.test(leg_diff$leg_diff)
 Q-Q plot:
 
 ```{r}
+#| label: r-plot-data-9
 # create a Q-Q plot
 ggplot(leg_diff,
        aes(sample = leg_diff)) +
@@ -706,6 +747,7 @@ ggplot(leg_diff,
 Shapiro-Wilk test:
 
 ```{python}
+#| label: py-test-normality-2
 # perform Shapiro-Wilk test on leg length differences
 pg.normality(leg_diff_py["leg_diff"])
 ```
@@ -713,6 +755,7 @@ pg.normality(leg_diff_py["leg_diff"])
 Create the Q-Q plot:
 
 ```{python}
+#| label: py-plot-data-7
 #| results: hide
 # create the Q-Q plot
 p = (ggplot(leg_diff_py,

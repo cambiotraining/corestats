@@ -3,6 +3,7 @@ title: "Two-way ANOVA"
 ---
 
 ```{r}
+#| label: r-setup
 #| echo: false
 #| message: false
 #| results: hide
@@ -10,6 +11,7 @@ source(file = "setup_files/setup.R")
 ```
 
 ```{python}
+#| label: py-setup
 #| echo: false
 #| message: false
 import shutup;shutup.please()
@@ -42,6 +44,7 @@ exec(open('setup_files/setup.py').read())
 ### Libraries
 
 ```{r}
+#| label: r-load-libraries
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
@@ -56,6 +59,7 @@ library(ggResidpanel)
 ### Functions
 
 ```{r}
+#| label: r-run-anova
 #| eval: false
 #| warning: false
 # Creates diagnostic plots
@@ -73,6 +77,7 @@ stats::anova()
 ### Libraries
 
 ```{python}
+#| label: py-import-libraries
 #| eval: false
 # A Python data analysis and manipulation tool
 import pandas as pd
@@ -93,6 +98,7 @@ from dgplots import dgplots
 ### Functions
 
 ```{python}
+#| label: py-read-data
 #| eval: false
 # Summary statistics
 pandas.DataFrame.describe()
@@ -123,6 +129,7 @@ Note: you can download the `dgplots` script [here](scripts/dgplots.py).
 A two-way analysis of variance is used when we have two categorical predictor variables (or factors) and a single continuous response variable. For example, when we are looking at how body `weight` (continuous response variable in kilograms) is affected by sex (categorical variable, `male` or `female`) and `exercise` type (categorical variable, `control` or `runner`).
 
 ```{r}
+#| label: r-read-data
 #| echo: false
 #| warning: false
 #| message: false
@@ -130,6 +137,7 @@ exercise <- read_csv("data/CS4-exercise.csv")
 ```
 
 ```{r}
+#| label: r-plot-data
 #| echo: false
 #| warning: false
 #| message: false
@@ -159,6 +167,7 @@ We will recreate the example analysis used in the lecture. The data are stored a
 First, we read in the data:
 
 ```{r}
+#| label: r-read-data-2
 #| eval: false
 #| warning: false
 #| message: false
@@ -168,6 +177,7 @@ exercise <- read_csv("data/CS4-exercise.csv")
 You can visualise the data with:
 
 ```{r}
+#| label: r-plot-data-2
 # visualise the data, sex vs weight
 ggplot(exercise,
        aes(x = sex, y = weight)) +
@@ -184,12 +194,14 @@ ggplot(exercise,
 First, we read in the data:
 
 ```{python}
+#| label: py-read-data-2
 exercise_py = pd.read_csv("data/CS4-exercise.csv")
 ```
 
 You can visualise the data with:
 
 ```{python}
+#| label: py-plot-data
 #| results: hide
 # visualise the data, sex vs weight
 p = (ggplot(exercise_py,
@@ -216,6 +228,7 @@ A better way would be to visualise both variables at the same time. We can do th
 ## R
 
 ```{r}
+#| label: r-plot-data-3
 ggplot(exercise,
        aes(x = sex, y = weight, fill = exercise)) +
   geom_boxplot() +
@@ -229,6 +242,7 @@ Here I've also changed the default colouring scheme, by using `scale_fill_brewer
 ## Python
 
 ```{python}
+#| label: py-plot-data-2
 #| results: hide
 p = (ggplot(exercise_py,
         aes(x = "sex",
@@ -257,6 +271,7 @@ Create an interaction plot:
 We're adding a bit of jitter to the data, to avoid too much overlap between the data points. We can do this with `geom_jitter()`.
 
 ```{r}
+#| label: r-plot-data-4
 ggplot(exercise,
        aes(x = sex, y = weight,
            colour = exercise, group = exercise)) +
@@ -277,6 +292,7 @@ The choice of which categorical factor is plotted on the horizontal axis and whi
 
 Plot the interaction plot the other way round:
 ```{r}
+#| label: r-plot-data-5
 ggplot(exercise,
        aes(x = exercise, y = weight,
            colour = sex, group = sex)) +
@@ -291,6 +307,7 @@ ggplot(exercise,
 We're adding a bit of jitter to the data, to avoid too much overlap between the data points. We can do this with `geom_jitter()`.
 
 ```{python}
+#| label: py-plot-data-3
 #| results: hide
 p = (ggplot(exercise_py,
         aes(x = "sex", y = "weight",
@@ -317,6 +334,7 @@ The choice of which categorical factor is plotted on the horizontal axis and whi
 Plot the interaction plot the other way round:
 
 ```{python}
+#| label: py-plot-data-4
 #| results: hide
 p = (ggplot(exercise_py,
         aes(x = "exercise", y = "weight",
@@ -350,6 +368,7 @@ Before we can formally test these things we first need to define the model and c
 ## R
 
 ```{r}
+#| label: r-fit-linear-model
 # define the linear model
 lm_exercise <- lm(weight ~ sex + exercise + sex:exercise,
                   data = exercise)
@@ -360,6 +379,7 @@ The `sex:exercise` term is how R represents the concept of an interaction betwee
 ## Python
 
 ```{python}
+#| label: py-fit-linear-model
 # create a linear model
 model = smf.ols(formula = "weight ~ exercise * sex", data = exercise_py)
 # and get the fitted parameters of the model
@@ -382,6 +402,7 @@ Again, we will check these assumptions visually by producing four key diagnostic
 ## R
 
 ```{r}
+#| label: r-calculate-residuals
 #| message: false
 #| warning: false
 resid_panel(lm_exercise,
@@ -407,6 +428,7 @@ Then R interprets it exactly the same way as writing all three terms.
 You can see this if you compare the output of the following two commands:
 
 ```{r}
+#| label: r-run-anova-2
 anova(lm(weight ~ sex + exercise + sex:exercise,
          data = exercise))
 
@@ -418,6 +440,7 @@ anova(lm(weight ~ sex * exercise,
 ## Python
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model
 dgplots(lm_exercise_py)
 ```
 :::
@@ -429,6 +452,7 @@ The assumptions appear to be met well enough, meaning we can implement the ANOVA
 ## R
 
 ```{r}
+#| label: r-run-anova-3
 # perform the ANOVA
 anova(lm_exercise)
 ```
@@ -438,6 +462,7 @@ We have a row in the table for each of the different effects that we’ve asked 
 ## Python
 
 ```{python}
+#| label: py-run-anova
 sm.stats.anova_lm(lm_exercise_py, typ = 2)
 ```
 
@@ -490,6 +515,7 @@ Questions to answer:
 #### Load the data
 
 ```{r}
+#| label: r-read-data-3
 #| warning: false
 #| message: false
 # read in the data
@@ -502,6 +528,7 @@ head(auxin_response)
 #### Visualise the data
 
 ```{r}
+#| label: r-plot-data-6
 ggplot(auxin_response,
        aes(x = genotype, y = plant_height)) +
   geom_boxplot()
@@ -514,6 +541,7 @@ ggplot(auxin_response,
 Let's look at the interaction plots. We're only plotting the mean values here, but feel free to explore the data itself by adding another `geom_`.
 
 ```{r}
+#| label: r-plot-data-7
 # by genotype
 ggplot(auxin_response,
        aes(x = concentration,
@@ -544,6 +572,7 @@ The interaction plots show the mean values for each group, so I prefer to overla
 First we need to define the model:
 
 ```{r}
+#| label: r-fit-linear-model-2
 # define the linear model, with interaction term
 lm_auxin <- lm(plant_height ~ concentration * genotype,
                data = auxin_response)
@@ -552,6 +581,7 @@ lm_auxin <- lm(plant_height ~ concentration * genotype,
 Next, we check the assumptions:
 
 ```{r}
+#| label: r-calculate-residuals-2
 #| message: false
 #| warning: false
 resid_panel(lm_auxin,
@@ -566,6 +596,7 @@ So, these actually all look pretty good, with the data looking normally distribu
 Let's carry out a two-way ANOVA:
 
 ```{r}
+#| label: r-run-anova-4
 # perform the ANOVA
 anova(lm_auxin)
 ```
@@ -579,6 +610,7 @@ There is a significant interaction between `concentration` and `genotype`.
 #### Load the data
 
 ```{python}
+#| label: py-read-data-3
 # read in the data
 auxin_response_py = pd.read_csv("data/CS4-auxin.csv")
 
@@ -589,6 +621,7 @@ auxin_response_py.head()
 #### Visualise the data
 
 ```{python}
+#| label: py-plot-data-5
 #| results: hide
 p = (ggplot(auxin_response_py,
        aes(x = "genotype", y = "plant_height")) +
@@ -607,6 +640,7 @@ p.show()
 Let's look at the interaction plots. We're also including the data itself here with `geom_jitter()`.
 
 ```{python}
+#| label: py-plot-data-6
 #| results: hide
 # by genotype
 p = (ggplot(auxin_response_py,
@@ -646,6 +680,7 @@ The interaction plots show the mean values for each group, so I prefer to overla
 First we need to define the model:
 
 ```{python}
+#| label: py-fit-linear-model-2
 # create a linear model
 model = smf.ols(formula= "plant_height ~ C(genotype) * concentration", data = auxin_response_py)
 # and get the fitted parameters of the model
@@ -655,6 +690,7 @@ lm_auxin_py = model.fit()
 Next, we check the assumptions:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-2
 dgplots(lm_auxin_py)
 ```
 
@@ -665,6 +701,7 @@ So, these actually all look pretty good, with the data looking normally distribu
 Let's carry out a two-way ANOVA:
 
 ```{python}
+#| label: py-run-anova-2
 sm.stats.anova_lm(lm_auxin_py, typ = 2)
 ```
 
@@ -703,6 +740,7 @@ Note: have a look at the data and make sure that they are in the correct format!
 #### Load the data
 
 ```{r}
+#| label: r-read-data-4
 # read in the data
 tulip <- read_csv("data/CS4-tulip.csv")
 
@@ -730,6 +768,7 @@ This data set has three variables; `blooms` (which is the response variable) and
 As always we'll visualise the data first:
 
 ```{r}
+#| label: r-plot-data-8
 #| message: false
 # by watering regime
 ggplot(tulip,
@@ -769,6 +808,7 @@ Again, both interaction plots suggest that there might be an interaction here. D
 First we need to define the model:
 
 ```{r}
+#| label: r-fit-linear-model-3
 # define the linear model
 lm_tulip <- lm(blooms ~ water * shade,
                data = tulip)
@@ -777,6 +817,7 @@ lm_tulip <- lm(blooms ~ water * shade,
 Next, we check the assumptions:
 
 ```{r}
+#| label: r-calculate-residuals-3
 #| message: false
 #| warning: false
 resid_panel(lm_tulip,
@@ -791,6 +832,7 @@ These are actually all OK. A two-way ANOVA analysis is on the cards.
 Let's carry out the two-way ANOVA.
 
 ```{r}
+#| label: r-run-anova-5
 # perform the ANOVA
 anova(lm_tulip)
 ```
@@ -804,6 +846,7 @@ So we do appear to have a significant interaction between `water` and `shade` as
 #### Load the data
 
 ```{python}
+#| label: py-read-data-4
 # read in the data
 tulip_py = pd.read_csv("data/CS4-tulip.csv")
 
@@ -816,6 +859,7 @@ In this data set the watering regime (`water`) and shading regime (`shade`) are 
 As such, we don't want to treat these as numbers but as *factors*. We can convert the columns using `astype(object)`. Because we'd like to keep referring to these columns as factors, we will update our existing data set.
 
 ```{python}
+#| label: py-convert-watering-shade-regimes-factor
 # convert watering and shade regimes to factor
 tulip_py['water'] = tulip_py['water'].astype(object)
 tulip_py['shade'] = tulip_py['shade'].astype(object)
@@ -828,6 +872,7 @@ This data set has three variables; `blooms` (which is the response variable) and
 As always we'll visualise the data first:
 
 ```{python}
+#| label: py-plot-data-7
 #| results: hide
 # by watering regime
 p = (ggplot(tulip_py,
@@ -877,6 +922,7 @@ Again, both interaction plots suggest that there might be an interaction here. D
 First we need to define the model:
 
 ```{python}
+#| label: py-fit-linear-model-3
 # create a linear model
 model = smf.ols(formula= "blooms ~ water * shade", data = tulip_py)
 # and get the fitted parameters of the model
@@ -886,6 +932,7 @@ lm_tulip_py = model.fit()
 Next, we check the assumptions:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-3
 dgplots(lm_tulip_py)
 ```
 
@@ -896,6 +943,7 @@ These are actually all OK. A two-way ANOVA analysis is on the cards.
 Let's carry out the two-way ANOVA.
 
 ```{python}
+#| label: py-run-anova-3
 sm.stats.anova_lm(lm_tulip_py, typ = 2)
 ```
 

@@ -3,6 +3,7 @@ title: "Model comparisons"
 ---
 
 ```{r}
+#| label: r-setup
 #| echo: false
 #| message: false
 #| results: hide
@@ -10,6 +11,7 @@ source(file = "setup_files/setup.R")
 ```
 
 ```{python}
+#| label: py-setup
 #| echo: false
 #| message: false
 import shutup;shutup.please()
@@ -42,6 +44,7 @@ exec(open('setup_files/setup.py').read())
 ### Libraries
 
 ```{r}
+#| label: r-load-libraries
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
@@ -59,6 +62,7 @@ library(broom)
 ### Functions
 
 ```{r}
+#| label: r-calculates-akaike-information-criterion
 #| eval: false
 #| warning: false
 
@@ -74,6 +78,7 @@ stats::step()
 ### Libraries
 
 ```{python}
+#| label: py-import-libraries
 #| eval: false
 # A fundamental package for scientific computing in Python
 import numpy as np
@@ -97,6 +102,7 @@ import statsmodels.formula.api as smf
 ### Functions
 
 ```{python}
+#| label: py-read-data
 #| eval: false
 # Reads in a .csv file
 pandas.DataFrame.read_csv()
@@ -126,6 +132,7 @@ First, we load the data and visualise it:
 ## R
 
 ```{r}
+#| label: r-read-data
 #| message: false
 ladybird <- read_csv("data/CS5-ladybird.csv")
 
@@ -135,6 +142,7 @@ head(ladybird)
 We can visualise the data by `male`, so we can see if the eggs clutch size differs a lot between the two groups:
 
 ```{r}
+#| label: r-plot-data
 ggplot(ladybird,
        aes(x = male, y = eggs)) +
     geom_boxplot() +
@@ -144,6 +152,7 @@ ggplot(ladybird,
 We can also plot the egg clutch size against the weight, again for each male colour group:
 
 ```{r}
+#| label: r-plot-data-2
 # visualise the data
 ggplot(ladybird,
        aes(x = weight, y = eggs,
@@ -155,12 +164,14 @@ ggplot(ladybird,
 ## Python
 
 ```{python}
+#| label: py-read-data-2
 ladybird_py = pd.read_csv("data/CS5-ladybird.csv")
 ```
 
 We can visualise the data by `male`, so we can see if the eggs clutch size differs a lot between the two groups:
 
 ```{python}
+#| label: py-plot-data
 #| results: hide
 p = (ggplot(ladybird_py,
         aes(x = "male", y = "eggs")) +
@@ -173,6 +184,7 @@ p.show()
 We can also plot the egg clutch size against the weight, again for each male colour group:
 
 ```{python}
+#| label: py-plot-data-2
 #| results: hide
 p = (ggplot(ladybird_py,
         aes(x = "weight", y = "eggs",
@@ -203,12 +215,14 @@ Next, we define the reduced model. This is the next, most simple model. In this 
 ## R
 
 ```{r}
+#| label: r-fit-linear-model
 # define the full model
 lm_full <- lm(eggs ~ weight * male,
               data = ladybird)
 ```
 
 ```{r}
+#| label: r-fit-linear-model-2
 # define the additive model
 lm_add <- lm(eggs ~ weight + male,
              data = ladybird)
@@ -217,6 +231,7 @@ lm_add <- lm(eggs ~ weight + male,
 We then extract the AIC values for each of the models:
 
 ```{r}
+#| label: r-define-the-additive-model
 AIC(lm_full)
 AIC(lm_add)
 ```
@@ -224,6 +239,7 @@ AIC(lm_add)
 ## Python
 
 ```{python}
+#| label: py-fit-linear-model
 # create the model
 model = smf.ols(formula= "eggs ~ weight * C(male)", data = ladybird_py)
 # and get the fitted parameters of the model
@@ -231,6 +247,7 @@ lm_full_py = model.fit()
 ```
 
 ```{python}
+#| label: py-fit-linear-model-2
 # create the additive linear model
 model = smf.ols(formula= "eggs ~ weight + C(male)", data = ladybird_py)
 # and get the fitted parameters of the model
@@ -240,6 +257,7 @@ lm_add_py = model.fit()
 We then extract the AIC values for each of the models:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model
 lm_full_py.aic
 lm_add_py.aic
 ```
@@ -262,6 +280,7 @@ Next, we see which of the remaining terms can be dropped. We will look at the mo
 Drop the variable `weight` and examine the AIC:
 
 ```{r}
+#| label: r-fit-linear-model-3
 # define the model
 lm_male <- lm(eggs ~ male,
               data = ladybird)
@@ -273,6 +292,7 @@ AIC(lm_male)
 Drop the variable `male` and examine the AIC:
 
 ```{r}
+#| label: r-fit-linear-model-4
 # define the model
 lm_weight <- lm(eggs ~ weight,
                 data = ladybird)
@@ -286,6 +306,7 @@ AIC(lm_weight)
 Drop the variable `weight` and examine the AIC:
 
 ```{python}
+#| label: py-fit-linear-model-3
 # create the model
 model = smf.ols(formula= "eggs ~ C(male)", data = ladybird_py)
 # and get the fitted parameters of the model
@@ -298,6 +319,7 @@ lm_male_py.aic
 Drop the variable `male` and examine the AIC:
 
 ```{python}
+#| label: py-fit-linear-model-4
 # create the model
 model = smf.ols(formula= "eggs ~ weight", data = ladybird_py)
 # and get the fitted parameters of the model
@@ -322,6 +344,7 @@ Drop the variable `weight` and see if that has an effect:
 ## R
 
 ```{r}
+#| label: r-fit-linear-model-5
 # define the model
 lm_null <- lm(eggs ~ 1,
               data = ladybird)
@@ -333,6 +356,7 @@ AIC(lm_null)
 ## Python
 
 ```{python}
+#| label: py-fit-linear-model-5
 # create the model
 model = smf.ols(formula= "eggs ~ 1", data = ladybird_py)
 # and get the fitted parameters of the model
@@ -364,6 +388,7 @@ Why have we made you work through this procedure then? Given their prevalence in
 Performing backwards stepwise elimination manually can be quite tedious. Thankfully R acknowledges this and there is a single inbuilt function called `step()` that can perform all of the necessary steps for you using AIC.
 
 ```{r}
+#| label: r-fit-linear-model-6
 #| eval: false
 # define the full model
 lm_full <- lm(eggs ~ weight * male,
@@ -416,6 +441,7 @@ Let's start by reading in the data and checking which variables are in the data 
 ## R
 
 ```{r}
+#| label: r-read-data-2
 #| message: false
 trees <- read_csv("data/CS5-trees.csv")
 
@@ -427,6 +453,7 @@ head(trees)
 First, we read in the data (if needed) and have a look at the variables:
 
 ```{python}
+#| label: py-read-data-3
 #| message: false
 trees_py = pd.read_csv("data/CS5-trees.csv")
 
@@ -450,6 +477,7 @@ We perform the BSE as follows:
 Define the model and use the `step()` function:
 
 ```{r}
+#| label: r-fit-linear-model-7
 # define the full model
 lm_trees <- lm(volume ~ girth * height,
                data = trees)
@@ -465,6 +493,7 @@ We first define the full model, then the model without the interaction (`model_1
 We extract the AICs for both models. Because we do not have an automated way of performing the BSE, we're stringing together a few operations to make the code a bit more concise (getting the `.fit()` of the model and immediately extracting the `aic` value):
 
 ```{python}
+#| label: py-fit-linear-model-6
 # define the models
 model_full = smf.ols(formula= "volume ~ girth * height",
                      data = trees_py)
@@ -497,6 +526,7 @@ Perform a BSE on `pm2_5`. Let's start by reading in the data and checking which 
 ## R
 
 ```{r}
+#| label: r-read-data-3
 #| message: false
 pm2_5 <- read_csv("data/CS5-pm2_5.csv")
 
@@ -506,6 +536,7 @@ head(pm2_5)
 ## Python
 
 ```{python}
+#| label: py-read-data-4
 pm2_5_py = pd.read_csv("data/CS5-pm2_5.csv")
 
 pm2_5_py.head()
@@ -523,6 +554,7 @@ pm2_5_py.head()
 ## R
 
 ```{r}
+#| label: r-fit-linear-model-8
 # define the model
 lm_pm2_5 <- lm(pm2_5 ~ avg_temp + rain_mm + wind_m_s * location,
                data = pm2_5)
@@ -536,6 +568,7 @@ step(lm_pm2_5)
 We first define the full model, again stringing together a few operations to be more concise.
 
 ```{python}
+#| label: py-fit-linear-model-7
 # define the model
 model_full = smf.ols(formula= "pm2_5 ~ avg_temp + rain_mm + wind_m_s * C(location)", data = pm2_5_py)
 
@@ -546,6 +579,7 @@ model_full.fit().aic
 Can we drop the interaction term or any of the remaining main effects?
 
 ```{python}
+#| label: py-fit-linear-model-8
 # define the model
 model_1 = smf.ols(
     formula= "pm2_5 ~ avg_temp + rain_mm + wind_m_s + C(location)",
@@ -572,6 +606,7 @@ The AIC goes up quite a bit if we drop the interaction term. This means that we 
 The model with the lowest AIC is the one without the `rain_mm` term, so our working model is:
 
 ```{python}
+#| label: py-fit-linear-model-9
 working_model = smf.ols(
     formula= "pm2_5 ~ avg_temp + wind_m_s * C(location)",
     data = pm2_5_py)
@@ -580,6 +615,7 @@ working_model = smf.ols(
 Now we can again check if dropping the `avg_temp` term or the `wind_m_s:location` interaction has any effect on the model performance:
 
 ```{python}
+#| label: py-fit-linear-model-10
 model_1 = smf.ols(
     formula= "pm2_5 ~ wind_m_s * C(location)",
     data = pm2_5_py)
@@ -599,6 +635,7 @@ This shows that dropping the `avg_temp` term lowers the AIC, whereas dropping th
 So, our new working model is:
 
 ```{python}
+#| label: py-fit-linear-model-11
 working_model = smf.ols(
     formula= "pm2_5 ~ wind_m_s * C(location)",
     data = pm2_5_py)
@@ -607,6 +644,7 @@ working_model = smf.ols(
 Lastly, now we've dropped the `avg_temp` term we can do one final check on the interaction term:
 
 ```{python}
+#| label: py-fit-linear-model-12
 model_1 = smf.ols(
     formula= "pm2_5 ~ wind_m_s + C(location) + wind_m_s + C(location)",
     data = pm2_5_py)

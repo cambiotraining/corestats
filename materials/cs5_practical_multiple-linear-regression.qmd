@@ -3,6 +3,7 @@ title: "Multiple linear regression"
 ---
 
 ```{r}
+#| label: r-setup
 #| echo: false
 #| message: false
 #| results: hide
@@ -10,6 +11,7 @@ source(file = "setup_files/setup.R")
 ```
 
 ```{python}
+#| label: py-setup
 #| echo: false
 #| message: false
 import shutup;shutup.please()
@@ -41,6 +43,7 @@ exec(open('setup_files/setup.py').read())
 ### Libraries
 
 ```{r}
+#| label: r-load-libraries
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
@@ -58,6 +61,7 @@ library(broom)
 ### Functions
 
 ```{r}
+#| label: r-run-anova
 #| eval: false
 #| warning: false
 # Gets underlying data out of model object
@@ -78,6 +82,7 @@ stats::lm()
 ### Libraries
 
 ```{python}
+#| label: py-import-libraries
 #| eval: false
 # A fundamental package for scientific computing in Python
 import numpy as np
@@ -104,6 +109,7 @@ from dgplots import dgplots
 ### Functions
 
 ```{python}
+#| label: py-read-data
 #| eval: false
 # Reads in a .csv file
 pandas.DataFrame.read_csv()
@@ -148,6 +154,7 @@ It contains the following variables:
 Let's first load the data:
 
 ```{r}
+#| label: r-read-data
 pm2_5 <- read_csv("data/CS5-pm2_5.csv")
 
 head(pm2_5)
@@ -156,6 +163,7 @@ head(pm2_5)
 It's the `pm2_5` response variable we're interested in here. Let's start by checking if there might be a difference between PM2.5 level in inner and outer London:
 
 ```{r}
+#| label: r-plot-data
 ggplot(pm2_5,
        aes(x = location, y = pm2_5)) +
     geom_boxplot() +
@@ -169,6 +177,7 @@ There seems to be quite a difference between the PM2.5 levels in the two London 
 Apart from the location, there are quite a few numerical descriptor variables. We could plot them one-by-one, but that's a bit tedious. So instead we use the `pairs()` function again. This only works on numerical data, so we select all the columns that are numeric with `select_if(is.numeric)`:
 
 ```{r}
+#| label: r-summarise-and-visualise
 pm2_5 |>
     select_if(is.numeric) |>
     pairs(lower.panel = NULL)
@@ -181,6 +190,7 @@ Other notable things include that rainfall seems completely independent of wind 
 We can visualise the relationship between `pm2_5` and `wind_m_s` in a bit more detail, by plotting the data against each other and colouring by `location`:
 
 ```{r}
+#| label: r-plot-data-2
 ggplot(pm2_5,
        aes(x = wind_m_s, y = pm2_5,
            colour = location)) +
@@ -192,6 +202,7 @@ This seems to show that there might be some linear relationship between PM2.5 le
 Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](#correlation-coefficients):
 
 ```{r}
+#| label: r-summarise-and-visualise-2
 pm2_5 |>
     select_if(is.numeric) |>
     cor()
@@ -204,6 +215,7 @@ This confirms what we saw in the plots, there aren't any very strong correlation
 Let's first load the data:
 
 ```{python}
+#| label: py-read-data-2
 pm2_5_py = pd.read_csv("data/CS5-pm2_5.csv")
 
 pm2_5_py.head()
@@ -212,6 +224,7 @@ pm2_5_py.head()
 It's the `pm2_5` response variable we're interested in here. Let's start by checking if there might be a difference between PM2.5 level in inner and outer London:
 
 ```{python}
+#| label: py-plot-data
 #| results: hide
 p = (ggplot(pm2_5_py, aes(x = "location", y = "pm2_5")) +
     geom_boxplot() +
@@ -231,6 +244,7 @@ But I'm not going to ;-)
 I'll just tell you that there is not much of a correlation between `pm2_5` and `avg_temp` or `rain_mm`, whereas there might be something going on in relation to `wind_m_s`. So I plot that instead and colour it by location:
 
 ```{python}
+#| label: py-plot-data-2
 #| results: hide
 p = (ggplot(pm2_5_py,
         aes(x = "wind_m_s",
@@ -248,6 +262,7 @@ If I would plot all the other variables against each other, then I would spot th
 Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](#correlation-coefficients):
 
 ```{python}
+#| label: py-summarise-and-visualise
 pm2_5_py.corr(numeric_only = True)
 ```
 
@@ -274,6 +289,7 @@ So let's define and explore it!
 We write the model as follows:
 
 ```{r}
+#| label: r-fit-linear-model
 lm_pm2_5_full <- lm(pm2_5 ~ avg_temp + location +
                             rain_mm + wind_m_s +
                             wind_m_s:location,
@@ -283,6 +299,7 @@ lm_pm2_5_full <- lm(pm2_5 ~ avg_temp + location +
 Let's look at the coefficients:
 
 ```{r}
+#| label: r-implement-and-interpret-the-test
 lm_pm2_5_full
 ```
 
@@ -292,6 +309,7 @@ lm_pm2_5_full
 This will give us quite a few coefficients, so instead of just calling the `lm` object, I'm restructuring the output using the `tidy()` function from the `broom` package. It's installed with `tidyverse` but you have to load it separately using `library(broom)`.
 
 ```{r}
+#| label: r-extracting-coefficients-with-tidy
 lm_pm2_5_full |>
     tidy() |>
     select(term, estimate)
@@ -301,6 +319,7 @@ lm_pm2_5_full |>
 The question is, are all of these terms statistically significant? To find out we perform an ANOVA:
 
 ```{r}
+#| label: r-run-anova-2
 anova(lm_pm2_5_full)
 ```
 
@@ -311,12 +330,14 @@ The p-value for the `avg_temp` is significant, whereas the `rain_mm` main effect
 What to do? We'll explore this in more detail in the chapter on model comparisons, but for now the most sensible option would be to redefine the model, but exclude the `rain_mm` variable. Here I have rewritten the model and named it `lm_pm2_5_red` to indicate it is a reduced model (with fewer variables than our original full model):
 
 ```{r}
+#| label: r-fit-linear-model-2
 lm_pm2_5_red <- lm(pm2_5 ~ avg_temp + location + wind_m_s + location:wind_m_s, data = pm2_5)
 ```
 
 Let's look at the new model coefficients:
 
 ```{r}
+#| label: r-extracting-coefficients-with-tidy-2
 lm_pm2_5_red
 ```
 
@@ -337,6 +358,7 @@ $PM2.5_{outer} = 16.07 + 0.01 \times avg\_temp - 0.72 \times wind\_m\_s$
 We still need to check the assumptions of the model:
 
 ```{r}
+#| label: r-calculate-residuals
 #| warning: false
 resid_panel(lm_pm2_5_red,
             plots = c("resid", "qq", "ls", "cookd"),
@@ -348,6 +370,7 @@ They all look pretty good, with the only weird thing being a small empty zone of
 It'd be useful to visualise the model. We can take the model and use the `augment()` function to extract the fitted values (`.fitted`). These are the values for `pm2_5` that the model is predicting. We can then plot these against the `wind_m_s` measurements, colouring by `location`:
 
 ```{r}
+#| label: r-plot-data-3
 lm_pm2_5_red |>
   augment() |>
   ggplot(aes(x = wind_m_s,
@@ -361,6 +384,7 @@ lm_pm2_5_red |>
 We write the model as follows:
 
 ```{python}
+#| label: py-fit-linear-model
 # create a linear model
 model = smf.ols(formula = "pm2_5 ~ avg_temp + C(location) + rain_mm + wind_m_s + wind_m_s:location", data = pm2_5_py)
 # and get the fitted parameters of the model
@@ -370,12 +394,14 @@ lm_pm2_5_full_py = model.fit()
 This will give us quite a few coefficients, so instead of just printing the entire summary table, we're extracting the parameters with `.params`:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model
 lm_pm2_5_full_py.params
 ```
 
 The question is, are all of these terms statistically significant? To find out we perform an ANOVA:
 
 ```{python}
+#| label: py-run-anova
 sm.stats.anova_lm(lm_pm2_5_full_py)
 ```
 
@@ -386,6 +412,7 @@ The p-value for the `avg_temp` is significant, whereas the `rain_mm` main effect
 What to do? We'll explore this in more detail in the chapter on model comparisons, but for now the most sensible option would be to redefine the model, but exclude the `rain_mm` variable. Here I have rewritten the model and named it `lm_pm2_5_red` to indicate it is a reduced model (with fewer variables than our original full model):
 
 ```{python}
+#| label: py-fit-linear-model-2
 # create a linear model
 model = smf.ols(formula = "pm2_5 ~ avg_temp + C(location) * wind_m_s", data = pm2_5_py)
 # and get the fitted parameters of the model
@@ -395,6 +422,7 @@ lm_pm2_5_red_py = model.fit()
 Let's look at the new model coefficients:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-2
 lm_pm2_5_red_py.params
 ```
 
@@ -415,6 +443,7 @@ $PM2.5_{outer} = 16.07 + 0.01 \times avg\_temp - 0.72 \times wind\_m\_s$
 We still need to check the assumptions of the model:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-3
 dgplots(lm_pm2_5_red_py)
 ```
 
@@ -423,6 +452,7 @@ They all look pretty good, with the only weird thing being a small empty zone of
 It'd be useful to visualise the model. We can take the model and extract the fitted values (`.fittedvalues`). These are the `pm2_5` that the model is predicting. We can then plot these against the `wind_m_s` measurements, colouring by `location`. We're also adding the original values to the plot with `geom_point()`:
 
 ```{python}
+#| label: py-plot-data-3
 #| results: hide
 p = (ggplot(pm2_5_py, aes(x = "wind_m_s",
                      y = "pm2_5",
@@ -455,6 +485,7 @@ To create the additive model, we drop the interaction term (keep in mind, this i
 First, we define the model:
 
 ```{r}
+#| label: r-fit-linear-model-3
 lm_pm2_5_add <- lm(pm2_5 ~ avg_temp + location + wind_m_s,
                    data = pm2_5)
 ```
@@ -462,6 +493,7 @@ lm_pm2_5_add <- lm(pm2_5 ~ avg_temp + location + wind_m_s,
 We can visualise this as follows:
 
 ```{r}
+#| label: r-plot-data-4
 lm_pm2_5_add |>
     augment() |>
     ggplot(aes(x = wind_m_s, y = pm2_5,
@@ -473,6 +505,7 @@ lm_pm2_5_add |>
 Next, we extract the coefficient estimates:
 
 ```{r}
+#| label: r-additive-model
 lm_pm2_5_add
 ```
 
@@ -481,6 +514,7 @@ lm_pm2_5_add
 First, we define the model
 
 ```{python}
+#| label: py-fit-linear-model-3
 # create a linear model
 model = smf.ols(formula = "pm2_5 ~ avg_temp + C(location) + wind_m_s",
                 data = pm2_5_py)
@@ -492,6 +526,7 @@ lm_pm2_5_add_py = model.fit()
 We can visualise this as follows:
 
 ```{python}
+#| label: py-plot-data-4
 #| results: hide
 p = (ggplot(pm2_5_py, aes(x = "wind_m_s",
                       y = "pm2_5",
@@ -505,6 +540,7 @@ p.show()
 Next, we extract the coefficient estimates:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-4
 lm_pm2_5_add_py.params
 ```
 :::
@@ -527,6 +563,7 @@ $PM2.5_{outer} = 14.99 + 0.016 \times avg\_temp - 0.50 \times wind\_m\_s$
 First, we define the model:
 
 ```{r}
+#| label: r-fit-linear-model-4
 lm_pm2_5_wind <- lm(pm2_5 ~ wind_m_s,
                    data = pm2_5)
 ```
@@ -534,6 +571,7 @@ lm_pm2_5_wind <- lm(pm2_5 ~ wind_m_s,
 We can visualise this as follows:
 
 ```{r}
+#| label: r-plot-data-5
 lm_pm2_5_wind |>
     augment() |>
     ggplot(aes(x = wind_m_s, y = pm2_5)) +
@@ -545,6 +583,7 @@ lm_pm2_5_wind |>
 ## Alternative using `geom_smooth()`
 
 ```{r}
+#| label: r-plot-data-6
 ggplot(pm2_5, aes(x = wind_m_s, y = pm2_5)) +
     geom_point() +
     geom_smooth(method = "lm", se = FALSE)
@@ -554,6 +593,7 @@ ggplot(pm2_5, aes(x = wind_m_s, y = pm2_5)) +
 Next, we extract the coefficient estimates:
 
 ```{r}
+#| label: r-alternative-using-geomsmooth
 lm_pm2_5_wind
 ```
 
@@ -562,6 +602,7 @@ lm_pm2_5_wind
 First, we define the model
 
 ```{python}
+#| label: py-fit-linear-model-4
 # create a linear model
 model = smf.ols(formula = "pm2_5 ~ wind_m_s",
                 data = pm2_5_py)
@@ -573,6 +614,7 @@ lm_pm2_5_wind_py = model.fit()
 We can visualise this as follows:
 
 ```{python}
+#| label: py-plot-data-5
 #| results: hide
 p = (ggplot(pm2_5_py, aes(x = "wind_m_s",
                       y = "pm2_5")) +
@@ -586,6 +628,7 @@ p.show()
 ## Alternative using `geom_smooth()`
 
 ```{python}
+#| label: py-plot-data-6
 #| results: hide
 p = (ggplot(pm2_5_py, aes(x = "wind_m_s", y = "pm2_5")) +
     geom_point() +
@@ -598,6 +641,7 @@ p.show()
 Next, we extract the coefficient estimates:
 
 ```{python}
+#| label: py-alternative-using-geomsmooth
 lm_pm2_5_wind_py.params
 ```
 :::::
@@ -616,6 +660,7 @@ If we're just looking at the effect of `location`, then we're essentially doing 
 First, we define the model:
 
 ```{r}
+#| label: r-fit-linear-model-5
 lm_pm2_5_loc <- lm(pm2_5 ~ location,
                    data = pm2_5)
 ```
@@ -623,6 +668,7 @@ lm_pm2_5_loc <- lm(pm2_5 ~ location,
 We can visualise this as follows:
 
 ```{r}
+#| label: r-plot-data-7
 lm_pm2_5_loc |>
     augment() |>
     ggplot(aes(x = location, y = pm2_5)) +
@@ -635,6 +681,7 @@ OK, what's going on here? I've plotted the `.fitted` values (the values predicte
 We can check this and see that each unique fitted value occurs 365 times:
 
 ```{r}
+#| label: r-revisiting-anova
 lm_pm2_5_loc |>
     augment() |>
     count(location, .fitted)
@@ -645,6 +692,7 @@ This makes sense if we think back to our original ANOVA exploration. There we es
 We could even check this:
 
 ```{r}
+#| label: r-revisiting-anova-2
 pm2_5 |>
     group_by(location) |>
     summarise(mean_pm2_5 = mean(pm2_5))
@@ -653,6 +701,7 @@ pm2_5 |>
 So, that matches. We move on and extract the coefficient estimates:
 
 ```{r}
+#| label: r-revisiting-anova-3
 lm_pm2_5_loc
 ```
 
@@ -663,6 +712,7 @@ These values match up exactly with the predicted values for each individual loca
 First, we define the model:
 
 ```{python}
+#| label: py-fit-linear-model-5
 # create a linear model
 model = smf.ols(formula = "pm2_5 ~ C(location)", data = pm2_5_py)
 # and get the fitted parameters of the model
@@ -672,6 +722,7 @@ lm_pm2_5_loc_py = model.fit()
 We can visualise this as follows:
 
 ```{python}
+#| label: py-plot-data-7
 #| results: hide
 p = (ggplot(pm2_5_py, aes(x = "location",
                      y = "pm2_5")) +
@@ -686,6 +737,7 @@ OK, what's going on here? I've plotted the `fittedvalues` (the values predicted 
 We can check this and see that each unique fitted value occurs 365 times, using the `value_counts()` function on the fitted values:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-5
 lm_pm2_5_loc_py.fittedvalues.value_counts()
 ```
 
@@ -694,12 +746,14 @@ This makes sense if we think back to our original ANOVA exploration. There we es
 We could even check this:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-6
 pm2_5_py.groupby("location")["pm2_5"].mean()
 ```
 
 So, that matches. We move on and extract the coefficient estimates:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-7
 lm_pm2_5_loc_py.params
 ```
 
@@ -722,12 +776,14 @@ The null model by itself is rarely analysed for its own sake but is instead used
 We define the null model as follows:
 
 ```{r}
+#| label: r-fit-linear-model-6
 lm_pm2_5_null <- lm(pm2_5 ~ 1, data = pm2_5)
 ```
 
 We can just view the model:
 
 ```{r}
+#| label: r-the-null-model
 lm_pm2_5_null
 ```
 
@@ -736,6 +792,7 @@ lm_pm2_5_null
 We define the null model as follows:
 
 ```{python}
+#| label: py-fit-linear-model-6
 # create a linear model
 model = smf.ols(formula = "pm2_5 ~ 1", data = pm2_5_py)
 # and get the fitted parameters of the model
@@ -745,6 +802,7 @@ lm_pm2_5_null_py = model.fit()
 We can just view the model parameters:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-8
 lm_pm2_5_null_py.params
 ```
 :::
@@ -794,11 +852,13 @@ Let's construct the four linear models in turn.
 First, we read in the data:
 
 ```{r}
+#| label: r-read-data-2
 #| message: false
 trees <- read_csv("data/CS5-trees.csv")
 ```
 
 ```{r}
+#| label: r-fit-linear-model-7
 # define the model
 lm_trees_full <- lm(volume ~ height * girth,
                    data = trees)
@@ -812,10 +872,12 @@ lm_trees_full
 First, we read in the data:
 
 ```{python}
+#| label: py-read-data-3
 trees_py = pd.read_csv("data/CS5-trees.csv")
 ```
 
 ```{python}
+#| label: py-fit-linear-model-7
 # create a linear model
 model = smf.ols(formula = "volume ~ height * girth",
                 data = trees_py)
@@ -827,6 +889,7 @@ lm_trees_full_py = model.fit()
 Extract the parameters:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-9
 lm_trees_full_py.params
 ```
 :::
@@ -849,6 +912,7 @@ If we look at the diagnostic plots for the model using the following commands we
 ## R
 
 ```{r}
+#| label: r-calculate-residuals-2
 #| message: false
 #| warning: false
 resid_panel(lm_trees_full,
@@ -859,6 +923,7 @@ resid_panel(lm_trees_full,
 ## Python
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-10
 dgplots(lm_trees_full_py)
 ```
 
@@ -876,6 +941,7 @@ All assumptions are OK.
 ## R
 
 ```{r}
+#| label: r-fit-linear-model-8
 # define the model
 lm_trees_add <- lm(volume ~ height + girth,
                    data = trees)
@@ -887,6 +953,7 @@ lm_trees_add
 ## Python
 
 ```{python}
+#| label: py-fit-linear-model-8
 # create a linear model
 model = smf.ols(formula = "volume ~ height + girth",
                 data = trees_py)
@@ -898,6 +965,7 @@ lm_trees_add_py = model.fit()
 Extract the parameters:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-11
 lm_trees_add_py.params
 ```
 :::
@@ -918,6 +986,7 @@ If we look at the diagnostic plots for the model using the following commands we
 ## R
 
 ```{r}
+#| label: r-calculate-residuals-3
 #| message: false
 #| warning: false
 resid_panel(lm_trees_add,
@@ -928,6 +997,7 @@ resid_panel(lm_trees_add,
 ## Python
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-12
 dgplots(lm_trees_add_py)
 ```
 :::
@@ -945,6 +1015,7 @@ This model isn't great.
 ## R
 
 ```{r}
+#| label: r-fit-linear-model-9
 # define the model
 lm_height <- lm(volume ~ height,
               data = trees)
@@ -956,6 +1027,7 @@ lm_height
 ## Python
 
 ```{python}
+#| label: py-fit-linear-model-9
 # create a linear model
 model = smf.ols(formula = "volume ~ height",
                 data = trees_py)
@@ -967,6 +1039,7 @@ lm_height_py = model.fit()
 Extract the parameters:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-13
 lm_height_py.params
 ```
 :::
@@ -987,6 +1060,7 @@ If we look at the diagnostic plots for the model using the following commands we
 ## R
 
 ```{r}
+#| label: r-calculate-residuals-4
 #| message: false
 #| warning: false
 resid_panel(lm_height,
@@ -997,6 +1071,7 @@ resid_panel(lm_height,
 ## Python
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-14
 dgplots(lm_height_py)
 ```
 :::
@@ -1013,6 +1088,7 @@ This model also isn't great.
 ## R
 
 ```{r}
+#| label: r-fit-linear-model-10
 # define the model
 lm_girth <- lm(volume ~ girth,
                data = trees)
@@ -1024,6 +1100,7 @@ lm_girth
 ## Python
 
 ```{python}
+#| label: py-fit-linear-model-10
 # create a linear model
 model = smf.ols(formula = "volume ~ girth",
                 data = trees_py)
@@ -1035,6 +1112,7 @@ lm_girth_py = model.fit()
 Extract the parameters:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-15
 lm_girth_py.params
 ```
 :::
@@ -1055,6 +1133,7 @@ If we look at the diagnostic plots for the model using the following commands we
 ## R
 
 ```{r}
+#| label: r-calculate-residuals-5
 #| message: false
 #| warning: false
 resid_panel(lm_girth,
@@ -1065,6 +1144,7 @@ resid_panel(lm_girth,
 ## Python
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-16
 dgplots(lm_girth_py)
 ```
 :::

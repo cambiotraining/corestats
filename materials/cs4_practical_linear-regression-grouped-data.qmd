@@ -3,6 +3,7 @@ title: "Linear regression with grouped data"
 ---
 
 ```{r}
+#| label: r-setup
 #| echo: false
 #| message: false
 #| results: hide
@@ -10,6 +11,7 @@ source(file = "setup_files/setup.R")
 ```
 
 ```{python}
+#| label: py-setup
 #| echo: false
 #| message: false
 import shutup;shutup.please()
@@ -42,6 +44,7 @@ exec(open('setup_files/setup.py').read())
 ### Libraries
 
 ```{r}
+#| label: r-load-libraries
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
@@ -59,6 +62,7 @@ library(broom)
 ### Functions
 
 ```{r}
+#| label: r-run-anova
 #| eval: false
 #| warning: false
 # Gets underlying data out of model object
@@ -79,6 +83,7 @@ stats::lm()
 ### Libraries
 
 ```{python}
+#| label: py-import-libraries
 #| eval: false
 # A fundamental package for scientific computing in Python
 import numpy as np
@@ -105,6 +110,7 @@ from dgplots import dgplots
 ### Functions
 
 ```{python}
+#| label: py-read-data
 #| eval: false
 # Computes natural logarithm of value
 numpy.log()
@@ -134,6 +140,7 @@ A linear regression analysis with grouped data is used when we have one categori
 For example in an experiment that looks at light intensity in woodland, how is light intensity (continuous: lux) affected by the height at which the measurement is taken, recorded as depth measured from the top of the canopy (continuous: meters) and by the type of woodland (categorical: Conifer or Broad leaf).
 
 ```{r}
+#| label: r-read-data
 #| echo: false
 #| warning: false
 #| message: false
@@ -171,6 +178,7 @@ Read in the data and inspect them:
 ## R
 
 ```{r}
+#| label: r-read-data-2
 #| message: false
 #| warning: false
 # read in the data
@@ -183,6 +191,7 @@ treelight
 ## Python
 
 ```{python}
+#| label: py-read-data-2
 # load the data
 treelight_py = pd.read_csv("data/CS4-treelight.csv")
 
@@ -197,6 +206,7 @@ treelight_py.head()
 ## R
 
 ```{r}
+#| label: r-plot-data
 # plot the data
 ggplot(treelight,
        aes(x = depth, y = light, colour = species)) +
@@ -209,6 +219,7 @@ ggplot(treelight,
 ## Python
 
 ```{python}
+#| label: py-plot-data
 #| results: hide
 # plot the data
 p = (ggplot(treelight_py,
@@ -231,6 +242,7 @@ It looks like there is a slight negative correlation between depth and light int
 ## R
 
 ```{r}
+#| label: r-plot-data-2
 #| message: false
 # plot the data
 ggplot(treelight,
@@ -246,6 +258,7 @@ ggplot(treelight,
 ## Python
 
 ```{python}
+#| label: py-plot-data-2
 #| results: hide
 # plot the data
 p = (ggplot(treelight_py,
@@ -275,6 +288,7 @@ We can test for a possible interaction more formally:
 ## R
 
 ```{r}
+#| label: r-run-anova-2
 anova(lm(light ~ depth * species,
          data = treelight))
 ```
@@ -288,6 +302,7 @@ Unfortunately there is no clear way of defining interaction models in pingouin. 
 If you haven't loaded `statsmodels` yet, run the following:
 
 ```{python}
+#| label: py-import-libraries-3
 #| eval: false
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
@@ -296,6 +311,7 @@ import statsmodels.formula.api as smf
 Next, we create a linear model and get the `.fit()`:
 
 ```{python}
+#| label: py-fit-linear-model
 # create a linear model
 model = smf.ols(formula = "light ~ depth * C(species)",
                 data = treelight_py)
@@ -307,6 +323,7 @@ lm_treelight_py = model.fit()
 To get the relevant values, we can print the summary of the model fit. This gives us a rather huge table. Don't be too daunted by it - there is a logic to the madness and for now we're mainly interested in the `P>|t|` column.
 
 ```{python}
+#| label: py-summarize-data
 print(lm_treelight_py.summary())
 ```
 
@@ -332,6 +349,7 @@ For a simple straight line such as the linear regression for the conifer data by
 I'm being a bit lazy here. Since I don't want to save the filtered data in a separate object, I'm using the pipe to send the Conifer data to the `lm()` function. However, the first argument in the `lm()` function is *not* data, so we need to tell it specifically that the data is coming from the pipe. We do this with the `.` notation:
 
 ```{r}
+#| label: r-filter-data
 # filter the Conifer data and fit a linear model
 treelight |>
   filter(species == "Conifer") |>
@@ -377,6 +395,7 @@ When we looked at the full data set, we found that interaction wasn’t importan
 ## R
 
 ```{r}
+#| label: r-fit-linear-model
 lm(light ~ depth + species,
    data = treelight)
 ```
@@ -420,6 +439,7 @@ light = 4829 + -262.2 \times depth
 The way we obtain the values for the model without the interaction is very similar to what we did for the conifer data. We need to update our model first, to remove the interaction:
 
 ```{python}
+#| label: py-fit-linear-model-2
 # create a linear model
 model = smf.ols(formula = "light ~ depth + C(species)",
                 data = treelight_py)
@@ -433,6 +453,7 @@ Notice the `+` symbol in the argument, as opposed to the `*` symbol used earlier
 We can get the relevant coefficients as follows:
 
 ```{python}
+#| label: py-summarize-data-2
 print(lm_treelight_add_py.summary())
 ```
 
@@ -472,6 +493,7 @@ First of all, we load the `broom` library. This is part of tidyverse, so you don
 The function we use here is called `augment()`. What this does is take a model object and a dataset and adds information about each observation in the dataset.
 
 ```{r}
+#| label: r-load-libraries-2
 # define the model without interaction term
 lm_additive <- lm(light ~ species + depth,
                   data = treelight)
@@ -490,6 +512,7 @@ The fitted or predicted values are in the `.fitted` column, with corresponding r
 Using this information we can now plot the regression lines by `species`:
 
 ```{r}
+#| label: r-plot-data-3
 # plot the regression lines by species
 lm_additive |>
   augment() |>
@@ -502,6 +525,7 @@ lm_additive |>
 Lastly, if we would want to plot the data and regression lines together, we could change the code as follows:
 
 ```{r}
+#| label: r-plot-data-4
 # plot the regression lines
 lm_additive |>
   augment() |>
@@ -523,6 +547,7 @@ To do this, we need to do the following:
 * plot these against the original data
 
 ```{python}
+#| label: py-predict-outcomes
 # get predicted values
 lm_treelight_add_py.predict()
 ```
@@ -530,6 +555,7 @@ lm_treelight_add_py.predict()
 We can't easily use the predicted values in this kind of format, so we're adding them to the existing data, in a column called `.fitted`:
 
 ```{python}
+#| label: py-inspect-data
 # add predicted values to data set
 treelight_py['.fitted'] = lm_treelight_add_py.predict()
 
@@ -540,6 +566,7 @@ treelight_py.head()
 Now we can simply plot the data:
 
 ```{python}
+#| label: py-plot-data-3
 #| results: hide
 # plot the data
 p = (ggplot(treelight_py,
@@ -569,6 +596,7 @@ Anyway, hopefully you’ve got the gist of checking assumptions for linear model
 ## R
 
 ```{r}
+#| label: r-calculate-residuals
 #| message: false
 #| warning: false
 resid_panel(lm_additive,
@@ -584,6 +612,7 @@ resid_panel(lm_additive,
 ## Python
 
 ```{python}
+#| label: py-assumptions
 dgplots(lm_treelight_add_py)
 ```
 
@@ -605,6 +634,7 @@ In this case interaction is important and so we need the output from a linear re
 ## R
 
 ```{r}
+#| label: r-fit-linear-model-2
 #| results: hide
 lm(light ~ depth + species + depth:species,
    data = treelight)
@@ -613,6 +643,7 @@ lm(light ~ depth + species + depth:species,
 or written using the short-hand:
 
 ```{r}
+#| label: r-fit-linear-model-3
 #| eval: false
 lm(light ~ depth * species,
    data = treelight)
@@ -622,6 +653,7 @@ There really is absolutely no difference in the end result.
 Either way this gives us the following output:
 
 ```{r}
+#| label: r-fit-linear-model-4
 #| echo: false
 lm(light ~ depth * species,
    data = treelight)
@@ -652,6 +684,7 @@ light = 5014 + -292.2 \times depth
 We've actually created this model before, but for clarity we'll define it here again.
 
 ```{python}
+#| label: py-fit-linear-model-3
 # create a linear model
 model = smf.ols(formula = "light ~ depth * C(species)",
                 data = treelight_py)
@@ -663,6 +696,7 @@ lm_treelight_py = model.fit()
 We get the model parameters as follows:
 
 ```{python}
+#| label: py-summarize-data-3
 print(lm_treelight_py.summary())
 ```
 
@@ -709,6 +743,7 @@ The `data/CS4-clover.csv` data set contains information on field trials at three
 ::: {.panel-tabset group="language"}
 ## R
 ```{r}
+#| label: r-read-data-3
 #| message: false
 #| warning: false
 clover <- read_csv("data/CS4-clover.csv")
@@ -717,6 +752,7 @@ clover <- read_csv("data/CS4-clover.csv")
 This data set has three variables; `yield` (which is the response variable), `yarrow` (which is a continuous predictor variable) and `farm` (which is the categorical predictor variables). As always we'll visualise the data first:
 
 ```{r}
+#| label: r-plot-data-5
 # plot the data
 ggplot(clover,
        aes(x = yarrow, y = yield,
@@ -728,6 +764,7 @@ ggplot(clover,
 Looking at this plot as it stands, it's pretty clear that yarrow density has a significant effect on yield, but it's pretty hard to see from the plot whether there is any effect of `farm`, or whether there is any interaction. In order to work that out we'll want to add the regression lines for each `farm` separately.
 
 ```{r}
+#| label: r-plot-data-6
 #| message: false
 # plot the data
 ggplot(clover,
@@ -743,6 +780,7 @@ The regression lines are very close together. Although the line for `Farm C` cro
 Let's carry out the analysis:
 
 ```{r}
+#| label: r-run-anova-3
 lm_clover <- lm(yield ~ yarrow * farm,
                 data = clover)
 
@@ -754,6 +792,7 @@ This confirms our suspicions from looking at the plot. There isn't any interacti
 Let's check the assumptions:
 
 ```{r}
+#| label: r-calculate-residuals-2
 #| message: false
 #| warning: false
 resid_panel(lm_clover,
@@ -770,6 +809,7 @@ This is a borderline case.
 
 ## Python
 ```{python}
+#| label: py-read-data-3
 #| message: false
 #| warning: false
 clover_py = pd.read_csv("data/CS4-clover.csv")
@@ -778,6 +818,7 @@ clover_py = pd.read_csv("data/CS4-clover.csv")
 This data set has three variables; `yield` (which is the response variable), `yarrow` (which is a continuous predictor variable) and `farm` (which is the categorical predictor variables). As always we'll visualise the data first:
 
 ```{python}
+#| label: py-plot-data-4
 #| results: hide
 # plot the data
 p = (ggplot(clover_py,
@@ -792,6 +833,7 @@ p.show()
 Looking at this plot as it stands, it's pretty clear that yarrow density has a significant effect on yield, but it's pretty hard to see from the plot whether there is any effect of `farm`, or whether there is any interaction. In order to work that out we'll want to add the regression lines for each `farm` separately.
 
 ```{python}
+#| label: py-plot-data-5
 #| results: hide
 # plot the data
 p = (ggplot(clover_py,
@@ -809,6 +851,7 @@ The regression lines are very close together. Although the line for `Farm C` cro
 Let's carry out the analysis. First, we need to change the name of the `yield` column, because `yield` is a keyword in Python, and we can't use it inside the model formula. How annoying.
 
 ```{python}
+#| label: py-fit-linear-model-4
 # rename yield column
 clover_py = clover_py.rename(columns = {"yield": "clover_yield"})
 
@@ -823,6 +866,7 @@ lm_clover_py = model.fit()
 Perform an ANOVA on the model:
 
 ```{python}
+#| label: py-run-anova
 sm.stats.anova_lm(lm_clover_py, typ = 2)
 ```
 
@@ -831,6 +875,7 @@ This confirms our suspicions from looking at the plot. There isn't any interacti
 Let's check the assumptions:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model
 dgplots(lm_clover_py)
 ```
 
@@ -856,6 +901,7 @@ Let's do a quick little transformation of the data, and repeat our analysis see 
 ## R
 
 ```{r}
+#| label: r-plot-data-7
 #| message: false
 # plot log-transformed data
 ggplot(clover,
@@ -870,6 +916,7 @@ ggplot(clover,
 To log-transform our data, we require `numpy`.
 
 ```{python}
+#| label: py-import-libraries-4
 #| eval: false
 # import numpy
 import numpy as np
@@ -878,12 +925,14 @@ import numpy as np
 First, we create a new column containing the log-transformed data:
 
 ```{python}
+#| label: py-import-numpy
 clover_py["log_yield"] = np.log(clover_py["clover_yield"])
 ```
 
 Then we can plot them:
 
 ```{python}
+#| label: py-plot-data-6
 #| results: hide
 # plot log-transformed data
 p = (ggplot(clover_py,
@@ -906,6 +955,7 @@ Let's do the analysis:
 ## R
 
 ```{r}
+#| label: r-run-anova-4
 # define linear model
 lm_log_clover <- lm(log(yield) ~ yarrow * farm,
                     data = clover)
@@ -916,6 +966,7 @@ anova(lm_log_clover)
 Woop. All good so far. We have the same conclusions as before in terms of what is significant and what isn't. Now we just need to check the assumptions:
 
 ```{r}
+#| label: r-calculate-residuals-3
 #| message: false
 #| warning: false
 resid_panel(lm_log_clover,
@@ -926,6 +977,7 @@ resid_panel(lm_log_clover,
 ## Python
 
 ```{python}
+#| label: py-fit-linear-model-5
 # create a linear model
 model = smf.ols(formula = "log_yield ~ yarrow * C(farm)",
                 data = clover_py)
@@ -938,12 +990,14 @@ lm_log_clover_py = model.fit()
 Perform an ANOVA on the model:
 
 ```{python}
+#| label: py-run-anova-2
 sm.stats.anova_lm(lm_log_clover_py, typ = 2)
 ```
 
 Woop. All good so far. We have the same conclusions as before in terms of what is significant and what isn't. Now we just need to check the assumptions:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-2
 dgplots(lm_clover_py)
 ```
 :::

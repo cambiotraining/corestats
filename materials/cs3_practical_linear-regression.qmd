@@ -3,6 +3,7 @@ title: "Linear regression"
 ---
 
 ```{r}
+#| label: r-setup
 #| echo: false
 #| message: false
 #| results: hide
@@ -10,6 +11,7 @@ source(file = "setup_files/setup.R")
 ```
 
 ```{python}
+#| label: py-setup
 #| echo: false
 #| message: false
 import shutup;shutup.please()
@@ -43,6 +45,7 @@ exec(open('setup_files/setup.py').read())
 ### Libraries
 
 ```{r}
+#| label: r-load-libraries
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
@@ -57,6 +60,7 @@ library(ggResidpanel)
 ### Functions
 
 ```{r}
+#| label: r-run-anova
 #| eval: false
 #| warning: false
 # Creates diagnostic plots
@@ -74,6 +78,7 @@ stats::anova()
 ### Libraries
 
 ```{python}
+#| label: py-import-libraries
 #| eval: false
 # A Python data analysis and manipulation tool
 import pandas as pd
@@ -97,6 +102,7 @@ from dgplots import dgplots
 ### Functions
 
 ```{python}
+#| label: py-read-data
 #| eval: false
 # Summary statistics
 pandas.DataFrame.describe()
@@ -130,7 +136,7 @@ Note: you can download the `dgplots` script [here](scripts/dgplots.py).
 Regression analysis not only tests for an association between two or more variables, but also allows you to investigate quantitatively the nature of any relationship which is present. This can help you determine if one variable may be used to predict values of another. Simple linear regression essentially models the dependence of a scalar dependent variable ($y$) on an independent (or explanatory) variable ($x$) according to the relationship:
 
 ```{=tex}
-\begin{equation*} 
+\begin{equation*}
 y = \beta_0 + \beta_1 x
 \end{equation*}
 ```
@@ -159,6 +165,7 @@ And then will be testing the following null and alternative hypotheses:
 First, we read in the data:
 
 ```{r}
+#| label: r-read-data
 #| message: false
 USArrests <- read_csv("data/CS3-usarrests.csv")
 ```
@@ -166,6 +173,7 @@ USArrests <- read_csv("data/CS3-usarrests.csv")
 You can visualise the data with:
 
 ```{r}
+#| label: r-plot-data
 # create scatterplot of the data
 ggplot(USArrests,
        aes(x = assault, y = murder)) +
@@ -176,12 +184,14 @@ ggplot(USArrests,
 First, we read in the data:
 
 ```{python}
+#| label: py-read-data-2
 USArrests_py = pd.read_csv("data/CS3-usarrests.csv")
 ```
 
 You can visualise the data with:
 
 ```{python}
+#| label: py-plot-data
 #| results: hide
 # create scatterplot of the data
 p = (ggplot(USArrests_py,
@@ -214,6 +224,7 @@ Whether these assumptions are met can easily be checked visually by producing fo
 First we need to define the linear model:
 
 ```{r}
+#| label: r-fit-linear-model
 lm_1 <- lm(murder ~ assault,
            data = USArrests)
 ```
@@ -224,6 +235,7 @@ lm_1 <- lm(murder ~ assault,
 Next, we can create diagnostic plots for the model:
 
 ```{r}
+#| label: r-calculate-residuals
 #| message: false
 #| warning: false
 resid_panel(lm_1,
@@ -240,6 +252,7 @@ resid_panel(lm_1,
 If you haven't loaded `statsmodels` yet, run the following:
 
 ```{python}
+#| label: py-import-libraries-3
 #| eval: false
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
@@ -248,6 +261,7 @@ import statsmodels.formula.api as smf
 Next, we create a linear model and get the `.fit()`:
 
 ```{python}
+#| label: py-fit-linear-model
 # create a linear model
 model = smf.ols(formula= "murder ~ assault", data = USArrests_py)
 # and get the fitted parameters of the model
@@ -257,6 +271,7 @@ lm_USArrests_py = model.fit()
 Then we use `dgplots()` to create the diagnostic plots:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model
 dgplots(lm_USArrests_py)
 ```
 :::
@@ -275,6 +290,7 @@ We have already defined the linear model, so we can have a closer look at it:
 ## R
 
 ```{r}
+#| label: r-show-linear-model
 # show the linear model
 lm_1
 ```
@@ -288,6 +304,7 @@ The `lm()` function returns a linear model object which is essentially a list co
 If you wanted to know more about the `lm` object we created, then type in:
 
 ```{r}
+#| label: r-display-results
 #| eval: false
 View(lm_1)
 ```
@@ -303,6 +320,7 @@ This shows a *list* (a type of object in R), containing all of the information a
 ## Python
 
 ```{python}
+#| label: py-summarize-data
 print(lm_USArrests_py.summary())
 ```
 
@@ -322,6 +340,7 @@ Next we can assess whether the slope is significantly different from zero:
 ## R
 
 ```{r}
+#| label: r-run-anova-2
 anova(lm_1)
 ```
 
@@ -341,6 +360,7 @@ This is exactly the same format as the table we saw for one-way ANOVA:
 We can perform an ANOVA on the `lm_USArrests_py` object using the `anova_lm()` function from the `statsmodels` package.
 
 ```{python}
+#| label: py-run-anova
 sm.stats.anova_lm(lm_USArrests_py, typ = 2)
 ```
 :::
@@ -357,6 +377,7 @@ It can be very helpful to plot the regression line with the original data to see
 ## R
 
 ```{r}
+#| label: r-plot-data-2
 #| message: false
 # plot the data
 ggplot(USArrests,
@@ -371,6 +392,7 @@ ggplot(USArrests,
 ## Python
 
 ```{python}
+#| label: py-plot-data-2
 #| results: hide
 p = (ggplot(USArrests_py,
         aes(x = "assault", y = "murder")) +
@@ -411,6 +433,7 @@ Perform a linear regression on the variables `life_exp` and `murder` and do the 
 First, we read in the data:
 
 ```{r}
+#| label: r-read-data-2
 #| message: false
 USAstate <- read_csv("data/CS3-statedata.csv")
 ```
@@ -418,6 +441,7 @@ USAstate <- read_csv("data/CS3-statedata.csv")
 Next, we visualise the `murder` variable against the `life_exp` variable. We also add a regression line.
 
 ```{r}
+#| label: r-plot-data-3
 #| message: false
 # plot the data and add the regression line
 ggplot(USAstate,
@@ -431,12 +455,14 @@ ggplot(USAstate,
 First, we read in the data:
 
 ```{python}
+#| label: py-read-data-3
 USAstate_py = pd.read_csv("data/CS3-statedata.csv")
 ```
 
 Next, we visualise the `murder` variable against the `life_exp` variable. We also add a regression line.
 
 ```{python}
+#| label: py-plot-data-3
 #| results: hide
 p = (ggplot(USAstate_py,
         aes(x = "life_exp", y = "murder")) +
@@ -464,6 +490,7 @@ Now, let's check the assumptions with the diagnostic plots.
 ## R
 
 ```{r}
+#| label: r-fit-linear-model-2
 #| message: false
 #| warning: false
 # create a linear model
@@ -482,6 +509,7 @@ The **Residuals** plot appears symmetric enough (similar distribution of points 
 First, we create a linear model:
 
 ```{python}
+#| label: py-fit-linear-model-2
 # create a linear model
 model = smf.ols(formula= "life_exp ~ murder", data = USAstate_py)
 # and get the fitted parameters of the model
@@ -490,6 +518,7 @@ lm_USAstate_py = model.fit()
 
 Next, we can create the diagnostic plots:
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-2
 dgplots(lm_USAstate_py)
 ```
 
@@ -512,12 +541,14 @@ So, let's actually do the analysis:
 ## R
 
 ```{r}
+#| label: r-run-anova-3
 anova(lm_murder)
 ```
 
 ## Python
 
 ```{python}
+#| label: py-run-anova-2
 sm.stats.anova_lm(lm_USAstate_py, typ = 2)
 ```
 :::
@@ -545,6 +576,7 @@ We'll run through this a bit quicker:
 ## R
 
 ```{r}
+#| label: r-plot-data-4
 #| message: false
 # plot the data
 ggplot(USAstate,
@@ -556,6 +588,7 @@ ggplot(USAstate,
 ## Python
 
 ```{python}
+#| label: py-plot-data-4
 #| results: hide
 p = (ggplot(USAstate_py,
         aes(x = "hs_grad", y = "frost")) +
@@ -580,6 +613,7 @@ Now, let's check the assumptions with the diagnostic plots.
 ## R
 
 ```{r}
+#| label: r-fit-linear-model-3
 #| message: false
 #| warning: false
 # create a linear model
@@ -596,6 +630,7 @@ resid_panel(lm_frost,
 First, we create a linear model:
 
 ```{python}
+#| label: py-fit-linear-model-3
 # create a linear model
 model = smf.ols(formula= "hs_grad ~ frost", data = USAstate_py)
 # and get the fitted parameters of the model
@@ -604,6 +639,7 @@ lm_frost_py = model.fit()
 
 Next, we can create the diagnostic plots:
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-3
 dgplots(lm_frost_py)
 ```
 :::

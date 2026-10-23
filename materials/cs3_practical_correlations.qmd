@@ -3,6 +3,7 @@ title: "Correlations"
 ---
 
 ```{r}
+#| label: r-setup
 #| echo: false
 #| message: false
 #| results: hide
@@ -10,6 +11,7 @@ source(file = "setup_files/setup.R")
 ```
 
 ```{python}
+#| label: py-setup
 #| echo: false
 #| message: false
 import shutup;shutup.please()
@@ -42,6 +44,7 @@ exec(open('setup_files/setup.py').read())
 ### Libraries
 
 ```{r}
+#| label: r-load-libraries
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
@@ -50,6 +53,7 @@ library(tidyverse)
 ### Functions
 
 ```{r}
+#| label: r-reshape-data
 #| eval: false
 #| warning: false
 # Computes the absolute value
@@ -76,6 +80,7 @@ tidyr::pivot_longer()
 ### Libraries
 
 ```{python}
+#| label: py-import-libraries
 #| eval: false
 # A Python data analysis and manipulation tool
 import pandas as pd
@@ -87,6 +92,7 @@ from plotnine import *
 ### Functions
 
 ```{python}
+#| label: py-read-data
 #| eval: false
 # Compute pairwise correlation of columns
 pandas.DataFrame.corr()
@@ -129,6 +135,7 @@ First, we load the data:
 ## R
 
 ```{r}
+#| label: r-read-data
 #| message: false
 # load the data
 USArrests <- read_csv("data/CS3-usarrests.csv")
@@ -140,6 +147,7 @@ USArrests
 We can create a visual overview of the potential correlations that might exist between the variables. There are different ways of doing this, for example by creating scatter plots between variable pairs:
 
 ```{r}
+#| label: r-plot-data
 # murder vs robbery
 ggplot(USArrests,
        aes(x = murder, y = robbery)) +
@@ -154,6 +162,7 @@ ggplot(USArrests,
 This gets a bit tedious if there are many unique variable pairs. Unfortunately `ggplot()` does not have a pairwise function, but we can borrow the one from base R. The `pairs()` function only wants numerical data, so we need to remove the `state` column for this. The `pairs()` function has a `lower.panel` argument that allows you to remove duplicate combinations (after all `murder` vs `assault` is the same as `assault` vs `murder`):
 
 ```{r}
+#| label: r-assault-vs-urbanpop
 USArrests |>
     select(-state) |>
     pairs(lower.panel = NULL)
@@ -163,6 +172,7 @@ USArrests |>
 First, we load the data:
 
 ```{python}
+#| label: py-read-data-2
 USArrests_py = pd.read_csv("data/CS3-usarrests.csv")
 
 USArrests_py.head()
@@ -171,6 +181,7 @@ USArrests_py.head()
 We can create a visual overview of the potential correlations that might exist between the variables. There are different ways of doing this, for example by creating scatter plots between variable pairs:
 
 ```{python}
+#| label: py-plot-data
 #| results: hide
 # murder vs robbery
 p = (ggplot(USArrests_py,
@@ -210,6 +221,7 @@ So, let's calculate **Pearson's r** for our data:
 We can do this using the `cor()` function. Since we can only calculate correlations between numbers, we have to remove the `state` column from our data before calculating the correlations:
 
 ```{r}
+#| label: r-correlation-coefficients-correlation-coefficients
 USArrests |>
     select(-state) |>
     cor()
@@ -230,6 +242,7 @@ The plot itself is coloured from yellow, indicating the smallest values (which i
 The plot is symmetric along the leading diagonal (hopefully for obvious reasons).
 
 ```{r}
+#| label: r-visualise-the-correlation-matrix
 USArrests |>
   select(-state) |>
   cor() |>
@@ -246,6 +259,7 @@ Before we can plot the data we need to reformat the data. We're taking the follo
 4. use the `mutate()` and `round()` functions to round the Pearson's r values
 
 ```{r}
+#| label: r-transform-data
 USArrests_pear <- USArrests |>
     select(-state) |>
     cor(method = "pearson") |>
@@ -259,11 +273,13 @@ USArrests_pear <- USArrests |>
 The output of that looks like this:
 
 ```{r}
+#| label: r-inspect-data
 head(USArrests_pear)
 ```
 
 After all that, we can visualise the data with `geom_tile()`, adding the Pearson's r values as text labels:
 ```{r}
+#| label: r-plot-data-2
 ggplot(USArrests_pear,
        aes(x = var1, y = var2, fill = pearson_cor)) +
     geom_tile() +
@@ -277,6 +293,7 @@ ggplot(USArrests_pear,
 ## Alternative method 2: rstatix
 As always, there are multiple ways to skin a proverbial cat. If you'd rather use a function from the `rstatix` package (which we've loaded before), then you can run the following code, which uses the `rstatix::cor_test()` function:
 ```{r}
+#| label: r-plot-data-3
 USArrests |>
     select(-state) |>
     cor_test() |>
@@ -294,6 +311,7 @@ USArrests |>
 We can do this using the `pandas.DataFrame.corr()` function. This function takes the default `method = "pearson"`. It should ignore the `state` column, so we tell it to.
 
 ```{python}
+#| label: py-alternative-method-2-rstatix
 USArrests_py.corr(numeric_only = True)
 ```
 This gives us a numerical overview of the Pearson's r correlation coefficients between each variable pair. Note that across the diagonal the correlation coefficients are `1` - this should make sense since, for example, `murder` is perfectly correlated with itself.
@@ -305,6 +323,7 @@ As before, the values are mirrored across the diagonal, since the correlation be
 Just staring at a matrix of numbers might not be very useful. It would be good to create some sort of heatmap of the values, so we can visually inspect the data a bit better.
 
 ```{python}
+#| label: py-inspect-data
 # create correlation matrix
 USArrests_cor_py = USArrests_py.corr(numeric_only = True)
 # put the row names into a column
@@ -316,6 +335,7 @@ USArrests_cor_py.head()
 Now that we have the correlation matrix in a workable format, we need to restructure it so that we can plot the data. For this, we need to create a "long" format, using the `melt()` function.
 
 ```{python}
+#| label: py-reshape-data
 USArrests_pear_py = pd.melt(USArrests_cor_py,
         id_vars=['var1'],
         value_vars=['murder', 'assault', 'urban_pop', 'robbery'],
@@ -325,10 +345,12 @@ USArrests_pear_py = pd.melt(USArrests_cor_py,
 
 Have a look at the structure:
 ```{python}
+#| label: py-inspect-data-2
 USArrests_pear_py.head()
 ```
 
 ```{python}
+#| label: py-plot-data-2
 #| results: hide
 p = (ggplot(USArrests_pear_py,
         aes(x = "var1", y = "var2", fill = "cor")) +
@@ -351,6 +373,7 @@ This test first calculates the rank of the numerical data (i.e. their position f
 ## R
 
 ```{r}
+#| label: r-spearman-s-rank-correlation-coefficient
 USArrests |>
     select(-state) |>
     cor(method = "spearman")
@@ -359,6 +382,7 @@ USArrests |>
 ## Python
 
 ```{python}
+#| label: py-spearman-s-rank-correlation-coefficient
 USArrests_py.corr(method = "spearman", numeric_only = True)
 ```
 :::
@@ -392,6 +416,7 @@ Visually determining the most negative/positively and uncorrelated pairs of vari
 ## R
 
 ```{r}
+#| label: r-read-data-2
 #| message: false
 #| warning: false
 USAstate <- read_csv("data/CS3-statedata.csv")
@@ -403,6 +428,7 @@ USAstate
 We basically repeat what we've done previously:
 
 ```{r}
+#| label: r-have-a-look-at-the-data
 USAstate_pear <-USAstate |>
   select(-state) |>
   cor(method = "pearson")
@@ -410,6 +436,7 @@ USAstate_pear <-USAstate |>
 
 Next, we can plot the data:
 ```{r}
+#| label: r-have-a-look-at-the-data-2
 heatmap(USAstate_pear, symm = TRUE, Rowv = NA)
 ```
 
@@ -417,12 +444,14 @@ heatmap(USAstate_pear, symm = TRUE, Rowv = NA)
 First, we load the data:
 
 ```{python}
+#| label: py-read-data-3
 USAstate_py = pd.read_csv("data/CS3-statedata.csv")
 
 USAstate_py.head()
 ```
 
 ```{python}
+#| label: py-inspect-data-3
 # create correlation matrix
 USAstate_cor_py = USAstate_py.corr(numeric_only = True)
 
@@ -435,6 +464,7 @@ USAstate_cor_py.head()
 Now that we have the correlation matrix in a workable format, we need to restructure it so that we can plot the data. For this, we need to create a "long" format, using the `melt()` function. Note that we're not setting the `values_var` argument. If not set, then it uses all but the `id_vars` column (which in our case is a good thing, since we don't want to manually specify lots of column names).
 
 ```{python}
+#| label: py-reshape-data-2
 USAstate_pear_py = pd.melt(USAstate_cor_py,
         id_vars=['var1'],
         var_name='var2',
@@ -443,10 +473,12 @@ USAstate_pear_py = pd.melt(USAstate_cor_py,
 
 Have a look at the structure:
 ```{python}
+#| label: py-inspect-data-4
 USArrests_pear_py.head()
 ```
 
 ```{python}
+#| label: py-plot-data-3
 #| results: hide
 p = (ggplot(USAstate_pear_py,
         aes(x = "var1", y = "var2", fill = "cor")) +
@@ -471,6 +503,7 @@ We can explore that numerically, by doing the following:
 First, we need to create the pairwise comparisons, with the relevant Pearson's $r$ values:
 
 ```{r}
+#| label: r-inspect-data-2
 # build a contingency table with as.table()
 # and create a dataframe with as.data.frame()
 USAstate_pear_cont <- as.data.frame(as.table(USAstate_pear))
@@ -484,6 +517,7 @@ Is this method obvious? No! Some creative Googling led to [Stackoverflow](https:
 Now that we have the paired comparisons, we can extract the relevant data:
 
 ```{r}
+#| label: r-filter-data
 # first we remove the same-pair correlations
 USAstate_pear_cont <- USAstate_pear_cont |>
   filter(Freq != 1)
@@ -506,11 +540,13 @@ Note that we use the minimum *absolute* value (with the `abs()` function) to fin
 ## Python
 We take the correlation matrix in the long format:
 ```{python}
+#| label: py-inspect-data-5
 USAstate_pear_py.head()
 ```
 
 and use it to extract the relevant values:
 ```{python}
+#| label: py-filter-data
 # filter out self-pairs
 df_cor = USAstate_pear_py.query("cor != 1")
 
@@ -553,6 +589,7 @@ In order to determine which variables are most affected by the choice of Spearma
 First, calculate the Pearson and Spearman correlation matrices (technically, we've done the Pearson one already, but we're doing it again for clarity here).
 
 ```{r}
+#| label: r-answer
 cor_pear <- USAstate |>
     select(-state) |>
     cor(method = "pearson")
@@ -564,12 +601,14 @@ cor_spear <- USAstate |>
 
 We can calculate the difference between two matrices by subtracting them.
 ```{r}
+#| label: r-answer-2
 cor_diff <- cor_pear - cor_spear
 ```
 
 Again, we could now just look at a grid of 64 numbers and see if we can spot the biggest differences, but our eyes aren't that good at processing and parsing this sort of information display. A better way would be to visualise the data.
 
 ```{r}
+#| label: r-answer-3
 heatmap(abs(cor_diff), symm = TRUE, Rowv = NA)
 ```
 
@@ -580,6 +619,7 @@ The `abs()` function calculates the absolute value (i.e. just the magnitude) of 
 First, calculate the Pearson and Spearman correlation matrices (technically, we've done the Pearson one already, but we're doing it again for clarity here).
 
 ```{python}
+#| label: py-answer
 cor_pear_py = USAstate_py.corr(method = "pearson", numeric_only = True)
 cor_spea_py = USAstate_py.corr(method = "spearman", numeric_only = True)
 ```
@@ -587,12 +627,14 @@ cor_spea_py = USAstate_py.corr(method = "spearman", numeric_only = True)
 We can calculate the difference between two matrices by subtracting them.
 
 ```{python}
+#| label: py-answer-2
 cor_dif_py = cor_pear_py - cor_spea_py
 ```
 
 Again, we could now just look at a grid of 64 numbers and see if we can spot the biggest differences, but our eyes aren't that good at processing and parsing this sort of information display. A better way would be to visualise the data.
 
 ```{python}
+#| label: py-inspect-data-6
 # get the row names in a column
 cor_dif_py = cor_dif_py.rename_axis("var1").reset_index()
 
@@ -613,6 +655,7 @@ cor_dif_py.head()
 Now we can plot the data:
 
 ```{python}
+#| label: py-plot-data-4
 #| results: hide
 p = (ggplot(cor_dif_py,
         aes(x = "var1", y = "var2", fill = "abs_cor")) +

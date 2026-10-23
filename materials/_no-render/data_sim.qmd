@@ -5,6 +5,7 @@ editor: visual
 ---
 
 ```{r}
+#| label: r-plot-data
 set.seed(2372)
 N <- 730
 true_coef <- c(
@@ -35,6 +36,7 @@ ggplot(sim, aes(wind_m_s, pm2_5, colour = location)) +
 ```
 
 ```{r}
+#| label: r-read-data
 # taking simulated PM2.5 and wind speed data
 quality_sim <- sim |>
     group_by(location) |>
@@ -58,6 +60,7 @@ write_csv(london, "../data/CS5-pm2_5.csv")
 ```
 
 ```{r}
+#| label: r-plot-data-2
 # avg daily temperature by day
 london |>
 ggplot(aes(x = id, y = avg_temp, colour = location)) +
@@ -80,12 +83,14 @@ london |>
 ```
 
 ```{r}
+#| label: r-wind-speed-vs-pm2-5
 london |>
     select(-date, - location) |>
     pairs()
 ```
 
 ```{r}
+#| label: r-fit-linear-model
 lm_wind <- lm(pm2_5 ~ wind_m_s * location,
    data = london)
 
