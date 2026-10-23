@@ -75,7 +75,7 @@ ggsave(filename = filename, height = height, width = width, ...)
 #### Global height example
 
 ```{r, quarter size global height dist plot}
-global_height <- data.frame(dist = dist_normal(169, 10)) %>%
+global_height <- data.frame(dist = dist_normal(169, 10)) |>
     ggplot(aes(xdist = dist)) +
     stat_slab(fill = "gray85", colour = "#EA7125", alpha =0.7) +
     scale_x_continuous(breaks = seq(140, 200, by = 10), limits = c(140, 200)) +
@@ -118,7 +118,7 @@ landscape.ggsave(plot = global_height, filename = "plots/cs1-global-height.png")
 ### Distributions
 
 ```{r, global height with mean/var}
-global_height_meanvar <- data.frame(dist = dist_normal(169, 10)) %>%
+global_height_meanvar <- data.frame(dist = dist_normal(169, 10)) |>
     ggplot(aes(xdist = dist)) +
     stat_slab(fill = "gray85", colour = "#EA7125", alpha =0.7) +
     scale_x_continuous(breaks = seq(140, 200, by = 10), limits = c(140, 200)) +
@@ -157,7 +157,7 @@ df <- data.frame(
 )
 
 other_distributions <- ggplot(df, aes(xdist = dist)) +
-  stat_slab(fill = "gray85", colour = "#EA7125", alpha =0.7) + 
+  stat_slab(fill = "gray85", colour = "#EA7125", alpha =0.7) +
   facet_wrap(facets = vars(name), scales = "free") +
   labs(y = "probability", x = NULL) +
   theme_void(base_size = 16)
@@ -194,7 +194,7 @@ square.ggsave(plot = two_groups, filename = "plots/cs1-two-groups.png")
 ```{r, classical hypothesis testing}
 quarter.ggsave(plot = global_height, filename = "plots/cs1-global-height-quarter.png")
 
-f_dist <- data.frame(dist = dist_f(8, 15)) %>%
+f_dist <- data.frame(dist = dist_f(8, 15)) |>
     ggplot(aes(xdist = dist)) +
     stat_slab(fill = "gray85", colour = "#EA7125", alpha =0.7) +
     labs(title = "F-statistic distribution", x="F", y = "probability density")
@@ -212,13 +212,13 @@ set.seed(15)
 
 boxplot_groups <- tibble(A = rnorm(20, 6, 1),
                          B = rnorm(20, 6, 1),
-                         C = rnorm(20, 7.5, 1)) %>% 
-  mutate(id = 1:n()) %>% 
-  pivot_longer(cols = -id, names_to = "group", values_to = "response") %>% 
-  select(-id) %>% 
-  group_by(group) %>% 
-  mutate(group_mean = mean(response)) %>% 
-  ungroup() %>%
+                         C = rnorm(20, 7.5, 1)) |>
+  mutate(id = 1:n()) |>
+  pivot_longer(cols = -id, names_to = "group", values_to = "response") |>
+  select(-id) |>
+  group_by(group) |>
+  mutate(group_mean = mean(response)) |>
+  ungroup() |>
 ggplot(aes(x = group, y = response)) +
   geom_boxplot() +
   scale_colour_manual(values = cols) +
@@ -241,15 +241,15 @@ cols <- c("A" = "#EA7125", "B" = "#0072CF", "C" = "#55A51C")
 ```{r}
 set.seed(seed)
 
-anova_example <- 
+anova_example <-
 tibble(A = rnorm(10, 6, 1),
        B = rnorm(10, 8, 1),
-       C = rnorm(10, 4, 1)) %>% 
-  mutate(id = 1:n()) %>% 
-  pivot_longer(cols = -id, names_to = "group", values_to = "response") %>% 
-  select(-id) %>% 
-  group_by(group) %>% 
-  mutate(group_mean = mean(response)) %>% 
+       C = rnorm(10, 4, 1)) |>
+  mutate(id = 1:n()) |>
+  pivot_longer(cols = -id, names_to = "group", values_to = "response") |>
+  select(-id) |>
+  group_by(group) |>
+  mutate(group_mean = mean(response)) |>
   ungroup()
 
 intuitive_original <- ggplot(anova_example, aes(x = group, y = response)) +
@@ -272,12 +272,12 @@ set.seed(seed)
 anova_large_diff <-
 tibble(A = rnorm(10, 6, 1),
        B = rnorm(10, 9.5, 1),
-       C = rnorm(10, 2.5, 1)) %>% 
-  mutate(id = 1:n()) %>% 
-  pivot_longer(cols = -id, names_to = "group", values_to = "response") %>% 
-  select(-id) %>% 
-  group_by(group) %>% 
-  mutate(group_mean = mean(response)) %>% 
+       C = rnorm(10, 2.5, 1)) |>
+  mutate(id = 1:n()) |>
+  pivot_longer(cols = -id, names_to = "group", values_to = "response") |>
+  select(-id) |>
+  group_by(group) |>
+  mutate(group_mean = mean(response)) |>
   ungroup()
 
 intuitive_large_diff <- ggplot(anova_large_diff, aes(x = group, y = response)) +
@@ -300,12 +300,12 @@ set.seed(seed)
 anova_small_diff <-
 tibble(A = rnorm(10, 6, 1),
        B = rnorm(10, 6.1, 1),
-       C = rnorm(10, 5.9, 1)) %>% 
-  mutate(id = 1:n()) %>% 
-  pivot_longer(cols = -id, names_to = "group", values_to = "response") %>% 
-  select(-id) %>% 
-  group_by(group) %>% 
-  mutate(group_mean = mean(response)) %>% 
+       C = rnorm(10, 5.9, 1)) |>
+  mutate(id = 1:n()) |>
+  pivot_longer(cols = -id, names_to = "group", values_to = "response") |>
+  select(-id) |>
+  group_by(group) |>
+  mutate(group_mean = mean(response)) |>
   ungroup()
 
 intuitive_small_diff <- ggplot(anova_small_diff, aes(x = group, y = response)) +
@@ -325,15 +325,15 @@ square.ggsave(plot = intuitive_small_diff, filename = "plots/cs2-intuitive-small
 ```{r}
 set.seed(seed)
 
-anova_small_spread <- 
+anova_small_spread <-
 tibble(A = rnorm(10, 6, 0.3),
        B = rnorm(10, 7, 0.3),
-       C = rnorm(10, 5, 0.3)) %>% 
-  mutate(id = 1:n()) %>% 
-  pivot_longer(cols = -id, names_to = "group", values_to = "response") %>% 
-  select(-id) %>% 
-  group_by(group) %>% 
-  mutate(group_mean = mean(response)) %>% 
+       C = rnorm(10, 5, 0.3)) |>
+  mutate(id = 1:n()) |>
+  pivot_longer(cols = -id, names_to = "group", values_to = "response") |>
+  select(-id) |>
+  group_by(group) |>
+  mutate(group_mean = mean(response)) |>
   ungroup()
 
 intuitive_small_spread <- ggplot(anova_small_spread, aes(x = group, y = response)) +
@@ -353,15 +353,15 @@ square.ggsave(plot = intuitive_small_spread, filename = "plots/cs2-intuitive-sma
 ```{r}
 set.seed(seed)
 
-anova_large_spread <- 
+anova_large_spread <-
 tibble(A = rnorm(10, 6, 1.7),
        B = rnorm(10, 8, 1.7),
-       C = rnorm(10, 4, 1.7)) %>% 
-  mutate(id = 1:n()) %>% 
-  pivot_longer(cols = -id, names_to = "group", values_to = "response") %>% 
-  select(-id) %>% 
-  group_by(group) %>% 
-  mutate(group_mean = mean(response)) %>% 
+       C = rnorm(10, 4, 1.7)) |>
+  mutate(id = 1:n()) |>
+  pivot_longer(cols = -id, names_to = "group", values_to = "response") |>
+  select(-id) |>
+  group_by(group) |>
+  mutate(group_mean = mean(response)) |>
   ungroup()
 
 intuitive_large_spread <- ggplot(anova_large_spread, aes(x = group, y = response)) +
@@ -379,11 +379,11 @@ square.ggsave(plot = intuitive_large_spread, filename = "plots/cs2-intuitive-lar
 ### Between-group variance
 
 ```{r, calculate global mean}
-global_mean <- anova_example %>% 
-  group_by(group) %>% 
-  slice(1) %>% 
-  ungroup() %>% 
-  summarise(global_mean = mean(group_mean)) %>% 
+global_mean <- anova_example |>
+  group_by(group) |>
+  slice(1) |>
+  ungroup() |>
+  summarise(global_mean = mean(group_mean)) |>
   pull()
 ```
 
@@ -414,14 +414,14 @@ square.ggsave(plot = between_group_var, filename = "plots/cs2-between-group-var.
 #### Grouped
 
 ```{r}
-anova_example_means <- anova_example %>%
-  select(-response) %>%
+anova_example_means <- anova_example |>
+  select(-response) |>
   distinct()
 
-between_group_var2 <- anova_example %>%
+between_group_var2 <- anova_example |>
   mutate(number = case_when(group == "A" ~ 1,
                             group == "B" ~ 2,
-                            group == "C" ~ 3)) %>%
+                            group == "C" ~ 3)) |>
 ggplot(aes(x = number, y = response)) +
   geom_point(colour = "white") +
   geom_hline(yintercept = global_mean, linetype = "dashed") +
@@ -462,7 +462,7 @@ within_group <- ggplot(anova_example, aes(x = group, y = response)) +
   scale_colour_manual(values = cols) +
   theme_classic(base_size = 15) +
   theme(legend.position = "none") +
-  labs(title = "Within-group variance", x = "Group", y = "Residuals") +  
+  labs(title = "Within-group variance", x = "Group", y = "Residuals") +
   geom_hline(yintercept = global_mean, linetype = "dashed") +
   geom_segment(aes(xend = group, y = (group_mean+1.9), yend = (group_mean-1.9), colour = group),
                arrow = arrow(ends = "both", length = unit(0.05, "inches"), type = "closed"),
@@ -475,7 +475,7 @@ square.ggsave(plot = within_group, filename = "plots/cs2-within-group.png")
 
 ```{r, generate linear model for plotting residuals}
 lm_anova <- lm(response ~ group, data = anova_example)
-anova_example_aug <- lm_anova %>% augment()
+anova_example_aug <- lm_anova |> augment()
 
 anova(lm_anova)
 ```
@@ -514,18 +514,18 @@ square.ggsave(plot = anova_residuals_grouped, filename = "plots/cs2-anova-residu
 Update the augmented data set first to normalise the between-group variances.
 
 ```{r, create augmented model object}
-anova_example_aug <- anova_example_aug %>% 
-  group_by(group) %>% 
+anova_example_aug <- anova_example_aug |>
+  group_by(group) |>
   mutate(mean_response = mean(response),
          std_response = mean_response - global_mean,
          id = 1:n())
 ```
 
 ```{r, combine three means and collapsed group points}
-comparing_variances <- anova_example_aug %>%
+comparing_variances <- anova_example_aug |>
   mutate(number = case_when(group == "A" ~ 1,
                             group == "B" ~ 2,
-                            group == "C" ~ 3)) %>%
+                            group == "C" ~ 3)) |>
 ggplot(aes(x = "Between-group", y = response, colour = group)) +
   geom_point(colour = "white") +
   geom_hline(yintercept = 0, linetype = "dashed") +
@@ -545,10 +545,10 @@ square.ggsave(plot = comparing_variances, filename = "plots/cs2-comparing-varian
 #### Corrected variances
 
 ```{r, comparing variances corrected for multiple points per group}
-comparing_variances_corrected <- anova_example_aug %>%
+comparing_variances_corrected <- anova_example_aug |>
   mutate(number = case_when(group == "A" ~ 1,
                             group == "B" ~ 2,
-                            group == "C" ~ 3)) %>%
+                            group == "C" ~ 3)) |>
 ggplot(aes(x = "Between-group", y = std_response, colour = group)) +
   geom_point(colour = "white") +
   geom_point(aes(group = id), position = position_dodge(width = 0.4), size = 3, alpha = 0.8) +
@@ -580,11 +580,11 @@ square.ggsave(plot = comparing_variances_arrows, filename = "plots/cs2-comparing
 #### Between group variance
 
 ```{r, calculate global mean for dataset3}
-global_mean_small_diff <- anova_small_diff %>% 
-  group_by(group) %>% 
-  slice(1) %>% 
-  ungroup() %>% 
-  summarise(global_mean = mean(group_mean)) %>% 
+global_mean_small_diff <- anova_small_diff |>
+  group_by(group) |>
+  slice(1) |>
+  ungroup() |>
+  summarise(global_mean = mean(group_mean)) |>
   pull()
 ```
 
@@ -614,7 +614,7 @@ within_group_small_diff <- ggplot(anova_small_diff, aes(x = group, y = response)
   scale_colour_manual(values = cols) +
   theme_classic(base_size = 15) +
   theme(legend.position = "none") +
-  labs(title = "Within-group variance", x = "Group", y = "Residuals") +  
+  labs(title = "Within-group variance", x = "Group", y = "Residuals") +
   geom_hline(yintercept = global_mean, linetype = "dashed") +
   geom_segment(aes(xend = group, y = (group_mean+1.9), yend = (group_mean-1.9), colour = group),
                arrow = arrow(ends = "both", length = unit(0.05, "inches"), type = "closed"),
@@ -627,24 +627,24 @@ square.ggsave(plot = within_group_small_diff, filename = "plots/cs2-within-group
 
 ```{r, generate linear model for plotting residuals}
 lm_anova_small <- lm(response ~ group, data = anova_small_diff)
-anova_small_aug <- lm_anova_small %>% augment()
+anova_small_aug <- lm_anova_small |> augment()
 
 anova(lm_anova_small)
 ```
 
 ```{r, create augmented model object}
-anova_small_aug2 <- anova_small_aug %>% 
-  group_by(group) %>% 
+anova_small_aug2 <- anova_small_aug |>
+  group_by(group) |>
   mutate(mean_response = mean(response),
          std_response = mean_response - global_mean,
          id = 1:n())
 ```
 
 ```{r, comparing variances corrected for multiple points per group for dataset3}
-comparing_variances_small_diff <- anova_small_aug2 %>%
+comparing_variances_small_diff <- anova_small_aug2 |>
   mutate(number = case_when(group == "A" ~ 1,
                             group == "B" ~ 2,
-                            group == "C" ~ 3)) %>%
+                            group == "C" ~ 3)) |>
 ggplot(aes(x = "Between-group", y = std_response, colour = group)) +
   geom_point(colour = "white") +
   geom_point(aes(group = id), position = position_dodge(width = 0.4), size = 3, alpha = 0.8) +
@@ -780,27 +780,27 @@ scatterplot_betas <- scatterplot2 +
   geom_segment(x = 1, xend = 0, y = 5.5, yend = 5, arrow = arrow(length = unit(0.03, "npc")), colour="#EA7125") +
   annotate("text", label = bquote(beta[0] ~ "(intercept)"), x = 3.2, y = 5.5, size = 7, colour="#EA7125") +
   geom_segment(x = 5, xend = 7,
-               y = lm_xy %>% augment(newdata = data.frame(x = 5)) %>% pull(.fitted),
-               yend = lm_xy %>% augment(newdata = data.frame(x = 5)) %>% pull(.fitted), colour="#EA7125") +
+               y = lm_xy |> augment(newdata = data.frame(x = 5)) |> pull(.fitted),
+               yend = lm_xy |> augment(newdata = data.frame(x = 5)) |> pull(.fitted), colour="#EA7125") +
   geom_segment(x = 7, xend = 7,
-               y = lm_xy %>% augment(newdata = data.frame(x = 7)) %>% pull(.fitted),
-               yend = lm_xy %>% augment(newdata = data.frame(x = 5)) %>% pull(.fitted), colour="#EA7125") +
+               y = lm_xy |> augment(newdata = data.frame(x = 7)) |> pull(.fitted),
+               yend = lm_xy |> augment(newdata = data.frame(x = 5)) |> pull(.fitted), colour="#EA7125") +
   annotate("text", label = bquote(beta[1] ~ "(slope)"), x = 6, y = 4, size = 7, colour="#EA7125") +
   annotate("text", label = bquote("y =" ~ beta[0] ~ "+" ~ beta[1]~"x"), x = 3.2, y = 1, size = 10, colour="#EA7125")
-  
+
 square.ggsave(plot = scatterplot_betas, filename = "plots/cs3-scatterplot-betas.png")
 ```
 
 ```{r, show errors above line of best fit}
 scatterplot_errors <- scatterplot2 +
-  geom_segment(aes(xend = x, yend = lm_xy %>% augment() %>% pull(.fitted)))
+  geom_segment(aes(xend = x, yend = lm_xy |> augment() |> pull(.fitted)))
 
 square.ggsave(plot = scatterplot_errors, filename = "plots/cs3-scatterplot-errors.png")
 ```
 
 ```{r, show deltas above line of best fit}
-lm_xy_aug <- lm_xy %>%
-  augment() %>% 
+lm_xy_aug <- lm_xy |>
+  augment() |>
   mutate(n_row = 1:n(),
          error_label = str_c("\u03b5[", n_row, "]"))
 
@@ -851,18 +851,18 @@ square.ggsave(plot = scatterplot_model, filename = "plots/cs3-scatterplot-model.
 
 ```{r, static SS plot}
 
-min_ss <- animate_data %>% 
-  filter(ss == min(ss)) %>% 
+min_ss <- animate_data |>
+  filter(ss == min(ss)) |>
   slice(1)
 
 label <- as.character(expression(beta[1]~"="~"- 0.3"))
 
 # create plot minimum ss
-sum_of_squares <- animate_data %>% 
-  arrange(slope_value) %>%
-  group_by(slope_value) %>% 
-  slice(1) %>% 
-  ungroup() %>% 
+sum_of_squares <- animate_data |>
+  arrange(slope_value) |>
+  group_by(slope_value) |>
+  slice(1) |>
+  ungroup() |>
   ggplot(aes(x = slope_value,
              y = ss)) +
   geom_point() +
@@ -882,16 +882,16 @@ square.ggsave(plot = sum_of_squares, filename = "plots/cs3-sum-of-squares.png")
 ```{r, animation1 - line rotate}
 # create data set
 slope_range <-
-  tibble(slope_value = seq(-1,0.5,0.01)) %>% 
+  tibble(slope_value = seq(-1,0.5,0.01)) |>
   mutate(intercept_value = ybar - slope_value * xbar)
 
-animate_data <- lm_xy_aug %>% 
-  select(x, y, .fitted) %>% 
-  cross_join(slope_range) %>% 
+animate_data <- lm_xy_aug |>
+  select(x, y, .fitted) |>
+  cross_join(slope_range) |>
   mutate(ab_fitted = intercept_value + slope_value * x,
-         error_value = ab_fitted - y) %>% 
-  group_by(slope_value) %>% 
-  mutate(ss = sum(error_value ^ 2)) %>% 
+         error_value = ab_fitted - y) |>
+  group_by(slope_value) |>
+  mutate(ss = sum(error_value ^ 2)) |>
   ungroup()
 
 p <- ggplot(animate_data, aes(x, y)) +
@@ -914,13 +914,13 @@ anim_save("plots/animation-lobf.gif", animation = ap_lobf_render)
 
 ```{r, animation2}
 
-animate_data_lad <- lm_xy_aug %>% 
-  select(x, y, .fitted) %>% 
-  cross_join(slope_range) %>% 
+animate_data_lad <- lm_xy_aug |>
+  select(x, y, .fitted) |>
+  cross_join(slope_range) |>
   mutate(ab_fitted = intercept_value + slope_value * x,
-         error_value = ab_fitted - y) %>% 
-  group_by(slope_value) %>% 
-  mutate(lad = sum(abs(error_value))) %>% 
+         error_value = ab_fitted - y) |>
+  group_by(slope_value) |>
+  mutate(lad = sum(abs(error_value))) |>
   ungroup()
 
 p_lad <- ggplot(animate_data_lad, aes(x, y)) +
@@ -943,11 +943,11 @@ anim_save("plots/animation-lobf_lad.gif", animation = ap_lobf_lad_render)
 
 ```{r, animation3}
 
-ap_lad <- animate_data_lad %>% 
-  arrange(slope_value) %>%
-  group_by(slope_value) %>% 
-  slice(1) %>% 
-  ungroup() %>% 
+ap_lad <- animate_data_lad |>
+  arrange(slope_value) |>
+  group_by(slope_value) |>
+  slice(1) |>
+  ungroup() |>
   ggplot(aes(x = slope_value,
              y = lad)) +
   geom_point() +
@@ -970,11 +970,11 @@ anim_save("plots/animation-lad.gif", animation = ap_lad_render)
 
 ```{r, animation4 - U}
 
-ap_ss <- animate_data %>% 
-  arrange(slope_value) %>%
-  group_by(slope_value) %>% 
-  slice(1) %>% 
-  ungroup() %>% 
+ap_ss <- animate_data |>
+  arrange(slope_value) |>
+  group_by(slope_value) |>
+  slice(1) |>
+  ungroup() |>
   ggplot(aes(x = slope_value,
                          y = ss)) +
   geom_point() +
@@ -1017,7 +1017,7 @@ sig_regression <- ggplot(xy_example_vs, aes(x = x, y = y)) +
   geom_text(aes(label = "y = 5 - 0.3x"), x = 1, y = 12, size = 9, hjust = 0)
 
 square.ggsave(plot = sig_regression, filename = "plots/cs3-sig-regression.png")
-  
+
 # add null model
 sig_regression_null <- sig_regression +
   geom_hline(yintercept = mean(xy_example_vs$y), colour = "black", linetype = "dashed",  linewidth = 1)
@@ -1033,7 +1033,7 @@ square.ggsave(plot = sig_regression_p, filename = "plots/cs3-sig-regression-p.pn
 
 ```{r, insignificant dataset with same equation}
 
-# generate data 
+# generate data
 #set.seed(23381)
 #x_ins <- seq(1, 10, 0.75)
 #y_ins <- 5 - (0.3 * x_ins) + rnorm(length(x_ins), 0, 5)
@@ -1059,7 +1059,7 @@ insig_regression <- ggplot(xy_example_ins, aes(x = x, y = y)) +
   geom_text(aes(label = "y = 5 - 0.3x"), x = 1, y = 12, size = 9, hjust = 0)
 
 square.ggsave(plot = insig_regression, filename = "plots/cs3-insig-regression.png")
-  
+
 # add null model
 insig_regression_null <- insig_regression +
   geom_hline(yintercept = mean(xy_example_vs$y), colour = "black", linetype = "dashed",  linewidth = 1)
@@ -1082,14 +1082,14 @@ scatterplot_null2 <- ggplot(xydat, aes(x = x, y = y)) +
   labs(title = "Scatterplot of y against x") +
   theme_classic(base_size = 15) +
   geom_smooth(method = "lm", se = FALSE, colour = "#0072CF", fullrange = TRUE) +
-  geom_segment(aes(xend = x, yend = lm_xy %>% augment() %>% pull(.fitted)))
+  geom_segment(aes(xend = x, yend = lm_xy |> augment() |> pull(.fitted)))
 
 square.ggsave(plot = scatterplot_null2, filename = "plots/cs3-scatterplot-null2.png")
 ```
 
 ```{r, predicted values separated out}
-predicted_values <- lm_xy %>%
-  augment() %>% 
+predicted_values <- lm_xy |>
+  augment() |>
   ggplot(aes(x, .fitted)) +
   geom_point(colour = "#0072CF", size = 3, shape = 4, stroke = 1.5) +
   geom_segment(aes(xend = x, yend = mean(xydat$y))) +
@@ -1104,7 +1104,7 @@ square.ggsave(plot = predicted_values, filename = "plots/cs3-predicted-values.pn
 
 ```{r, measured vs predicted values}
 measured_predicted <- ggplot(augment(lm_xy), aes(x, .fitted)) +
-  geom_hline(yintercept = mean(xydat$y), colour = "black", linetype = "dashed",  linewidth = 1) +  
+  geom_hline(yintercept = mean(xydat$y), colour = "black", linetype = "dashed",  linewidth = 1) +
   geom_point(aes(x = x, y = y), colour = "#999999", size = 4) +
   geom_point(colour = "#0072CF", size = 3, shape = 4, stroke = 1.5) +
   geom_segment(aes(xend = x, yend = y)) +
@@ -1117,9 +1117,9 @@ square.ggsave(plot = measured_predicted, filename = "plots/cs3-measured-predicte
 ```
 
 ```{r, signal to noise in regression}
-signal_noise <- lm_xy %>%
-  augment() %>% 
-  mutate(.fitted = .fitted - mean(y)) %>% 
+signal_noise <- lm_xy |>
+  augment() |>
+  mutate(.fitted = .fitted - mean(y)) |>
   ggplot() +
   geom_point(aes(x = "Residuals \n \n (noise)", y = .resid), size = 4, alpha = 0.5) +
   geom_point(aes(x = "Predicted values \n \n (signal)", y = .fitted), colour = "#0072CF", size = 3, shape = 4, stroke = 1.5) +
@@ -1145,7 +1145,7 @@ square.ggsave(plot = signal_noise_var, filename = "plots/cs3-signal-noise-var.pn
 ```{r, add pvalue to signal to noise}
 
 signal_noise_p <- signal_noise_var +
-  geom_text(aes(label = "p = 0.0002633"), x = 1.5, y = -2, size = 7, hjust = 0, colour = "#EA7125")  
+  geom_text(aes(label = "p = 0.0002633"), x = 1.5, y = -2, size = 7, hjust = 0, colour = "#EA7125")
 
 square.ggsave(plot = signal_noise_p, filename = "plots/cs3-signal-noise-p.png")
 ```
@@ -1297,50 +1297,50 @@ square.ggsave(plot = leverage_bad, filename = "plots/cs3-plot-leverage-bad.png")
 ```{r, same slope different corr}
 set.seed(20)
 
-corr1_slope1 <- tibble(X1 = rnorm(100, 0, 1)) %>%
-  ggplot(aes(x=X1, y=X1)) + 
+corr1_slope1 <- tibble(X1 = rnorm(100, 0, 1)) |>
+  ggplot(aes(x=X1, y=X1)) +
   geom_point(colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
   labs(title="1")
 
-corr08_slope1 <- rnorm_multi(n = 100, vars = 2, mu = c(0,0), sd = c(1,1), r = 0.9) %>%
-  ggplot(aes(x=X1, y=X2)) + 
+corr08_slope1 <- rnorm_multi(n = 100, vars = 2, mu = c(0,0), sd = c(1,1), r = 0.9) |>
+  ggplot(aes(x=X1, y=X2)) +
   geom_point(colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
   labs(title="0.8")
 
-corr04_slope1 <- rnorm_multi(n = 100, vars = 2, mu = c(0,0), sd = c(1,1), r = 0.4) %>%
-  ggplot(aes(x=X1, y=X2)) + 
+corr04_slope1 <- rnorm_multi(n = 100, vars = 2, mu = c(0,0), sd = c(1,1), r = 0.4) |>
+  ggplot(aes(x=X1, y=X2)) +
   geom_point(colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
   labs(title="0.4")
 
-corr0_slope1 <- rnorm_multi(n = 100, vars = 2, mu = c(0,0), sd = c(1,1), r = 0) %>%
-  ggplot(aes(x=X1, y=X2)) + 
+corr0_slope1 <- rnorm_multi(n = 100, vars = 2, mu = c(0,0), sd = c(1,1), r = 0) |>
+  ggplot(aes(x=X1, y=X2)) +
   geom_point(colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
   labs(title="0")
 
-corrn1_slope1 <- tibble(X1 = rnorm(100, 0, 1)) %>%
-  ggplot(aes(x=X1, y=(-X1))) + 
+corrn1_slope1 <- tibble(X1 = rnorm(100, 0, 1)) |>
+  ggplot(aes(x=X1, y=(-X1))) +
   geom_point(colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
-  theme(plot.margin = unit(c(0,0,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +  
+  theme(plot.margin = unit(c(0,0,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
   labs(title="-1")
 
-corrn08_slope1 <- rnorm_multi(n = 100, vars = 2, mu = c(0,0), sd = c(1,1), r = -0.9) %>%
-  ggplot(aes(x=X1, y=X2)) + 
+corrn08_slope1 <- rnorm_multi(n = 100, vars = 2, mu = c(0,0), sd = c(1,1), r = -0.9) |>
+  ggplot(aes(x=X1, y=X2)) +
   geom_point(colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
   labs(title="-0.8")
 
-corrn04_slope1 <- rnorm_multi(n = 100, vars = 2, mu = c(0,0), sd = c(1,1), r = -0.4) %>%
-  ggplot(aes(x=X1, y=X2)) + 
+corrn04_slope1 <- rnorm_multi(n = 100, vars = 2, mu = c(0,0), sd = c(1,1), r = -0.4) |>
+  ggplot(aes(x=X1, y=X2)) +
   geom_point(colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
@@ -1368,14 +1368,14 @@ p1 <- ggplot(data1, aes(x=X1, y=X2)) +
   geom_point(data=data1, colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
-  labs(title="1") 
+  labs(title="1")
 
 p2 <- ggplot(data1, aes(x=X1, y=X2)) +
   geom_point(colour="white") +
   geom_point(data=data2, colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
-  labs(title="1") 
+  labs(title="1")
 
 p3 <- ggplot(data1, aes(x=X1, y=X2)) +
   geom_point(colour="white") +
@@ -1389,28 +1389,28 @@ p4 <- ggplot(data1, aes(x=X1, y=X2)) +
   geom_point(data=data4, colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
-  labs(title="-1") 
+  labs(title="-1")
 
 p5 <- ggplot(data1, aes(x=X1, y=X2)) +
   geom_point(colour="white") +
   geom_point(data=data5, colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
-  labs(title="-1") 
+  labs(title="-1")
 
 p6 <- ggplot(data1, aes(x=X1, y=X2)) +
   geom_point(colour="white") +
   geom_point(data=data6, colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
-  labs(title="-1") 
+  labs(title="-1")
 
 p7 <- ggplot(data1, aes(x=X1, y=X2)) +
   geom_point(colour="white") +
   geom_point(data=data7, colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
-  labs(title="") 
+  labs(title="")
 
 corr_slopes <- p1 + p2 + p3 + p7 + p6 + p5 + p4 + plot_layout(nrow=1)
 
@@ -1419,35 +1419,35 @@ strip.ggsave(plot = corr_slopes, filename = "plots/cs3-corr_slopes.png")
 
 ```{r, nonlinear zero corr}
 
-nonlin1 <- generateCrescentMoon(n = 70, d = 2, sigma = 0.5) %>%
-ggplot(aes(x=X1, y=X2)) + 
+nonlin1 <- generateCrescentMoon(n = 70, d = 2, sigma = 0.5) |>
+ggplot(aes(x=X1, y=X2)) +
   geom_point(colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
   labs(title="0")
 
-nonlin2 <- generateFourClusters(n = 40, distance = 8, expected = FALSE) %>%
-ggplot(aes(x=X1, y=X2)) + 
+nonlin2 <- generateFourClusters(n = 40, distance = 8, expected = FALSE) |>
+ggplot(aes(x=X1, y=X2)) +
   geom_point(colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
   labs(title="0")
 
-nonlin3 <- generateSlicedCookie(n = 200, expected = FALSE, gap = 1.5) %>%
-ggplot(aes(x=X1, y=X2)) + 
+nonlin3 <- generateSlicedCookie(n = 200, expected = FALSE, gap = 1.5) |>
+ggplot(aes(x=X1, y=X2)) +
   geom_point(colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
   labs(title="0")
 
-nonlin4 <- generateTwoCircles(n = 200, noise_var = 0.08) %>%
-ggplot(aes(x=X1, y=X2)) + 
+nonlin4 <- generateTwoCircles(n = 200, noise_var = 0.08) |>
+ggplot(aes(x=X1, y=X2)) +
   geom_point(colour = "#0072CF", size = 1, alpha = 0.9) +
   theme_void(base_size = 15) +
   theme(plot.margin = unit(c(0,10,0,0), "pt"), plot.title = element_text(hjust = 0.5, margin=margin(b = 12, unit = "pt"))) +
   labs(title="0")
 
-nonlinear_corr <- plot_spacer() + nonlin1 + plot_spacer() + nonlin2 + plot_spacer() + nonlin3 + plot_spacer() + nonlin4 + plot_spacer() + 
+nonlinear_corr <- plot_spacer() + nonlin1 + plot_spacer() + nonlin2 + plot_spacer() + nonlin3 + plot_spacer() + nonlin4 + plot_spacer() +
   plot_layout(nrow=1, widths=c(0.6, 1, 0.6, 1, 0.6, 1, 0.6, 1, 0.6)) # should sum to 7
 
 strip.ggsave(plot = nonlinear_corr, filename = "plots/cs3-nonlinear-corr.png")
@@ -1509,7 +1509,7 @@ diff_arrows <- ggplot(xydat, aes(x = x, y = y)) +
                arrow = arrow(ends = "both", length = unit(0.05, "inches"), type = "closed"), colour = "#EA7125") +
   geom_segment(x=mean(xydat$x), xend=mean(xydat$x), y=mean(xydat$y)+1.7, yend=mean(xydat$y)-0.1,
                arrow = arrow(ends = "both", length = unit(0.05, "inches"), type = "closed"), colour = "#0072CF")
-  
+
 square.ggsave(plot = diff_arrows, filename = "plots/cs3-diff-arrows.png")
 ```
 
@@ -1648,7 +1648,7 @@ landscape.ggsave(plot = drivercaff_boxplot, filename = "plots/cs4-boxplot-career
 ```{r, interaction plot 1}
 
 interaction_careerdrink <- ggplot(racing, aes(x=Career, colour=Drink, group=Drink, y=Reaction)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   scale_colour_manual(values = cols) +
   geom_point(shape=4, size=2) +
   stat_summary(fun=mean, size=0.7) +
@@ -1663,7 +1663,7 @@ square.ggsave(plot = interaction_careerdrink, filename = "plots/cs4-interaction-
 colsalt <- c("Driver" = "#55A51C", "Control" = "#8F2BBC")
 
 interaction_careerdrink2 <- ggplot(racing, aes(x=Drink, colour=Career, group=Career, y=Reaction)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   scale_colour_manual(values = colsalt) +
   geom_point(shape=4, size=2) +
   stat_summary(fun=mean, size=0.7) +
@@ -1677,7 +1677,7 @@ square.ggsave(plot = interaction_careerdrink2, filename = "plots/cs4-interaction
 ```{r, interaction plot 1 raw}
 
 interaction_careerdrink_raw <- ggplot(racing, aes(x=Career, colour=Drink, group=Drink, y=Reaction)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   scale_colour_manual(values = cols) +
   geom_point(shape=4, size=2) +
   labs(y="Reaction time (ms)", title="Reaction time by drink and career") +
@@ -1690,7 +1690,7 @@ square.ggsave(plot = interaction_careerdrink_raw, filename = "plots/cs4-interact
 colsalt <- c("Driver" = "#55A51C", "Control" = "#8F2BBC")
 
 interaction_careerdrink2_raw <- ggplot(racing, aes(x=Drink, colour=Career, group=Career, y=Reaction)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   scale_colour_manual(values = colsalt) +
   geom_point(shape=4, size=2) +
   labs(y="Reaction time (ms)", title="Reaction time by drink and career") +
@@ -1702,7 +1702,7 @@ square.ggsave(plot = interaction_careerdrink2_raw, filename = "plots/cs4-interac
 ```{r, interaction plot iso}
 
 interaction_careerdrink_iso <- ggplot(racing, aes(x=Career, colour=Drink, group=Drink, y=Reaction)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   scale_colour_manual(values = cols) +
   geom_point(shape=4, size=2, colour="white") +
   stat_summary(fun=mean, size=0.7) +
@@ -1716,9 +1716,9 @@ square.ggsave(plot = interaction_careerdrink_iso, filename = "plots/cs4-interact
 #### Visualising interaction
 
 ```{r, interaction plot arrows drink}
-racing %>%
-  group_by(Career, Drink) %>%
-  summarise(Reaction, Mean=mean(Reaction)) %>%
+racing |>
+  group_by(Career, Drink) |>
+  summarise(Reaction, Mean=mean(Reaction)) |>
   distinct(Mean)
 
 interaction_arrows_drink <- interaction_careerdrink_iso +
@@ -1731,9 +1731,9 @@ square.ggsave(plot = interaction_arrows_drink, filename = "plots/cs4-interaction
 ```
 
 ```{r, interaction plot arrows career}
-racing %>%
-  group_by(Career, Drink) %>%
-  summarise(Reaction, Mean=mean(Reaction)) %>%
+racing |>
+  group_by(Career, Drink) |>
+  summarise(Reaction, Mean=mean(Reaction)) |>
   distinct(Mean)
 
 interaction_arrows_career <- interaction_careerdrink_iso +
@@ -1758,7 +1758,7 @@ racing_single_career <- tibble(Career, Drink, Reaction)
 cols <- c("Caffeine" = "#EA7125", "Water" = "#0072CF")
 
 single_effect_career <- ggplot(racing_single_career, aes(x=Career, colour=Drink, group=Drink, y=Reaction)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   ylim(c(145,355)) +
   scale_colour_manual(values = cols) +
   geom_point(shape=4, size=2) +
@@ -1781,7 +1781,7 @@ racing_single_drink <- tibble(Career, Drink, Reaction)
 cols <- c("Caffeine" = "#EA7125", "Water" = "#0072CF")
 
 single_effect_drink <- ggplot(racing_single_drink, aes(x=Career, colour=Drink, group=Drink, y=Reaction)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   ylim(c(145,355)) +
   scale_colour_manual(values = cols) +
   geom_point(shape=4, size=2) +
@@ -1804,7 +1804,7 @@ racing_zero <- tibble(Career, Drink, Reaction)
 cols <- c("Caffeine" = "#EA7125", "Water" = "#0072CF")
 
 zero_effects <- ggplot(racing_zero, aes(x=Career, colour=Drink, group=Drink, y=Reaction)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   ylim(c(145,355)) +
   scale_colour_manual(values = cols) +
   geom_point(shape=4, size=2) +
@@ -1827,7 +1827,7 @@ racing_both <- tibble(Career, Drink, Reaction)
 cols <- c("Caffeine" = "#EA7125", "Water" = "#0072CF")
 
 both_effects <- ggplot(racing_both, aes(x=Career, colour=Drink, group=Drink, y=Reaction)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   ylim(c(145,355)) +
   scale_colour_manual(values = cols) +
   geom_point(shape=4, size=2) +
@@ -1850,7 +1850,7 @@ racing_int1 <- tibble(Career, Drink, Reaction)
 cols <- c("Caffeine" = "#EA7125", "Water" = "#0072CF")
 
 extreme_int1 <- ggplot(racing_int1, aes(x=Career, colour=Drink, group=Drink, y=Reaction)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   ylim(c(145,355)) +
   scale_colour_manual(values = cols) +
   geom_point(shape=4, size=2) +
@@ -1873,7 +1873,7 @@ racing_int2 <- tibble(Career, Drink, Reaction)
 cols <- c("Caffeine" = "#EA7125", "Water" = "#0072CF")
 
 extreme_int2 <- ggplot(racing_int2, aes(x=Career, colour=Drink, group=Drink, y=Reaction)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   ylim(c(145,355)) +
   scale_colour_manual(values = cols) +
   geom_point(shape=4, size=2) +
@@ -1895,7 +1895,7 @@ Reaction <- rep(rnorm(10, 217.5, 20), times=2)
 racing_int3 <- tibble(Career, Drink, Reaction)
 
 consequence_boxplot <- ggplot(racing_int3, aes(x=Career, y=Reaction)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   geom_boxplot() +
   labs(y="Reaction time (ms)", title="Reaction time by career only")
 
@@ -1915,7 +1915,7 @@ anova(lm_tree)
 
 ```{r}
 treelight_raw <- ggplot(treelight, aes(x=Depth, colour=Species, group=Species, y=Light)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   scale_colour_manual(values = cols) +
   geom_point(size = 3) +
   labs(y="Light intensity (lux)", title="Light intensity by species and depth") +
@@ -1974,7 +1974,7 @@ data_error_categorical <- simple_categorical_model +
   geom_segment(x=2.1, xend=2.1, y=8.32, yend=10.3,
                arrow = arrow(ends = "both", length = unit(0.05, "inches"), type = "closed"), colour = "black")
 
-square.ggsave(plot = data_error_categorical, filename = "plots/cs5-data-error-categorical.png") 
+square.ggsave(plot = data_error_categorical, filename = "plots/cs5-data-error-categorical.png")
 ```
 
 ```{r, generalise any number of groups}
@@ -1982,9 +1982,9 @@ set.seed(21)
 D <- rnorm(10, 7, 1)
 E <- rnorm(10, 9, 1)
 
-anova_example_gen <- anova_example %>%
-  dplyr::select(-group_mean) %>%
-  add_row(group=rep("D",10), response=D) %>%
+anova_example_gen <- anova_example |>
+  dplyr::select(-group_mean) |>
+  add_row(group=rep("D",10), response=D) |>
   add_row(group=rep("E",10), response=E)
 ```
 
@@ -2007,7 +2007,7 @@ ggsave(plot = oneway_multiple, filename = "plots/cs5-oneway-multiple.png", heigh
 
 ```{r, revisiting twoway anova}
 twoway_model <- ggplot(racing, aes(x=Career, shape=Drink, group=Drink, y=Reaction)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   geom_point(alpha = 0.8, size = 2, colour="#999999") +
   stat_summary(fun=mean, size=0.7, colour="#0072CF") +
   stat_summary(fun=mean, geom="line", colour="#0072CF") +
@@ -2015,7 +2015,7 @@ twoway_model <- ggplot(racing, aes(x=Career, shape=Drink, group=Drink, y=Reactio
   theme(legend.position = c(.25, .8))
 
 coefficients(lm_racing)
-augment(lm_racing) %>% dplyr::select(.fitted) %>% unique()
+augment(lm_racing) |> dplyr::select(.fitted) |> unique()
 
 square.ggsave(plot = twoway_model, filename = "plots/cs5-twoway-categorical.png")
 
@@ -2047,7 +2047,7 @@ ggsave(plot = equation_step4, filename = "plots/cs5-twoway-equation4.png", width
 
 ```{r, revisiting treelight}
 twogroup_model <- ggplot(treelight, aes(x=Depth, shape=Species, group=Species, y=Light)) +
-  theme_classic(base_size=15) +  
+  theme_classic(base_size=15) +
   geom_point(size = 3, colour="#999999") +
   labs(y="Light intensity (lux)", title="Grouped linear regression") +
   theme(legend.position = c(.88, .88)) +
@@ -2139,7 +2139,7 @@ survey_models <- survey_full2 + survey_additive + survey_single
 ggsave(plot = survey_models, filename = "plots/cs5-survey-models.png", height=4, width=10)
 ```
 
-## CS6 
+## CS6
 
 ### Type I error
 
@@ -2147,7 +2147,7 @@ ggsave(plot = survey_models, filename = "plots/cs5-survey-models.png", height=4,
 null_dist <- ggplot(NULL, aes(c(-2,2))) +
   geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "grey95", colour = "#0072CF", size = 1, xlim = c(-2, 2)) +
-  geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "#0072CF") +  
+  geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "#0072CF") +
   labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
   theme_classic(base_size=15)
 
@@ -2156,32 +2156,32 @@ landscape.ggsave(plot = null_dist, filename = "plots/cs6-null-dist.png")
 
 ```{r, 5percent type 1}
 five_percent <- ggplot(NULL, aes(c(-2,2))) +
-  geom_hline(yintercept = 0, colour = "black", size = 0.25) +  
+  geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "grey95", colour = "#0072CF", size = 1, xlim = c(-2, 1)) +
-  geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "#0072CF") +    
+  geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "#0072CF") +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "#0072CF", colour = "#0072CF", size = 1, xlim = c(1, 2)) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "#0072CF", colour = "#0072CF", size = 1, xlim = c(-2, -1))  +
   labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
   theme_classic(base_size=15) +
   annotate(geom = "text", x=-1.5, y=0.6, label = "5%", size = 10) +
   geom_segment(x=-1.5, y=0.8, xend=-1.25, yend=0.1, arrow = arrow(ends = "last", length = unit(0.05, "inches"), type = "closed"), colour = "black") +
-  geom_segment(x=-1.5, y=0.5, xend=0.9, yend=0.1, arrow = arrow(ends = "last", length = unit(0.05, "inches"), type = "closed"), colour = "black")  
+  geom_segment(x=-1.5, y=0.5, xend=0.9, yend=0.1, arrow = arrow(ends = "last", length = unit(0.05, "inches"), type = "closed"), colour = "black")
 
 landscape.ggsave(plot = five_percent, filename = "plots/cs6-five-percent.png")
 ```
 
 ```{r, 1percent type 1}
 one_percent <- ggplot(NULL, aes(c(-2,2))) +
-  geom_hline(yintercept = 0, colour = "black", size = 0.25) +  
+  geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "grey95", colour = "#0072CF", size = 1, xlim = c(-2, 1.25)) +
-  geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "#0072CF") +    
+  geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "#0072CF") +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "#0072CF", colour = "#0072CF", size = 1, xlim = c(1.25, 2)) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "#0072CF", colour = "#0072CF", size = 1, xlim = c(-2, -1.25))  +
   labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
   theme_classic(base_size=15) +
   annotate(geom = "text", x=-1.5, y=0.6, label = "1%", size = 10) +
   geom_segment(x=-1.5, y=0.8, xend=-1.25, yend=0.1, arrow = arrow(ends = "last", length = unit(0.05, "inches"), type = "closed"), colour = "black") +
-  geom_segment(x=-1.5, y=0.5, xend=0.9, yend=0.1, arrow = arrow(ends = "last", length = unit(0.05, "inches"), type = "closed"), colour = "black")  
+  geom_segment(x=-1.5, y=0.5, xend=0.9, yend=0.1, arrow = arrow(ends = "last", length = unit(0.05, "inches"), type = "closed"), colour = "black")
 
 landscape.ggsave(plot = one_percent, filename = "plots/cs6-one-percent.png")
 ```
@@ -2190,9 +2190,9 @@ landscape.ggsave(plot = one_percent, filename = "plots/cs6-one-percent.png")
 
 ```{r, five percent wide plot}
 five_percent_wide <- ggplot(NULL, aes(c(-2,6))) +
-  geom_hline(yintercept = 0, colour = "grey70", size = 0.25) +  
+  geom_hline(yintercept = 0, colour = "grey70", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "grey95", colour = "#0072CF", size = 1, xlim = c(-2, 1)) +
-  #geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "#EA7125") +    
+  #geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "#EA7125") +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "#0072CF", colour = "#0072CF", size = 1, xlim = c(1, 2)) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "#0072CF", colour = "#0072CF", size = 1, xlim = c(-2, -1))  +
   labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
@@ -2204,9 +2204,9 @@ wide.ggsave(plot = five_percent_wide, filename = "plots/cs6-five-percent-wide.pn
 
 ```{r, retain null hypothesis distribution}
 retain_null <- ggplot(NULL, aes(c(-2,6))) +
-  geom_hline(yintercept = 0, colour = "black", size = 0.25) +  
+  geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "#0072CF", colour = "#0072CF", size = 1, xlim = c(-2, 1)) +
-  #geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "#EA7125") +    
+  #geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "#EA7125") +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "grey95", colour = "#0072CF", size = 1, xlim = c(1, 2)) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "grey95", colour = "#0072CF", size = 1, xlim = c(-2, -1))  +
   labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
@@ -2223,14 +2223,14 @@ retain_null_grey <- ggplot(NULL, aes(c(-2,6))) +
   annotate(xmin = -1, xmax = 1, ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2, colour = "#999999") +
   labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
   theme_classic(base_size=15) +
-  xlim(-2, 6) 
+  xlim(-2, 6)
 
 wide.ggsave(plot = retain_null_grey, filename = "plots/cs6-retain-null-grey.png")
 ```
 
 ```{r, adding a true/alternative distribution}
 true_distribution <- ggplot(NULL, aes(c(-2,6))) +
-  geom_hline(yintercept = 0, colour = "black", size = 0.25) +  
+  geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "white") +
   annotate(xmin = -1, xmax = 1, ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2, colour = "#999999") +
   labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
@@ -2244,14 +2244,14 @@ wide.ggsave(plot = true_distribution, filename = "plots/cs6-true-distribution.pn
 
 ```{r, false negative rate overlap}
 false_negative <- ggplot(NULL, aes(c(-2,6))) +
-  geom_hline(yintercept = 0, colour = "black", size = 0.25) +  
+  geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "white") +
   annotate(xmin = -1, xmax = 1, ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2, colour = "#999999") +
   labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
   theme_classic(base_size=15) +
   xlim(-2, 6) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", alpha = 0, size = 1) +
-  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", fill = "#0072CF", size = 1, xlim = c(0, 1)) +    
+  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", fill = "#0072CF", size = 1, xlim = c(0, 1)) +
   geom_vline(xintercept = 1.75, linetype = "dashed", size = 0.5, colour = "#0072CF") +
   annotate(geom="text", label="P(false negative)", size=8, x=-0.25, y=0.6)
 
@@ -2260,14 +2260,14 @@ wide.ggsave(plot = false_negative, filename = "plots/cs6-false-negative.png")
 
 ```{r, power}
 power <- ggplot(NULL, aes(c(-2,6))) +
-  geom_hline(yintercept = 0, colour = "black", size = 0.25) +  
+  geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), fill = "white") +
   annotate(xmin = -1, xmax = 1, ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2, colour = "#999999") +
   labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
   theme_classic(base_size=15) +
   xlim(-2, 6) +
   geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", alpha = 0, size = 1) +
-  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", fill = "#0072CF", size = 1, xlim = c(1, 3.5)) +    
+  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", fill = "#0072CF", size = 1, xlim = c(1, 3.5)) +
   geom_vline(xintercept = 1.75, linetype = "dashed", size = 0.5, colour = "black")
 
 wide.ggsave(plot = power, filename = "plots/cs6-power.png")
@@ -2275,14 +2275,14 @@ wide.ggsave(plot = power, filename = "plots/cs6-power.png")
 
 ```{r, null and alternative/true distribution}
 overlapping_dist <- ggplot(NULL, aes(c(-2,6))) +
-  geom_hline(yintercept = 0, colour = "black", size = 0.25) +  
+  geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   annotate(xmin = -1, xmax = 1, ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2, colour = "#999999") +
   labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
   theme_classic(base_size=15) +
   xlim(-2, 6) +
-  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", fill = "#0072CF", size = 1, xlim = c(1, 3.5)) + 
-  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", alpha = 0, size = 1) +  
-  geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), colour = "black", alpha = 0, size = 1) +  
+  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", fill = "#0072CF", size = 1, xlim = c(1, 3.5)) +
+  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", alpha = 0, size = 1) +
+  geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), colour = "black", alpha = 0, size = 1) +
   geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "black") +
   geom_vline(xintercept = 1.75, linetype = "dashed", size = 0.5, colour = "black")
 
@@ -2291,14 +2291,14 @@ wide.ggsave(plot = overlapping_dist, filename = "plots/cs6-overlapping-dist.png"
 
 ```{r, increased effect size}
 large_effect <- ggplot(NULL, aes(c(-2,6))) +
-  geom_hline(yintercept = 0, colour = "black", size = 0.25) +  
+  geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   annotate(xmin = -1, xmax = 1, ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2, colour = "#999999") +
   labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
   theme_classic(base_size=15) +
   xlim(-2, 6) +
-  geom_area(stat = "function", fun = dnorm, args=list(mean=4, sd=0.5), colour = "#0072CF", fill = "#0072CF", size = 1, xlim = c(2, 6)) + 
-  geom_area(stat = "function", fun = dnorm, args=list(mean=4, sd=0.5), colour = "#0072CF", alpha = 0, size = 1) +  
-  geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), colour = "black", alpha = 0, size = 1) +  
+  geom_area(stat = "function", fun = dnorm, args=list(mean=4, sd=0.5), colour = "#0072CF", fill = "#0072CF", size = 1, xlim = c(2, 6)) +
+  geom_area(stat = "function", fun = dnorm, args=list(mean=4, sd=0.5), colour = "#0072CF", alpha = 0, size = 1) +
+  geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), colour = "black", alpha = 0, size = 1) +
   geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "black") +
   geom_vline(xintercept = 4, linetype = "dashed", size = 0.5, colour = "black")
 
@@ -2307,14 +2307,14 @@ wide.ggsave(plot = large_effect, filename = "plots/cs6-large-effect.png")
 
 ```{r, increased significance threshold liberal alpha}
 liberal_alpha <- ggplot(NULL, aes(c(-2,6))) +
-  geom_hline(yintercept = 0, colour = "black", size = 0.25) +  
+  geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   annotate(xmin = -0.75, xmax = 0.75, ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2, colour = "#999999") +
   labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
   theme_classic(base_size=15) +
   xlim(-2, 6) +
-  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", fill = "#0072CF", size = 1, xlim = c(0.75, 3.5)) + 
-  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", alpha = 0, size = 1) +  
-  geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), colour = "black", alpha = 0, size = 1) +  
+  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", fill = "#0072CF", size = 1, xlim = c(0.75, 3.5)) +
+  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", alpha = 0, size = 1) +
+  geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), colour = "black", alpha = 0, size = 1) +
   geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "black") +
   geom_vline(xintercept = 1.75, linetype = "dashed", size = 0.5, colour = "black")
 
@@ -2323,14 +2323,14 @@ wide.ggsave(plot = liberal_alpha, filename = "plots/cs6-liberal-alpha.png")
 
 ```{r, decreased significance conservative alpha}
 conservative_alpha <- ggplot(NULL, aes(c(-2,6))) +
-  geom_hline(yintercept = 0, colour = "black", size = 0.25) +  
+  geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   annotate(xmin = -1.25, xmax = 1.25, ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2, colour = "#999999") +
   labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
   theme_classic(base_size=15) +
   xlim(-2, 6) +
-  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", fill = "#0072CF", size = 1, xlim = c(1.25, 3.5)) + 
-  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", alpha = 0, size = 1) +  
-  geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), colour = "black", alpha = 0, size = 1) +  
+  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", fill = "#0072CF", size = 1, xlim = c(1.25, 3.5)) +
+  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.5), colour = "#0072CF", alpha = 0, size = 1) +
+  geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.5), colour = "black", alpha = 0, size = 1) +
   geom_vline(xintercept = 0, linetype = "dashed", size = 0.5, colour = "black") +
   geom_vline(xintercept = 1.75, linetype = "dashed", size = 0.5, colour = "black")
 
@@ -2339,14 +2339,14 @@ wide.ggsave(plot = conservative_alpha, filename = "plots/cs6-conservative-alpha.
 
 ```{r, decreased variance}
 decreased_var <- ggplot(NULL, aes(c(-2,6))) +
-  geom_hline(yintercept = 0, colour = "black", size = 0.25) +  
+  geom_hline(yintercept = 0, colour = "black", size = 0.25) +
   annotate(xmin = -0.75, xmax = 0.75, ymin = -Inf, ymax = Inf, geom = 'rect', alpha = 0.2, colour = "#999999") +
   labs(title = "Gene expression distribution", x = "log2 fold change", y = "Probability density") +
   theme_classic(base_size=15) +
   xlim(-2, 6) +
-  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.25), colour = "#0072CF", fill = "#0072CF", size = 1, xlim = c(1, 3.5)) + 
-  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.25), colour = "#0072CF", alpha = 0, size = 1) +  
-  geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.25), colour = "black", alpha = 0, size = 1) +  
+  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.25), colour = "#0072CF", fill = "#0072CF", size = 1, xlim = c(1, 3.5)) +
+  geom_area(stat = "function", fun = dnorm, args=list(mean=1.75, sd=0.25), colour = "#0072CF", alpha = 0, size = 1) +
+  geom_area(stat = "function", fun = dnorm, args=list(mean=0, sd=0.25), colour = "black", alpha = 0, size = 1) +
   geom_vline(xintercept = 0, linetype = "dashed", size = 0.25, colour = "black") +
   geom_vline(xintercept = 1.75, linetype = "dashed", size = 0.25, colour = "black")
 
@@ -2391,9 +2391,9 @@ largeeff_largeerr <- tibble(x_var, y_var)
 lm_ss <- lm(y_var ~ x_var, smalleff_smallerr)
 lb1 <- paste("R^2 == ", round(summary(lm_ss)$adj.r.squared, 2))
 
-r2p1 <- ggplot(smalleff_smallerr, aes(x_var, y_var)) + 
+r2p1 <- ggplot(smalleff_smallerr, aes(x_var, y_var)) +
   geom_point(size=3, colour="#999999") +
-  geom_abline(intercept=1, slope=b1, colour="#0072CF", linewidth=1) + 
+  geom_abline(intercept=1, slope=b1, colour="#0072CF", linewidth=1) +
   labs(title = "Shallow slope with small residuals", x = "Predictor", y = "Response") +
   theme_classic(base_size=12) +
   ylim(0, 13) +
@@ -2404,9 +2404,9 @@ r2p1 <- ggplot(smalleff_smallerr, aes(x_var, y_var)) +
 lm_sl <- lm(y_var ~ x_var, smalleff_largeerr)
 lb <- paste("R^2 == ", round(summary(lm_sl)$adj.r.squared, 2))
 
-r2p2 <- ggplot(smalleff_largeerr, aes(x_var, y_var)) + 
+r2p2 <- ggplot(smalleff_largeerr, aes(x_var, y_var)) +
   geom_point(size=3, colour="#999999") +
-  geom_abline(intercept=1, slope=b1, colour="#0072CF", linewidth=1) + 
+  geom_abline(intercept=1, slope=b1, colour="#0072CF", linewidth=1) +
   labs(title = "Shallow slope with large residuals", x = "Predictor", y = "Response") +
   theme_classic(base_size=12) +
   ylim(0, 13) +
@@ -2417,9 +2417,9 @@ r2p2 <- ggplot(smalleff_largeerr, aes(x_var, y_var)) +
 lm_ls <- lm(y_var ~ x_var, largeeff_smallerr)
 lb <- paste("R^2 == ", round(summary(lm_ls)$adj.r.squared, 2))
 
-r2p3 <- ggplot(largeeff_smallerr, aes(x_var, y_var)) + 
+r2p3 <- ggplot(largeeff_smallerr, aes(x_var, y_var)) +
   geom_point(size=3, colour="#999999") +
-  geom_abline(intercept=-3, slope=b2, colour="#0072CF", linewidth=1) + 
+  geom_abline(intercept=-3, slope=b2, colour="#0072CF", linewidth=1) +
   labs(title = "Steep slope with small residuals", x = "Predictor", y = "Response") +
   theme_classic(base_size=12) +
   ylim(0, 13) +
@@ -2430,9 +2430,9 @@ r2p3 <- ggplot(largeeff_smallerr, aes(x_var, y_var)) +
 lm_ll <- lm(y_var ~ x_var, largeeff_largeerr)
 lb <- paste("R^2 == ", round(summary(lm_ll)$adj.r.squared, 2))
 
-r2p4 <- ggplot(largeeff_largeerr, aes(x_var, y_var)) + 
+r2p4 <- ggplot(largeeff_largeerr, aes(x_var, y_var)) +
   geom_point(size=3, colour="#999999") +
-  geom_abline(intercept=-3, slope=b2, colour="#0072CF", linewidth=1) + 
+  geom_abline(intercept=-3, slope=b2, colour="#0072CF", linewidth=1) +
   labs(title = "Steep slope with large residuals", x = "Predictor", y = "Response") +
   theme_classic(base_size=12) +
   ylim(0, 13) +
@@ -2476,9 +2476,9 @@ data4 <- tibble(x_var, y_var)
 lm_data1 <- lm(y_var ~ x_var, data1)
 lb1 <- paste("R^2 == ", round(summary(lm_data1)$adj.r.squared, 2))
 
-r2small <- ggplot(data1, aes(x_var, y_var)) + 
+r2small <- ggplot(data1, aes(x_var, y_var)) +
   geom_point(size=3, colour="#999999") +
-  geom_abline(intercept=1, slope=b1, colour="#0072CF", linewidth=1) + 
+  geom_abline(intercept=1, slope=b1, colour="#0072CF", linewidth=1) +
   labs(title = "Dataset 2", x = "Predictor", y = "Response") +
   theme_classic(base_size=15) +
   ylim(0, 10) +
@@ -2491,9 +2491,9 @@ square.ggsave(plot = r2small, filename = "plots/cs6-r2-small.png")
 lm_data2 <- lm(y_var ~ x_var, data2)
 lb1 <- paste("R^2 == ", round(summary(lm_data2)$adj.r.squared, 2))
 
-r2medium <- ggplot(data2, aes(x_var, y_var)) + 
+r2medium <- ggplot(data2, aes(x_var, y_var)) +
   geom_point(size=3, colour="#999999") +
-  geom_abline(intercept=1, slope=b1, colour="#0072CF", linewidth=1) + 
+  geom_abline(intercept=1, slope=b1, colour="#0072CF", linewidth=1) +
   labs(title = "Dataset 1", x = "Predictor", y = "Response") +
   theme_classic(base_size=15) +
   ylim(0, 10) +
@@ -2506,9 +2506,9 @@ square.ggsave(plot = r2medium, filename = "plots/cs6-r2-medium.png")
 lm_data3 <- lm(y_var ~ x_var, data3)
 lb1 <- paste("R^2 == ", round(summary(lm_data3)$adj.r.squared, 2))
 
-r2big <- ggplot(data3, aes(x_var, y_var)) + 
+r2big <- ggplot(data3, aes(x_var, y_var)) +
   geom_point(size=3, colour="#999999") +
-  geom_abline(intercept=1, slope=b1, colour="#0072CF", linewidth=1) + 
+  geom_abline(intercept=1, slope=b1, colour="#0072CF", linewidth=1) +
   labs(title = "Dataset 3", x = "Predictor", y = "Response") +
   theme_classic(base_size=15) +
   ylim(0, 10) +
@@ -2521,9 +2521,9 @@ square.ggsave(plot = r2big, filename = "plots/cs6-r2-big.png")
 lm_data4 <- lm(y_var ~ x_var, data4)
 lb1 <- paste("R^2 == ", round(summary(lm_data4)$adj.r.squared, 2))
 
-r2other <- ggplot(data4, aes(x_var, y_var)) + 
+r2other <- ggplot(data4, aes(x_var, y_var)) +
   geom_point(size=3, colour="#999999") +
-  geom_abline(intercept=-3.7, slope=b2, colour="#0072CF", linewidth=1) + 
+  geom_abline(intercept=-3.7, slope=b2, colour="#0072CF", linewidth=1) +
   labs(title = "Dataset 4", x = "Predictor", y = "Response") +
   theme_classic(base_size=15) +
   ylim(0, 12) +
@@ -2535,9 +2535,9 @@ square.ggsave(plot = r2other, filename = "plots/cs6-r2-other.png")
 ```{r}
 lb1 <- paste("R^2 == ", round(summary(lm_data2)$adj.r.squared, 2))
 
-r2medium_other <- ggplot(data2, aes(x_var, y_var)) + 
+r2medium_other <- ggplot(data2, aes(x_var, y_var)) +
   geom_point(size=3, colour="#999999") +
-  geom_abline(intercept=1, slope=b1, colour="#0072CF", linewidth=1) + 
+  geom_abline(intercept=1, slope=b1, colour="#0072CF", linewidth=1) +
   labs(title = "Dataset 1", x = "Predictor", y = "Response") +
   theme_classic(base_size=15) +
   ylim(0, 12) +
@@ -2561,14 +2561,14 @@ B <- A + rnorm(20, 1.5, 0.3)
 C <- A + rnorm(20, 5, 0.3)
 D <- A + rnorm(20, 0.3, 0.3)
 
-smallcohen <- tibble(A,B) %>% pivot_longer(A:B, names_to="group",values_to="response")
-bigcohen <- tibble(A,C) %>% pivot_longer(A:C, names_to="group",values_to="response")
-tinycohen <- tibble(A,D) %>% pivot_longer(A:D, names_to="group",values_to="response")
+smallcohen <- tibble(A,B) |> pivot_longer(A:B, names_to="group",values_to="response")
+bigcohen <- tibble(A,C) |> pivot_longer(A:C, names_to="group",values_to="response")
+tinycohen <- tibble(A,D) |> pivot_longer(A:D, names_to="group",values_to="response")
 
 E <- rnorm(20, 5, 0.5)
 G <- E + rnorm(20, 0.7, 0.1)
 
-othercohen <- tibble(E,G) %>% pivot_longer(E:G, names_to="group",values_to="response")
+othercohen <- tibble(E,G) |> pivot_longer(E:G, names_to="group",values_to="response")
 ```
 
 ```{r}
@@ -2608,7 +2608,7 @@ big_cohen <- ggplot(bigcohen, aes(group, response)) +
   ylim(3,13) +
   labs(title = "Large difference in group means", x = "Predictor", y = "Response") +
   theme_classic(base_size=15) +
-  annotate(geom="text", label=lb, parse=TRUE, x=1, y=12, size=6) 
+  annotate(geom="text", label=lb, parse=TRUE, x=1, y=12, size=6)
 
 square.ggsave(plot = big_cohen, filename = "plots/cs6-big-cohen.png")
 ```
@@ -2622,7 +2622,7 @@ other_cohen <- ggplot(othercohen, aes(group, response)) +
   ylim(3,13) +
   labs(title = "Medium difference in group means", x = "Predictor", y = "Response") +
   theme_classic(base_size=15) +
-  annotate(geom="text", label=lb, parse=TRUE, x=1, y=12, size=6) 
+  annotate(geom="text", label=lb, parse=TRUE, x=1, y=12, size=6)
 
 square.ggsave(plot = other_cohen, filename = "plots/cs6-other-cohen.png")
 ```
@@ -2638,8 +2638,8 @@ Control <- rnorm(n, 480, 30)
 B <- Control + rnorm(n, 30, 2)
 A <- Control + rnorm(n, 12, 2)
 
-bigdrug <- tibble(Control,B) %>% pivot_longer(Control:B, names_to="group",values_to="response") %>% mutate(group = factor(group, levels = c("Control", "B")))
-smalldrug <- tibble(Control,A) %>% pivot_longer(Control:A, names_to="group",values_to="response") %>% mutate(group = factor(group, levels = c("Control", "A")))
+bigdrug <- tibble(Control,B) |> pivot_longer(Control:B, names_to="group",values_to="response") |> mutate(group = factor(group, levels = c("Control", "B")))
+smalldrug <- tibble(Control,A) |> pivot_longer(Control:A, names_to="group",values_to="response") |> mutate(group = factor(group, levels = c("Control", "A")))
 ```
 
 ```{r}
@@ -2697,8 +2697,8 @@ n_repeats <- 100
 # Draw samples and store in a data frame
 samples <- replicate(n_repeats, {
   data.frame(value = rnorm(n_samples, mean = mean, sd = sd))
-}, simplify = FALSE) %>%
-  bind_rows(.id = "iteration") %>%
+}, simplify = FALSE) |>
+  bind_rows(.id = "iteration") |>
   mutate(iteration = as.integer(iteration))
 
 # Display the data
@@ -2713,18 +2713,18 @@ nres <- 10
 
 normSamp <- data.frame(matrix(rnorm(ngroups*nres, 0, 0.5), nres, ngroups))
 
-normSamp_long <- normSamp %>%
-  pivot_longer(X1:X100, names_to="iteration", values_to="value") %>%
-  mutate(across(c("iteration"), substr, 2, nchar(iteration))) %>%
+normSamp_long <- normSamp |>
+  pivot_longer(X1:X100, names_to="iteration", values_to="value") |>
+  mutate(across(c("iteration"), substr, 2, nchar(iteration))) |>
   mutate(iteration = factor(iteration, levels=unique(iteration)))
 
-onehundred <- normSamp %>%
-  pivot_longer(X1:X100, names_to="iteration", values_to="value") %>%
-  mutate(across(c("iteration"), substr, 2, nchar(iteration))) %>%   
+onehundred <- normSamp |>
+  pivot_longer(X1:X100, names_to="iteration", values_to="value") |>
+  mutate(across(c("iteration"), substr, 2, nchar(iteration))) |>
   ggplot(aes(x = factor(iteration, levels=unique(iteration)), y = value)) +
     geom_boxplot() +
     labs(x="Sample number", y="log2 fold change", title="Testing one hundred samples") +
-    geom_hline(yintercept=0, colour="black", size=0.25, alpha=0.8, linetype=2) + 
+    geom_hline(yintercept=0, colour="black", size=0.25, alpha=0.8, linetype=2) +
     theme_classic(base_size=15) +
     scale_x_discrete(breaks=c("10","20","30","40","50","60","70","80","90","100"))
 
@@ -2738,15 +2738,15 @@ for(i in 1:ngroups){
   pvals[i]<-t.test(normSamp[,i],mu=0)$p.value
 }
 
-onehundredsig <- normSamp %>%
-  pivot_longer(X1:X100, names_to="iteration", values_to="value") %>%
-  mutate(across(c("iteration"), substr, 2, nchar(iteration))) %>% 
-  mutate(sigp = if_else(iteration %in% which(pvals<0.05), TRUE, FALSE)) %>%
+onehundredsig <- normSamp |>
+  pivot_longer(X1:X100, names_to="iteration", values_to="value") |>
+  mutate(across(c("iteration"), substr, 2, nchar(iteration))) |>
+  mutate(sigp = if_else(iteration %in% which(pvals<0.05), TRUE, FALSE)) |>
   ggplot(aes(x = factor(iteration, levels=unique(iteration)), y = value, fill = sigp)) +
     geom_boxplot(show.legend=FALSE) +
     labs(x="Sample number", y="log2 fold change", title="Testing one hundred samples") +
     theme_classic(base_size=15) +
-    geom_hline(yintercept=0, colour="black", size=0.25, alpha=0.8, linetype=2) +   
+    geom_hline(yintercept=0, colour="black", size=0.25, alpha=0.8, linetype=2) +
     scale_fill_manual(values = c("white","#EA7125")) +
     scale_x_discrete(breaks=c("10","20","30","40","50","60","70","80","90","100"))
 

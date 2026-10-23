@@ -154,8 +154,8 @@ ggplot(USArrests,
 This gets a bit tedious if there are many unique variable pairs. Unfortunately `ggplot()` does not have a pairwise function, but we can borrow the one from base R. The `pairs()` function only wants numerical data, so we need to remove the `state` column for this. The `pairs()` function has a `lower.panel` argument that allows you to remove duplicate combinations (after all `murder` vs `assault` is the same as `assault` vs `murder`):
 
 ```{r}
-USArrests %>% 
-    select(-state) %>% 
+USArrests |>
+    select(-state) |>
     pairs(lower.panel = NULL)
 ```
 
@@ -210,8 +210,8 @@ So, let's calculate **Pearson's r** for our data:
 We can do this using the `cor()` function. Since we can only calculate correlations between numbers, we have to remove the `state` column from our data before calculating the correlations:
 
 ```{r}
-USArrests %>% 
-    select(-state) %>% 
+USArrests |>
+    select(-state) |>
     cor()
 ```
 
@@ -221,7 +221,7 @@ As before, the values are mirrored across the diagonal, since the correlation be
 
 ### Visualise the correlation matrix
 
-Just staring at a matrix of numbers might not be very useful. It would be good to create some sort of heatmap of the values, so we can visually inspect the data a bit better. There are dedicated packages that allow you to do this (for example the [corrr](https://corrr.tidymodels.org)) package). 
+Just staring at a matrix of numbers might not be very useful. It would be good to create some sort of heatmap of the values, so we can visually inspect the data a bit better. There are dedicated packages that allow you to do this (for example the [corrr](https://corrr.tidymodels.org)) package).
 
 Here we'll just use the standard `stats::heatmap()` function. The `symm` argument tells the function that we have a symmetric matrix and in conjunction with the `Rowv = NA` argument stops the plot from reordering the rows and columns. The `Rowv = NA` argument also stops the function from adding dendrograms to the margins of the plot.
 
@@ -230,9 +230,9 @@ The plot itself is coloured from yellow, indicating the smallest values (which i
 The plot is symmetric along the leading diagonal (hopefully for obvious reasons).
 
 ```{r}
-USArrests %>% 
-  select(-state) %>% 
-  cor() %>% 
+USArrests |>
+  select(-state) |>
+  cor() |>
   heatmap(symm = TRUE, Rowv = NA)
 ```
 
@@ -246,13 +246,13 @@ Before we can plot the data we need to reformat the data. We're taking the follo
 4. use the `mutate()` and `round()` functions to round the Pearson's r values
 
 ```{r}
-USArrests_pear <- USArrests %>% 
-    select(-state) %>% 
-    cor(method = "pearson") %>% 
-    as_tibble(rownames = "var1") %>% 
+USArrests_pear <- USArrests |>
+    select(-state) |>
+    cor(method = "pearson") |>
+    as_tibble(rownames = "var1") |>
     pivot_longer(cols = -var1,
                  names_to = "var2",
-                 values_to = "pearson_cor") %>% 
+                 values_to = "pearson_cor") |>
     mutate(pearson_cor = round(pearson_cor, digits = 3))
 ```
 
@@ -277,10 +277,10 @@ ggplot(USArrests_pear,
 ## Alternative method 2: rstatix
 As always, there are multiple ways to skin a proverbial cat. If you'd rather use a function from the `rstatix` package (which we've loaded before), then you can run the following code, which uses the `rstatix::cor_test()` function:
 ```{r}
-USArrests %>% 
-    select(-state) %>% 
-    cor_test() %>%
-    select(var1, var2, cor) %>% 
+USArrests |>
+    select(-state) |>
+    cor_test() |>
+    select(var1, var2, cor) |>
     ggplot(aes(x = var1, y = var2, fill = cor)) +
     geom_tile() +
     geom_text(aes(label = cor),
@@ -351,8 +351,8 @@ This test first calculates the rank of the numerical data (i.e. their position f
 ## R
 
 ```{r}
-USArrests %>% 
-    select(-state) %>% 
+USArrests |>
+    select(-state) |>
     cor(method = "spearman")
 ```
 
@@ -403,8 +403,8 @@ USAstate
 We basically repeat what we've done previously:
 
 ```{r}
-USAstate_pear <-USAstate %>% 
-  select(-state) %>% 
+USAstate_pear <-USAstate |>
+  select(-state) |>
   cor(method = "pearson")
 ```
 
@@ -474,7 +474,7 @@ First, we need to create the pairwise comparisons, with the relevant Pearson's $
 # build a contingency table with as.table()
 # and create a dataframe with as.data.frame()
 USAstate_pear_cont <- as.data.frame(as.table(USAstate_pear))
-    
+
 # and have a look
 head(USAstate_pear_cont)
 ```
@@ -485,19 +485,19 @@ Now that we have the paired comparisons, we can extract the relevant data:
 
 ```{r}
 # first we remove the same-pair correlations
-USAstate_pear_cont <- USAstate_pear_cont %>% 
+USAstate_pear_cont <- USAstate_pear_cont |>
   filter(Freq != 1)
 
 # most positively correlated pair
-USAstate_pear_cont %>% 
+USAstate_pear_cont |>
   filter(Freq == max(Freq))
 
 # most negatively correlated pair
-USAstate_pear_cont %>% 
+USAstate_pear_cont |>
   filter(Freq == min(Freq))
 
 # least correlated pair
-USAstate_pear_cont %>% 
+USAstate_pear_cont |>
   filter(Freq == min(abs(Freq)))
 ```
 
@@ -553,12 +553,12 @@ In order to determine which variables are most affected by the choice of Spearma
 First, calculate the Pearson and Spearman correlation matrices (technically, we've done the Pearson one already, but we're doing it again for clarity here).
 
 ```{r}
-cor_pear <- USAstate %>% 
-    select(-state) %>% 
+cor_pear <- USAstate |>
+    select(-state) |>
     cor(method = "pearson")
 
-cor_spear <- USAstate %>% 
-    select(-state) %>% 
+cor_spear <- USAstate |>
+    select(-state) |>
     cor(method = "spearman")
 ```
 
@@ -602,7 +602,7 @@ cor_dif_py = pd.melt(cor_dif_py,
         id_vars=['var1'],
         var_name='var2',
         value_name='cor').round(3)
-        
+
 # create a column with absolute correlation difference values
 cor_dif_py["abs_cor"] = cor_dif_py["cor"].abs()
 

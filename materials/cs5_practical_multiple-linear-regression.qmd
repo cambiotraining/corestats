@@ -12,7 +12,7 @@ source(file = "setup_files/setup.R")
 ```{python}
 #| echo: false
 #| message: false
-import shutup;shutup.please() 
+import shutup;shutup.please()
 exec(open('setup_files/setup.py').read())
 ```
 
@@ -169,8 +169,8 @@ There seems to be quite a difference between the PM2.5 levels in the two London 
 Apart from the location, there are quite a few numerical descriptor variables. We could plot them one-by-one, but that's a bit tedious. So instead we use the `pairs()` function again. This only works on numerical data, so we select all the columns that are numeric with `select_if(is.numeric)`:
 
 ```{r}
-pm2_5 %>% 
-    select_if(is.numeric) %>% 
+pm2_5 |>
+    select_if(is.numeric) |>
     pairs(lower.panel = NULL)
 ```
 
@@ -192,12 +192,12 @@ This seems to show that there might be some linear relationship between PM2.5 le
 Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](#correlation-coefficients):
 
 ```{r}
-pm2_5 %>% 
-    select_if(is.numeric) %>% 
+pm2_5 |>
+    select_if(is.numeric) |>
     cor()
 ```
 
-This confirms what we saw in the plots, there aren't any very strong correlations between the different (numerical) variables, apart from a negative correlation between `pm2_5` and `wind_m_s`, which has a Pearson's r of $r$ = `r pm2_5 %>% select_if(is.numeric) %>% cor_test() %>% filter(cor != 1) %>% arrange(desc(abs(cor))) %>% slice(1) %>% pull(cor)`.
+This confirms what we saw in the plots, there aren't any very strong correlations between the different (numerical) variables, apart from a negative correlation between `pm2_5` and `wind_m_s`, which has a Pearson's r of $r$ = `r pm2_5 |> select_if(is.numeric) |> cor_test() |> filter(cor != 1) |> arrange(desc(abs(cor))) |> slice(1) |> pull(cor)`.
 
 ## Python
 
@@ -251,7 +251,7 @@ Another way of looking at this would be to create a correlation matrix, like we 
 pm2_5_py.corr(numeric_only = True)
 ```
 
-This confirms what we saw in the plots, there aren't any very strong correlations between the different (numerical) variables, apart from a negative correlation between `pm2_5` and `wind_m_s`, which has a Pearson's r of $r$ = `r pm2_5 %>% select_if(is.numeric) %>% cor_test() %>% filter(cor != 1) %>% arrange(desc(abs(cor))) %>% slice(1) %>% pull(cor)`.
+This confirms what we saw in the plots, there aren't any very strong correlations between the different (numerical) variables, apart from a negative correlation between `pm2_5` and `wind_m_s`, which has a Pearson's r of $r$ = `r pm2_5 |> select_if(is.numeric) |> cor_test() |> filter(cor != 1) |> arrange(desc(abs(cor))) |> slice(1) |> pull(cor)`.
 :::
 
 ## Implement and interpret the test
@@ -292,8 +292,8 @@ lm_pm2_5_full
 This will give us quite a few coefficients, so instead of just calling the `lm` object, I'm restructuring the output using the `tidy()` function from the `broom` package. It's installed with `tidyverse` but you have to load it separately using `library(broom)`.
 
 ```{r}
-lm_pm2_5_full %>%
-    tidy() %>% 
+lm_pm2_5_full |>
+    tidy() |>
     select(term, estimate)
 ```
 :::
@@ -348,8 +348,8 @@ They all look pretty good, with the only weird thing being a small empty zone of
 It'd be useful to visualise the model. We can take the model and use the `augment()` function to extract the fitted values (`.fitted`). These are the values for `pm2_5` that the model is predicting. We can then plot these against the `wind_m_s` measurements, colouring by `location`:
 
 ```{r}
-lm_pm2_5_red %>% 
-  augment() %>% 
+lm_pm2_5_red |>
+  augment() |>
   ggplot(aes(x = wind_m_s,
              y = pm2_5, colour = location)) +
   geom_point() +
@@ -462,8 +462,8 @@ lm_pm2_5_add <- lm(pm2_5 ~ avg_temp + location + wind_m_s,
 We can visualise this as follows:
 
 ```{r}
-lm_pm2_5_add %>% 
-    augment() %>% 
+lm_pm2_5_add |>
+    augment() |>
     ggplot(aes(x = wind_m_s, y = pm2_5,
                colour = location)) +
     geom_point() +
@@ -484,7 +484,7 @@ First, we define the model
 # create a linear model
 model = smf.ols(formula = "pm2_5 ~ avg_temp + C(location) + wind_m_s",
                 data = pm2_5_py)
-                
+
 # and get the fitted parameters of the model
 lm_pm2_5_add_py = model.fit()
 ```
@@ -534,8 +534,8 @@ lm_pm2_5_wind <- lm(pm2_5 ~ wind_m_s,
 We can visualise this as follows:
 
 ```{r}
-lm_pm2_5_wind %>% 
-    augment() %>% 
+lm_pm2_5_wind |>
+    augment() |>
     ggplot(aes(x = wind_m_s, y = pm2_5)) +
     geom_point() +
     geom_smooth(aes(y = .fitted))
@@ -565,7 +565,7 @@ First, we define the model
 # create a linear model
 model = smf.ols(formula = "pm2_5 ~ wind_m_s",
                 data = pm2_5_py)
-                
+
 # and get the fitted parameters of the model
 lm_pm2_5_wind_py = model.fit()
 ```
@@ -623,8 +623,8 @@ lm_pm2_5_loc <- lm(pm2_5 ~ location,
 We can visualise this as follows:
 
 ```{r}
-lm_pm2_5_loc %>% 
-    augment() %>% 
+lm_pm2_5_loc |>
+    augment() |>
     ggplot(aes(x = location, y = pm2_5)) +
     geom_jitter(alpha = 0.3, width = 0.1) +
     geom_point(aes(y = .fitted), colour = "blue", size = 3)
@@ -635,8 +635,8 @@ OK, what's going on here? I've plotted the `.fitted` values (the values predicte
 We can check this and see that each unique fitted value occurs 365 times:
 
 ```{r}
-lm_pm2_5_loc %>% 
-    augment() %>% 
+lm_pm2_5_loc |>
+    augment() |>
     count(location, .fitted)
 ```
 
@@ -645,8 +645,8 @@ This makes sense if we think back to our original ANOVA exploration. There we es
 We could even check this:
 
 ```{r}
-pm2_5 %>% 
-    group_by(location) %>% 
+pm2_5 |>
+    group_by(location) |>
     summarise(mean_pm2_5 = mean(pm2_5))
 ```
 
@@ -749,11 +749,11 @@ lm_pm2_5_null_py.params
 ```
 :::
 
-This shows us that there is just one value: `r round(lm_pm2_5_null %>% tidy() %>% pull(estimate), digits = 2)`. This is the average across all the PM2.5 values in the data set.
+This shows us that there is just one value: `r round(lm_pm2_5_null |> tidy() |> pull(estimate), digits = 2)`. This is the average across all the PM2.5 values in the data set.
 
 Here we'd predict the PM2.5 values as follows:
 
-$PM2.5 = `r round(lm_pm2_5_null %>% tidy() %>% pull(estimate), digits = 2)`$
+$PM2.5 = `r round(lm_pm2_5_null |> tidy() |> pull(estimate), digits = 2)`$
 
 ## Exercises
 

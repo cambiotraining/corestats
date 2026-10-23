@@ -138,7 +138,7 @@ For example in an experiment that looks at light intensity in woodland, how is l
 #| warning: false
 #| message: false
 #| show_col_types: false
-read_csv("data/CS4-treelight.csv") %>% 
+read_csv("data/CS4-treelight.csv") |>
   ggplot(aes(x = depth, y = light, colour = species)) +
   geom_point() +
   scale_color_brewer(palette = "Dark2") +
@@ -158,7 +158,7 @@ Essentially the analysis is identical to two-way ANOVA.
 1. We will plot the data and visually inspect it.
 2. We will test for an interaction and if it doesn’t exist then:
     a. We can test to see if either predictor variable has an effect (i.e. do the regression lines have different intercepts? and is the common gradient significantly different from zero?)
-    
+
 We will first consider how to visualise the data before then carrying out an appropriate statistical test.
 
 ## Data and hypotheses
@@ -333,9 +333,9 @@ I'm being a bit lazy here. Since I don't want to save the filtered data in a sep
 
 ```{r}
 # filter the Conifer data and fit a linear model
-treelight %>% 
-  filter(species == "Conifer") %>% 
-  lm(light ~ depth, data = .)
+treelight |>
+  filter(species == "Conifer") |>
+  lm(light ~ depth, data = _)
 ```
 
 ## Python
@@ -367,7 +367,7 @@ So, the equation of the regression line for the conifer data is given by:
 
 \begin{equation}
 light = 5014 + -292.2 \times depth
-\end{equation} 
+\end{equation}
 
 This means that for every extra 1 m of depth of forest canopy we lose 292.2 lux of light.
 
@@ -403,17 +403,17 @@ Broadleaf:
 
 \begin{equation}
 light = 7962 + -262.2 \times depth
-\end{equation} 
+\end{equation}
 
 In this example we know that the gradient is the same for both lines (because we explicitly asked to exclude an interaction), so all I need to do is find the intercept value for the `Conifer` group. Unfortunately, the final value given underneath `SpeciesConifer` does not give me the intercept for `Conifer`, instead it tells me the difference between the `Conifer` group intercept and the baseline intercept i.e. the equation for the regression line for conifer woodland is given by:
 
 \begin{equation}
 light = (7962 + -3113) + -262.2 \times depth
-\end{equation} 
+\end{equation}
 
 \begin{equation}
 light = 4829 + -262.2 \times depth
-\end{equation} 
+\end{equation}
 
 ## Python
 
@@ -447,17 +447,17 @@ Broadleaf:
 
 \begin{equation}
 light = 7962 + -262.2 \times depth
-\end{equation} 
+\end{equation}
 
 In this example we know that the gradient is the same for both lines (because we explicitly asked to exclude an interaction), so all I need to do is find the intercept value for the `Conifer` group. Unfortunately, the final value given in `C(species)[T.Conifer]` does not give me the intercept for `Conifer`, instead it tells me the difference between the `Conifer` group intercept and the baseline intercept i.e. the equation for the regression line for conifer woodland is given by:
 
 \begin{equation}
 light = (7962 + -3113) + -262.2 \times depth
-\end{equation} 
+\end{equation}
 
 \begin{equation}
 light = 4829 + -262.2 \times depth
-\end{equation} 
+\end{equation}
 :::
 
 ### Adding custom regression lines
@@ -480,7 +480,7 @@ lm_additive <- lm(light ~ species + depth,
 library(broom)
 
 # augment the model
-lm_additive %>% augment()
+lm_additive |> augment()
 ```
 
 The output shows us lots of data. Our original `light` values are in the `light` column and it's the same for `species` and `depth`. What has been added is information about the fitted (or predicted) values based on the `light ~ depth + species` model we defined.
@@ -491,20 +491,20 @@ Using this information we can now plot the regression lines by `species`:
 
 ```{r}
 # plot the regression lines by species
-lm_additive %>%
-  augment() %>% 
+lm_additive |>
+  augment() |>
   ggplot(aes(x = depth, y = .fitted, colour = species)) +
   geom_line() +
   scale_color_brewer(palette = "Dark2")
-  
+
 ```
 
 Lastly, if we would want to plot the data and regression lines together, we could change the code as follows:
 
 ```{r}
 # plot the regression lines
-lm_additive %>%
-  augment() %>% 
+lm_additive |>
+  augment() |>
   ggplot(aes(x = depth, y = .fitted, colour = species)) +
   # add the original data points
   geom_point(data = treelight,
@@ -738,7 +738,7 @@ ggplot(clover,
   scale_color_brewer(palette = "Dark2")
 ```
 
-The regression lines are very close together. Although the line for `Farm C` crosses the other two, it doesn't look like we're going to see a very strong interaction - if there is one. There doesn't seem to be an effect of `farm` in general, since the lines are not separate from each other. 
+The regression lines are very close together. Although the line for `Farm C` crosses the other two, it doesn't look like we're going to see a very strong interaction - if there is one. There doesn't seem to be an effect of `farm` in general, since the lines are not separate from each other.
 
 Let's carry out the analysis:
 
@@ -804,7 +804,7 @@ p = (ggplot(clover_py,
 p.show()
 ```
 
-The regression lines are very close together. Although the line for `Farm C` crosses the other two, it doesn't look like we're going to see a very strong interaction - if there is one. There doesn't seem to be an effect of `farm` in general, since the lines are not separate from each other. 
+The regression lines are very close together. Although the line for `Farm C` crosses the other two, it doesn't look like we're going to see a very strong interaction - if there is one. There doesn't seem to be an effect of `farm` in general, since the lines are not separate from each other.
 
 Let's carry out the analysis. First, we need to change the name of the `yield` column, because `yield` is a keyword in Python, and we can't use it inside the model formula. How annoying.
 

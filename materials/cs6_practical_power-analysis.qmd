@@ -323,7 +323,7 @@ We get the effect size and we can see that an experiment with this many people w
 
 In both of the previous two examples we were a little bit context-free in terms of effect size. Let’s look at how we can use a pilot study with real data to calculate effect sizes and perform a power analysis to inform a future study.
 
-Let’s look again at the `fishlength` data we saw in the first practical relating to the lengths of fish from two separate rivers. 
+Let’s look again at the `fishlength` data we saw in the first practical relating to the lengths of fish from two separate rivers.
 This is saved as `data/CS1-twosample.csv`.
 
 ::: {.panel-tabset group="language"}
@@ -335,7 +335,7 @@ This is saved as `data/CS1-twosample.csv`.
 fishlength <- read_csv("data/CS1-twosample.csv")
 
 # visualise the data
-fishlength %>% 
+fishlength |>
   ggplot(aes(x = river, y = length)) +
   geom_boxplot()
 ```
@@ -396,7 +396,7 @@ cohens_d(length ~ river,
          data = fishlength)
 ```
 
-The `cohens_d()` function calculates the effect size using the formula of the test. The `effsize` column contains the information that we want, in this case `r round(fishlength %>% cohens_d(length ~ river, var.equal = TRUE) %>% pull(effsize), digits = 2)` .
+The `cohens_d()` function calculates the effect size using the formula of the test. The `effsize` column contains the information that we want, in this case `r round(fishlength |> cohens_d(length ~ river, var.equal = TRUE) |> pull(effsize), digits = 2)` .
 
 We can now actually answer our question and see how many fish we really need to catch in the future:
 
@@ -417,7 +417,7 @@ pg.compute_effsize(aripo, guanapo,
 
 Note: the `compute_effsize()` function is able to compute various effect sizes, but we're specifying Cohen's d here.
 
-So, the Cohen's d value for these data are d = `r round(fishlength %>% cohens_d(length ~ river, var.equal = TRUE) %>% pull(effsize), digits = 2)` .
+So, the Cohen's d value for these data are d = `r round(fishlength |> cohens_d(length ~ river, var.equal = TRUE) |> pull(effsize), digits = 2)` .
 
 We can now actually answer our question and see how many fish we really need to catch in the future:
 
@@ -519,14 +519,14 @@ For linear models the effect size is called Cohen’s $f^2$. We can calculate it
 f^2 = \frac{R^2}{1-R^2}
 \end{equation}
 
-We find $R^2$ from the `lm_lobster` summary. We can either just look at the results (spoiler alert, the $R^2$ is `r round(summary(lm_lobster) %>% glance() %>% pull(r.squared), digits = 4)`) and add it manually or extract the value with the `broom::glance()` function.
+We find $R^2$ from the `lm_lobster` summary. We can either just look at the results (spoiler alert, the $R^2$ is `r round(summary(lm_lobster) |> glance() |> pull(r.squared), digits = 4)`) and add it manually or extract the value with the `broom::glance()` function.
 
 Either way, we can calculate Cohen's $f^2$:
 
 ```{r}
 # get the effect size for ANOVA
-R2 <- summary(lm_lobster) %>%
-    glance() %>% 
+R2 <- summary(lm_lobster) |>
+    glance() |>
     pull(r.squared)
 
 # calculate Cohen's f2
@@ -535,7 +535,7 @@ f2 <- R2 / (1 - R2)
 f2
 ```
 
-So now we've got Cohen's $f^2$. 
+So now we've got Cohen's $f^2$.
 
 ## Python
 
@@ -545,7 +545,7 @@ The eta-squared value measures the contribution of the individual model terms. T
 
 Since we only have one model term here (`diet`), the $R^2$ and $\eta^2$ values are the same.
 
-We can get the $R^2$  (`r round(summary(lm_lobster) %>% glance() %>% pull(r.squared), digits = 4)`) value from the model as follows:
+We can get the $R^2$  (`r round(summary(lm_lobster) |> glance() |> pull(r.squared), digits = 4)`) value from the model as follows:
 
 ```{python}
 # get the R2 value
@@ -721,7 +721,7 @@ pg.compute_effsize(x = fish_data_py.length,
 ```
 :::
 
-Our effect size is `r round(fish_data %>% cohens_d(length ~ 1, mu = 20) %>% pull(effsize), digits = 2)` which is a moderate effect size. This is pretty good and it means we might have been able to detect this effect with fewer samples.
+Our effect size is `r round(fish_data |> cohens_d(length ~ 1, mu = 20) |> pull(effsize), digits = 2)` which is a moderate effect size. This is pretty good and it means we might have been able to detect this effect with fewer samples.
 
 ::: {.callout-important}
 Although the effect size here is negative, it does not matter in terms of the power calculations whether it's negative or positive.
@@ -993,12 +993,12 @@ lm_mussels <- lm(length ~ location,
 summary(lm_mussels)
 ```
 
-From this we can see that the R-squared value is `r round(summary(lm_mussels) %>% glance() %>% pull(r.squared), digits = 4)`. We can extract that as follows and then use it to calculate Cohen's $f^2$:
+From this we can see that the R-squared value is `r round(summary(lm_mussels) |> glance() |> pull(r.squared), digits = 4)`. We can extract that as follows and then use it to calculate Cohen's $f^2$:
 
 ```{r}
 # get the effect size for ANOVA
-R2 <- summary(lm_mussels) %>%
-    glance() %>% 
+R2 <- summary(lm_mussels) |>
+    glance() |>
     pull(r.squared)
 
 # calculate Cohen's f2
@@ -1034,7 +1034,7 @@ sm.stats.anova_lm(lm_mussels_py)
 
 Since we only have one model term here (`location`), the $R^2$ and $\eta^2$ values are the same.
 
-We can get the $R^2$  (`r round(summary(lm_mussels) %>% glance() %>% pull(r.squared), digits = 4)`) value from the model as follows:
+We can get the $R^2$  (`r round(summary(lm_mussels) |> glance() |> pull(r.squared), digits = 4)`) value from the model as follows:
 
 ```{python}
 # get the R2 value
@@ -1135,11 +1135,11 @@ lm_epilepsy <- lm(seizure ~ age,
 summary(lm_epilepsy)
 ```
 
-From this we get that the $R^2$ value is `r round(lm_epilepsy %>% glance() %>% pull(r.squared), digits = 7)` (which is tiny!) and we can use this to calculate Cohen's $f^2$ value using the formula in the notes:
+From this we get that the $R^2$ value is `r round(lm_epilepsy |> glance() |> pull(r.squared), digits = 7)` (which is tiny!) and we can use this to calculate Cohen's $f^2$ value using the formula in the notes:
 
 ```{r}
-R2 <- lm_epilepsy %>% 
-    glance() %>% 
+R2 <- lm_epilepsy |>
+    glance() |>
     pull(r.squared)
 
 f2 <- R2 / (1 - R2)
@@ -1155,7 +1155,7 @@ pwr.f2.test(u = 1, f2 = f2,
             sig.level = 0.05 , power = 0.9)
 ```
 
-This tells us that the denominator degrees of freedom (`v`) should be `r ceiling(pwr.f2.test(u = 1, f2 = f2, sig.level = 0.05, power = 0.9)[[2]])` (rounded up to the nearest number), and this means that we would need 11496 participants to detect this effect size (Remember: number of observations = numerator d.f. (`u`) + denominator d.f. (`v`) + 1). 
+This tells us that the denominator degrees of freedom (`v`) should be `r ceiling(pwr.f2.test(u = 1, f2 = f2, sig.level = 0.05, power = 0.9)[[2]])` (rounded up to the nearest number), and this means that we would need 11496 participants to detect this effect size (Remember: number of observations = numerator d.f. (`u`) + denominator d.f. (`v`) + 1).
 
 ## Python
 

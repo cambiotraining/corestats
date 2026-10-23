@@ -72,10 +72,10 @@ rstatix::tukey_hsd()
 # Creates diagnostic plots
 ggResidpanel::resid_panel()
 
-# Fits a linear model  
+# Fits a linear model
 stats::lm()
 
-# Carries out an ANOVA on a linear model 
+# Carries out an ANOVA on a linear model
 stats::anova()
 
 # Performs a Shapiro-Wilk test for normality
@@ -187,8 +187,8 @@ Next, we get some basic descriptive statistics:
 
 ```{r}
 # get some basic descriptive statistics
-oystercatcher %>% 
-  group_by(site) %>% 
+oystercatcher |>
+  group_by(site) |>
   get_summary_stats(type = "common")
 ```
 
@@ -261,19 +261,19 @@ We take the data, filter for each type of `site`, extract the `feeding` rates an
 
 ```{r}
 # Shapiro-Wilk test on each site
-oystercatcher %>% 
-    filter(site == "exposed") %>% 
-    pull(feeding) %>% 
+oystercatcher |>
+    filter(site == "exposed") |>
+    pull(feeding) |>
     shapiro.test()
 
-oystercatcher %>% 
-    filter(site == "partial") %>% 
-    pull(feeding) %>% 
+oystercatcher |>
+    filter(site == "partial") |>
+    pull(feeding) |>
     shapiro.test()
 
-oystercatcher %>% 
-    filter(site == "sheltered") %>% 
-    pull(feeding) %>% 
+oystercatcher |>
+    filter(site == "sheltered") |>
+    pull(feeding) |>
     shapiro.test()
 ```
 
@@ -469,7 +469,7 @@ Whilst the formal statistical tests (like Shapiro-Wilk) are technically fine, th
 
 ## Implement and interpret the test
 
-As is often the case, performing the actual statistical test is the least of your efforts. 
+As is often the case, performing the actual statistical test is the least of your efforts.
 
 ::: {.panel-tabset group="language"}
 ## R
@@ -487,9 +487,9 @@ In the output:
 -   The 1st line just tells you the that this is an ANOVA test
 -   The 2nd line tells you what the response variable is (in this case feeding)
 -   The 3rd, 4th and 5th lines are an ANOVA table which contain some useful values:
-    -   The `Df` column contains the degrees of freedom values on each row, `r glance(lm_oystercatcher) %>% pull(df) %>% as.numeric()` and `r glance(lm_oystercatcher) %>% pull(df.residual) %>% as.numeric()` (which we can use for the reporting)
-    -   The `F` value column contains the F statistic, `r round(glance(lm_oystercatcher) %>% pull(statistic) %>% as.numeric(), digits = 2)` (which again we'll need for reporting).
-    -   The p-value is 2.2e-16 and is the number directly under the `Pr(>F)` on the 4th line (to be precise, it is `r formatC((glance(lm_oystercatcher) %>% pull(p.value) %>% as.numeric()), format = "e", digits = 2)` but anything smaller than 2.2e-16 gets reported as `< 2.2e-16`).
+    -   The `Df` column contains the degrees of freedom values on each row, `r glance(lm_oystercatcher) |> pull(df) |> as.numeric()` and `r glance(lm_oystercatcher) |> pull(df.residual) |> as.numeric()` (which we can use for the reporting)
+    -   The `F` value column contains the F statistic, `r round(glance(lm_oystercatcher) |> pull(statistic) |> as.numeric(), digits = 2)` (which again we'll need for reporting).
+    -   The p-value is 2.2e-16 and is the number directly under the `Pr(>F)` on the 4th line (to be precise, it is `r formatC((glance(lm_oystercatcher) |> pull(p.value) |> as.numeric()), format = "e", digits = 2)` but anything smaller than 2.2e-16 gets reported as `< 2.2e-16`).
     -   The other values in the table (in the `Sum Sq` and `Mean Sq`) columns are used to calculate the F statistic itself and we don't need to know these.
 -   The 6th line has some symbolic codes to represent how big (small) the p-value is; so, a p-value smaller than 0.001 would have a \*\*\* symbol next to it (which ours does). Whereas if the p-value was between 0.01 and 0.05 then there would simply be a \* character next to it, etc. Thankfully we can all cope with actual numbers and don't need a short-hand code to determine the reporting of our experiments (please tell me that's true...!)
 
@@ -536,7 +536,7 @@ Again, the p-value is what we're most interested in here and shows us the probab
 
 Since the p-value is very small (much smaller than the standard significance level of 0.05) we can say "that it is very unlikely that these three samples came from the same parent distribution" and as such we can reject our null hypothesis and state that:
 
-> A one-way ANOVA showed that the mean feeding rate of oystercatchers differed significantly between locations (p = `r formatC((glance(lm_oystercatcher) %>% pull(p.value) %>% as.numeric()), format = "e", digits = 2)`).
+> A one-way ANOVA showed that the mean feeding rate of oystercatchers differed significantly between locations (p = `r formatC((glance(lm_oystercatcher) |> pull(p.value) |> as.numeric()), format = "e", digits = 2)`).
 
 ## Post-hoc testing (Tukey's range test)
 
@@ -690,8 +690,8 @@ Juvenile lobsters in aquaculture were grown on three different diets (fresh muss
 #| echo: false
 #| message: false
 #| warning: false
-read_csv("data/examples/cs2-messy_lobsters.csv") %>%
-    pivot_wider(names_from = diet, values_from = weight) %>%
+read_csv("data/examples/cs2-messy_lobsters.csv") |>
+    pivot_wider(names_from = diet, values_from = weight) |>
     select(-group)
 ```
 
@@ -732,16 +732,16 @@ The data have a unique `id` column, which we don't need any summary statistics f
 
 ```{r}
 # create some summary statistics
-lobsters %>% 
-  select(-id) %>% 
-  group_by(diet) %>% 
+lobsters |>
+  select(-id) |>
+  group_by(diet) |>
   get_summary_stats(type = "common")
 ```
 
 Next, we visualise the data:
 
 ```{r}
-lobsters %>% 
+lobsters |>
   ggplot(aes(x = diet, y = weight)) +
   geom_boxplot()
 ```
@@ -795,19 +795,19 @@ First, we perform the Shapiro-Wilk test on the individual groups:
 
 ```{r}
 # Shapiro-Wilk on lobster groups
-lobsters %>% 
-    filter(diet == "Flakes") %>% 
-    pull(weight) %>% 
+lobsters |>
+    filter(diet == "Flakes") |>
+    pull(weight) |>
     shapiro.test()
 
-lobsters %>% 
-    filter(diet == "Mussels") %>% 
-    pull(weight) %>% 
+lobsters |>
+    filter(diet == "Mussels") |>
+    pull(weight) |>
     shapiro.test()
 
-lobsters %>% 
-    filter(diet == "Pellets") %>% 
-    pull(weight) %>% 
+lobsters |>
+    filter(diet == "Pellets") |>
+    pull(weight) |>
     shapiro.test()
 ```
 
@@ -824,7 +824,7 @@ lm_lobsters <- lm(weight ~ diet,
 resid_lobsters <- residuals(lm_lobsters)
 
 # and perform the Shapiro-Wilk test on the residuals
-resid_lobsters %>% 
+resid_lobsters |>
   shapiro.test()
 ```
 

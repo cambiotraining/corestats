@@ -1,7 +1,7 @@
 ---
 title: "Two-sample data"
 ---
- 
+
 ```{r}
 #| echo: false
 #| message: false
@@ -62,8 +62,8 @@ library(rstatix)
 ```{r}
 #| eval: false
 #| warning: false
-# Computes summary statistics                         
-rstatix::get_summary_stats() 
+# Computes summary statistics
+rstatix::get_summary_stats()
 
 # Performs Levene's test for equality of variance
 # (non-normally distributed data)
@@ -215,8 +215,8 @@ This gives us the standard summary statistics, but in this case we have more tha
 
 ```{r}
 # get common summary stats for the length column
-rivers %>% 
-  group_by(river) %>% 
+rivers |>
+  group_by(river) |>
   get_summary_stats(type = "common")
 ```
 
@@ -245,7 +245,7 @@ Numbers might not always give you the best insight into your data, so we also vi
 ```{python}
 #| results: hide
 p = (ggplot(rivers_py,
-        aes(x = "river", y = "length")) + 
+        aes(x = "river", y = "length")) +
      geom_boxplot())
 
 p.show()
@@ -283,14 +283,14 @@ It's good practice to check what kind of data is going into these functions. Run
 
 ```{r}
 # filter data by river and perform test
-rivers %>% 
-    filter(river == "Aripo") %>% 
-    pull(length) %>% 
+rivers |>
+    filter(river == "Aripo") |>
+    pull(length) |>
     shapiro.test()
 
-rivers %>% 
-    filter(river == "Guanapo") %>% 
-    pull(length) %>% 
+rivers |>
+    filter(river == "Guanapo") |>
+    pull(length) |>
     shapiro.test()
 ```
 
@@ -355,7 +355,7 @@ levene_test(rivers,
             length ~ river)
 ```
 
-The key bit of information is the `p` column. This is the p-value `r round(levene_test(rivers, length ~ river) %>% pull(p), 4)` for this test.
+The key bit of information is the `p` column. This is the p-value `r round(levene_test(rivers, length ~ river) |> pull(p), 4)` for this test.
 
 ## Python
 
@@ -487,8 +487,8 @@ Calculate the median for each group (for reference) and perform a two-tailed, Ma
 We group the data using `group_by()` for each `river` and then use the `summarise()` the data.
 
 ```{r}
-rivers %>% 
-    group_by(river) %>% 
+rivers |>
+    group_by(river) |>
     summarise(median_length = median(length))
 ```
 
@@ -527,7 +527,7 @@ We can do this with the `pd.pivot()` function. We save the output in a new objec
 rivers_py_wide = pd.pivot(rivers_py,
                           columns = 'river',
                           values = 'length')
-      
+
 # have a look at the format
 rivers_py_wide.head()
 ```
@@ -648,8 +648,8 @@ Let's summarise the data (although a visualisation is probably much easier to wo
 
 ```{r}
 # create summary statistics for each group
-turtle %>% 
-  group_by(sex) %>% 
+turtle |>
+  group_by(sex) |>
   get_summary_stats(type = "common")
 ```
 
@@ -703,14 +703,14 @@ Let's look at the normality of each of the groups separately. There are several 
 
 ```{r}
 # perform Shapiro-Wilk test on each group
-turtle %>% 
-    filter(sex == "Female") %>% 
-    pull(serum) %>% 
+turtle |>
+    filter(sex == "Female") |>
+    pull(serum) |>
     shapiro.test()
 
-turtle %>% 
-    filter(sex == "Male") %>% 
-    pull(serum) %>% 
+turtle |>
+    filter(sex == "Male") |>
+    pull(serum) |>
     shapiro.test()
 ```
 
@@ -904,7 +904,7 @@ wilcox_test(serum ~ sex,
 turtle_py_wide = pd.pivot(turtle_py,
                           columns = 'sex',
                           values = 'serum')
-      
+
 # have a look at the format
 turtle_py_wide.head()
 ```

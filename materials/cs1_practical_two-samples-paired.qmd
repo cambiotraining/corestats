@@ -1,7 +1,7 @@
 ---
 title: "Paired data"
 ---
- 
+
 ```{r}
 #| echo: false
 #| message: false
@@ -85,8 +85,8 @@ ggplot2::stat_qq_line()
 # variation to each point, to handle overplotting
 ggplot2::geom_jitter()
 
-# Computes summary statistics                         
-rstatix::get_summary_stats() 
+# Computes summary statistics
+rstatix::get_summary_stats()
 
 # "Widens" the data, increasing the number of columns
 tidyr::pivot_wider()
@@ -227,10 +227,10 @@ In `tidyverse` we can use the `pivot_wider()` function.
 
 ```{r}
 # calculate the difference between evening and morning values
-cortisol_diff <- cortisol %>%
+cortisol_diff <- cortisol |>
   pivot_wider(id_cols = patient_id,
               names_from = time,
-              values_from = cortisol) %>% 
+              values_from = cortisol) |>
   mutate(cortisol_change = evening - morning)
 
 cortisol_diff
@@ -279,7 +279,7 @@ cortisol_diff_py = pd.pivot(cortisol_py, index = "patient_id", columns = "time",
 # add a new column with difference between
 # evening and morning cortisol levels
 cortisol_diff_py["cortisol_change"] = cortisol_diff_py["evening"].subtract(cortisol_diff_py["morning"])
-      
+
 # have a look at the format
 cortisol_diff_py.head()
 ```
@@ -498,8 +498,8 @@ Using the following data on deer legs (yes, really!), test the null hypothesis t
 #| warning: false
 #| message: false
 # deer leg length (cm)
-read_csv("data/CS1-deer.csv") %>% 
-  pivot_wider(names_from = leg, values_from = length) %>% 
+read_csv("data/CS1-deer.csv") |>
+  pivot_wider(names_from = leg, values_from = length) |>
   select(-id)
 ```
 
@@ -554,9 +554,9 @@ To make life easy we use the `get_summary_stats()` function from the `rstatix` p
 
 ```{r}
 # or even summarise by leg type
-deer %>% 
-  select(-id) %>% 
-  group_by(leg) %>% 
+deer |>
+  select(-id) |>
+  group_by(leg) |>
   get_summary_stats(type = "common")
 ```
 
@@ -573,10 +573,10 @@ All of this suggests that there might be a difference between the legs, with hin
 
 ```{r}
 # create a data set that contains the difference in leg length
-leg_diff <- deer %>% 
+leg_diff <- deer |>
   pivot_wider(id_cols = id,
               names_from = leg,
-              values_from = length) %>% 
+              values_from = length) |>
   mutate(leg_diff = hindleg - foreleg)
 ```
 
@@ -643,7 +643,7 @@ Next, we can add a new column `leg_diff` that contains the leg difference:
 # add a new column with difference between
 # hind and fore leg length
 leg_diff_py["leg_diff"] = leg_diff_py["hindleg"].subtract(leg_diff_py["foreleg"])
- 
+
 ```
 
 Finally, we can visualise this:

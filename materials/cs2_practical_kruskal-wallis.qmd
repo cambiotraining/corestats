@@ -159,9 +159,9 @@ spidermonkey <- read_csv("data/CS2-spidermonkey.csv")
 spidermonkey
 
 # summarise the data
-spidermonkey %>% 
-  select(-id) %>% 
-  group_by(familiarity) %>% 
+spidermonkey |>
+  select(-id) |>
+  group_by(familiarity) |>
   get_summary_stats(type = "common")
 
 # create boxplot

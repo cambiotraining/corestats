@@ -1,7 +1,7 @@
 ---
 title: "One-sample data"
 ---
- 
+
 ```{r}
 #| echo: false
 #| message: false
@@ -126,7 +126,7 @@ One sample tests are used when we have a single sample of continuous data. It is
 #| echo: false
 set.seed(726)
 tibble(x = dist_normal(20, 5),
-       sample = rnorm(10,21,5)) %>% 
+       sample = rnorm(10,21,5)) |>
     ggplot(aes(xdist = x)) +
     stat_slab() +
     geom_point(aes(x = sample, y = 0), size = 3) +
@@ -252,7 +252,7 @@ p.show()
 ```
 :::
 
-The data do not appear to contain any obvious errors, and whilst both the mean and median are less than 20 (`r fishlengthDF %>% summarise(mean = mean(length)) %>% pull() %>% round(digits = 1)` and `r fishlengthDF %>% summarise(median = median(length)) %>% pull() %>% round(digits = 1)` respectively) it is not absolutely certain that the sample mean is sufficiently different from this value to be "statistically significant", although we may anticipate such a result.
+The data do not appear to contain any obvious errors, and whilst both the mean and median are less than 20 (`r fishlengthDF |> summarise(mean = mean(length)) |> pull() |> round(digits = 1)` and `r fishlengthDF |> summarise(median = median(length)) |> pull() |> round(digits = 1)` respectively) it is not absolutely certain that the sample mean is sufficiently different from this value to be "statistically significant", although we may anticipate such a result.
 
 ## Assumptions
 
@@ -375,7 +375,7 @@ norm2 <- ggplot(df_dist, aes(sample = norm_dist)) +
     stat_qq_line(colour = "blue") +
     labs(x = "theoretical quantiles",
          y = "sample quantiles")
-    
+
 norm1 + norm2 +
     plot_annotation(title = "Normal distribution, 200 samples",
                     tag_levels = "A")
@@ -397,7 +397,7 @@ unif2 <- ggplot(df_dist, aes(sample = unif_dist)) +
     stat_qq_line(colour = "blue") +
     labs(x = "theoretical quantiles",
          y = "sample quantiles")
-    
+
 unif1 + unif2 +
     plot_annotation(title = "Uniform distribution, 200 samples",
                     tag_levels = "A")
@@ -419,7 +419,7 @@ tdist2 <- ggplot(df_dist, aes(sample = t_dist)) +
     stat_qq_line(colour = "blue") +
     labs(x = "theoretical quantiles",
          y = "sample quantiles")
-    
+
 tdist1 + tdist2 +
     plot_annotation(title = "T distribution, 200 samples",
                     tag_levels = "A")
@@ -441,7 +441,7 @@ exp_dist2 <- ggplot(df_dist, aes(sample = exp_dist)) +
     stat_qq_line(colour = "blue") +
     labs(x = "theoretical quantiles",
          y = "sample quantiles")
-    
+
 exp_dist1 + exp_dist2 +
     plot_annotation(title = "Exponential distribution, 200 samples",
                     tag_levels = "A")
@@ -611,14 +611,14 @@ median_fishlength <- median(fishlengthDF$length)
 
 ```{r}
 # create a histogram
-fishlengthDF %>% 
+fishlengthDF |>
   ggplot(aes(x = length)) +
   geom_histogram(bins = 10) +
   geom_vline(xintercept = median_fishlength,
              colour = "red")
 
 # create box plot
-fishlengthDF %>% 
+fishlengthDF |>
   ggplot(aes(y = length)) +
   geom_boxplot()
 ```

@@ -339,7 +339,7 @@ By now you should have a good feeling for the data and could already provide som
 *	If not:
     * Does `exercise` have an effect on `weight`?
     * Does `sex` have an effect on `weight`?
-    
+
 We can now attempt to answer these three questions more formally using an ANOVA test. We have to test for three things: the interaction, the effect of `exercise` and the effect of `sex.`
 
 ## Assumptions
@@ -445,7 +445,7 @@ We have a row in the table for each of the different effects that we’ve asked 
 
 :::
 
-`sex:exercise` has a p-value of about `r anova(lm_exercise) %>% broom::tidy() %>% filter(term == "sex:exercise") %>% pull(p.value) %>% formatC(format = "e", digits = 2)` (which is smaller than 0.05) and so we can conclude that the interaction between `sex` and `exercise` is significant.
+`sex:exercise` has a p-value of about `r anova(lm_exercise) |> broom::tidy() |> filter(term == "sex:exercise") |> pull(p.value) |> formatC(format = "e", digits = 2)` (which is smaller than 0.05) and so we can conclude that the interaction between `sex` and `exercise` is significant.
 
 **This is where we must stop.**
 
@@ -455,7 +455,7 @@ In this case, `weight` depends on _and_ the sex _and_ the exercise regime. This 
 
 We would report this as follows:
 
-> A two-way ANOVA test showed that there was a significant interaction between the effects of sex and exercise on weight (p = `r anova(lm_exercise) %>% broom::tidy() %>% filter(term == "sex:exercise") %>% pull(p.value) %>% formatC(format = "e", digits = 2)`). Exercise was associated with a small loss of weight in males but a larger loss of weight in females.
+> A two-way ANOVA test showed that there was a significant interaction between the effects of sex and exercise on weight (p = `r anova(lm_exercise) |> broom::tidy() |> filter(term == "sex:exercise") |> pull(p.value) |> formatC(format = "e", digits = 2)`). Exercise was associated with a small loss of weight in males but a larger loss of weight in females.
 
 ## Exercises
 
@@ -676,7 +676,7 @@ There is definitely a significant interaction between `concentration` and `genot
 
 So, we can conclude the following:
 
-> A two-way ANOVA showed that there is a significant interaction between genotype and auxin concentration on plant height (p = `r anova(lm_auxin) %>% broom::tidy() %>% filter(term == "concentration:genotype") %>%  pull(p.value) %>% formatC(format = "e", digits = 2)`). Increasing auxin concentration appears to result in a reduction of plant height in both wild type and mutant genotypes. The response in the mutant genotype seems to be less pronounced than in wild type.
+> A two-way ANOVA showed that there is a significant interaction between genotype and auxin concentration on plant height (p = `r anova(lm_auxin) |> broom::tidy() |> filter(term == "concentration:genotype") |>  pull(p.value) |> formatC(format = "e", digits = 2)`). Increasing auxin concentration appears to result in a reduction of plant height in both wild type and mutant genotypes. The response in the mutant genotype seems to be less pronounced than in wild type.
 
 :::
 :::
@@ -712,18 +712,18 @@ tulip
 
 In this data set the watering regime (`water`) and shading regime (`shade`) are encoded with numerical values. However, these numbers are actually categories, representing the amount of water/shade.
 
-As such, we don't want to treat these as numbers but as _factors_. At the moment they are numbers, which we can tell with `<dbl>`, which stands for `double`. 
+As such, we don't want to treat these as numbers but as _factors_. At the moment they are numbers, which we can tell with `<dbl>`, which stands for `double`.
 
 We can convert the columns using the `as_factor()` function. Because we'd like to keep referring to these columns as factors, we will update our existing data set.
 
 ``` {r}
 # convert watering and shade regimes to factor
-tulip <- tulip %>% 
+tulip <- tulip |>
   mutate(water = as_factor(water),
          shade = as_factor(shade))
 ```
 
-This data set has three variables; `blooms` (which is the response variable) and `water` and `shade` (which are the two potential predictor variables). 
+This data set has three variables; `blooms` (which is the response variable) and `water` and `shade` (which are the two potential predictor variables).
 
 #### Visualise the data
 
@@ -821,7 +821,7 @@ tulip_py['water'] = tulip_py['water'].astype(object)
 tulip_py['shade'] = tulip_py['shade'].astype(object)
 ```
 
-This data set has three variables; `blooms` (which is the response variable) and `water` and `shade` (which are the two potential predictor variables). 
+This data set has three variables; `blooms` (which is the response variable) and `water` and `shade` (which are the two potential predictor variables).
 
 #### Visualise the data
 
@@ -835,7 +835,7 @@ p = (ggplot(tulip_py,
      geom_boxplot())
 
 p.show()
-  
+
 # by shading regime
 p = (ggplot(tulip_py,
         aes(x = "shade", y = "blooms")) +
@@ -904,7 +904,7 @@ sm.stats.anova_lm(lm_tulip_py, typ = 2)
 So we do appear to have a significant interaction between `water` and `shade` as expected.
 :::
 
-> A two-way ANOVA showed that there is a significant interaction between watering and shading regimes on number of blooms (p = `r anova(lm_tulip) %>% broom::tidy() %>% filter(term == "water:shade") %>%  pull(p.value) %>% formatC(format = "e", digits = 2)`).
+> A two-way ANOVA showed that there is a significant interaction between watering and shading regimes on number of blooms (p = `r anova(lm_tulip) |> broom::tidy() |> filter(term == "water:shade") |>  pull(p.value) |> formatC(format = "e", digits = 2)`).
 
 :::
 :::

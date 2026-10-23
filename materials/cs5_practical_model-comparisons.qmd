@@ -550,11 +550,11 @@ Can we drop the interaction term or any of the remaining main effects?
 model_1 = smf.ols(
     formula= "pm2_5 ~ avg_temp + rain_mm + wind_m_s + C(location)",
     data = pm2_5_py)
-    
+
 model_2 = smf.ols(
     formula= "pm2_5 ~ avg_temp + wind_m_s * C(location)",
     data = pm2_5_py)
-    
+
 model_3 = smf.ols(
     formula= "pm2_5 ~ rain_mm + wind_m_s * C(location)",
     data = pm2_5_py)
@@ -583,7 +583,7 @@ Now we can again check if dropping the `avg_temp` term or the `wind_m_s:location
 model_1 = smf.ols(
     formula= "pm2_5 ~ wind_m_s * C(location)",
     data = pm2_5_py)
-    
+
 model_2 = smf.ols(
     formula= "pm2_5 ~ avg_temp + wind_m_s + C(location)",
     data = pm2_5_py)
