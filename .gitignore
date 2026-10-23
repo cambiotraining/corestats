@@ -9,3 +9,8 @@
 .DS_Store
 .icloud
 /slides/plots/
+
+**/*.quarto_ipynb
+
+# Positron log file
+snowflake.log
