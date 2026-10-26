@@ -126,7 +126,7 @@ plotnine.stats.stat_qq_line()
 
 ## Purpose and aim
 
-One sample tests are used when we have a single sample of continuous data. It is used to find out if the sample came from a parent distribution with a given mean (or median). This essentially boils down to finding out if the sample mean (or median) is "close enough" to our hypothesised parent population mean (or median). So, in the figure below, we could use these tests to see what the probability is that the sample of ten points comes from the distribution plotted above it i.e. a population with a mean of 20 mm.
+One-sample tests are used when we have a single sample of continuous data. They are used to find out if the sample came from a parent distribution with a given mean (or median). This essentially boils down to finding out if the sample mean (or median) is "close enough" to our hypothesised parent population mean (or median). So, in the figure below, we could use these tests to see what the probability is that the sample of ten points comes from the distribution plotted above it, i.e. a population with a mean of 20 mm.
 
 ```{r}
 #| label: r-plot-data-2
@@ -150,13 +150,13 @@ set.seed(NULL)
 
 There are two tests that we are going to look at in this situation; the one-sample t-test, and the one-sample Wilcoxon signed rank-sum test. Both tests work on the sort of data that we're considering here, but they both have different assumptions.
 
-If your data is normally distributed, then a one-sample t-test is appropriate. If your data aren't normally distributed, but their distribution is symmetric, and the sample size is small then a one-sample Wilcoxon signed rank-sum test is more appropriate.
+If your data is normally distributed, then a one-sample t-test is appropriate. If your data aren't normally distributed, but their distribution is symmetric, and the sample size is small, then a one-sample Wilcoxon signed rank-sum test is more appropriate.
 
 For each statistical test we consider there will be five tasks. These will come back again and again, so pay extra close attention.
 
 ::: callout-important
-1.  Setting out of the hypothesis
-2.  Summarise and visualisation of the data
+1.  Set out the hypothesis
+2.  Summarise and visualise the data
 3.  Assessment of assumptions
 4.  Implementation of the statistical test
 5.  Interpreting the output and presentation of results
@@ -166,10 +166,10 @@ We won't always carry these out in exactly the same order, but we will always co
 
 ## Data and hypotheses
 
-For example, suppose we measure the body lengths of male guppies (in mm) collected from the Guanapo River in Trinidad. We want to test whether the data support the hypothesis that the mean body is actually 20 mm. We form the following null and alternative hypotheses:
+For example, suppose we measure the body lengths of male guppies (in mm) collected from the Guanapo River in Trinidad. We want to test whether the data support the hypothesis that the mean body length is actually 20 mm. We form the following null and alternative hypotheses:
 
--   $H_0$: The mean body length is equal to 20mm ($\mu =$ 20).
--   $H_1$: The mean body length is not equal to 20mm ($\mu \neq$ 20).
+-   $H_0$: The mean body length is equal to 20 mm ($\mu =$ 20).
+-   $H_1$: The mean body length is not equal to 20 mm ($\mu \neq$ 20).
 
 We will use a one-sample, two-tailed t-test to see if we should reject the null hypothesis or not.
 
@@ -326,7 +326,7 @@ NB. By even looking at this distribution to assess the assumption of normality w
 
 ### Q-Q plot of the data
 
-Q-Q plot is the short for quantile-quantile plot. This **diagnostic** plot (as it is sometimes called) is a way of comparing two distributions. How Q-Q plots work won't be explained here but will be addressed in the next session.
+A Q-Q plot is short for a quantile-quantile plot. This **diagnostic** plot (as it is sometimes called) is a way of comparing two distributions. How Q-Q plots work won't be explained here but will be addressed in the next session.
 
 Construct a Q-Q Plot of the quantiles of the data against the quantiles of a normal distribution:
 
@@ -355,11 +355,11 @@ p.show()
 ```
 :::
 
-What is important to know is that if the data were normally distributed then all of the points should lie on (or close to) the diagonal line in this graph.
+What is important to know is that, if the data were normally distributed, all of the points should lie on (or close to) the diagonal line in this graph.
 
 In this case, the points lie quite close to the line for the most part but the sample quantiles (points) from either end of the sample distribution are either smaller (below the line on the left) or larger (above the line on the right) than expected if they were supposed to be normally distributed. This suggests that the sample distribution is a bit more spread out than would be expected if it came from a normal distribution.
 
-It is important to recognise that there isn't a simple unambiguous answer when interpreting these types of graph, in terms of whether the assumption of normality has been well met or not and instead it often boils down to a matter of experience.
+It is important to recognise that there isn't a simple unambiguous answer when interpreting these types of graph in terms of whether the assumption of normality has been well met. Instead, it often boils down to a matter of experience.
 
 It is a very rare situation indeed where the assumptions necessary for a test will be met unequivocally and a certain degree of personal interpretation is always needed. Here you have to ask yourself whether the data are normal "enough" for you to be confident in the validity of the test.
 
@@ -401,7 +401,7 @@ norm1 + norm2 +
                     tag_levels = "A")
 ```
 
-These two graphs relate to 200 data points that have been drawn from a normal distribution. Even here you can see that the points do not all lie perfectly on the diagonal line in the QQ plot, and a certain amount of deviation at the top and bottom of the graph can happen just by chance (if I were to draw a different set of point then the graph would look slightly different).
+These two graphs relate to 200 data points that have been drawn from a normal distribution. Even here you can see that the points do not all lie perfectly on the diagonal line in the QQ plot, and a certain amount of deviation at the top and bottom of the graph can happen just by chance (if I were to draw a different set of points, then the graph would look slightly different).
 
 ------------------------------------------------------------------------
 
@@ -476,7 +476,7 @@ In all four cases it is worth noting that the deviations are only at the ends of
 
 ### Shapiro-Wilk test
 
-This is one of a number of formal statistical test that assess whether a given sample of numbers come from a normal distribution. It calculates the probability of getting the sample data if the underlying distribution is in fact normal. It is very easy to carry out in R.
+This is one of a number of formal statistical tests that assess whether a given sample of numbers comes from a normal distribution. It calculates the probability of getting the sample data if the underlying distribution is in fact normal. It is very easy to carry out in R.
 
 Perform a Shapiro-Wilk test on the data:
 
@@ -509,7 +509,7 @@ pg.normality(fishlength_py.length)
 -   the `normal` column gives us the outcome of the test in `True/False`
 :::
 
-As the p-value is bigger than 0.05 (say) then we can say that there is insufficient evidence to reject the null hypothesis that the sample came from a normal distribution.
+As the p-value is bigger than 0.05 (say), we can say that there is insufficient evidence to reject the null hypothesis that the sample came from a normal distribution.
 
 It is important to recognise that the Shapiro-Wilk test is not without limitations. It is rather sensitive to the sample size being considered. In general, for small sample sizes, the test is very relaxed about normality (and nearly all data sets are considered normal), whereas for large sample sizes the test can be overly strict, and it can fail to recognise data sets that are very nearly normal indeed.
 
@@ -583,14 +583,14 @@ The p-value is what we're mostly interested in. It gives the probability of us g
 
 It is important to realise that the p-value is just an indication and there is no absolute certainty here in this interpretation.
 
-People, however like more definite answers and so we pick an artificial probability threshold (called a significance level) in order to be able to say something more decisive. The standard significance level is 0.05 and since our p-value is smaller than this we choose to say that "it is very unlikely that we would have this particular sample if the null hypothesis were true".
+People, however, like more definite answers and so we pick an artificial probability threshold (called a significance level) in order to be able to say something more decisive. The standard significance level is 0.05 and since our p-value is smaller than this we choose to say that "it is very unlikely that we would have this particular sample if the null hypothesis were true".
 :::
 
 In this case the p-value is much smaller than 0.05, so we reject our null hypothesis and state that:
 
 > A one-sample t-test indicated that the mean body length of male guppies ($\bar{x}$ = 18.29mm) differs significantly from 20 mm (p = 0.0014).
 
-The above sentence is an adequate concluding statement for this test and is what we would write in any paper or report. Note that we have included (in brackets) information on the actual mean value of our group($\bar{x}$ = 18.29mm) and the p-value (p = 0.0014). In some journals you are only required to report whether the p-value is less than the critical value (e.g. p \< 0.05) but I would always recommend reporting the actual p-value obtained.
+The above sentence is an adequate concluding statement for this test and is what we would write in any paper or report. Note that we have included (in brackets) information on the actual mean value of our group ($\bar{x}$ = 18.29 mm) and the p-value (p = 0.0014). In some journals you are only required to report whether the p-value is less than the critical value (e.g. p \< 0.05), but I would always recommend reporting the actual p-value obtained.
 
 ::: callout-important
 Additional information, such as the test statistic and degrees of freedom, are sometimes also reported. This is more of a legacy from the time where people did the calculations by hand and used tables. I personally find it much more useful to report as above and supply the data and analysis, so other people can see what I've done and why!
@@ -604,7 +604,7 @@ The Wilcoxon signed rank test checks if the rank-transformed values are symmetri
 
 ### Data and hypotheses
 
-Again, we use the `fishlength` data set. The one-sample Wilcoxon signed rank test allows to see if the *median* body length is different from a specified value. Here we want to test whether the data support the hypothesis that the median body is actually 20 mm. The following null and alternative hypotheses are very similar to those used for the one sample t-test:
+Again, we use the `fishlength` data set. The one-sample Wilcoxon signed rank test allows us to see if the *median* body length is different from a specified value. Here we want to test whether the data support the hypothesis that the median body length is actually 20 mm. The following null and alternative hypotheses are very similar to those used for the one-sample t-test:
 
 -   $H_0$: The median body length is equal to 20 mm ($\mu =$ 20).
 -   $H_1$: The median body length is not equal to 20 mm ($\mu \neq$ 20).
@@ -983,11 +983,11 @@ pg.wilcoxon(dissolving_py.dissolving_time - 45,
 
 #### Discussion
 
-In terms of choosing between the two test we can see that both meet their respective assumptions and so both tests are valid. In this case both tests also agree in terms of their conclusions i.e. that the average dissolving time (either mean or median) doesn't differ significantly from the proposed value of 45 s.
+In terms of choosing between the two tests, we can see that both meet their respective assumptions and so both tests are valid. In this case both tests also agree in terms of their conclusions, i.e. that the average dissolving time (either mean or median) doesn't differ significantly from the proposed value of 45 s.
 
 -   So one answer would be that it doesn't matter which test you use.
 -   Another answer would be that you should pick the test that measures the quantity you're interested in *i.e.* if you care about medians then use the Wilcoxon test, whereas if you care about means then use the t-test.
--   A final answer would be that, since both test are valid we would prefer to use the test with greater **power**. t-tests always have more power than Wilcoxon tests (as long as they're valid) and so we could report that one. (We'll talk about this in the last session but power is effectively the capacity of a test to detect a significant difference - so more power is better).
+-   A final answer would be that, since both tests are valid, we would prefer to use the test with greater **power**. t-tests always have more power than Wilcoxon tests (as long as they're valid) and so we could report that one. (We'll talk about this in the last session but power is effectively the capacity of a test to detect a significant difference - so more power is better).
 :::
 :::
 

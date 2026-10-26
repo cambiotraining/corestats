@@ -117,7 +117,7 @@ pandas.DataFrame.read_csv()
 
 ## Purpose and aim
 
-Correlation refers to the relationship of two variables (or data sets) to one another. Two data sets are said to be correlated if they are not independent from one another. Correlations can be useful because they can indicate if a predictive relationship may exist. However just because two data sets are correlated does not mean that they are causally related.
+Correlation refers to the relationship between two variables (or data sets). Two data sets are said to be correlated if they are not independent from one another. Correlations can be useful because they can indicate if a predictive relationship may exist. However, just because two data sets are correlated does not mean that they are causally related.
 
 ## Data and hypotheses
 
@@ -212,7 +212,7 @@ From the visual inspection we can see that there appears to be a slight positive
 
 Instead of visualising the variables against each other in a scatter plot, we can also calculate correlation coefficients for each variable pair. There are different types of correlation coefficients, but the most well-known one is probably **Pearson's r**. This is a measure of the linear correlation between two variables. It has a value between -1 and +1, where +1 means a perfect positive correlation, -1 means a perfect negative correlation and 0 means no correlation at all.
 
-There are other correlation coefficients, most notably the **Spearman's rank correlation coefficient**, a non-parametric measure of rank correlation and is generally less sensitive to outliers.
+There are other correlation coefficients, most notably the **Spearman's rank correlation coefficient**, a non-parametric measure of rank correlation, and it is generally less sensitive to outliers.
 
 So, let's calculate **Pearson's r** for our data:
 
@@ -253,9 +253,9 @@ USArrests |>
 ## Alternative method 1: ggplot
 Before we can plot the data we need to reformat the data. We're taking the following steps:
 
-1. we calculate the correlation matrix with `cor()` using the (default) method of `method = "pearson"`
-2. convert the output to a tibble so we can use
-3. `pivot_longer()` to reformat the data into pairwise variables and a column with the Pearson's r value
+1. calculate the correlation matrix with `cor()` using the (default) method of `method = "pearson"`
+2. convert the output to a tibble
+3. use `pivot_longer()` to reformat the data into pairwise variables and a column with the Pearson's r value
 4. use the `mutate()` and `round()` functions to round the Pearson's r values
 
 ```{r}
@@ -363,7 +363,7 @@ p.show()
 ```
 :::
 
-The correlation matrix and visualisations give us the insight that we need. The most correlated variables are `murder` and `assault` with an $r$ value of 0.80. This appears to agree well with the set plots that we produced earlier.
+The correlation matrix and visualisations give us the insight that we need. The most correlated variables are `murder` and `assault` with an $r$ value of 0.80. This appears to agree well with the scatter plots that we produced earlier.
 
 ## Spearman's rank correlation coefficient
 
@@ -397,7 +397,7 @@ USArrests_py.corr(method = "spearman", numeric_only = True)
 
 Pearson's correlation for USA state data
 
-We will again use the data from the file `data/CS3-statedata.csv` data set for this exercise. The data set contains 50 rows and 8 columns, with column names: `population`, `income`, `illiteracy`, `life_exp`, `murder`, `hs_grad`, `frost` and `area`.
+We will again use the data from the `data/CS3-statedata.csv` file. The data set contains 50 rows and 8 columns, with column names: `population`, `income`, `illiteracy`, `life_exp`, `murder`, `hs_grad`, `frost` and `area`.
 
 Visually identify 3 different pairs of variables that appear to be
 
@@ -410,7 +410,7 @@ Calculate Pearson's r for all variable pairs and see how well you were able to i
 ::: {.callout-answer collapse="true"}
 ## Answer
 
-Visually determining the most negative/positively and uncorrelated pairs of variables:
+Visually determining the most negatively correlated, positively correlated and uncorrelated pairs of variables:
 
 ::: {.panel-tabset group="language"}
 ## R
@@ -461,7 +461,7 @@ USAstate_cor_py = USAstate_cor_py.rename_axis("var1").reset_index()
 USAstate_cor_py.head()
 ```
 
-Now that we have the correlation matrix in a workable format, we need to restructure it so that we can plot the data. For this, we need to create a "long" format, using the `melt()` function. Note that we're not setting the `values_var` argument. If not set, then it uses all but the `id_vars` column (which in our case is a good thing, since we don't want to manually specify lots of column names).
+Now that we have the correlation matrix in a workable format, we need to restructure it so that we can plot the data. For this, we need to create a "long" format, using the `melt()` function. Note that we're not setting the `values_var` argument. If it is not set, then it uses all but the `id_vars` column (which in our case is a good thing, since we don't want to manually specify lots of column names).
 
 ```{python}
 #| label: py-reshape-data-2
@@ -581,7 +581,7 @@ Thinking about the variables, can you explain why this might this be?
 
 ## Answer
 
-In order to determine which variables are most affected by the choice of Spearman vs Pearson you could just plot both matrices out side by side and try to spot what was going on, but one of the reasons we're using programming languages is that we can be a bit more **programmatic** about these things. Also, our eyes aren't that good at processing and parsing this sort of information display. A better way would be to somehow visualise the data.
+In order to determine which variables are most affected by the choice of Spearman vs Pearson you could just plot both matrices side by side and try to spot what was going on, but one of the reasons we're using programming languages is that we can be a bit more **programmatic** about these things. Also, our eyes aren't that good at processing and parsing this sort of information display. A better way would be to somehow visualise the data.
 
 ::: {.panel-tabset group="language"}
 ## R
@@ -670,7 +670,7 @@ p.show()
 
 All in all there is not a huge difference in correlation coefficients, since the values are all quite small. Most of the changes occur along the `area` variable. One possible explanation could be that certain states with a large area have a relatively large effect on the Pearson's r coefficient. For example, Alaska has an area that is over twice as big as the next state - Texas.
 
-If, for example, we'd look a bit closer then we would find for `area` and `income` that Pearson gives a value of 0.36, a slight positive correlation, whereas Spearman gives a value of 0.057, basically uncorrelated.
+If, for example, we looked a bit closer, then we would find that for `area` and `income` Pearson gives a value of 0.36, a slight positive correlation, whereas Spearman gives a value of 0.057, basically uncorrelated.
 
 This means that this is basically ignored by Spearman.
 

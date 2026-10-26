@@ -121,7 +121,7 @@ The probability of getting a false positive in our analysis is precisely the sig
 
 Unfortunately, this has unintended consequences (doesn’t everything?). It turns out that reducing the significance level means that we increase the chance of getting false negatives. This should make sense; if we’re increasing the barrier to entry in terms of acceptance then we’ll also accidentally miss out on some of the good stuff.
 
-**Power** is the capacity of a test to detect significant different results. It is affected by three things:
+**Power** is the capacity of a test to detect statistically significant effects. It is affected by three things:
 
 1. the effect size: i.e. how big of a difference do you want to be able to detect, or alternatively what do you consider a meaningful effect/difference to be?
 2. sample size
@@ -171,7 +171,7 @@ The key point about effect sizes and power analyses is that you need to specify 
 
 [Jacob Cohen](https://en.wikipedia.org/wiki/Jacob_Cohen_(statistician)) was an American statistician who developed a large set of measures for effect sizes (which we will use today). He came up with a rough set of numerical measures for "small", "medium" and "large" effect sizes that are still in use today. These do come with some caveats though; Jacob was a psychologist and so his assessment of what was a large effect may be somewhat different from yours. They do form a useful starting point however.
 
-There a lot of different ways of specifying effects sizes, but we can split them up into three distinct families of estimates:
+There are a lot of different ways of specifying effect sizes, but we can split them up into three distinct families of estimates:
 
 1. **Correlation estimates**: these use $R^2$ as a measure of variance explained by a model (for linear models, anova etc. A large $R^2$ value would indicate that a lot of variance has been explained by our model and we would expect to see a lot of difference between groups, or a tight cluster of points around a line of best fit. The argument goes that we would need fewer data points to observe such a relationship with confidence. Trying to find a relationship with a low $R^2$ value would be trickier and would therefore require more data points for an equivalent power.
 2. **Difference between means**: these look at how far apart the means of two groups are, measured in units of standard deviations (for t-tests). An effect size of 2 in this case would be interpreted as the two groups having means that were two standard deviations away from each other (quite a big difference), whereas an effect size of 0.2 would be harder to detect and would require more data to pick it up.
@@ -253,7 +253,7 @@ pwr.t.test(d = 0.5, sig.level = 0.05, power = 0.8,
            type = "two.sample", alternative = "two.sided")
 ```
 
-The first line is what we’re looking for `n = 63.76` tells that we need 64 (rounding up) students in each group (so 128 in total) in order to carry out this study with sufficient power. The other lines should be self-explanatory (well they should be by this stage; if you need me to tell you that the function is just returning the values that you’ve just typed in then you have bigger problems to worry about).
+The first line is what we’re looking for: `n = 63.76` tells us that we need 64 (rounding up) students in each group (so 128 in total) in order to carry out this study with sufficient power. The other lines should be self-explanatory (well, they should be by this stage; if you need me to tell you that the function is just returning the values that you’ve just typed in, then you have bigger problems to worry about).
 
 The `pwr.t.test()` function has six arguments. Two of them specify what sort of t-test you’ll be carrying out
 * `type`; which describes the type of t-test you will eventually be carrying out (one of `two.sample`, `one.sample` or `paired`), and
@@ -281,9 +281,9 @@ pwr.solve_power(effect_size = 0.5,
                             power = 0.8)
 ```
 
-The output `n = 63.76` tells that we need 64 (rounding up) students in each group (so 128 in total) in order to carry out this study with sufficient power.
+The output `n = 63.76` tells us that we need 64 (rounding up) students in each group (so 128 in total) in order to carry out this study with sufficient power.
 
-The `TTestIndPower()` function uses the four arguments that are are used in the power analysis:
+The `TTestIndPower()` function uses the four arguments that are used in the power analysis:
 
 * `effect_size`; this is the effect size, a single number calculated using Cohen’s d statistic.
 * `alpha`; this is the significance level (default is `0.05`)
@@ -387,7 +387,7 @@ aripo = fishlength_py.query('river == "Aripo"')["length"]
 guanapo = fishlength_py.query('river == "Guanapo"')["length"]
 ```
 
-Next, we perform the t-test. We specify that the variance are equal by setting `correction = False`. We also `transpose()` the data, so we can actually see the entire output.
+Next, we perform the t-test. We specify that the variances are equal by setting `correction = False`. We also `transpose()` the data, so we can actually see the entire output.
 
 ```{python}
 #| label: py-visualise-the-data
@@ -404,7 +404,7 @@ Let’s first work out exactly what the effect size of this previous study reall
 ::: {.panel-tabset group="language"}
 ## R
 
-To this, we use the `cohens_d` function from the `rstatix` package:
+To do this, we use the `cohens_d` function from the `rstatix` package:
 
 ```{r}
 #| label: r-visualise-the-data
@@ -436,7 +436,7 @@ pg.compute_effsize(aripo, guanapo,
 
 Note: the `compute_effsize()` function is able to compute various effect sizes, but we're specifying Cohen's d here.
 
-So, the Cohen's d value for these data are d = `r round(fishlength |> cohens_d(length ~ river, var.equal = TRUE) |> pull(effsize), digits = 2)` .
+So, the Cohen's d value for these data is d = `r round(fishlength |> cohens_d(length ~ river, var.equal = TRUE) |> pull(effsize), digits = 2)`.
 
 We can now actually answer our question and see how many fish we really need to catch in the future:
 
@@ -455,13 +455,13 @@ pwr.solve_power(
 
 From this we can see that any future experiments would really only need to use 19 fish for each group (we always round this number up, so no fish will be harmed during the experiment...) if we wanted to be confident of detecting the difference we observed in the previous study.
 
-This approach can also be used when the pilot study showed a smaller effect size that wasn’t observed to be significant (indeed arguably, a pilot study shouldn’t really concern itself with significance but should only really be used as a way of assessing potential effect sizes which can then be used in a follow-up study).
+This approach can also be used when the pilot study showed a smaller effect size that was not statistically significant (indeed, arguably, a pilot study shouldn’t really concern itself with significance but should only really be used as a way of assessing potential effect sizes, which can then be used in a follow-up study).
 
 ## Linear model power calculations
 
 Thankfully the ideas we’ve covered in the t-test section should see us in good stead going forward and I can stop writing everything out in such excruciating detail (I do have other things to do you know...).
 
-Let's read in `data/CS2-lobsters.csv`. This data set was used in an earlier practical and describes the effect of three different food sources on lobster weight .
+Let's read in `data/CS2-lobsters.csv`. This data set was used in an earlier practical and describes the effect of three different food sources on lobster weight.
 
 As a quick reminder we'll also plot the data and perform an ANOVA:
 
@@ -1068,7 +1068,7 @@ f2 <- R2 / (1 - R2)
 f2
 ```
 
-Now, our model has 5 parameters (because we have 5 groups) and so the numerator degrees of freedom will be 4 $(5 - 1 = 4)$. This means that we can now carry our our power analysis:
+Now, our model has 5 parameters (because we have 5 groups) and so the numerator degrees of freedom will be 4 $(5 - 1 = 4)$. This means that we can now carry out our power analysis:
 
 ```{r}
 #| label: r-calculate-power-2
@@ -1136,7 +1136,7 @@ This means we need 4 samples per group, so 20 in total ($4 \times 5$).
 The file `/data/CS6-epilepsy1.csv` contains information on the ages and rates of seizures of 236 patients undertaking a clinical trial.
 
 a. Analyse the data using a linear model and calculate the effect size.
-b. If there would be a relationship that large between age and seizure rate how big a study would be needed to observe the effect with a 90% power?
+b. If there were a relationship that large between age and seizure rate, how big a study would be needed to observe the effect with 90% power?
 
 
 ::: {.callout-answer collapse="true"}
@@ -1218,7 +1218,7 @@ f2
 
 This effect size is absolutely tiny. If we really wanted to design an experiment to pick up an effect size this small then we would expect that we'll need 1000s of participants.
 
-Now, our model has 2 parameters (an intercept and a slope) and so the numerator degrees of freedom (`u`) will be 1 (2 - 1 = 1!). This means that we can now carry our our power analysis:
+Now, our model has 2 parameters (an intercept and a slope) and so the numerator degrees of freedom (`u`) will be 1 (2 - 1 = 1!). This means that we can now carry out our power analysis:
 
 ```{r}
 #| label: r-calculate-power-3
@@ -1277,7 +1277,7 @@ from pwr_f2_test import *
 exec(open('scripts/pwr_f2_test.py').read())
 ```
 
-Next, we calculated `f2`:
+Next, we calculate `f2`:
 
 ```{python}
 #| label: py-get-the-r2-value
@@ -1308,13 +1308,13 @@ b. How big a study would we need to detect a medium effect size (according to Co
 ::: {.callout-answer collapse="true"}
 ## Answer
 
-Here we have a system with a single response variable, and three predictor variables. One of them is `gender`, a categorical predictor with two possible levels (M, F). One of them is `treatment`, again a categorical predictor with two possible levels (Drug, placebo) and one of them is continuous (`age`). The last one could even be viewed as a categorical predictor, where each year is a category. If we would like to model `age` as such, then we'd have to define it as a factor. We're not doing this here.
+Here we have a system with a single response variable and three predictor variables. One of them is `gender`, a categorical predictor with two possible levels (M, F). One of them is `treatment`, again a categorical predictor with two possible levels (Drug, placebo), and one of them is continuous (`age`). The last one could even be viewed as a categorical predictor, where each year is a category. If we wanted to model `age` as such, then we'd have to define it as a factor. We're not doing this here.
 
 A linear model with all possible two-way interactions would look something like this:
 
 `response ~ treatment + gender + age + treatment:gender + treatment:age + age:gender`
 
-In order to do a power calculation for this set up, we'll need four things:
+In order to do a power calculation for this setup, we'll need four things:
 
 1. the **effect size**. Here we're told it's a medium effect size according to Cohen so we can use his default values. Here the value is 0.15, see table further above. Alternatively, we could have looked this up online (which may give us different values, or values that are relevant to a specific discipline).
 2. The **desired power**. Here we're told it's 90%
@@ -1327,7 +1327,7 @@ There are three simple ideas here that you need:
 
 1. The degrees of freedom for a categorical variable is just the number of groups - 1
 2. The degrees of freedom for a continuous variable is always 1
-3. the degrees of freedom for any interaction is simple the product of the degrees of the main effects involved in the interaction.
+3. the degrees of freedom for any interaction is simply the product of the degrees of the main effects involved in the interaction.
 
 So this means:
 

@@ -24,7 +24,7 @@ do this once):
 
 ## Python
 
-For this course we'll be using [Visual Studio Code](https://code.visualstudio.com). This provides support for various programming languages (including Python and R). It works on Windows, MacOS and Linux. It's also open-source and free.
+For this course we'll be using [Visual Studio Code](https://code.visualstudio.com). This provides support for various programming languages (including Python and R). It works on Windows, macOS and Linux. It's also open-source and free.
 
 Please refer to the [installation instructions](https://code.visualstudio.com/docs/python/python-tutorial) and make sure that you verify that Python code will run.
 
@@ -136,7 +136,7 @@ conda install -c conda-forge pingouin
 ```
 
 #### patchworklib
-The `patchworklib` package provides an easy way for assembling figures. This package is required to run the course-specific `dgplots()` function. For more information see: [https://pypi.org/project/patchworklib/](https://pypi.org/project/patchworklib/).
+The `patchworklib` package provides an easy way to assemble figures. This package is required to run the course-specific `dgplots()` function. For more information see: [https://pypi.org/project/patchworklib/](https://pypi.org/project/patchworklib/).
 
 It can be installed via `pip`
 ```{python}
@@ -147,7 +147,7 @@ pip install patchworklib
 
 #### plotnine
 
-The `plotnine` packages provides a grammar of graphics to Python - an equivalent to the `ggplot2` package in R. For more information see: [https://plotnine.readthedocs.io/en/stable/#](https://plotnine.readthedocs.io/en/stable/#).
+The `plotnine` package provides a grammar of graphics for Python - an equivalent to the `ggplot2` package in R. For more information see: [https://plotnine.readthedocs.io/en/stable/#](https://plotnine.readthedocs.io/en/stable/#).
 
 It can be installed via `pip`
 ```{python}
@@ -192,4 +192,3 @@ or `conda`
 conda install -c conda-forge statsmodels
 ```
 :::
-

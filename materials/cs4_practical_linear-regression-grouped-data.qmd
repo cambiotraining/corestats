@@ -153,7 +153,7 @@ read_csv("data/CS4-treelight.csv") |>
        y = "Light intensity (lux)")
 ```
 
-When analysing these type of data we want to know:
+When analysing this type of data we want to know:
 
 1.	Is there a difference between the groups?
 2.	Does the continuous predictor variable affect the continuous response variable (does canopy depth affect measured light intensity?)
@@ -488,9 +488,9 @@ In the example above we determined that the interaction term `species:depth` was
 ## R
 This is relatively straightforward if we understand the output of the model a bit better.
 
-First of all, we load the `broom` library. This is part of tidyverse, so you don't have to install it. It is not loaded by default, hence us loading it. What broom does it changes the format of many common base R outputs into a more tidy format, so we can work with the output in our analyses more easily.
+First of all, we load the `broom` library. This is part of tidyverse, so you don't have to install it. It is not loaded by default, hence us loading it. What `broom` does is change the format of many common base R outputs into a tidier format, so we can work with the output in our analyses more easily.
 
-The function we use here is called `augment()`. What this does is take a model object and a dataset and adds information about each observation in the dataset.
+The function we use here is called `augment()`. It takes a model object and a dataset and adds information about each observation in the dataset.
 
 ```{r}
 #| label: r-load-libraries-2
@@ -588,7 +588,7 @@ p.show()
 
 ## Assumptions
 
-In this case we first wanted to check if the interaction was significant, prior to checking the assumptions. If we would have checked the assumptions first, then we would have done that one the full model (with the interaction), then done the ANOVA if everything was OK. We would have then found out that the interaction was not significant, meaning we'd have to re-check the assumptions with the new model. In what order you do it is a bit less important here. The main thing is that you check the assumptions and report on it!
+In this case we first wanted to check if the interaction was significant, prior to checking the assumptions. If we had checked the assumptions first, then we would have done so on the full model (with the interaction), then done the ANOVA if everything was OK. We would then have found out that the interaction was not significant, meaning we'd have to re-check the assumptions with the new model. The order in which you do this is a bit less important here. The main thing is that you check the assumptions and report on them!
 
 Anyway, hopefully you’ve got the gist of checking assumptions for linear models by now: diagnostic plots!
 
@@ -749,7 +749,7 @@ The `data/CS4-clover.csv` data set contains information on field trials at three
 clover <- read_csv("data/CS4-clover.csv")
 ```
 
-This data set has three variables; `yield` (which is the response variable), `yarrow` (which is a continuous predictor variable) and `farm` (which is the categorical predictor variables). As always we'll visualise the data first:
+This data set has three variables; `yield` (which is the response variable), `yarrow` (which is a continuous predictor variable) and `farm` (which is the categorical predictor variable). As always we'll visualise the data first:
 
 ```{r}
 #| label: r-plot-data-5
@@ -804,7 +804,7 @@ This is a borderline case.
 
 1. Normality is fine (Q-Q plot)
 2. There aren't any highly influential points (Cook's D plot)
-3. There is a strong suggestion of heterogeneity of variance (Location-Scale plot). Most of the points are relatively close to the regression lines, but the there is a much great spread of points low yarrow density (which corresponds to high yield values, which is what the predicted values correspond to).
+3. There is a strong suggestion of heterogeneity of variance (Location-Scale plot). Most of the points are relatively close to the regression lines, but there is a much greater spread of points at low yarrow density (which corresponds to high yield values, which is what the predicted values correspond to).
 4. Finally, there is a slight suggestion that the data might not be linear, that it might curve slightly (Residual plot).
 
 ## Python
@@ -815,7 +815,7 @@ This is a borderline case.
 clover_py = pd.read_csv("data/CS4-clover.csv")
 ```
 
-This data set has three variables; `yield` (which is the response variable), `yarrow` (which is a continuous predictor variable) and `farm` (which is the categorical predictor variables). As always we'll visualise the data first:
+This data set has three variables; `yield` (which is the response variable), `yarrow` (which is a continuous predictor variable) and `farm` (which is the categorical predictor variable). As always we'll visualise the data first:
 
 ```{python}
 #| label: py-plot-data-4
@@ -883,7 +883,7 @@ This is a borderline case.
 
 1. Normality is fine (Q-Q plot)
 2. There aren't any highly influential points (Influential points plot)
-3. There is a strong suggestion of heterogeneity of variance (Location-Scale plot). Most of the points are relatively close to the regression lines, but the there is a much great spread of points low yarrow density (which corresponds to high yield values, which is what the predicted values correspond to).
+3. There is a strong suggestion of heterogeneity of variance (Location-Scale plot). Most of the points are relatively close to the regression lines, but there is a much greater spread of points at low yarrow density (which corresponds to high yield values, which is what the predicted values correspond to).
 4. Finally, there is a slight suggestion that the data might not be linear, that it might curve slightly (Residuals plot).
 :::
 
@@ -895,7 +895,7 @@ We have two options; both of which are arguably OK to do in real life.
     b. We could try a permutation based approach (beyond the remit of this course, and actually a bit tricky in this situation). This wouldn't address the non-linearity but it would deal with the variance assumption.
     c. We could come up with a specific functional, mechanistic relationship between yarrow density and clover yield based upon other aspects of their biology. For example there might be a threshold effect such that for yarrow densities below a particular value, clover yields are unaffected, but as soon as yarrow values get above that threshold the clover yield decreases (maybe even linearly). This would require a much better understanding of clover-yarrow dynamics (of which I personally know very little).
 
-Let's do a quick little transformation of the data, and repeat our analysis see if our assumptions are better met this time (just for the hell of it):
+Let's do a quick little transformation of the data, and repeat our analysis to see whether our assumptions are better met this time (just for the hell of it):
 
 ::: {.panel-tabset group="language"}
 ## R

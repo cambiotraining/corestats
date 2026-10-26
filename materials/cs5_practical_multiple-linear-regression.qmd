@@ -160,7 +160,7 @@ pm2_5 <- read_csv("data/CS5-pm2_5.csv")
 head(pm2_5)
 ```
 
-It's the `pm2_5` response variable we're interested in here. Let's start by checking if there might be a difference between PM2.5 level in inner and outer London:
+It's the `pm2_5` response variable we're interested in here. Let's start by checking if there might be a difference between PM2.5 levels in inner and outer London:
 
 ```{r}
 #| label: r-plot-data
@@ -185,7 +185,7 @@ pm2_5 |>
 
 We can see that there is not much of a correlation between `pm2_5` and `avg_temp` or `rain_mm`, whereas there might be something going on in relation to `wind_m_s`.
 
-Other notable things include that rainfall seems completely independent of wind speed (rain fall seems pretty constant). Nor does the average temperature seem in any way related to wind speed (it looks like a random collection of data points!).
+Other notable things include that rainfall seems completely independent of wind speed (rainfall seems pretty constant). Nor does the average temperature seem in any way related to wind speed (it looks like a random collection of data points!).
 
 We can visualise the relationship between `pm2_5` and `wind_m_s` in a bit more detail, by plotting the data against each other and colouring by `location`:
 
@@ -221,7 +221,7 @@ pm2_5_py = pd.read_csv("data/CS5-pm2_5.csv")
 pm2_5_py.head()
 ```
 
-It's the `pm2_5` response variable we're interested in here. Let's start by checking if there might be a difference between PM2.5 level in inner and outer London:
+It's the `pm2_5` response variable we're interested in here. Let's start by checking if there might be a difference between PM2.5 levels in inner and outer London:
 
 ```{python}
 #| label: py-plot-data
@@ -257,7 +257,7 @@ p.show()
 
 This seems to show that there might be some linear relationship between PM2.5 levels and wind speed.
 
-If I would plot all the other variables against each other, then I would spot that rainfall seems completely independent of wind speed (rain fall seems pretty constant). Nor does the average temperature seem in any way related to wind speed (it looks like a random collection of data points!). You can check this yourself!
+If I plotted all the other variables against each other, then I would spot that rainfall seems completely independent of wind speed (rainfall seems pretty constant). Nor does the average temperature seem in any way related to wind speed (it looks like a random collection of data points!). You can check this yourself!
 
 Another way of looking at this would be to create a correlation matrix, like we did before in the [correlations chapter](#correlation-coefficients):
 
@@ -273,7 +273,7 @@ This confirms what we saw in the plots, there aren't any very strong correlation
 
 From our initial observations we derived that there might be some relationship between PM2.5 levels and wind speed. We also noticed that this is likely to be different between inner and outer London.
 
-If we would want to test for *every* variable and interaction, then we would end up with a rather huge model, which would even include 3-way and a 4-way interaction! To illustrate the point that the process of model testing applies to as many variables as you like, we're adding the `avg_temp` and `rain_mm` variables to our model.
+If we wanted to test for *every* variable and interaction, then we would end up with a rather huge model, which would even include a three-way and a four-way interaction! To illustrate the point that the process of model testing applies to as many variables as you like, we're adding the `avg_temp` and `rain_mm` variables to our model.
 
 So in this case we create a model that takes into account all of the main effects (`avg_temp`, `location`, `rain_mm`, `wind_m_s`). We also include a potential two-way interaction (`location:wind_m_s`). The two-way interaction may be of interest since the PM2.5 levels in response to wind speed seem to differ between the two locations.
 
@@ -323,9 +323,9 @@ The question is, are all of these terms statistically significant? To find out w
 anova(lm_pm2_5_full)
 ```
 
-From this we can see that the interaction between `location` and `wind_m_s` is statistically significant. Which means that we can't just talk about the effect of `location` or `wind_m_s` on PM2.5 levels, without taking the other variable into account!
+From this we can see that the interaction between `location` and `wind_m_s` is statistically significant, which means that we can't just talk about the effect of `location` or `wind_m_s` on PM2.5 levels without taking the other variable into account!
 
-The p-value for the `avg_temp` is significant, whereas the `rain_mm` main effect is not. This means that rain fall is not contributing much to model's ability to explain our data. This matches what we already saw when we visualised the data.
+The p-value for the `avg_temp` is significant, whereas the `rain_mm` main effect is not. This means that rainfall is not contributing much to the model's ability to explain our data. This matches what we already saw when we visualised the data.
 
 What to do? We'll explore this in more detail in the chapter on model comparisons, but for now the most sensible option would be to redefine the model, but exclude the `rain_mm` variable. Here I have rewritten the model and named it `lm_pm2_5_red` to indicate it is a reduced model (with fewer variables than our original full model):
 
@@ -405,9 +405,9 @@ The question is, are all of these terms statistically significant? To find out w
 sm.stats.anova_lm(lm_pm2_5_full_py)
 ```
 
-From this we can see that the interaction between `location` and `wind_m_s` is statistically significant. Which means that we can't just talk about the effect of `location` or `wind_m_s` on PM2.5 levels, without taking the other variable into account!
+From this we can see that the interaction between `location` and `wind_m_s` is statistically significant, which means that we can't just talk about the effect of `location` or `wind_m_s` on PM2.5 levels without taking the other variable into account!
 
-The p-value for the `avg_temp` is significant, whereas the `rain_mm` main effect is not. This means that rain fall is not contributing much to model's ability to explain our data. This matches what we already saw when we visualised the data.
+The p-value for the `avg_temp` is significant, whereas the `rain_mm` main effect is not. This means that rainfall is not contributing much to the model's ability to explain our data. This matches what we already saw when we visualised the data.
 
 What to do? We'll explore this in more detail in the chapter on model comparisons, but for now the most sensible option would be to redefine the model, but exclude the `rain_mm` variable. Here I have rewritten the model and named it `lm_pm2_5_red` to indicate it is a reduced model (with fewer variables than our original full model):
 
@@ -466,7 +466,7 @@ p.show()
 
 ## Exploring models
 
-Rather than stop here however, we will use the concept of the linear model to its full potential and show that we can construct and analyse any possible combination of predictor variables for this data set. Namely we will consider the following four extra models, where reduce the complexity to the model, step-by-step:
+Rather than stop here, however, we will use the concept of the linear model to its full potential and show that we can construct and analyse any possible combination of predictor variables for this data set. Namely, we will consider the following four extra models, where we reduce the complexity of the model step by step:
 
 | Model | Description |
 |:---|:---|
@@ -551,7 +551,7 @@ $PM2.5_{inner} = 19.04 + 0.016 \times avg\_temp - 0.50 \times wind\_m\_s$
 
 $PM2.5_{outer} = (19.04 - 4.05) + 0.016 \times avg\_temp - 0.50 \times wind\_m\_s$
 
-gives
+which gives
 
 $PM2.5_{outer} = 14.99 + 0.016 \times avg\_temp - 0.50 \times wind\_m\_s$
 
@@ -768,7 +768,7 @@ $\bar{PM2.5_{outer}} = 16.94 - 4.11 = 12.83$
 
 ### The null model
 
-The null model by itself is rarely analysed for its own sake but is instead used a reference point for more sophisticated model selection techniques. It represents your data as an overal average value.
+The null model by itself is rarely analysed for its own sake but is instead used as a reference point for more sophisticated model selection techniques. It represents your data as an overall average value.
 
 ::: {.panel-tabset group="language"}
 ## R
@@ -904,7 +904,7 @@ volume = 69.40 + -1.30 $\times$ 67 + -5.86 $\times$ 20 + 0.13 $\times$ 67 $\time
 
 volume = 45.81
 
-Here we note that the interaction term just requires us to multiple the three numbers together (we haven't looked at continuous predictors before in the examples and this exercise was included as a check to see if this whole process was making sense).
+Here we note that the interaction term just requires us to multiply the three numbers together (we haven't looked at continuous predictors before in the examples and this exercise was included as a check to see if this whole process was making sense).
 
 If we look at the diagnostic plots for the model using the following commands we get:
 
@@ -1006,7 +1006,7 @@ This model isn't great.
 
 -   There is a worrying lack of linearity exhibited in the Residuals plot suggesting that this linear model isn't appropriate.
 -   Assumptions of Normality seem OK
--   Equality of variance is harder to interpret. Given the lack of linearity in the data it isn't really sensible to interpret the Location-Scale plot as it stands (since the plot is generated assuming that we've fitted a straight line through the data), but for the sake of practicing interpretation we'll have a go. There is definitely suggestions of heterogeneity of variance here with a cluster of points with fitted values of around 20 having noticeably lower variance than the rest of the dataset.
+-   Equality of variance is harder to interpret. Given the lack of linearity in the data, it isn't really sensible to interpret the Location-Scale plot as it stands (since the plot is generated assuming that we've fitted a straight line through the data), but for the sake of practising interpretation we'll have a go. There is definitely a suggestion of heterogeneity of variance here, with a cluster of points with fitted values of around 20 having noticeably lower variance than the rest of the dataset.
 -   One point is influential and if there weren't issues with the linearity of the model I would remove this point and repeat the analysis. As it stands there isn't much point.
 
 #### Height-only model

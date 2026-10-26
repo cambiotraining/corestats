@@ -42,7 +42,7 @@ For two samples the data can be stored in one of three formats:
 2.	in a stacked data frame,
 3.	or in an unstacked data frame/list.
 
-Two separate vectors case is (hopefully) obvious.
+The two-separate-vectors case is (hopefully) obvious.
 
 When using a data frame we have different options to organise our data. The best way of formatting data is by using [the tidy data format](https://r4ds.had.co.nz/tidy-data.html).
 

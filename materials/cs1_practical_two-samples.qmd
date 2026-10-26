@@ -151,7 +151,7 @@ plotnine.stats.stat_qq_line()
 :::
 
 ## Purpose and aim
-These two-sample Student's t-test is used when we have two samples of continuous data where we are trying to find out if the samples came from the same parent distribution or not. This essentially boils down to finding out if there is a difference in the means of the two samples.
+This two-sample Student's t-test is used when we have two samples of continuous data where we are trying to find out if the samples came from the same parent distribution or not. This essentially boils down to finding out if there is a difference in the means of the two samples.
 
 ## Data and hypotheses
 
@@ -168,7 +168,7 @@ We use a two-sample, two-tailed t-test to see if we can reject the null hypothes
 
 The data are stored in the file `data/CS1-twosample.csv`.
 
-Let's read in the data and have a quick look at the first rows to see how the data is structured.
+Let's read in the data and have a quick look at the first rows to see how the data are structured.
 
 Make sure you have downloaded the data and placed it within your working directory.
 
@@ -391,7 +391,7 @@ pg.homoscedasticity(dv = "length",
 ```
 :::
 
-The p-value tells us the probability of observing these two samples if they come from distributions with the same variance. As this probability is greater than our arbitrary significance level of 0.05 then we can be somewhat confident that the necessary assumptions for carrying out Student's t-test on these two samples was valid. (Once again woohoo!)
+The p-value tells us the probability of observing these two samples if they come from distributions with the same variance. As this probability is greater than our arbitrary significance level of 0.05, we can be somewhat confident that the necessary assumptions for carrying out Student's t-test on these two samples were valid. (Once again, woohoo!)
 
 ### Bartlett's test
 
@@ -400,7 +400,7 @@ If we had wanted to carry out Bartlett's test (i.e. if the data *had* been suffi
 ::: {.panel-tabset group="language"}
 ## R
 
-Here we use `bartlett.test()` function.
+Here we use the `bartlett.test()` function.
 
 ```{r}
 #| label: r-bartlett-s-test
@@ -422,7 +422,7 @@ pg.homoscedasticity(dv = "length",
 
 ## Implement and interpret the test
 
-In this case we're ignoring the fact that the data are not normal enough, according to the Shapiro-Wilk test. However, this is not entirely naughty, because the sample sizes are pretty large and the t-test is also pretty robust in this case, we can perform a t-test. Remember, this is only allowed because the variances of the two groups (Aripo and Guanapo) are equal.
+In this case we're ignoring the fact that the data are not normal enough, according to the Shapiro-Wilk test. However, this is not entirely naughty, because the sample sizes are pretty large and the t-test is also pretty robust in this case. We therefore perform a t-test. But remember, this is only allowed because the variances of the two groups (Aripo and Guanapo) are equal.
 
 Perform a two-sample, two-tailed, t-test:
 
@@ -463,7 +463,7 @@ aripo = rivers_py.query('river == "Aripo"')["length"]
 guanapo = rivers_py.query('river == "Guanapo"')["length"]
 ```
 
-Next, we perform the t-test. We specify that the variance are equal by setting `correction = False`. We also `transpose()` the data, so we can actually see the entire output.
+Next, we perform the t-test. We specify that the variances are equal by setting `correction = False`. We also `transpose()` the data, so we can actually see the entire output.
 
 ```{python}
 #| label: py-two-sample-two-tailed-t-test
@@ -484,7 +484,7 @@ Complete [Exercise -@sec-exr_turtles].
 
 ## Dealing with non-normal data
 
-If we're not sure that the data we are dealing with may come from a parent distribution that is normal, then we can't use a Student's t-test. Instead we use the **Mann-Whitney U test**. This test does not assume that the parent distributions are normally distributed. It does however assume that both have the same shape and variance. With this test we check if the medians of the two parent distributions differ significantly from each other.
+If we're not sure that the data we are dealing with might come from a parent distribution that is normal, then we can't use a Student's t-test. Instead we use the **Mann-Whitney U test**. This test does not assume that the parent distributions are normally distributed. It does, however, assume that both have the same shape and variance. With this test we check if the medians of the two parent distributions differ significantly from each other.
 
 ### Data and hypotheses
 
@@ -509,7 +509,7 @@ Calculate the median for each group (for reference) and perform a two-tailed, Ma
 
 ::: {.panel-tabset group="language"}
 ## R
-We group the data using `group_by()` for each `river` and then use the `summarise()` the data.
+We group the data using `group_by()` for each `river` and then use `summarise()` on the data.
 
 ```{r}
 #| label: r-implement-and-interpret-the-test
@@ -932,7 +932,7 @@ This is the same as before.
 
 #### Assumptions
 
-We've already checked that the variances of the two groups are similar, so we're OK there. Whilst the Mann-Whitney U test doesn't require normality or symmetry of distributions it does require that the distributions have the same shape. In this example, with just a handful of data points in each group, it's quite hard to make this call one way or another. My advice in this case would be say that unless it's obvious that the distributions are very different we can just allow this assumption to pass, and you're only going see obvious differences in distribution shape when you have considerably more data points than we have here.
+We've already checked that the variances of the two groups are similar, so we're OK there. Whilst the Mann-Whitney U test doesn't require normality or symmetry of distributions, it does require that the distributions have the same shape. In this example, with just a handful of data points in each group, it's quite hard to make this call one way or another. My advice in this case would be to say that unless it's obvious that the distributions are very different, we can just allow this assumption to pass, and you're only going to see obvious differences in distribution shape when you have considerably more data points than we have here.
 
 #### Carry out a Mann-Whitney U test
 

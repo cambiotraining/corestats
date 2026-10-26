@@ -36,7 +36,7 @@ exec(open('setup_files/setup.py').read())
 
 ## Purpose and aim
 
-Analysis of variance or ANOVA is a test than can be used when we have multiple samples of continuous response data. Whilst it is possible to use ANOVA with only two samples, it is generally used when we have three or more groups. It is used to find out if the samples came from parent distributions with the same mean. It can be thought of as a generalisation of the two-sample Student's t-test.
+Analysis of variance or ANOVA is a test that can be used when we have multiple samples of continuous response data. Whilst it is possible to use ANOVA with only two samples, it is generally used when we have three or more groups. It is used to find out if the samples came from parent distributions with the same mean. It can be thought of as a generalisation of the two-sample Student's t-test.
 
 ## Libraries and functions
 
@@ -157,7 +157,7 @@ Note: you can download the `dgplots` script [here](scripts/dgplots.py).
 
 For example, suppose we measure the feeding rate of oyster catchers (shellfish per hour) at three sites characterised by their degree of shelter from the wind, imaginatively called `exposed` (E), `partially sheltered` (P) and `sheltered` (S). We want to test whether the data support the hypothesis that feeding rates don't differ between locations. We form the following null and alternative hypotheses:
 
--   $H_0$: The mean feeding rates at all three sites is the same $\mu E = \mu P = \mu S$
+-   $H_0$: The mean feeding rates at all three sites are the same $\mu E = \mu P = \mu S$
 -   $H_1$: The mean feeding rates are not all equal.
 
 We will use a one-way ANOVA test to check this.
@@ -348,7 +348,7 @@ Unfortunately `pingouin` does not have a straightforward way of extracting resid
 
 To get our residuals we use `statsmodels`, a module that provides functions for statistical models. We'll be using this in upcoming sessions, so you'll have a head start!
 
-At this point you shouldn't concern yourself too much with the exact syntax, just run it an have a look.
+At this point you shouldn't concern yourself too much with the exact syntax, just run it and have a look.
 
 ::: {.callout-note collapse="true"}
 ## Technical details (optional)
@@ -508,9 +508,9 @@ This takes the linear model (i.e. finds the means of the three groups and calcul
 
 In the output:
 
--   The 1st line just tells you the that this is an ANOVA test
+-   The 1st line just tells you that this is an ANOVA test
 -   The 2nd line tells you what the response variable is (in this case feeding)
--   The 3rd, 4th and 5th lines are an ANOVA table which contain some useful values:
+-   The 3rd, 4th and 5th lines form an ANOVA table that contains some useful values:
     -   The `Df` column contains the degrees of freedom values on each row, `r glance(lm_oystercatcher) |> pull(df) |> as.numeric()` and `r glance(lm_oystercatcher) |> pull(df.residual) |> as.numeric()` (which we can use for the reporting)
     -   The `F` value column contains the F statistic, `r round(glance(lm_oystercatcher) |> pull(statistic) |> as.numeric(), digits = 2)` (which again we'll need for reporting).
     -   The p-value is 2.2e-16 and is the number directly under the `Pr(>F)` on the 4th line (to be precise, it is `r formatC((glance(lm_oystercatcher) |> pull(p.value) |> as.numeric()), format = "e", digits = 2)` but anything smaller than 2.2e-16 gets reported as `< 2.2e-16`).
@@ -664,7 +664,7 @@ Here we have a p-value of 2.39 $\times$ 10<sup>-7</sup> and so the test has very
 
 However, this was not due to all of the sample means being different, but rather just because one of the groups is very different from the others. In order to drill down and investigate this further we use a new test called **Tukey's range test** (or **Tukey's honest significant difference test** -- this always makes me think of some terrible cowboy/western dialogue).
 
-This will compare all of the groups in a pairwise fashion and reports on whether a significant difference exists.
+This will compare all of the groups in a pairwise fashion and report on whether a significant difference exists.
 
 ### Performing Tukey's test
 
@@ -704,7 +704,7 @@ When to use Tukey's range test is a matter of debate (strangely enough a lot of 
 -   Some people claim that we should only perform Tukey's range test (or any other post-hoc tests) if the preceding ANOVA test showed that there was a significant difference between the groups and that if the ANOVA test had not shown any significant differences between groups then we would have to stop there.
 -   Other people say that this is rubbish and we can do whatever we like as long as we tell people what we did.
 
-The background to this is rather involved but one of the reasons for this debate is to prevent so-called **data-dredging** or **p-hacking**. This is where scientists/analysts are so fixated on getting a "significant" result that they perform a huge variety of statistical techniques until they find one that shows that their data is significant (this was a particular problem in psychological studies for while -- not to point fingers though, they are working hard to sort their stuff out. Kudos!).
+The background to this is rather involved but one of the reasons for this debate is to prevent so-called **data-dredging** or **p-hacking**. This is where scientists/analysts are so fixated on getting a "significant" result that they perform a huge variety of statistical techniques until they find one that shows that their data is significant (this was a particular problem in psychological studies for a while -- not to point fingers though, they are working hard to sort their stuff out. Kudos!).
 
 Whether you should use post-hoc testing or not will depend on your experimental design and the questions that you're attempting to answer.
 
@@ -831,7 +831,7 @@ We'll explore the assumption of normality and equality of variance, assuming tha
 
 **Normality**
 
-We'll be really thorough here and consider the normality of each group separately and jointly using the Shapiro-Wilk test, as well as looking at the Q-Q plot. In reality, and after these examples , we'll only use the Q-Q plot.
+We'll be really thorough here and consider the normality of each group separately and jointly using the Shapiro-Wilk test, as well as looking at the Q-Q plot. In reality, and after these examples, we'll only use the Q-Q plot.
 
 First, we perform the Shapiro-Wilk test on the individual groups:
 
@@ -872,7 +872,7 @@ resid_lobsters |>
   shapiro.test()
 ```
 
-This on the other hand says that everything is fine. Let's look at Q-Q plot.
+This on the other hand says that everything is fine. Let's look at the Q-Q plot.
 
 ```{r}
 #| label: r-calculate-residuals-2
@@ -883,7 +883,7 @@ resid_panel(lm_lobsters,
             plots = "qq")
 ```
 
-Here, I've used an extra argument to the normal diagnostic plots call. The default option is to plot 4 diagnostic plots. You can tell `resid_panel()` to only plot a specific one, using the `plots =` arguments. If you want to know more about this have a look at the [help documentation](https://goodekat.github.io/ggResidpanel-tutorial/tutorial.html#overview) or by using `?resid_panel`.
+Here, I've used an extra argument to the normal diagnostic plots call. The default option is to plot 4 diagnostic plots. You can tell `resid_panel()` to only plot a specific one, using the `plots =` argument. If you want to know more about this have a look at the [help documentation](https://goodekat.github.io/ggResidpanel-tutorial/tutorial.html#overview) or by using `?resid_panel`.
 
 The Q-Q plot looks OK, not perfect, but more than good enough for us to have confidence in the normality of the data.
 
@@ -924,7 +924,7 @@ Overall, this assumption is pretty well met.
 
 **Normality**
 
-We'll be really thorough here and consider the normality of each group separately and jointly using the Shapiro-Wilk test, as well as looking at the Q-Q plot. In reality, and after these examples , we'll only use the Q-Q plot.
+We'll be really thorough here and consider the normality of each group separately and jointly using the Shapiro-Wilk test, as well as looking at the Q-Q plot. In reality, and after these examples, we'll only use the Q-Q plot.
 
 First, we perform the Shapiro-Wilk test on the individual groups:
 
@@ -955,7 +955,7 @@ lm_lobsters_py = model.fit()
 pg.normality(lm_lobsters_py.resid)
 ```
 
-This on the other hand says that everything is fine. Let's look at Q-Q plot.
+This on the other hand says that everything is fine. Let's look at the Q-Q plot.
 
 ```{python}
 #| label: py-plot-data-4
@@ -1031,7 +1031,7 @@ pg.anova(dv = "weight",
 
 #### Post-hoc testing with Tukey
 
-In this case we did not find any significant differences between the different diets. So that is a good time for me to reiterate that carrying out the post-hoc test after getting a non-significant result with ANOVA is something that you have to think very carefully about and it all depends on what your research question it.
+In this case we did not find any significant differences between the different diets. So that is a good time for me to reiterate that carrying out the post-hoc test after getting a non-significant result with ANOVA is something that you have to think very carefully about and it all depends on what your research question is.
 
 If your research question was:
 

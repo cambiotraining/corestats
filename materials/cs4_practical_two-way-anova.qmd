@@ -147,10 +147,10 @@ ggplot(exercise,
   scale_color_brewer(palette = "Dark2")
 ```
 
-When analysing these type of data there are two things we want to know:
+When analysing this type of data there are two things we want to know:
 
 1.	Does either of the predictor variables have an effect on the response variable i.e. does sex affect body weight? Or does being a runner affect body weight?
-2.	Is there any **interaction** between the two predictor variables? An interaction would mean that the effect that exercise has on your weight depends on whether you are male or female rather than being independent of your sex. For example if being male means that runners weigh more than non-runners, but being female means that runners weight less than non-runners then we would say that there was an interaction.
+2.	Is there any **interaction** between the two predictor variables? An interaction would mean that the effect that exercise has on your weight depends on whether you are male or female rather than being independent of your sex. For example, if being male means that runners weigh more than non-runners, but being female means that runners weigh less than non-runners, then we would say that there was an interaction.
 
 We will first consider how to visualise the data before then carrying out an appropriate statistical test.
 
@@ -237,7 +237,7 @@ ggplot(exercise,
 
 This produces box plots for all (four) combinations of the predictor variables. We are plotting `sex` on the x-axis; `weight` on the y-axis and filling the box plot by `exercise` regime.
 
-Here I've also changed the default colouring scheme, by using `scale_fill_brewer(palette = "Dark2")`. This uses a colour-blind friendly colour palette (more about the Brewer colour pallete [here](https://ggplot2.tidyverse.org/reference/scale_brewer.html)).
+Here I've also changed the default colouring scheme, by using `scale_fill_brewer(palette = "Dark2")`. This uses a colour-blind-friendly colour palette (more about the Brewer colour palette [here](https://ggplot2.tidyverse.org/reference/scale_brewer.html)).
 
 ## Python
 
@@ -255,7 +255,7 @@ p.show()
 
 This produces box plots for all (four) combinations of the predictor variables. We are plotting `sex` on the x-axis; `weight` on the y-axis and filling the box plot by `exercise` regime.
 
-Here I've also changed the default colouring scheme, by using `scale_fill_brewer(type = "qual", palette = "Dark2")`. This uses a colour-blind friendly colour palette (more about the Brewer colour pallete [here](https://ggplot2.tidyverse.org/reference/scale_brewer.html)).
+Here I've also changed the default colouring scheme, by using `scale_fill_brewer(type = "qual", palette = "Dark2")`. This uses a colour-blind-friendly colour palette (more about the Brewer colour palette [here](https://ggplot2.tidyverse.org/reference/scale_brewer.html)).
 
 :::
 
@@ -285,7 +285,7 @@ Here we plot `weight` on the y-axis, by `sex` on the x-axis.
 
 * we `colour` the data by `exercise` regime and `group` the data by `exercise` to work out the mean values of each group
 * `geom_jitter(width = 0.05)` displays the data, with a tiny bit of random noise, to separate the data points a bit for visualisation
-* `stat_summary(fun = mean)`calculates the mean for each group
+* `stat_summary(fun = mean)` calculates the mean for each group
 * `scale_colour_brewer()` lets us define the colour palette
 
 The choice of which categorical factor is plotted on the horizontal axis and which is plotted as different lines is completely arbitrary. Looking at the data both ways shouldn’t add anything but often you’ll find that you prefer one plot to another.
@@ -326,7 +326,7 @@ Here we plot `weight` on the y-axis, by `sex` on the x-axis.
 
 * we `colour` the data by `exercise` regime and `group` the data by `exercise` to work out the mean values of each group
 * `geom_jitter(width = 0.05)` displays the data, with a tiny bit of random noise, to separate the data points a bit for visualisation
-* `stat_summary(fun_data = "mean_cl_boot")`calculates the mean for each group
+* `stat_summary(fun_data = "mean_cl_boot")` calculates the mean for each group
 * `scale_colour_brewer()` lets us define the colour palette
 
 The choice of which categorical factor is plotted on the horizontal axis and which is plotted as different lines is completely arbitrary. Looking at the data both ways shouldn’t add anything but often you’ll find that you prefer one plot to another.
@@ -386,7 +386,7 @@ model = smf.ols(formula = "weight ~ exercise * sex", data = exercise_py)
 lm_exercise_py = model.fit()
 ```
 
-The formula `weight ~ exercise * sex` can be read as "`weight` depends on `exercise` and `sex` *and* the interaction between `exercise` and `sex`.
+The formula `weight ~ exercise * sex` can be read as: "`weight` depends on `exercise` and `sex` *and* the interaction between `exercise` and `sex`."
 :::
 
 As the two-way ANOVA is a type of linear model we need to satisfy pretty much the same assumptions as we did for a simple linear regression or a one-way ANOVA:
@@ -565,7 +565,7 @@ ggplot(auxin_response,
 
 We've constructed both box plots and two interaction plots. We only needed to do one interaction plot but I find it can be quite useful to look at the data from different angles.
 
-The interaction plots show the mean values for each group, so I prefer to overlay this with the actual data. Both interaction plots suggest that there is an interaction here as the lines in the plots aren't parallel. Looking at the interaction plot with `concentration` on the x-axis, it appears that there is non-difference between genotypes when the concentration is `low`, but that there is a difference between genotypes when the concentration is `none` or `high`.
+The interaction plots show the mean values for each group, so I prefer to overlay this with the actual data. Both interaction plots suggest that there is an interaction here as the lines in the plots aren't parallel. Looking at the interaction plot with `concentration` on the x-axis, it appears that there is no difference between genotypes when the concentration is `low`, but that there is a difference between genotypes when the concentration is `none` or `high`.
 
 #### Assumptions
 
@@ -673,7 +673,7 @@ p.show()
 
 We've constructed both box plots and two interaction plots. We only needed to do one interaction plot but I find it can be quite useful to look at the data from different angles.
 
-The interaction plots show the mean values for each group, so I prefer to overlay this with the actual data. Both interaction plots suggest that there is an interaction here as the lines in the plots aren't parallel. Looking at the interaction plot with `concentration` on the x-axis, it appears that there is non-difference between genotypes when the concentration is `low`, but that there is a difference between genotypes when the concentration is `none` or `high`.
+The interaction plots show the mean values for each group, so I prefer to overlay this with the actual data. Both interaction plots suggest that there is an interaction here as the lines in the plots aren't parallel. Looking at the interaction plot with `concentration` on the x-axis, it appears that there is no difference between genotypes when the concentration is `low`, but that there is a difference between genotypes when the concentration is `none` or `high`.
 
 #### Assumptions
 
@@ -801,7 +801,7 @@ ggplot(tulip,
   scale_colour_brewer(palette = "Dark2")
 ```
 
-Again, both interaction plots suggest that there might be an interaction here. Digging in a little deeper from a descriptive perspective, it looks as though that `water` regime 1 is behaving differently to `water` regimes 2 and 3 under different shade conditions.
+Again, both interaction plots suggest that there might be an interaction here. Digging in a little deeper from a descriptive perspective, it looks as though `water` regime 1 is behaving differently from `water` regimes 2 and 3 under different shade conditions.
 
 #### Assumptions
 
@@ -915,7 +915,7 @@ p = (ggplot(tulip_py,
 p.show()
 ```
 
-Again, both interaction plots suggest that there might be an interaction here. Digging in a little deeper from a descriptive perspective, it looks as though that `water` regime 1 is behaving differently to `water` regimes 2 and 3 under different shade conditions.
+Again, both interaction plots suggest that there might be an interaction here. Digging in a little deeper from a descriptive perspective, it looks as though `water` regime 1 is behaving differently from `water` regimes 2 and 3 under different shade conditions.
 
 #### Assumptions
 
@@ -952,7 +952,7 @@ sm.stats.anova_lm(lm_tulip_py, typ = 2)
 So we do appear to have a significant interaction between `water` and `shade` as expected.
 :::
 
-> A two-way ANOVA showed that there is a significant interaction between watering and shading regimes on number of blooms (p = `r anova(lm_tulip) |> broom::tidy() |> filter(term == "water:shade") |>  pull(p.value) |> formatC(format = "e", digits = 2)`).
+> A two-way ANOVA showed that there is a significant interaction between watering and shading regimes on the number of blooms (p = `r anova(lm_tulip) |> broom::tidy() |> filter(term == "water:shade") |>  pull(p.value) |> formatC(format = "e", digits = 2)`).
 
 :::
 :::
