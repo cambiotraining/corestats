@@ -5,6 +5,7 @@ editor: visual
 ---
 
 ```{r}
+#| label: r-plot-data
 set.seed(2372)
 N <- 730
 true_coef <- c(
@@ -22,70 +23,74 @@ sim <- data.frame(
 )
 
 # simulate response variable
-sim <- sim |> 
+sim <- sim |>
   mutate(
-    pm2_5 = rnorm(n = nrow(sim), 
+    pm2_5 = rnorm(n = nrow(sim),
               mean = model.matrix(~ wind_m_s + location + wind_m_s:location) %*% true_coef + error)
   )
 
 # visualise
-ggplot(sim, aes(wind_m_s, pm2_5, colour = location)) + 
+ggplot(sim, aes(wind_m_s, pm2_5, colour = location)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)
 ```
 
 ```{r}
+#| label: r-read-data
 # taking simulated PM2.5 and wind speed data
-quality_sim <- sim %>% 
-    group_by(location) %>% 
+quality_sim <- sim |>
+    group_by(location) |>
     mutate(id = 1:n())
 
 
 # take orginal weather data from Heathrow 2019
 # and simulate difference between inner/outer London
-london <- read_csv("heathrow_weather_2019.csv") %>% 
-    select(date, avg_temp, rain_mm) %>% 
-    mutate(id = 1:n()) %>% 
-    left_join(., quality_sim, by = "id") %>% 
-    mutate(temp_error = runif(n(), min = 0, max = 1)) %>% 
-    mutate(avg_temp = round((avg_temp - temp_error), digits = 1)) %>% 
+london <- read_csv("heathrow_weather_2019.csv") |>
+    select(date, avg_temp, rain_mm) |>
+    mutate(id = 1:n()) |>
+    left_join(., quality_sim, by = "id") |>
+    mutate(temp_error = runif(n(), min = 0, max = 1)) |>
+    mutate(avg_temp = round((avg_temp - temp_error), digits = 1)) |>
     mutate(pm2_5 = round(pm2_5, digits = 3),
-           wind_m_s = round(wind_m_s, digits = 2)) %>% 
-    select(-temp_error, -id) %>% 
-    select(sort(names(.)))
+           wind_m_s = round(wind_m_s, digits = 2)) |>
+    select(-temp_error, -id) |>
+    select(sort(names(_)))
 
 write_csv(london, "../data/CS5-pm2_5.csv")
 ```
 
 ```{r}
+#| label: r-plot-data-2
 # avg daily temperature by day
-london %>% 
+london |>
 ggplot(aes(x = id, y = avg_temp, colour = location)) +
     geom_point()
 
 # wind speed by day
-london %>% 
+london |>
 ggplot(aes(x = id, y = wind_m_s, colour = location)) +
     geom_point()
 
-london %>% 
+london |>
     ggplot(aes(x = wind_m_s, y = pm2_5, colour = location)) +
     geom_point() +
     geom_smooth(method = "lm", se = FALSE)
 
 # wind speed vs pm2.5
-london %>% 
+london |>
     ggplot(aes(wind_m_s, pm2_5, colour = location)) +
     geom_point()
 ```
 
 ```{r}
-london %>% 
-    select(-date, - location) %>% 
+#| label: r-wind-speed-vs-pm2-5
+london |>
+    select(-date, - location) |>
     pairs()
 ```
 
 ```{r}
+#| label: r-fit-linear-model
 lm_wind <- lm(pm2_5 ~ wind_m_s * location,
    data = london)
 
@@ -94,7 +99,7 @@ lm_full <- lm(pm2_5 ~ avg_temp + rain_mm + wind_m_s * location,
 
 step(lm_full)
 
-lm_wind %>%
+lm_wind |>
     resid_panel(plots = c("resid", "qq", "ls", "cookd"),
                 smoother = TRUE)
 ```

@@ -1,8 +1,9 @@
 ---
 title: "Two-sample data"
 ---
- 
+
 ```{r}
+#| label: r-setup
 #| echo: false
 #| message: false
 #| results: hide
@@ -10,6 +11,7 @@ source(file = "setup_files/setup.R")
 ```
 
 ```{python}
+#| label: py-setup
 #| echo: false
 #| message: false
 #| warning: false
@@ -49,6 +51,7 @@ exec(open('setup_files/setup.py').read())
 ### Libraries
 
 ```{r}
+#| label: r-load-libraries
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
@@ -60,10 +63,11 @@ library(rstatix)
 ### Functions
 
 ```{r}
+#| label: r-plot-data
 #| eval: false
 #| warning: false
-# Computes summary statistics                         
-rstatix::get_summary_stats() 
+# Computes summary statistics
+rstatix::get_summary_stats()
 
 # Performs Levene's test for equality of variance
 # (non-normally distributed data)
@@ -92,6 +96,7 @@ ggplot2::stat_qq_line()
 ### Libraries
 
 ```{python}
+#| label: py-import-libraries
 #| eval: false
 # A Python data analysis and manipulation tool
 import pandas as pd
@@ -106,6 +111,7 @@ from plotnine import *
 ### Functions
 
 ```{python}
+#| label: py-read-data
 #| eval: false
 # Summary statistics
 pandas.DataFrame.describe()
@@ -145,7 +151,7 @@ plotnine.stats.stat_qq_line()
 :::
 
 ## Purpose and aim
-These two-sample Student's t-test is used when we have two samples of continuous data where we are trying to find out if the samples came from the same parent distribution or not. This essentially boils down to finding out if there is a difference in the means of the two samples.
+This two-sample Student's t-test is used when we have two samples of continuous data where we are trying to find out if the samples came from the same parent distribution or not. This essentially boils down to finding out if there is a difference in the means of the two samples.
 
 ## Data and hypotheses
 
@@ -162,7 +168,7 @@ We use a two-sample, two-tailed t-test to see if we can reject the null hypothes
 
 The data are stored in the file `data/CS1-twosample.csv`.
 
-Let's read in the data and have a quick look at the first rows to see how the data is structured.
+Let's read in the data and have a quick look at the first rows to see how the data are structured.
 
 Make sure you have downloaded the data and placed it within your working directory.
 
@@ -172,6 +178,7 @@ Make sure you have downloaded the data and placed it within your working directo
 First we load the relevant libraries:
 
 ```{r}
+#| label: r-load-libraries-2
 #| eval: false
 #| warning: false
 #| message: false
@@ -185,6 +192,7 @@ library(rstatix)
 We then read in the data and create a table containing the data.
 
 ```{r}
+#| label: r-read-data
 #| message: false
 rivers <- read_csv("data/CS1-twosample.csv")
 
@@ -194,6 +202,7 @@ rivers
 ## Python
 
 ```{python}
+#| label: py-read-data-2
 rivers_py = pd.read_csv("data/CS1-twosample.csv")
 
 rivers_py.head()
@@ -208,21 +217,24 @@ Let's first summarise the data.
 ## R
 
 ```{r}
+#| label: r-summarize-data
 summary(rivers)
 ```
 
 This gives us the standard summary statistics, but in this case we have more than one group (Aripo and Guanapo), so it might be helpful to get summary statistics *per group*. One way of doing this is by using the `get_summary_stats()` function from the `rstatix` library.
 
 ```{r}
+#| label: r-summarize-data-2
 # get common summary stats for the length column
-rivers %>% 
-  group_by(river) %>% 
+rivers |>
+  group_by(river) |>
   get_summary_stats(type = "common")
 ```
 
 Numbers might not always give you the best insight into your data, so we also visualise our data:
 
 ```{r}
+#| label: r-plot-data-2
 ggplot(rivers,
        aes(x = river, y = length)) +
   geom_boxplot()
@@ -231,21 +243,24 @@ ggplot(rivers,
 ## Python
 
 ```{python}
+#| label: py-summarize-data
 rivers_py.describe()
 ```
 
 This gives us the standard summary statistics, but in this case we have more than one group (Aripo and Guanapo), so it might be helpful to get summary statistics *per group*. Here we use the `pd.groupby()` function to group by `river`. We only want to have summary statistics for the `length` variable, so we specify that as well:
 
 ```{python}
+#| label: py-summarize-data-2
 rivers_py.groupby("river")["length"].describe()
 ```
 
 Numbers might not always give you the best insight into your data, so we also visualise our data:
 
 ```{python}
+#| label: py-plot-data
 #| results: hide
 p = (ggplot(rivers_py,
-        aes(x = "river", y = "length")) + 
+        aes(x = "river", y = "length")) +
      geom_boxplot())
 
 p.show()
@@ -282,15 +297,16 @@ It's good practice to check what kind of data is going into these functions. Run
 :::
 
 ```{r}
+#| label: r-filter-data
 # filter data by river and perform test
-rivers %>% 
-    filter(river == "Aripo") %>% 
-    pull(length) %>% 
+rivers |>
+    filter(river == "Aripo") |>
+    pull(length) |>
     shapiro.test()
 
-rivers %>% 
-    filter(river == "Guanapo") %>% 
-    pull(length) %>% 
+rivers |>
+    filter(river == "Guanapo") |>
+    pull(length) |>
     shapiro.test()
 ```
 
@@ -303,6 +319,7 @@ To perform a Shapiro-Wilk test we can use the `normality()` function from `pingo
 -   `data` = data frame
 
 ```{python}
+#| label: py-filter-data-by-river-and-perform-test
 pg.normality(dv = "length",
              group = "river",
              data = rivers_py)
@@ -343,6 +360,7 @@ The function we use is `levene_test()` from the `rstatix` library.
 It takes the data in the form of a formula as follows:
 
 ```{r}
+#| label: r-equality-of-variance
 levene_test(data = rivers,
             formula = length ~ river)
 ```
@@ -350,12 +368,13 @@ levene_test(data = rivers,
 Or shortened:
 
 ```{r}
+#| label: r-equality-of-variance-2
 #| eval: false
 levene_test(rivers,
             length ~ river)
 ```
 
-The key bit of information is the `p` column. This is the p-value `r round(levene_test(rivers, length ~ river) %>% pull(p), 4)` for this test.
+The key bit of information is the `p` column. This is the p-value `r round(levene_test(rivers, length ~ river) |> pull(p), 4)` for this test.
 
 ## Python
 
@@ -364,6 +383,7 @@ To test for equality of variance, we can use the `homoscedasticity()` function f
 Note that, contrary to R, we specify the type of test in the `method` argument. The default is `"levene"`, assuming that data are *not* normally distributed.
 
 ```{python}
+#| label: py-equality-of-variance
 pg.homoscedasticity(dv = "length",
                     group = "river",
                     method = "levene",
@@ -371,7 +391,7 @@ pg.homoscedasticity(dv = "length",
 ```
 :::
 
-The p-value tells us the probability of observing these two samples if they come from distributions with the same variance. As this probability is greater than our arbitrary significance level of 0.05 then we can be somewhat confident that the necessary assumptions for carrying out Student's t-test on these two samples was valid. (Once again woohoo!)
+The p-value tells us the probability of observing these two samples if they come from distributions with the same variance. As this probability is greater than our arbitrary significance level of 0.05, we can be somewhat confident that the necessary assumptions for carrying out Student's t-test on these two samples were valid. (Once again, woohoo!)
 
 ### Bartlett's test
 
@@ -380,9 +400,10 @@ If we had wanted to carry out Bartlett's test (i.e. if the data *had* been suffi
 ::: {.panel-tabset group="language"}
 ## R
 
-Here we use `bartlett.test()` function.
+Here we use the `bartlett.test()` function.
 
 ```{r}
+#| label: r-bartlett-s-test
 bartlett.test(length ~ river, data = rivers)
 ```
 
@@ -391,6 +412,7 @@ The relevant p-value is given on the 3rd line.
 ## Python
 
 ```{python}
+#| label: py-bartlett-s-test
 pg.homoscedasticity(dv = "length",
                     group = "river",
                     method = "bartlett",
@@ -400,7 +422,7 @@ pg.homoscedasticity(dv = "length",
 
 ## Implement and interpret the test
 
-In this case we're ignoring the fact that the data are not normal enough, according to the Shapiro-Wilk test. However, this is not entirely naughty, because the sample sizes are pretty large and the t-test is also pretty robust in this case, we can perform a t-test. Remember, this is only allowed because the variances of the two groups (Aripo and Guanapo) are equal.
+In this case we're ignoring the fact that the data are not normal enough, according to the Shapiro-Wilk test. However, this is not entirely naughty, because the sample sizes are pretty large and the t-test is also pretty robust in this case. We therefore perform a t-test. But remember, this is only allowed because the variances of the two groups (Aripo and Guanapo) are equal.
 
 Perform a two-sample, two-tailed, t-test:
 
@@ -408,6 +430,7 @@ Perform a two-sample, two-tailed, t-test:
 ## R
 
 ```{r}
+#| label: r-inspect-data
 # two-sample, two-tailed t-test
 t_test(length ~ river,
        alternative = "two.sided",
@@ -435,13 +458,15 @@ So, how do we interpret these results?
 The `ttest()` function in `pingouin` needs two vectors as input, so we split the data as follows:
 
 ```{python}
+#| label: py-filter-data
 aripo = rivers_py.query('river == "Aripo"')["length"]
 guanapo = rivers_py.query('river == "Guanapo"')["length"]
 ```
 
-Next, we perform the t-test. We specify that the variance are equal by setting `correction = False`. We also `transpose()` the data, so we can actually see the entire output.
+Next, we perform the t-test. We specify that the variances are equal by setting `correction = False`. We also `transpose()` the data, so we can actually see the entire output.
 
 ```{python}
+#| label: py-two-sample-two-tailed-t-test
 pg.ttest(aripo, guanapo,
          correction = False).transpose()
 ```
@@ -459,7 +484,7 @@ Complete [Exercise -@sec-exr_turtles].
 
 ## Dealing with non-normal data
 
-If we're not sure that the data we are dealing with may come from a parent distribution that is normal, then we can't use a Student's t-test. Instead we use the **Mann-Whitney U test**. This test does not assume that the parent distributions are normally distributed. It does however assume that both have the same shape and variance. With this test we check if the medians of the two parent distributions differ significantly from each other.
+If we're not sure that the data we are dealing with might come from a parent distribution that is normal, then we can't use a Student's t-test. Instead we use the **Mann-Whitney U test**. This test does not assume that the parent distributions are normally distributed. It does, however, assume that both have the same shape and variance. With this test we check if the medians of the two parent distributions differ significantly from each other.
 
 ### Data and hypotheses
 
@@ -484,17 +509,19 @@ Calculate the median for each group (for reference) and perform a two-tailed, Ma
 
 ::: {.panel-tabset group="language"}
 ## R
-We group the data using `group_by()` for each `river` and then use the `summarise()` the data.
+We group the data using `group_by()` for each `river` and then use `summarise()` on the data.
 
 ```{r}
-rivers %>% 
-    group_by(river) %>% 
+#| label: r-implement-and-interpret-the-test
+rivers |>
+    group_by(river) |>
     summarise(median_length = median(length))
 ```
 
 Perform the Mann-Whitney U test:
 
 ```{r}
+#| label: r-run-wilcoxon-test
 #| warning: false
 wilcox_test(length ~ river,
             alternative = "two.sided",
@@ -523,11 +550,12 @@ The easiest way is to reformat our data from the *long* format where all the dat
 We can do this with the `pd.pivot()` function. We save the output in a new object and then access the values as required. It keeps all the data separate, meaning that there will be missing values `NaN` in this format. The `pg.mwu()` function ignores missing values by default.
 
 ```{python}
+#| label: py-inspect-data
 # reformat the data into a 'wide' format
 rivers_py_wide = pd.pivot(rivers_py,
                           columns = 'river',
                           values = 'length')
-      
+
 # have a look at the format
 rivers_py_wide.head()
 ```
@@ -535,6 +563,7 @@ rivers_py_wide.head()
 Next, we can calculate the median values for each river:
 
 ```{python}
+#| label: py-have-a-look-at-the-format
 rivers_py_wide['Aripo'].median()
 rivers_py_wide['Guanapo'].median()
 ```
@@ -542,6 +571,7 @@ rivers_py_wide['Guanapo'].median()
 Finally, we can perform the Mann-Whitney U test:
 
 ```{python}
+#| label: py-perform-mann-whitney-u-test
 # perform the Mann-Whitney U test
 # ignoring the missing values
 pg.mwu(rivers_py_wide['Aripo'],
@@ -572,6 +602,7 @@ Create the Q-Q plots for the two rivers in the `data/CS1-twosample.csv` file and
 ## R
 
 ```{r}
+#| label: r-plot-data-3
 # we group the data by river
 # then create a panel per river
 # containing the Q-Q plot for that river
@@ -585,6 +616,7 @@ ggplot(rivers,
 ## Python
 
 ```{python}
+#| label: py-plot-data-2
 #| results: hide
 p = (ggplot(rivers_py,
         aes(sample = "length")) +
@@ -636,6 +668,7 @@ Let's load the data and explore our data a bit more before we dive into the stat
 ## R
 
 ```{r}
+#| label: r-read-data-2
 #| warning: false
 # load the data
 turtle <- read_csv("data/CS1-turtle.csv")
@@ -647,15 +680,17 @@ turtle
 Let's summarise the data (although a visualisation is probably much easier to work with):
 
 ```{r}
+#| label: r-summarize-data-3
 # create summary statistics for each group
-turtle %>% 
-  group_by(sex) %>% 
+turtle |>
+  group_by(sex) |>
   get_summary_stats(type = "common")
 ```
 
 and visualise the data:
 
 ```{r}
+#| label: r-plot-data-4
 # visualise the data
 ggplot(turtle,
        aes(x = sex, y = serum)) +
@@ -665,6 +700,7 @@ ggplot(turtle,
 ## Python
 
 ```{python}
+#| label: py-read-data-3
 turtle_py = pd.read_csv("data/CS1-turtle.csv")
 
 turtle_py.describe()
@@ -673,6 +709,7 @@ turtle_py.describe()
 and visualise the data:
 
 ```{python}
+#| label: py-plot-data-3
 #| results: hide
 p = (ggplot(turtle_py,
         aes(x = "sex", y = "serum")) +
@@ -702,21 +739,23 @@ Let's look at the normality of each of the groups separately. There are several 
 ## R
 
 ```{r}
+#| label: r-filter-data-2
 # perform Shapiro-Wilk test on each group
-turtle %>% 
-    filter(sex == "Female") %>% 
-    pull(serum) %>% 
+turtle |>
+    filter(sex == "Female") |>
+    pull(serum) |>
     shapiro.test()
 
-turtle %>% 
-    filter(sex == "Male") %>% 
-    pull(serum) %>% 
+turtle |>
+    filter(sex == "Male") |>
+    pull(serum) |>
     shapiro.test()
 ```
 
 ## Python
 
 ```{python}
+#| label: py-perform-shapiro-wilk-test-on-each-group
 pg.normality(dv = "serum",
              group = "sex",
              data = turtle_py)
@@ -734,6 +773,7 @@ Given these caveats of the Shapiro-Wilk test (I'll stop mentioning them now, I t
 ## R
 
 ```{r}
+#| label: r-plot-data-5
 # create Q-Q plots for both groups
 ggplot(turtle,
        aes(sample = serum)) +
@@ -745,6 +785,7 @@ ggplot(turtle,
 ## Python
 
 ```{python}
+#| label: py-plot-data-4
 #| results: hide
 # create Q-Q plots for both groups
 p = (ggplot(turtle_py,
@@ -771,6 +812,7 @@ It's not clear whether the data are normal or not, so it isn't clear which test 
 Bartlett's test gives us:
 
 ```{r}
+#| label: r-perform-bartlett-s-test
 # perform Bartlett's test
 bartlett.test(serum ~ sex,
               data = turtle)
@@ -779,6 +821,7 @@ bartlett.test(serum ~ sex,
 and Levene's test gives us:
 
 ```{r}
+#| label: r-perform-levene-s-test
 #| warning: false
 # perform Levene's test
 levene_test(serum ~ sex,
@@ -790,6 +833,7 @@ levene_test(serum ~ sex,
 Bartlett's test gives us:
 
 ```{python}
+#| label: py-perform-levene-s-test
 pg.homoscedasticity(dv = "serum",
                     group = "sex",
                     method = "bartlett",
@@ -799,6 +843,7 @@ pg.homoscedasticity(dv = "serum",
 and Levene's test gives us:
 
 ```{python}
+#| label: py-perform-levene-s-test-2
 pg.homoscedasticity(dv = "serum",
                     group = "sex",
                     method = "levene",
@@ -822,6 +867,7 @@ In the `t_test()` function the default option for dealing with equality of varia
 :::
 
 ```{r}
+#| label: r-perform-two-sample-t-test
 # perform two-sample t-test
 t_test(serum ~ sex,
        alternative = "two.sided",
@@ -836,6 +882,7 @@ To test if the two groups are different from one another, we can use the `pg.tte
 This function requires the data to be separated into individual groups, so we need to split the `serum` data by `sex`. One of the ways we can do this is:
 
 ```{python}
+#| label: py-filter-data-2
 turtle_male = turtle_py.query('sex == "Male"')["serum"]
 turtle_female = turtle_py.query('sex == "Female"')["serum"]
 ```
@@ -843,6 +890,7 @@ turtle_female = turtle_py.query('sex == "Female"')["serum"]
 Next, we use these data to test for differences:
 
 ```{python}
+#| label: py-perform-two-sample-t-test
 pg.ttest(turtle_female, turtle_male,
                 alternative = "two-sided",
                 correction = False).transpose()
@@ -884,7 +932,7 @@ This is the same as before.
 
 #### Assumptions
 
-We've already checked that the variances of the two groups are similar, so we're OK there. Whilst the Mann-Whitney U test doesn't require normality or symmetry of distributions it does require that the distributions have the same shape. In this example, with just a handful of data points in each group, it's quite hard to make this call one way or another. My advice in this case would be say that unless it's obvious that the distributions are very different we can just allow this assumption to pass, and you're only going see obvious differences in distribution shape when you have considerably more data points than we have here.
+We've already checked that the variances of the two groups are similar, so we're OK there. Whilst the Mann-Whitney U test doesn't require normality or symmetry of distributions, it does require that the distributions have the same shape. In this example, with just a handful of data points in each group, it's quite hard to make this call one way or another. My advice in this case would be to say that unless it's obvious that the distributions are very different, we can just allow this assumption to pass, and you're only going to see obvious differences in distribution shape when you have considerably more data points than we have here.
 
 #### Carry out a Mann-Whitney U test
 
@@ -892,6 +940,7 @@ We've already checked that the variances of the two groups are similar, so we're
 ## R
 
 ```{r}
+#| label: r-run-wilcoxon-test-2
 wilcox_test(serum ~ sex,
             alternative = "two.sided",
             data = turtle)
@@ -900,16 +949,18 @@ wilcox_test(serum ~ sex,
 ## Python
 
 ```{python}
+#| label: py-inspect-data-2
 # reformat the data into a 'wide' format
 turtle_py_wide = pd.pivot(turtle_py,
                           columns = 'sex',
                           values = 'serum')
-      
+
 # have a look at the format
 turtle_py_wide.head()
 ```
 
 ```{python}
+#| label: py-perform-mann-whitney-u-test-2
 # perform the Mann-Whitney U test
 # ignoring the missing values
 pg.mwu(turtle_py_wide['Male'],

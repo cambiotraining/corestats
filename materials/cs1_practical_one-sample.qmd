@@ -1,8 +1,9 @@
 ---
 title: "One-sample data"
 ---
- 
+
 ```{r}
+#| label: r-setup
 #| echo: false
 #| message: false
 #| results: hide
@@ -10,6 +11,7 @@ source(file = "setup_files/setup.R")
 ```
 
 ```{python}
+#| label: py-setup
 #| echo: false
 #| message: false
 import shutup;shutup.please()
@@ -47,6 +49,7 @@ exec(open('setup_files/setup.py').read())
 ### Libraries
 
 ```{r}
+#| label: r-load-libraries
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
@@ -58,6 +61,7 @@ library(rstatix)
 ### Functions
 
 ```{r}
+#| label: r-plot-data
 #| eval: false
 #| warning: false
 # Performs a one-sample t-test, Student's t-test and Welch's t-test in later sections
@@ -81,6 +85,7 @@ ggplot2::stat_qq_line()
 ### Libraries
 
 ```{python}
+#| label: py-import-libraries
 #| eval: false
 # A Python data analysis and manipulation tool
 import pandas as pd
@@ -95,6 +100,7 @@ from plotnine import *
 ### Functions
 
 ```{python}
+#| label: py-read-data
 #| eval: false
 # Reads in a .csv file
 pandas.DataFrame.read_csv()
@@ -120,13 +126,14 @@ plotnine.stats.stat_qq_line()
 
 ## Purpose and aim
 
-One sample tests are used when we have a single sample of continuous data. It is used to find out if the sample came from a parent distribution with a given mean (or median). This essentially boils down to finding out if the sample mean (or median) is "close enough" to our hypothesised parent population mean (or median). So, in the figure below, we could use these tests to see what the probability is that the sample of ten points comes from the distribution plotted above it i.e. a population with a mean of 20 mm.
+One-sample tests are used when we have a single sample of continuous data. They are used to find out if the sample came from a parent distribution with a given mean (or median). This essentially boils down to finding out if the sample mean (or median) is "close enough" to our hypothesised parent population mean (or median). So, in the figure below, we could use these tests to see what the probability is that the sample of ten points comes from the distribution plotted above it, i.e. a population with a mean of 20 mm.
 
 ```{r}
+#| label: r-plot-data-2
 #| echo: false
 set.seed(726)
 tibble(x = dist_normal(20, 5),
-       sample = rnorm(10,21,5)) %>% 
+       sample = rnorm(10,21,5)) |>
     ggplot(aes(xdist = x)) +
     stat_slab() +
     geom_point(aes(x = sample, y = 0), size = 3) +
@@ -143,13 +150,13 @@ set.seed(NULL)
 
 There are two tests that we are going to look at in this situation; the one-sample t-test, and the one-sample Wilcoxon signed rank-sum test. Both tests work on the sort of data that we're considering here, but they both have different assumptions.
 
-If your data is normally distributed, then a one-sample t-test is appropriate. If your data aren't normally distributed, but their distribution is symmetric, and the sample size is small then a one-sample Wilcoxon signed rank-sum test is more appropriate.
+If your data is normally distributed, then a one-sample t-test is appropriate. If your data aren't normally distributed, but their distribution is symmetric, and the sample size is small, then a one-sample Wilcoxon signed rank-sum test is more appropriate.
 
 For each statistical test we consider there will be five tasks. These will come back again and again, so pay extra close attention.
 
 ::: callout-important
-1.  Setting out of the hypothesis
-2.  Summarise and visualisation of the data
+1.  Set out the hypothesis
+2.  Summarise and visualise the data
 3.  Assessment of assumptions
 4.  Implementation of the statistical test
 5.  Interpreting the output and presentation of results
@@ -159,10 +166,10 @@ We won't always carry these out in exactly the same order, but we will always co
 
 ## Data and hypotheses
 
-For example, suppose we measure the body lengths of male guppies (in mm) collected from the Guanapo River in Trinidad. We want to test whether the data support the hypothesis that the mean body is actually 20 mm. We form the following null and alternative hypotheses:
+For example, suppose we measure the body lengths of male guppies (in mm) collected from the Guanapo River in Trinidad. We want to test whether the data support the hypothesis that the mean body length is actually 20 mm. We form the following null and alternative hypotheses:
 
--   $H_0$: The mean body length is equal to 20mm ($\mu =$ 20).
--   $H_1$: The mean body length is not equal to 20mm ($\mu \neq$ 20).
+-   $H_0$: The mean body length is equal to 20 mm ($\mu =$ 20).
+-   $H_1$: The mean body length is not equal to 20 mm ($\mu \neq$ 20).
 
 We will use a one-sample, two-tailed t-test to see if we should reject the null hypothesis or not.
 
@@ -178,6 +185,7 @@ Make sure you have downloaded the data (see: [Data section](../setup.qmd)) and p
 First we load the relevant libraries:
 
 ```{r}
+#| label: r-load-libraries-2
 #| eval: false
 #| warning: false
 #| message: false
@@ -188,6 +196,7 @@ library(tidyverse)
 We then read in the data and create a table containing the data.
 
 ```{r}
+#| label: r-read-data
 #| warning: false
 #| message: false
 # import the data
@@ -203,6 +212,7 @@ The first line reads the data into R and creates an object called a **tibble**, 
 We then read the data in:
 
 ```{python}
+#| label: py-read-data-2
 # load the data
 fishlength_py = pd.read_csv('data/CS1-onesample.csv')
 
@@ -219,12 +229,14 @@ Summarise the data and visualise it:
 ## R
 
 ```{r}
+#| label: r-summarize-data
 summary(fishlengthDF)
 ```
 
 From the `summary()` output we can see that the mean and median of the `length` variable are quite close together. The `id` column also has minimum, maximum, mean etc. values - these are not useful! The numbers in the `id` column have no numerical value, but are just to ensure each observation can be traced back, if needed.
 
 ```{r}
+#| label: r-plot-data-3
 ggplot(fishlengthDF,
        aes(x = river,
            y = length)) +
@@ -236,12 +248,14 @@ ggplot(fishlengthDF,
 First we have a look at a numerical summary of the data:
 
 ```{python}
+#| label: py-summarize-data
 fishlength_py.describe()
 ```
 
 From the `describe()` output we can see that the mean and median of the `length` variable are quite close together. The `id` column also has minimum, maximum, mean etc. values - these are not useful! The numbers in the `id` column have no numerical value, but are just to ensure each observation can be traced back, if needed.
 
 ```{python}
+#| label: py-plot-data
 #| results: hide
 p = (ggplot(fishlength_py,
         aes(x = "river",
@@ -252,7 +266,7 @@ p.show()
 ```
 :::
 
-The data do not appear to contain any obvious errors, and whilst both the mean and median are less than 20 (`r fishlengthDF %>% summarise(mean = mean(length)) %>% pull() %>% round(digits = 1)` and `r fishlengthDF %>% summarise(median = median(length)) %>% pull() %>% round(digits = 1)` respectively) it is not absolutely certain that the sample mean is sufficiently different from this value to be "statistically significant", although we may anticipate such a result.
+The data do not appear to contain any obvious errors, and whilst both the mean and median are less than 20 (`r fishlengthDF |> summarise(mean = mean(length)) |> pull() |> round(digits = 1)` and `r fishlengthDF |> summarise(median = median(length)) |> pull() |> round(digits = 1)` respectively) it is not absolutely certain that the sample mean is sufficiently different from this value to be "statistically significant", although we may anticipate such a result.
 
 ## Assumptions
 
@@ -287,6 +301,7 @@ Plot a histogram of the data, which gives:
 ## R
 
 ```{r}
+#| label: r-plot-data-4
 ggplot(fishlengthDF,
        aes(x = length)) +
   geom_histogram(bins = 15)
@@ -295,6 +310,7 @@ ggplot(fishlengthDF,
 ## Python
 
 ```{python}
+#| label: py-plot-data-2
 #| results: hide
 p = (ggplot(fishlength_py,
         aes(x = "length")) +
@@ -310,7 +326,7 @@ NB. By even looking at this distribution to assess the assumption of normality w
 
 ### Q-Q plot of the data
 
-Q-Q plot is the short for quantile-quantile plot. This **diagnostic** plot (as it is sometimes called) is a way of comparing two distributions. How Q-Q plots work won't be explained here but will be addressed in the next session.
+A Q-Q plot is short for a quantile-quantile plot. This **diagnostic** plot (as it is sometimes called) is a way of comparing two distributions. How Q-Q plots work won't be explained here but will be addressed in the next session.
 
 Construct a Q-Q Plot of the quantiles of the data against the quantiles of a normal distribution:
 
@@ -318,6 +334,7 @@ Construct a Q-Q Plot of the quantiles of the data against the quantiles of a nor
 ## R
 
 ```{r}
+#| label: r-plot-data-5
 ggplot(fishlengthDF,
        aes(sample = length)) +
   stat_qq() +
@@ -327,6 +344,7 @@ ggplot(fishlengthDF,
 ## Python
 
 ```{python}
+#| label: py-plot-data-3
 #| results: hide
 p = (ggplot(fishlength_py,
         aes(sample = "length")) +
@@ -337,17 +355,18 @@ p.show()
 ```
 :::
 
-What is important to know is that if the data were normally distributed then all of the points should lie on (or close to) the diagonal line in this graph.
+What is important to know is that, if the data were normally distributed, all of the points should lie on (or close to) the diagonal line in this graph.
 
 In this case, the points lie quite close to the line for the most part but the sample quantiles (points) from either end of the sample distribution are either smaller (below the line on the left) or larger (above the line on the right) than expected if they were supposed to be normally distributed. This suggests that the sample distribution is a bit more spread out than would be expected if it came from a normal distribution.
 
-It is important to recognise that there isn't a simple unambiguous answer when interpreting these types of graph, in terms of whether the assumption of normality has been well met or not and instead it often boils down to a matter of experience.
+It is important to recognise that there isn't a simple unambiguous answer when interpreting these types of graph in terms of whether the assumption of normality has been well met. Instead, it often boils down to a matter of experience.
 
 It is a very rare situation indeed where the assumptions necessary for a test will be met unequivocally and a certain degree of personal interpretation is always needed. Here you have to ask yourself whether the data are normal "enough" for you to be confident in the validity of the test.
 
 Below are four examples of QQ plots for different types of distributions:
 
 ```{r}
+#| label: r-load-libraries-3
 #| echo: false
 # load required libraries
 library(distributional)
@@ -364,6 +383,7 @@ df_dist <- data.frame(norm_dist = rnorm(200,0,1),
 ```
 
 ```{r}
+#| label: r-plot-data-6
 #| echo: false
 norm1 <- ggplot(df_dist, aes(x = norm_dist)) +
     stat_dots() +
@@ -375,17 +395,18 @@ norm2 <- ggplot(df_dist, aes(sample = norm_dist)) +
     stat_qq_line(colour = "blue") +
     labs(x = "theoretical quantiles",
          y = "sample quantiles")
-    
+
 norm1 + norm2 +
     plot_annotation(title = "Normal distribution, 200 samples",
                     tag_levels = "A")
 ```
 
-These two graphs relate to 200 data points that have been drawn from a normal distribution. Even here you can see that the points do not all lie perfectly on the diagonal line in the QQ plot, and a certain amount of deviation at the top and bottom of the graph can happen just by chance (if I were to draw a different set of point then the graph would look slightly different).
+These two graphs relate to 200 data points that have been drawn from a normal distribution. Even here you can see that the points do not all lie perfectly on the diagonal line in the QQ plot, and a certain amount of deviation at the top and bottom of the graph can happen just by chance (if I were to draw a different set of points, then the graph would look slightly different).
 
 ------------------------------------------------------------------------
 
 ```{r}
+#| label: r-plot-data-7
 #| echo: false
 unif1 <- ggplot(df_dist, aes(x = unif_dist)) +
     stat_dots() +
@@ -397,7 +418,7 @@ unif2 <- ggplot(df_dist, aes(sample = unif_dist)) +
     stat_qq_line(colour = "blue") +
     labs(x = "theoretical quantiles",
          y = "sample quantiles")
-    
+
 unif1 + unif2 +
     plot_annotation(title = "Uniform distribution, 200 samples",
                     tag_levels = "A")
@@ -408,6 +429,7 @@ These two graphs relate to 200 data points that have been drawn from a uniform d
 ------------------------------------------------------------------------
 
 ```{r}
+#| label: r-plot-data-8
 #| echo: false
 tdist1 <- ggplot(df_dist, aes(x = t_dist)) +
     stat_dots() +
@@ -419,7 +441,7 @@ tdist2 <- ggplot(df_dist, aes(sample = t_dist)) +
     stat_qq_line(colour = "blue") +
     labs(x = "theoretical quantiles",
          y = "sample quantiles")
-    
+
 tdist1 + tdist2 +
     plot_annotation(title = "T distribution, 200 samples",
                     tag_levels = "A")
@@ -430,6 +452,7 @@ These two graphs relate to 200 data points that have been drawn from a t distrib
 ------------------------------------------------------------------------
 
 ```{r}
+#| label: r-plot-data-9
 #| echo: false
 exp_dist1 <- ggplot(df_dist, aes(x = exp_dist)) +
     stat_dots() +
@@ -441,7 +464,7 @@ exp_dist2 <- ggplot(df_dist, aes(sample = exp_dist)) +
     stat_qq_line(colour = "blue") +
     labs(x = "theoretical quantiles",
          y = "sample quantiles")
-    
+
 exp_dist1 + exp_dist2 +
     plot_annotation(title = "Exponential distribution, 200 samples",
                     tag_levels = "A")
@@ -453,7 +476,7 @@ In all four cases it is worth noting that the deviations are only at the ends of
 
 ### Shapiro-Wilk test
 
-This is one of a number of formal statistical test that assess whether a given sample of numbers come from a normal distribution. It calculates the probability of getting the sample data if the underlying distribution is in fact normal. It is very easy to carry out in R.
+This is one of a number of formal statistical tests that assess whether a given sample of numbers comes from a normal distribution. It calculates the probability of getting the sample data if the underlying distribution is in fact normal. It is very easy to carry out in R.
 
 Perform a Shapiro-Wilk test on the data:
 
@@ -463,6 +486,7 @@ Perform a Shapiro-Wilk test on the data:
 The `shapiro.test()` function needs a numerical vector as input. We get this by extracting the `length` column.
 
 ```{r}
+#| label: r-test-normality
 shapiro.test(fishlengthDF$length)
 ```
 
@@ -476,6 +500,7 @@ shapiro.test(fishlengthDF$length)
 We take the `length` values from the `fishlength_py` data frame and pass that to the `normality()` function in `pingouin`:
 
 ```{python}
+#| label: py-shapiro-wilk-test
 pg.normality(fishlength_py.length)
 ```
 
@@ -484,7 +509,7 @@ pg.normality(fishlength_py.length)
 -   the `normal` column gives us the outcome of the test in `True/False`
 :::
 
-As the p-value is bigger than 0.05 (say) then we can say that there is insufficient evidence to reject the null hypothesis that the sample came from a normal distribution.
+As the p-value is bigger than 0.05 (say), we can say that there is insufficient evidence to reject the null hypothesis that the sample came from a normal distribution.
 
 It is important to recognise that the Shapiro-Wilk test is not without limitations. It is rather sensitive to the sample size being considered. In general, for small sample sizes, the test is very relaxed about normality (and nearly all data sets are considered normal), whereas for large sample sizes the test can be overly strict, and it can fail to recognise data sets that are very nearly normal indeed.
 
@@ -506,6 +531,7 @@ Perform a one-sample, two-tailed t-test:
 ## R
 
 ```{r}
+#| label: r-implement-and-interpret-the-test
 t_test(length ~ 1,
        mu = 20, alternative = "two.sided",
        data = fishlengthDF)
@@ -527,6 +553,7 @@ In the output:
 ## Python
 
 ```{python}
+#| label: py-implement-and-interpret-the-test
 pg.ttest(x = fishlength_py.length,
          y = 20,
          alternative = "two-sided").round(3)
@@ -556,14 +583,14 @@ The p-value is what we're mostly interested in. It gives the probability of us g
 
 It is important to realise that the p-value is just an indication and there is no absolute certainty here in this interpretation.
 
-People, however like more definite answers and so we pick an artificial probability threshold (called a significance level) in order to be able to say something more decisive. The standard significance level is 0.05 and since our p-value is smaller than this we choose to say that "it is very unlikely that we would have this particular sample if the null hypothesis were true".
+People, however, like more definite answers and so we pick an artificial probability threshold (called a significance level) in order to be able to say something more decisive. The standard significance level is 0.05 and since our p-value is smaller than this we choose to say that "it is very unlikely that we would have this particular sample if the null hypothesis were true".
 :::
 
 In this case the p-value is much smaller than 0.05, so we reject our null hypothesis and state that:
 
 > A one-sample t-test indicated that the mean body length of male guppies ($\bar{x}$ = 18.29mm) differs significantly from 20 mm (p = 0.0014).
 
-The above sentence is an adequate concluding statement for this test and is what we would write in any paper or report. Note that we have included (in brackets) information on the actual mean value of our group($\bar{x}$ = 18.29mm) and the p-value (p = 0.0014). In some journals you are only required to report whether the p-value is less than the critical value (e.g. p \< 0.05) but I would always recommend reporting the actual p-value obtained.
+The above sentence is an adequate concluding statement for this test and is what we would write in any paper or report. Note that we have included (in brackets) information on the actual mean value of our group ($\bar{x}$ = 18.29 mm) and the p-value (p = 0.0014). In some journals you are only required to report whether the p-value is less than the critical value (e.g. p \< 0.05), but I would always recommend reporting the actual p-value obtained.
 
 ::: callout-important
 Additional information, such as the test statistic and degrees of freedom, are sometimes also reported. This is more of a legacy from the time where people did the calculations by hand and used tables. I personally find it much more useful to report as above and supply the data and analysis, so other people can see what I've done and why!
@@ -577,7 +604,7 @@ The Wilcoxon signed rank test checks if the rank-transformed values are symmetri
 
 ### Data and hypotheses
 
-Again, we use the `fishlength` data set. The one-sample Wilcoxon signed rank test allows to see if the *median* body length is different from a specified value. Here we want to test whether the data support the hypothesis that the median body is actually 20 mm. The following null and alternative hypotheses are very similar to those used for the one sample t-test:
+Again, we use the `fishlength` data set. The one-sample Wilcoxon signed rank test allows us to see if the *median* body length is different from a specified value. Here we want to test whether the data support the hypothesis that the median body length is actually 20 mm. The following null and alternative hypotheses are very similar to those used for the one-sample t-test:
 
 -   $H_0$: The median body length is equal to 20 mm ($\mu =$ 20).
 -   $H_1$: The median body length is not equal to 20 mm ($\mu \neq$ 20).
@@ -605,20 +632,22 @@ Plot a histogram and a box plot of the data:
 Let's first determine the median, so we can use that to compare our data to. We'll also store the value in an object called `median_fishlength`.
 
 ```{r}
+#| label: r-determine-median
 # determine the median
 median_fishlength <- median(fishlengthDF$length)
 ```
 
 ```{r}
+#| label: r-plot-data-10
 # create a histogram
-fishlengthDF %>% 
+fishlengthDF |>
   ggplot(aes(x = length)) +
   geom_histogram(bins = 10) +
   geom_vline(xintercept = median_fishlength,
              colour = "red")
 
 # create box plot
-fishlengthDF %>% 
+fishlengthDF |>
   ggplot(aes(y = length)) +
   geom_boxplot()
 ```
@@ -628,10 +657,12 @@ fishlengthDF %>%
 Let's first determine the median, so we can use that to compare our data to.
 
 ```{python}
+#| label: py-create-box-plot
 median_fishlength = fishlength_py.length.median()
 ```
 
 ```{python}
+#| label: py-plot-data-4
 #| results: hide
 # create a histogram
 p = (ggplot(fishlength_py,
@@ -662,6 +693,7 @@ Perform a one-sample, two-tailed Wilcoxon signed rank test:
 ## R
 
 ```{r}
+#| label: r-run-wilcoxon-test
 wilcox_test(length ~ 1,
             mu = 20, alternative = "two.sided",
             data = fishlengthDF)
@@ -676,6 +708,7 @@ The syntax is identical to the one-sample t-test we carried out earlier.
 ## Python
 
 ```{python}
+#| label: py-run-wilcoxon-test
 pg.wilcoxon(fishlength_py.length - 20,
             alternative = "two-sided")
 ```
@@ -732,6 +765,7 @@ We read in the data from `CS1-gastric_juices.csv`. It contains two columns, an `
 ## R
 
 ```{r}
+#| label: r-read-data-2
 #| message: false
 #| warning: false
 # load the data
@@ -747,6 +781,7 @@ summary(dissolving)
 We can look at the histogram and box plot of the data:
 
 ```{r}
+#| label: r-plot-data-11
 # create a histogram
 ggplot(dissolving,
        aes(x = dissolving_time)) +
@@ -761,6 +796,7 @@ ggplot(dissolving,
 ## Python
 
 ```{python}
+#| label: py-read-data-3
 # load the data
 dissolving_py = pd.read_csv("data/CS1-gastric_juices.csv")
 
@@ -774,6 +810,7 @@ dissolving_py.describe()
 We can look at the histogram and box plot of the data:
 
 ```{python}
+#| label: py-plot-data-5
 #| results: hide
 # create a histogram
 p = (ggplot(dissolving_py,
@@ -784,6 +821,7 @@ p.show()
 ```
 
 ```{python}
+#| label: py-plot-data-6
 #| results: hide
 # create a box plot
 p = (ggplot(dissolving_py,
@@ -811,11 +849,13 @@ Normality:
 ## R
 
 ```{r}
+#| label: r-test-normality-2
 # perform Shapiro-Wilk test
 shapiro.test(dissolving$dissolving_time)
 ```
 
 ```{r}
+#| label: r-plot-data-12
 # create a Q-Q plot
 ggplot(dissolving,
        aes(sample = dissolving_time)) +
@@ -826,11 +866,14 @@ ggplot(dissolving,
 ## Python
 
 ```{python}
+#| label: py-test-normality
 # Perform Shapiro-Wilk test to check normality
 pg.normality(dissolving_py.dissolving_time)
 ```
 
-```{python, results='hide'}
+```{python}
+#| label: py-plot-data-7
+#| results: hide
 # Create a Q-Q plot
 p = (ggplot(dissolving_py,
         aes(sample = "dissolving_time")) +
@@ -854,6 +897,7 @@ In reality, if I found myself in this situation I would also try doing a non-par
 ## R
 
 ```{r}
+#| label: r-perform-one-sample-t-test
 # perform one-sample t-test
 dissolving
 t_test(dissolving_time ~ 1,
@@ -864,6 +908,7 @@ t_test(dissolving_time ~ 1,
 ## Python
 
 ```{python}
+#| label: py-perform-one-sample-t-test
 pg.ttest(x = dissolving_py.dissolving_time,
          y = 45,
          alternative = "two-sided").round(3)
@@ -909,10 +954,12 @@ Calculating the median and performing the test:
 ## R
 
 ```{r}
+#| label: r-wilcoxon-signed-rank-test
 median(dissolving$dissolving_time)
 ```
 
 ```{r}
+#| label: r-run-wilcoxon-test-2
 wilcox_test(dissolving_time ~ 1,
             mu = 45, alternative = "two.sided",
             data = dissolving)
@@ -921,10 +968,12 @@ wilcox_test(dissolving_time ~ 1,
 ## Python
 
 ```{python}
+#| label: py-wilcoxon-signed-rank-test
 dissolving_py.dissolving_time.median()
 ```
 
 ```{python}
+#| label: py-run-wilcoxon-test-2
 pg.wilcoxon(dissolving_py.dissolving_time - 45,
             alternative = "two-sided")
 ```
@@ -934,11 +983,11 @@ pg.wilcoxon(dissolving_py.dissolving_time - 45,
 
 #### Discussion
 
-In terms of choosing between the two test we can see that both meet their respective assumptions and so both tests are valid. In this case both tests also agree in terms of their conclusions i.e. that the average dissolving time (either mean or median) doesn't differ significantly from the proposed value of 45 s.
+In terms of choosing between the two tests, we can see that both meet their respective assumptions and so both tests are valid. In this case both tests also agree in terms of their conclusions, i.e. that the average dissolving time (either mean or median) doesn't differ significantly from the proposed value of 45 s.
 
 -   So one answer would be that it doesn't matter which test you use.
 -   Another answer would be that you should pick the test that measures the quantity you're interested in *i.e.* if you care about medians then use the Wilcoxon test, whereas if you care about means then use the t-test.
--   A final answer would be that, since both test are valid we would prefer to use the test with greater **power**. t-tests always have more power than Wilcoxon tests (as long as they're valid) and so we could report that one. (We'll talk about this in the last session but power is effectively the capacity of a test to detect a significant difference - so more power is better).
+-   A final answer would be that, since both tests are valid, we would prefer to use the test with greater **power**. t-tests always have more power than Wilcoxon tests (as long as they're valid) and so we could report that one. (We'll talk about this in the last session but power is effectively the capacity of a test to detect a significant difference - so more power is better).
 :::
 :::
 

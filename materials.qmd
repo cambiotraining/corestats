@@ -4,6 +4,7 @@ subtitle: Detailed course materials can be found in this section, including exer
 ---
 
 ```{r}
+#| label: r-setup
 #| echo: false
 #| message: false
 #| results: hide
@@ -14,6 +15,7 @@ source(file = "materials/setup_files/setup.R")
 The data we will be using throughout all the sessions are contained in a single ZIP file. They are all small CSV files (comma separated values). You can download the data below:
 
 ```{r}
+#| label: r-data-index-datasets
 #| echo: false
 download_link(
   link = "https://github.com/cambiotraining/corestats/raw/main/data_CS.zip",
@@ -40,7 +42,7 @@ For two samples the data can be stored in one of three formats:
 2.	in a stacked data frame,
 3.	or in an unstacked data frame/list.
 
-Two separate vectors case is (hopefully) obvious.
+The two-separate-vectors case is (hopefully) obvious.
 
 When using a data frame we have different options to organise our data. The best way of formatting data is by using [the tidy data format](https://r4ds.had.co.nz/tidy-data.html).
 
@@ -54,16 +56,22 @@ Tidy data has the following properties:
 
 Stacked form (or [long format data](https://tidyr.tidyverse.org/reference/pivot_longer.html)) is where the data is arranged in such a way that each variable (thing that we measured) has its own column. If we consider a dataset containing meerkat weights (in g) from two different countries then a stacked format of the data would look like:
 
-```{r stacked-table, echo=FALSE, message=FALSE}
-read_csv("materials/data/examples/cs1-meerkats.csv") %>% 
+```{r}
+#| label: stacked-table
+#| echo: false
+#| message: false
+read_csv("materials/data/examples/cs1-meerkats.csv") |>
   select(-id, -year)
 ```
 
 In the unstacked (or [wide format](https://tidyr.tidyverse.org/reference/pivot_wider.html)) form a variable (measured thing) is present in more than one column. For example, let's say we measured meerkat weight in two countries over a period of years. We could then organise our data in such a way that for each year the measured values are split by country:
 
-```{r unstacked-table, echo=FALSE, message=FALSE}
-read_csv("materials/data/examples/cs1-meerkats.csv") %>% 
-  select(-id) %>% 
+```{r}
+#| label: unstacked-table
+#| echo: false
+#| message: false
+read_csv("materials/data/examples/cs1-meerkats.csv") |>
+  select(-id) |>
   pivot_wider(names_from = country, values_from = weight)
 ```
 

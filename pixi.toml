@@ -1,0 +1,41 @@
+[workspace]
+authors = ["Cambridge Bioinformatics Training <bioinformatics-training@lists.cam.ac.uk>"]
+channels = ["conda-forge", "bioconda"]
+name = "corestats"
+platforms = ["linux-64"]
+
+[activation.env]
+RETICULATE_PYTHON = "$PIXI_PROJECT_ROOT/.pixi/envs/default/bin/python"
+
+[dependencies]
+quarto = "*"
+r-base = "*"
+r-knitr = "*"
+r-downloadthis = "*"
+r-downlit = "*"
+r-corrr = "*"
+r-reticulate = "*"
+r-kableextra = "*"
+r-tidyverse = "*"
+r-rstatix = "*"
+r-ggresidpanel = "*"
+r-broom = "*"
+r-pwr = "*"
+r-distributional = "*"
+r-ggdist = "*"
+r-patchwork = "*"
+python = "3.13.*"
+jupyter = "*"
+numpy = "*"
+pandas = "*"
+pingouin = "*"
+plotnine = "*"
+scikit-posthocs = "*"
+statsmodels = "*"
+scipy = "*"
+matplotlib = "*"
+ipython = "*"
+shutup = "*"
+
+[tasks]
+render = "quarto render"

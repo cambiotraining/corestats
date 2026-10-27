@@ -3,6 +3,7 @@ title: "Kruskal-Wallis"
 ---
 
 ```{r}
+#| label: r-setup
 #| echo: false
 #| message: false
 #| results: hide
@@ -10,6 +11,7 @@ source(file = "setup_files/setup.R")
 ```
 
 ```{python}
+#| label: py-setup
 #| echo: false
 #| message: false
 import shutup;shutup.please()
@@ -27,7 +29,7 @@ exec(open('setup_files/setup.py').read())
 
 **Objectives**
 
--   Be able to perform an Kruskal-Wallis test in R
+-   Be able to perform a Kruskal-Wallis test in R
 -   Understand the output of the test and evaluate the assumptions
 -   Be able to perform post-hoc testing after a Kruskal-Wallis test
 :::
@@ -47,6 +49,7 @@ The Kruskal-Wallis one-way analysis of variance test is an analogue of ANOVA tha
 ### Libraries
 
 ```{r}
+#| label: r-load-libraries
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
@@ -61,6 +64,7 @@ library(ggResidpanel)
 ### Functions
 
 ```{r}
+#| label: r-run-kruskal-wallis-test
 #| eval: false
 #| warning: false
 # Performs a Kruskal-Wallis test
@@ -75,6 +79,7 @@ rstatix::dunn_test()
 ### Libraries
 
 ```{python}
+#| label: py-import-libraries
 #| eval: false
 # A Python data analysis and manipulation tool
 import pandas as pd
@@ -98,6 +103,7 @@ import statsmodels.formula.api as smf
 ### Functions
 
 ```{python}
+#| label: py-read-data
 #| eval: false
 # Summary statistics
 pandas.DataFrame.describe()
@@ -149,19 +155,21 @@ The data are stored in the file `data/CS2-spidermonkey.csv`.
 First we read the data in:
 
 ```{r}
+#| label: r-read-data
 #| message: false
 #| warning: false
 spidermonkey <- read_csv("data/CS2-spidermonkey.csv")
 ```
 
 ```{r}
+#| label: r-plot-data
 # look at the data
 spidermonkey
 
 # summarise the data
-spidermonkey %>% 
-  select(-id) %>% 
-  group_by(familiarity) %>% 
+spidermonkey |>
+  select(-id) |>
+  group_by(familiarity) |>
   get_summary_stats(type = "common")
 
 # create boxplot
@@ -174,10 +182,12 @@ ggplot(spidermonkey,
 First we read the data in:
 
 ```{python}
+#| label: py-read-data-2
 spidermonkey_py = pd.read_csv("data/CS2-spidermonkey.csv")
 ```
 
 ```{python}
+#| label: py-summarize-data
 # look at the data
 spidermonkey_py.head()
 
@@ -186,6 +196,7 @@ spidermonkey_py.describe()["aggression"]
 ```
 
 ```{python}
+#| label: py-plot-data
 #| results: hide
 # create boxplot
 p = (ggplot(spidermonkey_py,
@@ -219,12 +230,13 @@ We test for equality of variance using Levene's test (since we can't assume norm
 ## R
 
 ```{r}
+#| label: r-perform-levene-s-test
 # perform Levene's test
 levene_test(aggression ~ familiarity,
             data = spidermonkey)
 ```
 
-The relevant p-value is given in the `p` column (0.893). As it is quite large we see that each group do appear to have the same variance.
+The relevant p-value is given in the `p` column (0.893). As it is quite large we see that each group does appear to have the same variance.
 
 There is also a warning about `group coerced to factor`. There is no need to worry about this - Levene's test needs to compare different groups and because `familiarity` is encoded as a character value, it converts it to a categorical one before running the test.
 
@@ -232,6 +244,7 @@ There is also a warning about `group coerced to factor`. There is no need to wor
 We can run Levene's test with the `pg.homoscedasticity()` function. We previously used this for Bartlett's test, but it allows us to define Levene's instead.
 
 ```{python}
+#| label: py-perform-levene-s-test
 pg.homoscedasticity(dv = "aggression",
                     group = "familiarity",
                     method = "levene",
@@ -247,6 +260,7 @@ Perform a Kruskal-Wallis test on the data:
 ## R
 
 ```{r}
+#| label: r-run-kruskal-wallis-test-2
 # implement Kruskal-Wallis test
 kruskal.test(aggression ~ familiarity,
              data = spidermonkey)
@@ -261,6 +275,7 @@ The p-value is given in the 3rd line. This shows us the probability of getting s
 We can use the `kruskal()` function from `pingouin` to perform the Kruskal-Wallis test:
 
 ```{python}
+#| label: py-run-kruskal-wallis-test
 pg.kruskal(dv = "aggression",
            between = "familiarity",
            data = spidermonkey_py)
@@ -284,6 +299,7 @@ Dunn's test is used to check for significant differences in group medians:
 The `dunn_test()` function comes from the `rstatix` package, so make sure you have that loaded.
 
 ```{r}
+#| label: r-perform-dunn-s-test
 # perform Dunn's test
 dunn_test(aggression ~ familiarity,
           data = spidermonkey)
@@ -296,22 +312,25 @@ The comparison between the pairs of groups is reported in the table at the botto
 The `dunn_test()` function has several arguments, of which the `p.adjust.method` is likely to be of interest. Here you can define which method needs to be used to account for multiple comparisons. The default is `"holm"`. We'll cover more about this in the chapter on [Power analysis](#cs6-intro).
 
 ## Python
-Unfortunately `pingouin` does not seem to have function that can perform Dunn's test, so we need to import this from elsewhere.
+Unfortunately `pingouin` does not seem to have a function that can perform Dunn's test, so we need to import this from elsewhere.
 
-There is a series of post-hocs tests available via `scikit_posthocs`. You'll need to install this by running:
+There is a series of post-hoc tests available via `scikit_posthocs`. You'll need to install this by running:
 
 ```{python}
+#| label: py-perform-dunn-s-test
 #| eval: false
 pip install scikit-posthocs
 ```
 
 After installation, load it with:
 ```{python}
+#| label: py-import-libraries-3
 import scikit_posthocs as sp
 ```
 
 Finally, we can perform Dunn's test as follows:
 ```{python}
+#| label: py-perform-dunn-s-test-2
 sp.posthoc_dunn(spidermonkey_py,
                 val_col = "aggression",
                 group_col = "familiarity")
@@ -344,6 +363,7 @@ Perform a Kruskal-Wallis test and do a post-hoc test on the `lobster` data set.
 All done previously.
 
 ```{r}
+#| label: r-read-data-2
 #| echo: false
 #| message: false
 #| warning: false
@@ -352,6 +372,7 @@ lobsters <- read_csv("data/CS2-lobsters.csv")
 ```
 
 ```{python}
+#| label: py-read-data-3
 #| echo: false
 #| message: false
 #| warning: false
@@ -360,12 +381,13 @@ lobsters_py = pd.read_csv("data/CS2-lobsters.csv")
 
 #### Assumptions
 
-From before, since the data are normal enough they are definitely similar enough for a Kruskal-Wallis test and they do all have equality of variance from out assessment of the diagnostic plots. For completeness though we will look at Levene's test.
+From before, since the data are normal enough they are definitely similar enough for a Kruskal-Wallis test and they do all have equal variance from our assessment of the diagnostic plots. For completeness though we will look at Levene's test.
 
 ::: {.panel-tabset group="language"}
 ## R
 
 ```{r}
+#| label: r-assumptions
 #| warning: false
 levene_test(weight ~ diet,
             data = lobsters)
@@ -374,6 +396,7 @@ levene_test(weight ~ diet,
 ## Python
 
 ```{python}
+#| label: py-assumptions
 pg.homoscedasticity(dv = "weight",
                     group = "diet",
                     method = "levene",
@@ -385,12 +408,13 @@ Given that the p-value is so high, this again agrees with our previous assessmen
 
 #### Kruskal-Wallis test
 
-So, we perform the Kruskall-Wallis test.
+So, we perform the Kruskal-Wallis test.
 
 ::: {.panel-tabset group="language"}
 ## R
 
 ```{r}
+#| label: r-run-kruskal-wallis-test-3
 # implement Kruskal-Wallis test
 kruskal.test(weight ~ diet,
              data = lobsters)
@@ -399,6 +423,7 @@ kruskal.test(weight ~ diet,
 ## Python
 
 ```{python}
+#| label: py-run-kruskal-wallis-test-2
 pg.kruskal(dv = "weight",
            between = "diet",
            data = lobsters_py)

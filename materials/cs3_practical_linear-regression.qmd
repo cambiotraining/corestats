@@ -3,6 +3,7 @@ title: "Linear regression"
 ---
 
 ```{r}
+#| label: r-setup
 #| echo: false
 #| message: false
 #| results: hide
@@ -10,6 +11,7 @@ source(file = "setup_files/setup.R")
 ```
 
 ```{python}
+#| label: py-setup
 #| echo: false
 #| message: false
 import shutup;shutup.please()
@@ -43,6 +45,7 @@ exec(open('setup_files/setup.py').read())
 ### Libraries
 
 ```{r}
+#| label: r-load-libraries
 #| eval: false
 # A collection of R packages designed for data science
 library(tidyverse)
@@ -57,6 +60,7 @@ library(ggResidpanel)
 ### Functions
 
 ```{r}
+#| label: r-run-anova
 #| eval: false
 #| warning: false
 # Creates diagnostic plots
@@ -74,6 +78,7 @@ stats::anova()
 ### Libraries
 
 ```{python}
+#| label: py-import-libraries
 #| eval: false
 # A Python data analysis and manipulation tool
 import pandas as pd
@@ -97,6 +102,7 @@ from dgplots import dgplots
 ### Functions
 
 ```{python}
+#| label: py-read-data
 #| eval: false
 # Summary statistics
 pandas.DataFrame.describe()
@@ -130,7 +136,7 @@ Note: you can download the `dgplots` script [here](scripts/dgplots.py).
 Regression analysis not only tests for an association between two or more variables, but also allows you to investigate quantitatively the nature of any relationship which is present. This can help you determine if one variable may be used to predict values of another. Simple linear regression essentially models the dependence of a scalar dependent variable ($y$) on an independent (or explanatory) variable ($x$) according to the relationship:
 
 ```{=tex}
-\begin{equation*} 
+\begin{equation*}
 y = \beta_0 + \beta_1 x
 \end{equation*}
 ```
@@ -159,6 +165,7 @@ And then will be testing the following null and alternative hypotheses:
 First, we read in the data:
 
 ```{r}
+#| label: r-read-data
 #| message: false
 USArrests <- read_csv("data/CS3-usarrests.csv")
 ```
@@ -166,6 +173,7 @@ USArrests <- read_csv("data/CS3-usarrests.csv")
 You can visualise the data with:
 
 ```{r}
+#| label: r-plot-data
 # create scatterplot of the data
 ggplot(USArrests,
        aes(x = assault, y = murder)) +
@@ -176,12 +184,14 @@ ggplot(USArrests,
 First, we read in the data:
 
 ```{python}
+#| label: py-read-data-2
 USArrests_py = pd.read_csv("data/CS3-usarrests.csv")
 ```
 
 You can visualise the data with:
 
 ```{python}
+#| label: py-plot-data
 #| results: hide
 # create scatterplot of the data
 p = (ggplot(USArrests_py,
@@ -197,7 +207,7 @@ Perhaps unsurprisingly, there appears to be a relatively strong positive relatio
 
 ## Assumptions
 
-In order for a linear regression analysis to be valid 4 key assumptions need to be met:
+In order for a linear regression analysis to be valid, four key assumptions need to be met:
 
 ::: callout-important
 1.  The data must be linear (it is entirely possible to calculate a straight line through data that is not straight - it doesn't mean that you should!)
@@ -214,6 +224,7 @@ Whether these assumptions are met can easily be checked visually by producing fo
 First we need to define the linear model:
 
 ```{r}
+#| label: r-fit-linear-model
 lm_1 <- lm(murder ~ assault,
            data = USArrests)
 ```
@@ -224,6 +235,7 @@ lm_1 <- lm(murder ~ assault,
 Next, we can create diagnostic plots for the model:
 
 ```{r}
+#| label: r-calculate-residuals
 #| message: false
 #| warning: false
 resid_panel(lm_1,
@@ -231,15 +243,16 @@ resid_panel(lm_1,
             smoother = TRUE)
 ```
 
--   The top left graph plots the **Residuals plot**. If the data are best explained by a linear line then the points should be uniformly distributed above and below the horizontal blue line. If that's the case then the red line (a smoother line) should overlay the blue line. This plot is pretty good.
+-   The top left graph plots the **Residuals plot**. If the data are best explained by a straight line, then the points should be uniformly distributed above and below the horizontal blue line. If that's the case, then the red line (a smoother line) should overlay the blue line. This plot is pretty good.
 -   The top right graph shows the **Q-Q plot** which allows a visual inspection of normality. If the residuals are normally distributed, then the points should lie on the diagonal dotted line. This isn't too bad but there is some slight snaking towards the upper end and there appears to be an outlier.
 -   The bottom left **Location-scale** graph allows us to investigate whether there is any correlation between the residuals and the predicted values and whether the variance of the residuals changes significantly. If not, then the red line should be horizontal. If there is any correlation or change in variance then the red line will not be horizontal. This plot is fine.
--   The last graph shows the **Cook's distance** and tests if any one point has an unnecessarily large effect on the fit. The important aspect here is to see if any points are larger than 0.5 (meaning you'd have to be careful) or 1.0 (meaning you'd definitely have to check if that point has an large effect on the model). If not, then no point has undue influence. This plot is good.
+-   The last graph shows the **Cook's distance** and tests if any one point has an unnecessarily large effect on the fit. The important aspect here is to see if any points are larger than 0.5 (meaning you'd have to be careful) or 1.0 (meaning you'd definitely have to check if that point has a large effect on the model). If not, then no point has undue influence. This plot is good.
 
 ## Python
 If you haven't loaded `statsmodels` yet, run the following:
 
 ```{python}
+#| label: py-import-libraries-3
 #| eval: false
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
@@ -248,6 +261,7 @@ import statsmodels.formula.api as smf
 Next, we create a linear model and get the `.fit()`:
 
 ```{python}
+#| label: py-fit-linear-model
 # create a linear model
 model = smf.ols(formula= "murder ~ assault", data = USArrests_py)
 # and get the fitted parameters of the model
@@ -257,6 +271,7 @@ lm_USArrests_py = model.fit()
 Then we use `dgplots()` to create the diagnostic plots:
 
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model
 dgplots(lm_USArrests_py)
 ```
 :::
@@ -275,6 +290,7 @@ We have already defined the linear model, so we can have a closer look at it:
 ## R
 
 ```{r}
+#| label: r-show-linear-model
 # show the linear model
 lm_1
 ```
@@ -288,6 +304,7 @@ The `lm()` function returns a linear model object which is essentially a list co
 If you wanted to know more about the `lm` object we created, then type in:
 
 ```{r}
+#| label: r-display-results
 #| eval: false
 View(lm_1)
 ```
@@ -295,7 +312,7 @@ View(lm_1)
 This shows a *list* (a type of object in R), containing all of the information associated with the linear model. The most relevant ones at the moment are:
 
 * `coefficients` contains the values of the coefficients we found earlier.
-* `residuals` contains the residual associated for each individual data point.
+* `residuals` contains the residuals associated with each individual data point.
 * `fitted.values` contains the values that the linear model predicts for each individual data point.
 
 :::
@@ -303,6 +320,7 @@ This shows a *list* (a type of object in R), containing all of the information a
 ## Python
 
 ```{python}
+#| label: py-summarize-data
 print(lm_USArrests_py.summary())
 ```
 
@@ -322,6 +340,7 @@ Next we can assess whether the slope is significantly different from zero:
 ## R
 
 ```{r}
+#| label: r-run-anova-2
 anova(lm_1)
 ```
 
@@ -329,18 +348,19 @@ Here, we again use the `anova()` command to assess significance. This shouldn't 
 
 This is exactly the same format as the table we saw for one-way ANOVA:
 
--   The 1st line just tells you the that this is an ANOVA test
+-   The 1st line just tells you that this is an ANOVA test
 -   The 2nd line tells you what the response variable is (in this case `Murder`)
 -   The 3rd, 4th and 5th lines are an ANOVA table which contain some useful values:
     -   The `Df` column contains the degrees of freedom values on each row, 1 and 48
     -   The `F` value column contains the F statistic, 86.454
     -   The p-value is 2.596e-12 and is the number directly under the `Pr(>F)` on the 4th line.
-    -   The other values in the table (in the `Sum Sq` and `Mean Sq`) column are used to calculate the F statistic itself and we don't need to know these.
+    -   The other values in the table (in the `Sum Sq` and `Mean Sq`) columns are used to calculate the F statistic itself and we don't need to know these.
 
 ## Python
 We can perform an ANOVA on the `lm_USArrests_py` object using the `anova_lm()` function from the `statsmodels` package.
 
 ```{python}
+#| label: py-run-anova
 sm.stats.anova_lm(lm_USArrests_py, typ = 2)
 ```
 :::
@@ -357,6 +377,7 @@ It can be very helpful to plot the regression line with the original data to see
 ## R
 
 ```{r}
+#| label: r-plot-data-2
 #| message: false
 # plot the data
 ggplot(USArrests,
@@ -371,6 +392,7 @@ ggplot(USArrests,
 ## Python
 
 ```{python}
+#| label: py-plot-data-2
 #| results: hide
 p = (ggplot(USArrests_py,
         aes(x = "assault", y = "murder")) +
@@ -391,7 +413,7 @@ p.show()
 
 {{< level 2 >}}
 
-We will use the data from the file `data/CS3-statedata.csv` data set for this exercise. This rather more benign data set contains information on more general properties of each US state, such as population (1975), per capita income (1974), illiteracy proportion (1970), life expectancy (1969), murder rate per 100,000 people (there's no getting away from it), percentage of the population who are high-school graduates, average number of days where the minimum temperature is below freezing between 1931 and 1960, and the state area in square miles. The data set contains 50 rows and 8 columns, with column names: `population`, `income`, `illiteracy`, `life_exp`, `murder`, `hs_grad`, `frost` and `area`.
+We will use the data from the `data/CS3-statedata.csv` data set for this exercise. This rather more benign data set contains information on more general properties of each US state, such as population (1975), per capita income (1974), illiteracy proportion (1970), life expectancy (1969), murder rate per 100,000 people (there's no getting away from it), percentage of the population who are high-school graduates, average number of days where the minimum temperature is below freezing between 1931 and 1960, and the state area in square miles. The data set contains 50 rows and 8 columns, with column names: `population`, `income`, `illiteracy`, `life_exp`, `murder`, `hs_grad`, `frost` and `area`.
 
 Perform a linear regression on the variables `life_exp` and `murder` and do the following:
 
@@ -411,6 +433,7 @@ Perform a linear regression on the variables `life_exp` and `murder` and do the 
 First, we read in the data:
 
 ```{r}
+#| label: r-read-data-2
 #| message: false
 USAstate <- read_csv("data/CS3-statedata.csv")
 ```
@@ -418,6 +441,7 @@ USAstate <- read_csv("data/CS3-statedata.csv")
 Next, we visualise the `murder` variable against the `life_exp` variable. We also add a regression line.
 
 ```{r}
+#| label: r-plot-data-3
 #| message: false
 # plot the data and add the regression line
 ggplot(USAstate,
@@ -431,12 +455,14 @@ ggplot(USAstate,
 First, we read in the data:
 
 ```{python}
+#| label: py-read-data-3
 USAstate_py = pd.read_csv("data/CS3-statedata.csv")
 ```
 
 Next, we visualise the `murder` variable against the `life_exp` variable. We also add a regression line.
 
 ```{python}
+#| label: py-plot-data-3
 #| results: hide
 p = (ggplot(USAstate_py,
         aes(x = "life_exp", y = "murder")) +
@@ -464,6 +490,7 @@ Now, let's check the assumptions with the diagnostic plots.
 ## R
 
 ```{r}
+#| label: r-fit-linear-model-2
 #| message: false
 #| warning: false
 # create a linear model
@@ -476,12 +503,13 @@ resid_panel(lm_murder,
             smoother = TRUE)
 ```
 
-The **Residuals** plot appears symmetric enough (similar distribution of points above and below the horizontal blue line) for me to happy with linearity. Similarly the red line in the **Location-Scale** plot looks horizontal enough for me to be happy with homogeneity of variance. There aren't any influential points in the **Cook's distance** plot. The only plot that does give me a bit of concern is the **Q-Q** plot. Here we see clear evidence of snaking, although the degree of snaking isn't actually that bad. This just means that we can be pretty certain that the distribution of residuals isn't normal, but also that it isn't *very* non-normal.
+The **Residuals** plot appears symmetric enough (similar distribution of points above and below the horizontal blue line) for me to be happy with linearity. Similarly the red line in the **Location-Scale** plot looks horizontal enough for me to be happy with homogeneity of variance. There aren't any influential points in the **Cook's distance** plot. The only plot that does give me a bit of concern is the **Q-Q** plot. Here we see clear evidence of snaking, although the degree of snaking isn't actually that bad. This just means that we can be pretty certain that the distribution of residuals isn't normal, but also that it isn't *very* non-normal.
 
 ## Python
 First, we create a linear model:
 
 ```{python}
+#| label: py-fit-linear-model-2
 # create a linear model
 model = smf.ols(formula= "life_exp ~ murder", data = USAstate_py)
 # and get the fitted parameters of the model
@@ -490,15 +518,16 @@ lm_USAstate_py = model.fit()
 
 Next, we can create the diagnostic plots:
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-2
 dgplots(lm_USAstate_py)
 ```
 
-The **Residuals** plot appears symmetric enough (similar distribution of points above and below the horizontal blue line) for me to happy with linearity. Similarly the red line in the **Location-Scale** plot looks horizontal enough for me to be happy with homogeneity of variance. There aren't any influential points in the **Influential points** plot. The only plot that does give me a bit of concern is the **Q-Q** plot. Here we see clear evidence of snaking, although the degree of snaking isn't actually that bad. This just means that we can be pretty certain that the distribution of residuals isn't normal, but also that it isn't *very* non-normal.
+The **Residuals** plot appears symmetric enough (similar distribution of points above and below the horizontal blue line) for me to be happy with linearity. Similarly the red line in the **Location-Scale** plot looks horizontal enough for me to be happy with homogeneity of variance. There aren't any influential points in the **Influential points** plot. The only plot that does give me a bit of concern is the **Q-Q** plot. Here we see clear evidence of snaking, although the degree of snaking isn't actually that bad. This just means that we can be pretty certain that the distribution of residuals isn't normal, but also that it isn't *very* non-normal.
 :::
 
 What do we do in this situation? Well, there are three possible options:
 
-1.  Appeal to the **Central Limit Theorem**. This states that if we have a large enough sample size we don't have to worry about whether the distribution of the residuals are normally distributed. **Large enough** is a bit of a moving target here and to be honest it depends on how non-normal the underlying data are. If the data are only a little bit non-normal then we can get away with using a smaller sample than if the data are massively skewed (for example). This is not an exact science, but anything over 30 data points is considered a lot for mild to moderate non-normality (as we have in this case). If the data were very skewed then we would be looking for more data points (50-100). So, for this example we can legitimately just carry on with our analysis without worrying.
+1.  Appeal to the **Central Limit Theorem**. This states that if we have a large enough sample size we don't have to worry about whether the distribution of the residuals is normal. **Large enough** is a bit of a moving target here and to be honest it depends on how non-normal the underlying data are. If the data are only a little bit non-normal then we can get away with using a smaller sample than if the data are massively skewed (for example). This is not an exact science, but anything over 30 data points is considered a lot for mild to moderate non-normality (as we have in this case). If the data were very skewed then we would be looking for more data points (50-100). So, for this example we can legitimately just carry on with our analysis without worrying.
 2.  Try transforming the data. Here we would try applying some mathematical functions to the response variable (`life_exp`) in the hope that repeating the analysis with this transformed variable would make things better. To be honest with you it might not work and we won't know until we try. Dealing with transformed variables is legitimate as an approach but it can make interpreting the model a bit more challenging. In this particular example none of the traditional transformations (log, square-root, reciprocal) do anything to fix the slight lack of normality.
 3.  Go with permutation methods / bootstrapping. This approach would definitely work. I don't have time to explain it here (it's the subject of an entire other practical). This approach also requires us to have a reasonably large sample size to work well as we have to assume that the distribution of the sample is a good approximation for the distribution of the entire data set.
 
@@ -512,12 +541,14 @@ So, let's actually do the analysis:
 ## R
 
 ```{r}
+#| label: r-run-anova-3
 anova(lm_murder)
 ```
 
 ## Python
 
 ```{python}
+#| label: py-run-anova-2
 sm.stats.anova_lm(lm_USAstate_py, typ = 2)
 ```
 :::
@@ -545,6 +576,7 @@ We'll run through this a bit quicker:
 ## R
 
 ```{r}
+#| label: r-plot-data-4
 #| message: false
 # plot the data
 ggplot(USAstate,
@@ -556,6 +588,7 @@ ggplot(USAstate,
 ## Python
 
 ```{python}
+#| label: py-plot-data-4
 #| results: hide
 p = (ggplot(USAstate_py,
         aes(x = "hs_grad", y = "frost")) +
@@ -572,7 +605,7 @@ Once again, we look at the data.
 2.  Whilst there is a trend upwards, which wouldn't surprise me if it came back as being significant, I'm a bit concerned about...
 3.  The assumptions. I'm mainly concerned that the data aren't very linear. There appears to be a noticeable pattern to the data with some sort of minimum around 50-60 Frost days. This means that it's hard to assess the other assumptions.
 
-Let's check these out properly
+Let's check these out properly.
 
 Now, let's check the assumptions with the diagnostic plots.
 
@@ -580,6 +613,7 @@ Now, let's check the assumptions with the diagnostic plots.
 ## R
 
 ```{r}
+#| label: r-fit-linear-model-3
 #| message: false
 #| warning: false
 # create a linear model
@@ -596,6 +630,7 @@ resid_panel(lm_frost,
 First, we create a linear model:
 
 ```{python}
+#| label: py-fit-linear-model-3
 # create a linear model
 model = smf.ols(formula= "hs_grad ~ frost", data = USAstate_py)
 # and get the fitted parameters of the model
@@ -604,6 +639,7 @@ lm_frost_py = model.fit()
 
 Next, we can create the diagnostic plots:
 ```{python}
+#| label: py-and-get-the-fitted-parameters-of-the-model-3
 dgplots(lm_frost_py)
 ```
 :::
