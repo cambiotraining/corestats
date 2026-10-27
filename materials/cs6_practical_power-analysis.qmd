@@ -173,7 +173,7 @@ The key point about effect sizes and power analyses is that you need to specify 
 
 There are a lot of different ways of specifying effect sizes, but we can split them up into three distinct families of estimates:
 
-1. **Correlation estimates**: these use $R^2$ as a measure of variance explained by a model (for linear models, anova etc. A large $R^2$ value would indicate that a lot of variance has been explained by our model and we would expect to see a lot of difference between groups, or a tight cluster of points around a line of best fit. The argument goes that we would need fewer data points to observe such a relationship with confidence. Trying to find a relationship with a low $R^2$ value would be trickier and would therefore require more data points for an equivalent power.
+1. **Correlation estimates**: these use $R^2$ as a measure of variance explained by a model (for linear models, anova, etc.). A large $R^2$ value would indicate that a lot of variance has been explained by our model and we would expect to see a lot of difference between groups, or a tight cluster of points around a line of best fit. The argument goes that we would need fewer data points to observe such a relationship with confidence. Trying to find a relationship with a low $R^2$ value would be trickier and would therefore require more data points for an equivalent power.
 2. **Difference between means**: these look at how far apart the means of two groups are, measured in units of standard deviations (for t-tests). An effect size of 2 in this case would be interpreted as the two groups having means that were two standard deviations away from each other (quite a big difference), whereas an effect size of 0.2 would be harder to detect and would require more data to pick it up.
 3. **Difference between count data**: these I freely admit I have no idea how to intuitively explain them (shock, horror). Mathematically they are based on the chi-squared statistic but that’s as good as I can tell you I’m afraid. They are, however, pretty easy to calculate.
 
@@ -255,16 +255,17 @@ pwr.t.test(d = 0.5, sig.level = 0.05, power = 0.8,
 
 The first line is what we’re looking for: `n = 63.76` tells us that we need 64 (rounding up) students in each group (so 128 in total) in order to carry out this study with sufficient power. The other lines should be self-explanatory (well, they should be by this stage; if you need me to tell you that the function is just returning the values that you’ve just typed in, then you have bigger problems to worry about).
 
-The `pwr.t.test()` function has six arguments. Two of them specify what sort of t-test you’ll be carrying out
-* `type`; which describes the type of t-test you will eventually be carrying out (one of `two.sample`, `one.sample` or `paired`), and
-* `alternative`; which describes the type of alternative hypothesis you want to test (one of `two.sided`, `less` or `greater`)
+The `pwr.t.test()` function has six arguments. Two of them specify what sort of t-test you’ll be carrying out:
+
+* `type`: the type of t-test you will carry out (one of `two.sample`, `one.sample` or `paired`)
+* `alternative`: the alternative hypothesis you want to test (one of `two.sided`, `less` or `greater`)
 
 The other four arguments are what is used in the power analysis:
 
-* `d`; this is the effect size, a single number calculated using Cohen’s d statistic.
-* `sig.level`; this is the significance level
-* `power`; is the power
-* `n`; this is the number of observations per sample.
+* `d`: the effect size, a single number calculated using Cohen’s d statistic.
+* `sig.level`: the significance level
+* `power`: the power
+* `n`: the number of observations per sample.
 
 ## Python
 
